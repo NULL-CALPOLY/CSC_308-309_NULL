@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import UserSchema from "User.js";
 
-const UserSchema = new mongoose.Schema(
+const EventSchema = new mongoose.Schema(
     {
         eventName : {
             type: String,
@@ -13,44 +13,40 @@ const UserSchema = new mongoose.Schema(
               required: true,
               trim: true
         },
-        phoneNumber : {
+        mapComponent : {
                type: String,
                required: true,
-               trim: true
         },
-        age : {
-               type: Integer,
+        attendees : {
+               type: UserSchema,
+               required: false,
+        },
+        Host : {
+               type: UserSchema,
                required: true,
-               trim: true
         },
-        gender : {
-               type: String,
-               required: true,
-               trim: true
-               enum: ["Male", "Female", "Other", "Do not want to Disclose"]
-        },
-        interests : {
-            type: String[],
+        blockedUsers : {
+            type: [UserSchema],
             required : false,
         },
-        radius : {
-             type: Integer,
+        comment : {
+             type: [{ type: String }],
              required : true,
         },
         location : {
               latitude: {
-                  type: Float,
+                  type: Number,
                   required: true
               },
               longitude: {
-                  type: Float,
+                  type: Number,
                   required: true
               },
         },
     },
-    { collection : "users_list" }
+    { collection : "events_list" }
 );
 
-const User = mongoose.model("User", UserSchema);
+const Event = mongoose.model("Event", EventSchema);
 
-export default User;
+export default Event;
