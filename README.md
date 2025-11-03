@@ -13,3 +13,11 @@ csc 308/309 project developed by Brian, Vishnu, Ryan, and Aaron
 3. Enable “Format on Save” in your VS Code settings.
 
 4. Run npm run format before committing to format all files.
+
+# Backend Instructions
+
+1. Create a .env file with the MONGODB connection string.
+
+2. Label it as MONGODB_URI = "connection_string"
+
+3. make sure before doing git add, that you have .env in the gitignore file
