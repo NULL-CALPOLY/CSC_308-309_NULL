@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const UserLoginSchema = new mongoose.Schema(
   {
@@ -14,9 +14,9 @@ const UserLoginSchema = new mongoose.Schema(
       trim: true,
     },
   },
-  { collection: "users_login_list" }
+  { collection: 'users_login_list' }
 );
 
-const UserLogin = mongoose.model("UserLogin", UserLoginSchema);
+const UserLogin = mongoose.model('UserLogin', UserLoginSchema);
 
 export default UserLogin;
