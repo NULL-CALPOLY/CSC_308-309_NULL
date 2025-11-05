@@ -2,9 +2,10 @@ import mongoose from 'mongoose';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { config } from 'dotenv';
-import express from "express";
-import router from "./UserRoutes.js";
-import cors from "cors";
+import express from 'express';
+import userRouter from './UserFiles/UserRoutes.js';
+import loginRouter from './UserFiles/Credentials/LoginRoutes.js';
+import cors from 'cors';
 
 // Intialize Express app
 const app = express();
@@ -13,7 +14,8 @@ const port = /*process.env.PORT*/ 3000; // if want your own port, just uncomment
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use("/", router);
+app.use('/users', userRouter);
+app.use('/logins', loginRouter);
 
 // Setup path to .env
 const __filename = fileURLToPath(import.meta.url);
@@ -29,12 +31,17 @@ const uri = process.env.MONGODB_URI;
 mongoose
   .connect(uri) // The two defaults weren't needed in latest version of mongoose
   .then(() => {
-    console.log('✅ Connected to MongoDB')
-    app.listen(port, () => {console.log(`🚀 Server is running on port ${port}`)})
+    console.log('✅ Connected to MongoDB');
+    app.listen(port, () => {
+      console.log(`🚀 Server is running on port ${port}`);
+    });
   })
   .catch((error) => console.error('❌ MongoDB connection error:', error));
 
 // Start the server
 
+app.get("/", (req, res) => {
+  res.send("see github for instructions to use db")
+})
 
 export default mongoose;

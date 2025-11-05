@@ -6,7 +6,7 @@ csc 308/309 project developed by Brian, Vishnu, Ryan, and Aaron
 
 [Figma UI Design](https://www.figma.com/design/0z8JxtDEOHMynJBxNlRy3B/NULL?node-id=0-1&t=4Dz5RBx5Wi5keHSV-1)
 
-# Setup Instructions:
+# Prettier/ESLint Setup Instructions:
 
 1. Run npm install to get the dev dependencies.
 
@@ -23,3 +23,22 @@ csc 308/309 project developed by Brian, Vishnu, Ryan, and Aaron
 2. Label it as MONGODB_URI = "connection_string"
 
 3. make sure before doing git add, that you have .env in the gitignore file
+
+# Database Tutorial
+
+1. npm start to run this thing (or node backend/backend.js)
+
+/users for users
+/logins for credentials
+/(users or logins)/:id for id search
+/(users or logins)/search/(catagory)/(whatever) for search, CASE SENSITIVE
+  - for multiple inputs in (whatever), seperate by comma
+    - Ex. /users/search/interests/balling,dunking
+  - for spaces use %20
+    - Ex. /users/search/name/LEBRON%20JAMES
+
+If there's bugs, fix if you can. Otherwise just dm Brian.
+Feel free to ask Brian for more information, although information about code is commented
+Please feel free to add additional features
+
+

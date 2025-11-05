@@ -1,6 +1,6 @@
 // basically stolen from backend assignment
 
-import userModel from './User.js';
+import userModel from './UserSchema.js';
 
 // Get all users
 function getUsers() {
