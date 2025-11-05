@@ -1,0 +1,71 @@
+.navbar {
+  position: fixed;          /* Always at the top */
+  top: 0;
+  left: 0;
+  width: 100vw;             /* Span the entire viewport width */
+  z-index: 1000;
+
+  background: #0b0f14;      /* dark techy background */
+  color: #fff;
+  padding: 1rem 3rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid rgba(100, 255, 218, 0.15);
+}
+
+/* Logo / brand */
+.navbar__logo h2 {
+  margin: 0;
+  font-family: "Consolas", "Courier New", monospace;
+  color: #64ffda;
+  letter-spacing: 1px;
+}
+
+/* Links section */
+.navbar__links {
+  display: flex;
+  gap: 2.5rem;
+}
+
+.navbar__links a {
+  text-decoration: none;
+  color: #e6edf3;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.navbar__links a:hover {
+  color: #64ffda;
+  transform: translateY(-2px);
+}
+
+/* Profile section */
+.navbar__profile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar__profile-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #64ffda;
+}
+
+/* Remove mobile hamburger completely */
+.navbar__hamburger {
+  display: none;
+}
+
+/* Optional: give the page content padding so it’s not hidden behind the navbar */
+body {
+  margin: 0;
+  padding-top: 80px; /* adjust to navbar height */
+  background-color: #0b0f14;
+}
