@@ -28,17 +28,17 @@ csc 308/309 project developed by Brian, Vishnu, Ryan, and Aaron
 
 1. npm start to run this thing (or node backend/backend.js)
 
-/users for users
-/logins for credentials
-/(users or logins)/:id for id search
-/(users or logins)/search/(catagory)/(whatever) for search, CASE SENSITIVE
+- /users for users
+- /logins for credentials
+- /(users or logins)/:id for id search
+- /(users or logins)/search/(catagory)/(whatever) for search, CASE SENSITIVE
   - for multiple inputs in (whatever), seperate by comma
     - Ex. /users/search/interests/balling,dunking
   - for spaces use %20
     - Ex. /users/search/name/LEBRON%20JAMES
 
-If there's bugs, fix if you can. Otherwise just dm Brian.
-Feel free to ask Brian for more information, although information about code is commented
-Please feel free to add additional features
+1. If there's bugs, fix if you can. Otherwise just dm Brian.
+2. Feel free to ask Brian for more information, although information about code is commented.
+3. Please feel free to add additional features.
 
 
