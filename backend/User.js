@@ -18,14 +18,14 @@ const UserSchema = new mongoose.Schema(
                trim: true
         },
         age : {
-               type: Integer,
+               type: Number,
                required: true,
                trim: true
         },
         gender : {
                type: String,
                required: true,
-               trim: true
+               trim: true,
                enum: ["Male", "Female", "Other", "Do not want to Disclose"]
         },
         interests : {
@@ -33,7 +33,7 @@ const UserSchema = new mongoose.Schema(
             required : false,
         },
         radius : {
-             type: Integer,
+             type: Number,
              required : true,
         },
         location : {
