@@ -26,7 +26,7 @@ function updateLogin(id, loginData) {
 
 // Find login by email
 function findLoginByEmail(email) {
-  return loginModel.find({ email: email });
+  return loginModel.findOne({ email: email });
 }
 
 // Find login by password

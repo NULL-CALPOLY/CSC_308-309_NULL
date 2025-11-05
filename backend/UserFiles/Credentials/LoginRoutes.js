@@ -33,6 +33,30 @@ router.get('/:id', async (req, res) => {
     });
 });
 
+// Confirm Login (compare email + password)
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).send('Email and password required');
+  }
+
+  try {
+    const login = await loginServices.findLoginByEmail(email);
+
+    if (!login) {
+      return res.status(404).send('User not found');
+    }
+    if (login.password === password) {
+      res.status(200).send('Login successful');
+    } else {
+      res.status(401).send('Invalid password');
+    }
+  } catch (error) {
+    res.status(500).send(`Error in the server: ${error}`);
+  }
+});
+
+
 // Post new login credentials
 router.post('/', async (req, res) => {
   await loginServices
