@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./SignIn.css";
 
 export default function SignIn() {
@@ -6,6 +7,8 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const navigate = useNavigate();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -13,7 +16,7 @@ export default function SignIn() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch("http://localhost:3000/logins/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -25,8 +28,8 @@ export default function SignIn() {
       }
 
       const data = await res.json();
-
-      alert("Signed in!");
+      console.log(data);
+      navigate('/');
 
     } catch (err) {
       setErrorMsg(err.message);
@@ -36,6 +39,7 @@ export default function SignIn() {
   };
 
   return (
+  <div className = "container">
     <div className="signin-container">
       <form onSubmit={handleSubmit} className="signin-form">
         <h2>Sign In</h2>
@@ -71,5 +75,6 @@ export default function SignIn() {
         )}
       </form>
     </div>
+   </div>
   );
 }

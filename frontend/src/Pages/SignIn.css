@@ -1,94 +1,56 @@
-/* --- GLOBAL PAGE SETTINGS ------------------------------------------------ */
-
-/* Apply styles to the entire page and root container */
-html, body, #root {
-  height: 100%;
-  width: 100%;
-  background: #ffffff;        /* White background for the whole page */
+#root {
+  margin: 0 auto;
+  text-align: center;
 }
 
-/* --- SIGN-IN CONTAINER --------------------------------------------------- */
-
-.signin-container {
+.container {
+  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 100vh;
-  background: #ffffff;
+  justify-content: center;
+  background: #ffffff; /* stays white even if body changes later */
 }
 
-/* --- SIGN-IN FORM BOX ---------------------------------------------------- */
-
-/* Styles the actual form card */
-.signin-form {
-  background: #ffffff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  padding: 2rem;
+/* Typical sign-in layout (safe defaults; tweak as you like) */
+.signin-container {
   width: 100%;
-  max-width: 360px;
+  max-width: 420px;
+}
+
+.signin-form {
+  display: grid;
+  gap: 0.75rem;
+  padding: 2rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
 }
 
 .signin-form h2 {
-  text-align: center;
+  margin: 0 0 0.25rem;
   font-size: 1.5rem;
-  color: #222;
 }
 
-/* --- LABELS & INPUTS ----------------------------------------------------- */
-
-/* Styles the labels for form fields */
 .signin-form label {
-  display: block;             /* Ensure each label takes a full line */
-  margin: 0.75rem 0 0.25rem;  /* Spacing above and below label */
-  font-size: 0.9rem;          /* Slightly smaller than normal text */
-  color: #555;                /* Medium gray text for labels */
+  text-align: left;
+  font-size: 0.95rem;
+  color: #334155;
 }
 
-/* Styles for input fields (email, password, etc.) */
 .signin-form input {
-  width: 100%;                /* Full width of the form */
-  padding: 0.6rem;            /* Space inside input box */
-  border: 1px solid #ccc;     /* Light gray border */
-  border-radius: 6px;         /* Slightly rounded corners */
-  font-size: 1rem;            /* Regular readable size */
-  color: #333;                /* Dark text color */
-  background: #f9f9f9;        /* Very light gray background */
-  transition: border-color 0.2s ease, background 0.2s ease; /* Smooth hover/focus animation */
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #fff;
 }
 
-/* Input focus state (when user clicks inside the box) */
 .signin-form input:focus {
-  outline: none;              /* Remove default blue browser outline */
-  border-color: #007bff;      /* Blue border highlight */
-  background: #fff;           /* Pure white background when active */
+  outline: none;
+  border-color: #646cff;
+  box-shadow: 0 0 0 3px rgba(100,108,255,0.2);
 }
 
-/* --- BUTTON -------------------------------------------------------------- */
-
-/* Styles the "Sign In" button */
-.signin-form button {
-  width: 100%;                /* Full width across the form */
-  margin-top: 1rem;           /* Space above button */
-  padding: 0.75rem;           /* Inner padding for click area */
-  border: none;               /* Remove default button border */
-  border-radius: 6px;         /* Rounded corners */
-  background-color: #007bff;  /* Primary blue color */
-  color: #fff;                /* White text */
-  font-weight: 600;           /* Slightly bolder text */
-  font-size: 1rem;            /* Consistent size with inputs */
-  cursor: pointer;            /* Pointer cursor to indicate clickable */
-  transition: background 0.2s ease, transform 0.1s ease; /* Smooth hover animation */
-}
-
-/* Button hover effect */
-.signin-form button:hover {
-  background-color: #0056b3;  /* Darker blue on hover */
-  transform: translateY(-2px);/* Small lift animation */
-}
-
-/* Button active (when pressed down) */
-.signin-form button:active {
-  transform: translateY(0);   /* Remove lift effect */
-}
