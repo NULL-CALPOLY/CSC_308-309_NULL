@@ -44,12 +44,12 @@ router.post('/login', async (req, res) => {
     const login = await loginServices.findLoginByEmail(email);
 
     if (!login) {
-      return res.status(404).send('User not found');
+      return res.status(404).json({ success: false, message: "Login failed" });
     }
     if (login.password === password) {
-      res.status(200).send('Login successful');
+      res.status(200).json({ success: true, message: "Login Successful" });
     } else {
-      res.status(401).send('Invalid password');
+      res.status(401).json({ success: false, message: "Login failed" });
     }
   } catch (error) {
     res.status(500).send(`Error in the server: ${error}`);
