@@ -10,7 +10,7 @@ import {
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import markerIcon from "../assets/pin.svg";
-import locateIcon from "../assets/location.png";
+import locateIcon from "../assets/location.svg";
 import "./SmallMapComponent.css";
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -20,7 +20,6 @@ L.Icon.Default.mergeOptions({
 });
 
 export default function HomePage() {
-  // State to hold the user's located position
   const [userPosition, setUserPosition] = useState(null);
 
   return (
@@ -53,11 +52,6 @@ export default function HomePage() {
 
         <LocateButton icon={locateIcon} setUserPosition={setUserPosition} />
       </MapContainer>
-      {userPosition && (
-        <p className="coords">
-          Latitude: {userPosition[0].toFixed(5)}, Longitude: {userPosition[1].toFixed(5)}
-        </p>
-      )}
     </div>
   );
 }
