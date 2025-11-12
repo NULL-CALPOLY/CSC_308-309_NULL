@@ -2,9 +2,13 @@
 import React from "react";
 
 
-export default function RandomComponent() {
+export default function RandomComponent(props) {
 
   return (
-    <div> hello </div>
+    <div className="Event-Container">
+      <div className="Event-Title">
+        {props.eventName}
+      </div>
+    </div>
   );
 }
