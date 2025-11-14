@@ -1,0 +1,44 @@
+/* RandomComponent.css */
+
+.Tag-Container {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  color: white;
+  font-weight: 400;
+  text-align: center;
+  font-size: 0.6rem;
+  max-width: fit-content;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.Tag-Container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 10px rgba(40, 30, 30, 0.15);
+}
+
+/* specific interest colors */
+.sports {
+  background-color: #ff6b6b;
+}
+
+.music {
+  background-color: #4dabf7;
+}
+
+.coding {
+  background-color: #51cf66;
+}
+
+.art {
+  background-color: #845ef7;
+}
+
+.travel {
+  background-color: #ffa94d;
+}
+
+/* default fallback */
+.Tag-Container:not(.sports):not(.music):not(.coding):not(.art):not(.travel) {
+  background-color: #868e96;
+}

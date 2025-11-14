@@ -1,0 +1,81 @@
+/* === Event Card Base === */
+.Event-Container {
+  background: #333a47;
+  color: #e9edf4;
+  border-radius: 14px;
+  padding: 14px 16px;
+  max-width: 280px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue",
+    Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+    "Noto Color Emoji";
+  text-align: left; /* All content left-aligned */
+}
+
+/* Title + divider */
+.Event-Title {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.25;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.Event-Divider {
+  border: 0;
+  border-top: 1px solid #e6e8ee;
+  margin: 8px 0 12px;
+}
+
+/* Event info */
+.Event-Time,
+.Event-Address,
+.Event-Description,
+.Event-Attendees,
+.Event-Host {
+  font-size: 14px;
+  line-height: 20px;
+  color: #c9d1dc;
+  margin-top: 6px;
+}
+
+/* Tag — aligned to the left now */
+.Event-Container .Tag-Container {
+  display: inline-block;
+  margin-top: 8px;
+  margin-left: 0;
+}
+
+/* Footer: bottom-right for toggle buttons */
+.Event-Footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* Smaller link-style buttons */
+.SeeToggle {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.85rem;
+  color: #4dabf7;
+  font-weight: 600;
+  cursor: pointer;
+}
+.SeeToggle:hover {
+  text-decoration: underline;
+}
+
+/* When expanded: Tag stays left, button stays right */
+.Expanded-Footer {
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+/* Keep consistent spacing between event details */
+.Event-Extra .Event-Row + .Event-Row {
+  margin-top: 6px;
+}

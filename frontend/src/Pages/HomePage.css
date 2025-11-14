@@ -1,4 +1,77 @@
-/* index.css */
-html, body, #root { height: 100%; margin: 0; }
-.container { height: 100vh; }
-.leaflet-container { height: 100%; width: 100%; }
+/* The sidebar on the right */
+.Event_Container {
+  position: fixed;
+  top: 60px; /* offset for navbar height */
+  right: 0;
+  height: calc(100vh - 60px); /* full height minus navbar */
+  width: 300px;
+  background: #ffffff;
+  border-left: 1px solid #e9edf3;
+  box-shadow: -6px 0 18px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* prevent double scrolling */
+  z-index: 1;
+}
+
+/* Search bar stays at the top */
+.Search_Bar {
+  flex-shrink: 0; /* prevents it from resizing */
+  padding: 12px;
+  border-bottom: 1px solid #e9edf3;
+  background: #fafbfe;
+  z-index: 2;
+}
+
+.Search_Bar input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d8dee9;
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+}
+
+.Search_Bar input:focus {
+  border-color: #9bbcff;
+  box-shadow: 0 0 0 3px rgba(155, 188, 255, 0.25);
+}
+
+/* Scrollable list below the search bar */
+.Event_List {
+  flex: 1; /* take up remaining height */
+  overflow-y: auto; /* make it scrollable vertically */
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Make each event card fit nicely */
+.Event_List .Event-Container {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+}
+
+/* Optional: custom scrollbar for nice look */
+.Event_List::-webkit-scrollbar {
+  width: 10px;
+}
+.Event_List::-webkit-scrollbar-thumb {
+  background: #d8dee9;
+  border-radius: 8px;
+}
+.Event_List::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+.Map {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0; /* Behind other content */
+}

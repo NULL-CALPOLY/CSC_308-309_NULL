@@ -1,0 +1,66 @@
+/* Centers the map on the page */
+.map-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height:700px;
+  width: 940px;
+  background-color: #f5f5f5;
+}
+
+/* Fixed-size square map with border */
+.map-component {
+  width: 350px;
+  height: 350px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+
+  /* 👇 Add your border here */
+  border: 3px solid #000000; /* blue border, adjust color/thickness as needed */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Ensure map tiles fill the container */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+}
+
+/* Floating locate-me button */
+.locate-btn {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  padding: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  z-index: 1000;
+  transition: transform 0.1s ease-in-out;
+}
+
+.locate-btn:hover {
+  transform: scale(1.1);
+}
+
+.locate-btn img {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+/* Rounded zoom controls */
+.leaflet-control-zoom {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.coords {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #333;
+  text-align: center;
+}
