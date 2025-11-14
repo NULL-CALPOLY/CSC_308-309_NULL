@@ -1,11 +1,11 @@
 .navbar {
-  position: fixed;          /* Always at the top */
+  position: fixed; /* Always at the top */
   top: 0;
   left: 0;
-  width: 100vw;             /* Span the entire viewport width */
+  width: 100vw; /* Span the entire viewport width */
   z-index: 1000;
 
-  background: white;      /* dark techy background */
+  background: white; /* dark techy background */
   color: #fff;
   padding: 1rem 3rem;
 
@@ -20,7 +20,7 @@
 /* Logo / brand */
 .navbar__logo h2 {
   margin: 0;
-  font-family: "Consolas", "Courier New", monospace;
+  font-family: 'Consolas', 'Courier New', monospace;
   color: #00eb08;
   letter-spacing: 1px;
 }
@@ -36,7 +36,9 @@
   font-weight: 500;
   font-size: 1rem;
   align: center;
-  transition: color 0.2s ease, transform 0.2s ease;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .navbar__links a:hover {
@@ -80,4 +82,3 @@ body {
   color: #2563eb;
   border-bottom: 2px solid #2563eb;
 }
-

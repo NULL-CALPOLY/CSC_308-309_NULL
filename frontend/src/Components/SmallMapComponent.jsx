@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   MapContainer,
   TileLayer,
@@ -6,12 +6,12 @@ import {
   Popup,
   useMap,
   useMapEvents,
-} from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
-import markerIcon from "../assets/pin.svg";
-import locateIcon from "../assets/location.svg";
-import "./SmallMapComponent.css";
+} from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import markerIcon from '../assets/pin.svg';
+import locateIcon from '../assets/location.svg';
+import './SmallMapComponent.css';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -62,7 +62,7 @@ function LocateButton({ icon, setUserPosition }) {
 
   const handleLocate = () => {
     if (!navigator.geolocation) {
-      alert("Geolocation not supported");
+      alert('Geolocation not supported');
       return;
     }
 
@@ -71,9 +71,9 @@ function LocateButton({ icon, setUserPosition }) {
         const latlng = [pos.coords.latitude, pos.coords.longitude];
         setUserPosition(latlng); // ✅ update parent state
         map.flyTo(latlng, 15);
-        console.log("📍 Current location:", latlng); // ✅ log to console
+        console.log('📍 Current location:', latlng); // ✅ log to console
       },
-      () => alert("Unable to retrieve your location.")
+      () => alert('Unable to retrieve your location.')
     );
   };
 
