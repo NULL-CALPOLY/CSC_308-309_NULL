@@ -30,6 +30,7 @@ csc 308/309 project developed by Brian, Vishnu, Ryan, and Aaron
 
 - /users for users
 - /logins for credentials
+- /events for events (ALL USERIDS IN EVENTS MUST BE VALID IN USERS)
 - /(users or logins)/:id for id search
 - /(users or logins)/search/(catagory)/(whatever) for search, CASE SENSITIVE
   - for multiple inputs in (whatever), seperate by comma

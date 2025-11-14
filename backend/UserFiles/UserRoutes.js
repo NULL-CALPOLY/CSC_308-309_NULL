@@ -12,27 +12,30 @@ router.get('/all', async (req, res) => {
   await userServices
     .getUsers()
     .then((users) => {
-      res.json(users);
+      if (!users || users.length === 0)
+        [res.status(404).json({ success: false, message: 'No users found' })];
+      res.status(200).json(users);
     })
     .catch((error) => {
-      res.status(500).send(`Error in the server: ${error}`);
+      res
+        .status(500)
+        .json({ success: false, message: `Error in the server: ${error}` });
     });
 });
 
 // Get a user by ID
 router.get('/:id', async (req, res) => {
-  await userServices
-    .findUserById(req.params.id)
+  await userServices.findUserById(req.params.id)
     .then((user) => {
-      if (user === undefined || user === null) {
-        res.status(404).send('User not found');
-      } else {
-        res.json(user);
-      }
+      if (!user) 
+        res.status(404).json({ success: false, message: 'User not found' });
+      
+      else 
+        res.status(200).json({ success: true, data: user });
     })
     .catch((error) => {
-      res.status(500).send(`Error in the server: ${error}`);
-    });
+      res.status(500).json({ success: false, message: `Error in the server: ${error.message}` });
+    })
 });
 
 // Post a new user
@@ -40,10 +43,10 @@ router.post('/', async (req, res) => {
   await userServices
     .addUser(req.body)
     .then((user) => {
-      res.status(201).json(user);
+      res.status(201).json({ success: true, data: user });
     })
     .catch((error) => {
-      res.status(500).send(`Error in the server: ${error}`);
+      res.status(400).json({ success: false, message: `Error creating user: ${error.message}` });
     });
 });
 
@@ -51,11 +54,14 @@ router.post('/', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   await userServices
     .deleteUser(req.params.id)
-    .then(() => {
-      res.status(204).send();
+    .then((deletedUser) => {
+      if (!deletedUser) 
+        res.status(404).json({ success: false, message: 'User not found' });
+      else 
+        res.status(200).json({ success: true, message: 'User deleted successfully' });
     })
     .catch((error) => {
-      res.status(404).send(`User not found: ${error}`);
+      res.status(500).json({ success: false, message: `Error in the server: ${error}` });
     });
 });
 
@@ -64,25 +70,27 @@ router.put('/:id', async (req, res) => {
   await userServices
     .updateUser(req.params.id, req.body)
     .then((user) => {
-      res.json(user);
+      if (!user)
+        res.status(404).json({ success: false, message: 'User not found' });
+      else
+        res.status(200).json({ success: true, data: user });
     })
     .catch((error) => {
-      res.status(500).send(`Error in the server: ${error}`);
+      res.status(500).json({ success: false, message: `Error in the server: ${error}` });
     });
 });
 
 // Search users by name
 router.get('/search/name/:name', async (req, res) => {
-  // localhost:3000/users/search/name/LEBRON%20JAMES (%20 for space)
   await userServices
     .findUserByName(req.params.name)
     .then((users) => {
       if (!users || users.length === 0)
-        res.status(404).send('No users found with that name');
-      else res.json(users);
+        res.status(404).json({ success: false, message: 'No users found with that name' });
+      else res.status(200).json({ success: true, data: users });
     })
     .catch((error) => {
-      res.status(500).send(`Error in the server: ${error}`);
+      res.status(500).json({ success: false, message: `Error in the server: ${error}` });
     });
 });
 
@@ -92,11 +100,11 @@ router.get('/search/email/:email', async (req, res) => {
     .findUserByEmail(req.params.email)
     .then((users) => {
       if (!users || users.length === 0)
-        res.status(404).send('No users found with that email');
-      else res.json(users);
+        res.status(404).json({ success: false, message: 'No users found with that email' });
+      else res.status(200).json({ success: true, data: users });
     })
     .catch((error) => {
-      res.status(500).send(`Error in the server: ${error}`);
+      res.status(500).json({ success: false, message: `Error in the server: ${error}` });
     });
 });
 
@@ -106,11 +114,11 @@ router.get('/search/age/:age', async (req, res) => {
     .findUserByAge(req.params.age)
     .then((users) => {
       if (!users || users.length === 0)
-        res.status(404).send('No users found with that age');
-      else res.json(users);
+        res.status(404).json({ success: false, message: 'No users found with that age' });
+      else res.status(200).json({ success: true, data: users });
     })
     .catch((error) => {
-      res.status(500).send(`Error in the server: ${error}`);
+      res.status(500).json({ success: false, message: `Error in the server: ${error}` });
     });
 });
 
@@ -120,26 +128,25 @@ router.get('/search/gender/:gender', async (req, res) => {
     .findUserByGender(req.params.gender)
     .then((users) => {
       if (!users || users.length === 0)
-        res.status(404).send('No users found with that gender');
-      else res.json(users);
+        res.status(404).json({ success: false, message: 'No users found with that gender' });
+      else res.status(200).json({ success: true, data: users });
     })
     .catch((error) => {
-      res.status(500).send(`Error in the server: ${error}`);
+      res.status(500).json({ success: false, message: `Error in the server: ${error}` });
     });
 });
 
 // Search users by interests
 router.get('/search/interests/:interests', async (req, res) => {
-  // localhost:3000/users/search/interests/reading,coding (this is reading or coding, not and)
   await userServices
     .findUserByInterests(req.params.interests.split(',').map((i) => i.trim()))
     .then((users) => {
       if (!users || users.length === 0)
-        res.status(404).send('No users found with that interest(s)');
-      else res.json(users);
+        res.status(404).json({ success: false, message: 'No users found with that interest(s)' });
+      else res.status(200).json({ success: true, data: users });
     })
     .catch((error) => {
-      res.status(500).send(`Error in the server: ${error}`);
+      res.status(500).json({ success: false, message: `Error in the server: ${error}` });
     });
 });
 
@@ -149,29 +156,26 @@ router.get('/search/radius/:radius', async (req, res) => {
     .findUserByRadius(req.params.radius)
     .then((users) => {
       if (!users || users.length === 0)
-        res.status(404).send('No users found with that radius');
-      else res.json(users);
+        res.status(404).json({ success: false, message: 'No users found with that radius' });
+      else res.status(200).json({ success: true, data: users });
     })
     .catch((error) => {
-      res.status(500).send(`Error in the server: ${error}`);
+      res.status(500).json({ success: false, message: `Error in the server: ${error}` });
     });
 });
 
 // Search users by location
 router.get('/search/location/:location', async (req, res) => {
-  // localhost:3000/users/search/interests/latitude,longitude,radius
-  const userLocation = req.params.location
-    .split(',')
-    .map((i) => parseFloat(i.trim()));
+  const userLocation = req.params.location.split(',').map((i) => parseFloat(i.trim()));
   await userServices
     .findUserByLocation(userLocation[0], userLocation[1], userLocation[2])
     .then((users) => {
       if (!users || users.length === 0)
-        res.status(404).send('No users found with that location');
-      else res.json(users);
+        res.status(404).json({ success: false, message: 'No users found with that location' });
+      else res.status(200).json({ success: true, data: users });
     })
     .catch((error) => {
-      res.status(500).send(`Error in the server: ${error}`);
+      res.status(500).json({ success: false, message: `Error in the server: ${error}` });
     });
 });
 
