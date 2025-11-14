@@ -45,14 +45,14 @@ function findEventByDescription(keyword) {
     .populate('attendees host blockedUsers');
 }
 
-// Find event(s) by mapComponent 
+// Find event(s) by mapComponent
 function findEventByMapComponent(mapComponent) {
   return eventModel
     .find({ mapComponent })
     .populate('attendees host blockedUsers');
 }
 
-// Find events that include a specific attendee 
+// Find events that include a specific attendee
 function findEventByAttendee(userId) {
   return eventModel
     .find({ attendees: userId })
@@ -105,12 +105,12 @@ function findEventsBetween(startTime, endTime) {
   return eventModel
     .find({
       'time.start': { $gte: startTime },
-      'time.end': { $lte: endTime }
+      'time.end': { $lte: endTime },
     })
     .populate('attendees host blockedUsers');
 }
 
-// Find events where a user is blocked 
+// Find events where a user is blocked
 function findEventsBlockingUser(userId) {
   return eventModel
     .find({ blockedUsers: userId })

@@ -15,7 +15,9 @@ router.get('/all', async (req, res) => {
       res.status(200).json({ success: true, data: logins });
     })
     .catch((error) => {
-      res.status(500).json({ success: false, message: `Error in the server: ${error}` });
+      res
+        .status(500)
+        .json({ success: false, message: `Error in the server: ${error}` });
     });
 });
 
@@ -31,7 +33,9 @@ router.get('/:id', async (req, res) => {
       }
     })
     .catch((error) => {
-      res.status(500).json({ success: false, message: `Error in the server: ${error}` });
+      res
+        .status(500)
+        .json({ success: false, message: `Error in the server: ${error}` });
     });
 });
 
@@ -39,12 +43,16 @@ router.get('/:id', async (req, res) => {
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res.status(400).json({ success: false, message: 'Email and password required' });
+    return res
+      .status(400)
+      .json({ success: false, message: 'Email and password required' });
   }
   try {
     const login = await loginServices.findLoginByEmail(email);
     if (!login) {
-      return res.status(404).json({ success: false, message: 'User not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: 'User not found' });
     }
     if (login.password === password) {
       res.status(200).json({ success: true, message: 'Login successful' });
@@ -52,7 +60,9 @@ router.post('/login', async (req, res) => {
       res.status(401).json({ success: false, message: 'Invalid password' });
     }
   } catch (error) {
-    res.status(500).json({ success: false, message: `Error in the server: ${error}` });
+    res
+      .status(500)
+      .json({ success: false, message: `Error in the server: ${error}` });
   }
 });
 
@@ -64,7 +74,9 @@ router.post('/', async (req, res) => {
       res.status(201).json({ success: true, data: login });
     })
     .catch((error) => {
-      res.status(500).json({ success: false, message: `Error in the server: ${error}` });
+      res
+        .status(500)
+        .json({ success: false, message: `Error in the server: ${error}` });
     });
 });
 
@@ -76,11 +88,15 @@ router.delete('/:id', async (req, res) => {
       if (!deletedLogin) {
         res.status(404).json({ success: false, message: 'Login not found' });
       } else {
-        res.status(200).json({ success: true, message: 'Login deleted successfully' });
+        res
+          .status(200)
+          .json({ success: true, message: 'Login deleted successfully' });
       }
     })
     .catch((error) => {
-      res.status(500).json({ success: false, message: `Error in the server: ${error}` });
+      res
+        .status(500)
+        .json({ success: false, message: `Error in the server: ${error}` });
     });
 });
 
@@ -96,7 +112,9 @@ router.put('/:id', async (req, res) => {
       }
     })
     .catch((error) => {
-      res.status(500).json({ success: false, message: `Error in the server: ${error}` });
+      res
+        .status(500)
+        .json({ success: false, message: `Error in the server: ${error}` });
     });
 });
 
@@ -106,13 +124,17 @@ router.get('/search/email/:email', async (req, res) => {
     .findLoginByEmail(req.params.email)
     .then((users) => {
       if (!users || users.length === 0) {
-        res.status(404).json({ success: false, message: 'No logins found with that email' });
+        res
+          .status(404)
+          .json({ success: false, message: 'No logins found with that email' });
       } else {
         res.status(200).json({ success: true, data: users });
       }
     })
     .catch((error) => {
-      res.status(500).json({ success: false, message: `Error in the server: ${error}` });
+      res
+        .status(500)
+        .json({ success: false, message: `Error in the server: ${error}` });
     });
 });
 
@@ -122,15 +144,21 @@ router.get('/search/password/:password', async (req, res) => {
     .findLoginByPassword(req.params.password)
     .then((users) => {
       if (!users || users.length === 0) {
-        res.status(404).json({ success: false, message: 'No logins found with that password' });
+        res
+          .status(404)
+          .json({
+            success: false,
+            message: 'No logins found with that password',
+          });
       } else {
         res.status(200).json({ success: true, data: users });
       }
     })
     .catch((error) => {
-      res.status(500).json({ success: false, message: `Error in the server: ${error}` });
+      res
+        .status(500)
+        .json({ success: false, message: `Error in the server: ${error}` });
     });
 });
-
 
 export default router;

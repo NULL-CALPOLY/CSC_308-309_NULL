@@ -32,7 +32,7 @@ function findUserById(id) {
 }
 
 function findUserByName(name) {
-  return userModel.find.find({ name: { $regex: name, $options: 'i' } })
+  return userModel.find.find({ name: { $regex: name, $options: 'i' } });
 }
 
 function findUserByEmail(email) {

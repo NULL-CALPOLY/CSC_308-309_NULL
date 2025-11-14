@@ -1,10 +1,10 @@
 // src/App.jsx
-import React from "react";
-import { Routes, Route } from "react-router-dom";
-import "./App.css";
-import Navbar from "./Components/Navbar.jsx";
-import HomePage from "./Pages/HomePage.jsx";
-import SignIn from "./Pages/SignIn.jsx";
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import './App.css';
+import Navbar from './Components/Navbar.jsx';
+import HomePage from './Pages/HomePage.jsx';
+import SignIn from './Pages/SignIn.jsx';
 
 const AboutPage = () => <div style={{ padding: 24 }}>About</div>;
 const SearchPage = () => <div style={{ padding: 24 }}>Search</div>;

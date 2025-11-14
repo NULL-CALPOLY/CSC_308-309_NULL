@@ -1,10 +1,6 @@
 // src/Components/Navbar.jsx
-import React from "react";
-
+import React from 'react';
 
 export default function RandomComponent() {
-
-  return (
-    <div> hello </div>
-  );
+  return <div> hello </div>;
 }

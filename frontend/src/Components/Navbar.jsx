@@ -1,11 +1,11 @@
 // src/Components/Navbar.jsx
-import React from "react";
-import { NavLink } from "react-router-dom";
-import "./Navbar.css";
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import './Navbar.css';
 
 export default function Navbar() {
   const linkClass = ({ isActive }) =>
-    isActive ? "navbar__link active" : "navbar__link";
+    isActive ? 'navbar__link active' : 'navbar__link';
 
   return (
     <nav className="navbar">
