@@ -40,29 +40,21 @@ router.get('/:id', async (req, res) => {
 });
 
 // Confirm Login (compare email + password)
-router.post('/login', async (req, res) => {
+router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) {
-    return res
-      .status(400)
-      .json({ success: false, message: 'Email and password required' });
-  }
+  
+  if (!email || !password)
+    return res.status(400).json({ success: false, message: "Email and password required" });
+
   try {
-    const login = await loginServices.findLoginByEmail(email);
-    if (!login) {
-      return res
-        .status(404)
-        .json({ success: false, message: 'User not found' });
-    }
-    if (login.password === password) {
-      res.status(200).json({ success: true, message: 'Login successful' });
-    } else {
-      res.status(401).json({ success: false, message: 'Invalid password' });
-    }
-  } catch (error) {
-    res
-      .status(500)
-      .json({ success: false, message: `Error in the server: ${error}` });
+    const user = await loginServices.authenticate(email, password);
+
+    if (!user)
+      return res.status(401).json({ success: false, message: "Invalid email or password" });
+
+    res.status(200).json({ success: true, message: "Login successful", userId: user._id });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
   }
 });
 
@@ -127,29 +119,6 @@ router.get('/search/email/:email', async (req, res) => {
         res
           .status(404)
           .json({ success: false, message: 'No logins found with that email' });
-      } else {
-        res.status(200).json({ success: true, data: users });
-      }
-    })
-    .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
-    });
-});
-
-// Search login by password
-router.get('/search/password/:password', async (req, res) => {
-  await loginServices
-    .findLoginByPassword(req.params.password)
-    .then((users) => {
-      if (!users || users.length === 0) {
-        res
-          .status(404)
-          .json({
-            success: false,
-            message: 'No logins found with that password',
-          });
       } else {
         res.status(200).json({ success: true, data: users });
       }

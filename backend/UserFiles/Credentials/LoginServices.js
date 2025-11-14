@@ -16,12 +16,15 @@ function deleteLogin(id) {
   return loginModel.findByIdAndDelete(id);
 }
 
-// Update login credentials
-function updateLogin(id, loginData) {
-  return loginModel.findByIdAndUpdate(id, loginData, {
-    new: true,
-    runValidators: true,
-  });
+// Update login, will auto rehash if password is included
+async function updateLogin(id, loginData) {
+  const user = await loginModel.findById(id);
+  if (!user) return null;
+
+  if (loginData.email) user.email = loginData.email;
+  if (loginData.password) user.password = loginData.password;
+
+  return user.save();
 }
 
 // Find login by email
@@ -29,19 +32,19 @@ function findLoginByEmail(email) {
   return loginModel.findOne({ email: email });
 }
 
-// Find login by password
-function findLoginByPassword(password) {
-  return loginModel.find({ password: password });
-}
 
 // Find login by ID
 function findLoginById(id) {
   return loginModel.findById(id);
 }
 
-// Find login by email and password
-function findLoginByEmailAndPassword(email, password) {
-  return loginModel.findOne({ email: email, password: password });
+// Login (email + password compare)
+async function authenticate(email, password) {
+  const user = await loginModel.findOne({ email });
+  if (!user) return null;
+
+  const match = await user.comparePassword(password);
+  return match ? user : null;
 }
 
 export default {
@@ -50,7 +53,6 @@ export default {
   deleteLogin,
   updateLogin,
   findLoginByEmail,
-  findLoginByPassword,
   findLoginById,
-  findLoginByEmailAndPassword,
+  authenticate,
 };
