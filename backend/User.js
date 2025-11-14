@@ -17,7 +17,7 @@ const UserSchema = new mongoose.Schema(
                required: true,
                trim: true
         },
-        age : {
+        dateOfBirth : {
                type: Number,
                required: true,
                trim: true
@@ -32,19 +32,10 @@ const UserSchema = new mongoose.Schema(
             type: [{ type: String }],
             required : false,
         },
-        radius : {
-             type: Number,
+        city : {
+             type: String,
              required : true,
-        },
-        location : {
-              latitude: {
-                  type: Number,
-                  required: true
-              },
-              longitude: {
-                  type: Number,
-                  required: true
-              },
+             trim: true
         },
     },
     { collection : "users_list" }

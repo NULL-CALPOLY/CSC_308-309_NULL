@@ -43,8 +43,8 @@ function findUserByPhoneNumber(phoneNumber) {
   return userModel.find({ phoneNumber: phoneNumber });
 }
 
-function findUserByAge(age) {
-  return userModel.find({ age: age });
+function findUserByDateOfBirth(dateOfBirth) {
+  return userModel.find({ dateOfBirth: dateOfBirth });
 }
 
 function findUserByGender(gender) {
@@ -55,18 +55,8 @@ function findUserByInterests(interests) {
   return userModel.find({ interests: { $in: interests } });
 }
 
-function findUserByRadius(radius) {
-  return userModel.find({ radius: radius });
-}
-
-function findUserByLocation(latitude, longitude, radiusInMiles) {
-  return userModel.find({
-    location: {
-      $geoWithin: {
-        $centerSphere: [[longitude, latitude], radiusInMiles / 3959],
-      },
-    },
-  });
+function findUserByHomeTown(homeTown) {
+  return userModel.find({ homeTown: homeTown });
 }
 
 export default {
@@ -75,11 +65,10 @@ export default {
   findUserByName,
   findUserByEmail,
   findUserByPhoneNumber,
-  findUserByAge,
+  findUserByDateOfBirth,
   findUserByGender,
   findUserByInterests,
-  findUserByRadius,
-  findUserByLocation,
+  findUserByHomeTown,
   addUser,
   deleteUser,
   updateUser,

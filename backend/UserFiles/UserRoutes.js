@@ -100,13 +100,13 @@ router.get('/search/email/:email', async (req, res) => {
     });
 });
 
-// Search users by age
-router.get('/search/age/:age', async (req, res) => {
+// Search users by date of birth
+router.get('/search/dateOfBirth/:dateOfBirth', async (req, res) => {
   await userServices
-    .findUserByAge(req.params.age)
+    .findUserByDateOfBirth(req.params.dateOfBirth)
     .then((users) => {
       if (!users || users.length === 0)
-        res.status(404).send('No users found with that age');
+        res.status(404).send('No users found with that date of birth');
       else res.json(users);
     })
     .catch((error) => {
@@ -128,6 +128,21 @@ router.get('/search/gender/:gender', async (req, res) => {
     });
 });
 
+//Search users by home town
+router.get('/search/homeTown/:homeTown', async (req, res) => {
+  await userServices
+    .findUserByHomeTown(req.params.homeTown)
+    .then((users) => {
+      if (!users || users.length === 0)
+        res.status(404).send('No users found with that home town');
+      else res.json(users);
+    })
+    .catch((error) => {
+      res.status(500).send(`Error in the server: ${error}`);
+    });
+});
+
+
 // Search users by interests
 router.get('/search/interests/:interests', async (req, res) => {
   // localhost:3000/users/search/interests/reading,coding (this is reading or coding, not and)
@@ -143,36 +158,5 @@ router.get('/search/interests/:interests', async (req, res) => {
     });
 });
 
-// Search users by radius
-router.get('/search/radius/:radius', async (req, res) => {
-  await userServices
-    .findUserByRadius(req.params.radius)
-    .then((users) => {
-      if (!users || users.length === 0)
-        res.status(404).send('No users found with that radius');
-      else res.json(users);
-    })
-    .catch((error) => {
-      res.status(500).send(`Error in the server: ${error}`);
-    });
-});
-
-// Search users by location
-router.get('/search/location/:location', async (req, res) => {
-  // localhost:3000/users/search/interests/latitude,longitude,radius
-  const userLocation = req.params.location
-    .split(',')
-    .map((i) => parseFloat(i.trim()));
-  await userServices
-    .findUserByLocation(userLocation[0], userLocation[1], userLocation[2])
-    .then((users) => {
-      if (!users || users.length === 0)
-        res.status(404).send('No users found with that location');
-      else res.json(users);
-    })
-    .catch((error) => {
-      res.status(500).send(`Error in the server: ${error}`);
-    });
-});
 
 export default router;
