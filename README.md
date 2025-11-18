@@ -27,12 +27,21 @@ csc 308/309 project developed by Brian, Vishnu, Ryan, and Aaron
 # Database Tutorial
 
 1. npm start to run this thing (or node backend/backend.js)
+  - or whatever it takes to start the program 
 
+For now, there are 3 main databases:
+1. users
+2. logins
+3. events
+   
 - /users for users
 - /logins for credentials
-- /events for events (ALL USERIDS IN EVENTS MUST BE VALID IN USERS)
-- /(users or logins)/:id for id search
-- /(users or logins)/search/(catagory)/(whatever) for search, CASE SENSITIVE
+- /events for events
+  - ALL USERIDS IN EVENTS MUST BE VALID IN USERS
+
+- /(database)/:id for id search
+- /(database)/search/(catagory)/(whatever) for search
+  - CASE SENSITIVE
   - for multiple inputs in (whatever), seperate by comma
     - Ex. /users/search/interests/balling,dunking
   - for spaces use %20
