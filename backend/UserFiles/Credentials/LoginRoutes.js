@@ -56,7 +56,6 @@ router.post('/login', async (req, res) => {
   }
 });
 
-
 // Post new login credentials
 router.post('/', async (req, res) => {
   await loginServices

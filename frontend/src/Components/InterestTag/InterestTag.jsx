@@ -1,10 +1,8 @@
-import React from "react";
-import "./InterestTag.css";
-
+import React from 'react';
+import './InterestTag.css';
 
 export default function TagComponent(props) {
-
-    const className = `Tag-Container ${props.Interest.trim().toLowerCase()}`;
+  const className = `Tag-Container ${props.Interest.trim().toLowerCase()}`;
 
   return (
     <div className={className}>

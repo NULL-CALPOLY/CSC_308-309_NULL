@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import "./EventComponent.css";
-import TagComponent from "./InterestTag.jsx";
+import React, { useState } from 'react';
+import './EventComponent.css';
+import TagComponent from '../InterestTag/InterestTag.jsx';
 
-export default function RandomComponent(props) {
+export default function EventComponent(props) {
   const [expanded, setExpanded] = useState(false);
   const hasExtra = Boolean(props.description || props.attendees || props.host);
   const tag = props.interest;
@@ -35,14 +35,14 @@ export default function RandomComponent(props) {
       {expanded && (
         <div className="Event-Extra">
           {props.description && (
-            <div className="Event-Description">Description : {props.description}</div>
+            <div className="Event-Description">
+              Description : {props.description}
+            </div>
           )}
           {props.attendees && (
             <div className="Event-Attendees">Attendees : {props.attendees}</div>
           )}
-          {props.host && (
-            <div className="Event-Host">Host : {props.host}</div>
-          )}
+          {props.host && <div className="Event-Host">Host : {props.host}</div>}
 
           {/* When expanded, move Tag to bottom */}
           <div className="Event-Footer Expanded-Footer">

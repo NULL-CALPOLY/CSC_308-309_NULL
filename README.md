@@ -40,5 +40,3 @@ csc 308/309 project developed by Brian, Vishnu, Ryan, and Aaron
 1. If there's bugs, fix if you can. Otherwise just dm Brian.
 2. Feel free to ask Brian for more information, although information about code is commented.
 3. Please feel free to add additional features.
-
-

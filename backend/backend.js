@@ -40,8 +40,8 @@ mongoose
 
 // Start the server
 
-app.get("/", (req, res) => {
-  res.send("see github for instructions to use db")
-})
+app.get('/', (req, res) => {
+  res.send('see github for instructions to use db');
+});
 
 export default mongoose;
