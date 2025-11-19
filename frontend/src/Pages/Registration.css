@@ -15,9 +15,8 @@
 /* Typical registration layout (safe defaults; tweak as you like) */
 .registration-container {
   width: 100%;
-  max-width: 420px;
+  max-width: 800px;
 }
-
 .registration-form {
   display: grid;
   gap: 0.75rem;
@@ -52,4 +51,21 @@
   outline: none;
   border-color: #646cff;
   box-shadow: 0 0 0 3px rgba(100,108,255,0.2);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* two equal columns */
+  gap: 1.5rem 2rem; /* row gap, column gap */
+  margin-top: 1rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.registration-form button {
+  margin-top: 2rem;
+  width: 100%;
 }

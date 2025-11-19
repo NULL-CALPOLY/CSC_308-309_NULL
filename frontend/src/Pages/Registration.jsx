@@ -7,8 +7,8 @@ export default function Registration() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const[dateOfBirth, setDateOfBirth] = useState("");
   const[gender, setGender] = useState("");
-  const[interests, setInterests] = useState("");
-  const[homeTown, setHomeTown] = useState("");
+  const[interests, setInterests] = useState([]);
+  const[city, setCity] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,20 +22,20 @@ export default function Registration() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:3000/logins/login", {
+      const res = await fetch("http://localhost:3000/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ name, phoneNumber, gender, dateOfBirth, city, email, interests}),
       });
 
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        throw new Error(err.message || "Login failed");
+        throw new Error(err.message || "Registration failed");
       }
 
       const data = await res.json();
       console.log(data);
-      navigate('/');
+      navigate('/register');
 
     } catch (err) {
       setErrorMsg(err.message);
@@ -45,106 +45,124 @@ export default function Registration() {
   };
 
   return (
-  <div className = "container">
-    <div className="registration-container">
-      <form onSubmit={handleSubmit} className="registration-form">
-        <h2>Register</h2>
+ <div className="container">
+  <div className="registration-container">
+    <form onSubmit={handleSubmit} className="registration-form">
+      <h2>Register</h2>
 
-        <label htmlFor="name">Name:</label>
-        <input
-          type="name"
-          id="name"
-          autoComplete="username"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Enter your name"
-          required
-        />
+      <div className="form-grid"> 
+        <div className="form-field">
+          <label htmlFor="name">Name:</label>
+          <input
+            type="name"
+            id="name"
+            autoComplete="username"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter your name"
+            required
+          />
+        </div>
 
-        <label htmlFor="phoneNumber">Phone Number:</label>
-        <input
-          type="phoneNumber"
-          id="phoneNumber"
-          autoComplete="phoneNumber"
-          value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
-          placeholder="Enter your phone number(0000000000)"
-          required
-        />
+        <div className="form-field">
+          <label htmlFor="phoneNumber">Phone Number:</label>
+          <input
+            type="phoneNumber"
+            id="phoneNumber"
+            autoComplete="phoneNumber"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            placeholder="Enter your phone number"
+            required
+          />
+        </div>
 
-        <label htmlFor="dateOfBirth">Date Of Birth:</label>
-        <input 
-          type="dateOfBirth"
-          id="dateOfBirth"
-          autoComplete="dateOfBirth"
-          value={dateOfBirth}
-          onChange={(e) => setDateOfBirth(e.target.value)}
-          placeholder="Enter your date of birth(MMDDYYYY)"
-          required
-        />
+        <div className="form-field">
+          <label htmlFor="dateOfBirth">Date Of Birth:</label>
+          <input 
+            type="date"
+            id="dateOfBirth"
+            autoComplete="bday"
+            value={dateOfBirth}
+            onChange={(e) => setDateOfBirth(e.target.value)}
+            required
+          />
+        </div>
 
-        <label htmlFor="gender">Gender:</label>
-        <input
-          type="gender"
-          id="gender"
-          autoComplete="gender"
-          value={gender}
-          onChange={(e) => setGender(e.target.value)}
-          placeholder="Enter your gender"
-          required
-        />
-        <label htmlFor="homeTown">Home Town:</label>
-        <input
-          type="homeTown"
-          id="homeTown"
-          autoComplete="homeTown"
-          value={homeTown}
-          onChange={(e) => setHomeTown(e.target.value)}
-          placeholder="Enter your home town"
-          required
-        />
-        <label htmlFor="interests">Interests:</label>
-        <input
-          type="interest"
-          id="interest"
-          autoComplete="interests"
-          value={interests}
-          onChange={(e) => setInterests(e.target.value)}
-          placeholder="Enter your Interests"
-          required
-        />/*Set a column in css to list interests figure out how to scroll for identifiable interests */
+        <div className="form-field">
+          <label htmlFor="gender">Gender:</label>
+          <input
+            type="text"
+            id="gender"
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+            placeholder="Enter your gender"
+            required
+          />
+        </div>
 
-        <label htmlFor="email">Email:</label>
-        <input
-          type="email"
-          id="email"
-          autoComplete="username"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter your email"
-          required
-        />
+        <div className="form-field">
+          <label htmlFor="city">City:</label>
+          <input
+            type="text"
+            id="city"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            placeholder="Enter your city"
+            required
+          />
+        </div>
 
-        <label htmlFor="password">Password:</label>
-        <input
-          type="password"
-          id="password"
-          autoComplete="current-password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Enter your password"
-          required
-        />
+        <div className="form-field">
+          <label htmlFor="interests">Interests:</label>
+          <input
+            type="text"
+            id="interests"
+            value={interests.join(", ")}
+            onChange={(e) => setInterests(
+            e.target.value.split(",").map((i) => i.trim())
+            )}
+            placeholder="Enter your interests"
+            required
+          />
+        </div>
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Registring..." : "Register"}
-        </button>
+        <div className="form-field">
+          <label htmlFor="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
+            required
+          />
+        </div>
 
-        {errorMsg && (
-          <p style={{ marginTop: "0.75rem", color: "#ff6b6b" }}>{errorMsg}</p>
-        )}
-      </form>
-    </div>
-   </div>
-  );
+        <div className="form-field">
+          <label htmlFor="password">Password:</label>
+          <input
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+      </div>
+
+      <button type="submit" disabled={loading}>
+        {loading ? "Registering..." : "Register"}
+      </button>
+
+      {errorMsg && (
+        <p style={{ marginTop: "0.75rem", color: "#ff6b6b" }}>{errorMsg}</p>
+      )}
+    </form>
+  </div>
+</div>
+);
 }

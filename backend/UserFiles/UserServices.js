@@ -55,8 +55,8 @@ function findUserByInterests(interests) {
   return userModel.find({ interests: { $in: interests } });
 }
 
-function findUserByHomeTown(homeTown) {
-  return userModel.find({ homeTown: homeTown });
+function findUserByCity(city) {
+  return userModel.find({ city: city });
 }
 
 export default {
@@ -68,7 +68,7 @@ export default {
   findUserByDateOfBirth,
   findUserByGender,
   findUserByInterests,
-  findUserByHomeTown,
+  findUserByCity,
   addUser,
   deleteUser,
   updateUser,

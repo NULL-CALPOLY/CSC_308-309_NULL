@@ -129,9 +129,9 @@ router.get('/search/gender/:gender', async (req, res) => {
 });
 
 //Search users by home town
-router.get('/search/homeTown/:homeTown', async (req, res) => {
+router.get('/search/city/:city', async (req, res) => {
   await userServices
-    .findUserByHomeTown(req.params.homeTown)
+    .findUserByCity(req.params.city)
     .then((users) => {
       if (!users || users.length === 0)
         res.status(404).send('No users found with that home town');
