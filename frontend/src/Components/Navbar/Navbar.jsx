@@ -35,12 +35,6 @@ export default function Navbar() {
           className="navbar__profile-icon"
         />
       </div>
-
-      <div className="navbar__hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
     </nav>
   );
 }

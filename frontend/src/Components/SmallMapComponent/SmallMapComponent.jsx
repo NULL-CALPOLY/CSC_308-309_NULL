@@ -19,7 +19,7 @@ L.Icon.Default.mergeOptions({
   iconRetinaUrl: markerIcon,
 });
 
-export default function HomePage() {
+export default function SmallMapComponent() {
   const [userPosition, setUserPosition] = useState(null);
 
   return (
@@ -36,9 +36,11 @@ export default function HomePage() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        <Marker position={[51.505, -0.09]}>
-          <Popup>stuff</Popup>
-        </Marker>
+        {!userPosition && (
+          <Marker position={[35.3, -120.66]}>
+            <Popup>stuff</Popup>
+          </Marker>
+        )}
 
         {userPosition && (
           <Marker position={userPosition}>
