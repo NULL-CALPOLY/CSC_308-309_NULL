@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import SmallMapComponent from '../Components/SmallMapComponent.jsx'
 import "./Registration.css";
 
 export default function Registration() {
@@ -49,7 +50,6 @@ export default function Registration() {
   <div className="registration-container">
     <form onSubmit={handleSubmit} className="registration-form">
       <h2>Register</h2>
-
       <div className="form-grid"> 
         <div className="form-field">
           <label htmlFor="name">Name:</label>
@@ -154,6 +154,7 @@ export default function Registration() {
         </div>
       </div>
 
+      
       <button type="submit" disabled={loading}>
         {loading ? "Registering..." : "Register"}
       </button>
@@ -162,6 +163,9 @@ export default function Registration() {
         <p style={{ marginTop: "0.75rem", color: "#ff6b6b" }}>{errorMsg}</p>
       )}
     </form>
+    <div className="map-column">
+        <SmallMapComponent />
+    </div>
   </div>
 </div>
 );
