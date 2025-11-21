@@ -158,5 +158,28 @@ router.get('/search/interests/:interests', async (req, res) => {
     });
 });
 
+router.get('/search/location/:location', async (req, res) => {
+  const userLocation = req.params.location
+    .split(',')
+    .map((i) => parseFloat(i.trim()));
+  await userServices
+    .findUserByLocation(userLocation[0], userLocation[1], userLocation[2])
+    .then((users) => {
+      if (!users || users.length === 0)
+        res
+          .status(404)
+          .json({
+            success: false,
+            message: 'No users found with that location',
+          });
+      else res.status(200).json({ success: true, data: users });
+    })
+    .catch((error) => {
+      res
+        .status(500)
+        .json({ success: false, message: `Error in the server: ${error}` });
+    });
+});
+
 
 export default router;

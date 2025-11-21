@@ -36,6 +36,16 @@ const UserSchema = new mongoose.Schema(
              required : true,
              trim: true
         },
+        location: {
+            latitude: {
+                type: Number,
+                required: true,
+            },
+            longitude: {
+                type: Number,
+                required: true,
+            },
+        }
     },
     { collection : "users_list" }
 );

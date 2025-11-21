@@ -58,6 +58,15 @@ function findUserByInterests(interests) {
 function findUserByCity(city) {
   return userModel.find({ city: city });
 }
+function findUserByLocation(latitude, longitude, radiusInMiles) {
+  return userModel.find({
+    location: {
+      $geoWithin: {
+        $centerSphere: [[longitude, latitude], radiusInMiles / 3959],
+      },
+    },
+  });
+}
 
 export default {
   getUsers,
@@ -69,6 +78,7 @@ export default {
   findUserByGender,
   findUserByInterests,
   findUserByCity,
+  findUserByLocation,
   addUser,
   deleteUser,
   updateUser,
