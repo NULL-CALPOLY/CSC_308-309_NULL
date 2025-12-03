@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SmallMapComponent from '../Components/SmallMapComponent.jsx'
+import SmallMapComponent from '../Components/RegistrationMapComponent.jsx'
 import "./Registration.css";
 
 export default function Registration() {
@@ -11,22 +11,31 @@ export default function Registration() {
   const[interests, setInterests] = useState([]);
   const[city, setCity] = useState("");
   const [email, setEmail] = useState("");
+  const [location, setLocation] = useState(null); // silently set by map
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
 
+ 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg("");
     setLoading(true);
 
+
+    if (!location || !location.latitude || !location.longitude) {
+        setErrorMsg("Please select a location on the map.");
+        setLoading(false);
+        return;
+    }
+
     try {
       const res = await fetch("http://localhost:3000/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phoneNumber, gender, dateOfBirth, city, email, interests}),
+        body: JSON.stringify({ name, phoneNumber, gender, dateOfBirth, city, email, location, interests}),
       });
 
       if (!res.ok) {
@@ -36,7 +45,22 @@ export default function Registration() {
 
       const data = await res.json();
       console.log(data);
-      navigate('/register');
+      
+
+
+      const loginRes = await fetch("http://localhost:3000/logins", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+      });
+
+      if (!loginRes.ok) {
+          const err = await loginRes.json().catch(() => ({}));
+          console.warn("Login registration failed:", err.message || "Unknown error");
+      } else {
+          const loginData = await loginRes.json();
+          console.log("Login credentials saved:", loginData);
+      }
 
     } catch (err) {
       setErrorMsg(err.message);
@@ -44,6 +68,7 @@ export default function Registration() {
       setLoading(false);
     }
   };
+  navigate('/register');
 
   return (
  <div className="container">
@@ -154,7 +179,6 @@ export default function Registration() {
         </div>
       </div>
 
-      
       <button type="submit" disabled={loading}>
         {loading ? "Registering..." : "Register"}
       </button>
@@ -164,7 +188,12 @@ export default function Registration() {
       )}
     </form>
     <div className="map-column">
-        <SmallMapComponent />
+      <SmallMapComponent
+          onLocationSelect={(lat, lng) =>
+        setLocation({ latitude: lat, longitude: lng })
+              }
+        />
+
     </div>
   </div>
 </div>

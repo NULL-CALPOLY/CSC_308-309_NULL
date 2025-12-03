@@ -1,17 +1,16 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   MapContainer,
   TileLayer,
   Marker,
   Popup,
-  useMap,
-  useMapEvents,
-} from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
-import markerIcon from "../assets/pin.svg";
-import locateIcon from "../assets/location.svg";
-import "./SmallMapComponent.css";
+  useMap
+} from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import markerIcon from '../assets/pin.svg';
+import locateIcon from '../assets/location.svg';
+import './SmallMapComponent.css';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -19,7 +18,7 @@ L.Icon.Default.mergeOptions({
   iconRetinaUrl: markerIcon,
 });
 
-export default function HomePage() {
+export default function SmallMapComponent() {
   const [userPosition, setUserPosition] = useState(null);
 
   return (
@@ -36,9 +35,11 @@ export default function HomePage() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        <Marker position={[51.505, -0.09]}>
-          <Popup>stuff</Popup>
-        </Marker>
+        {!userPosition && (
+          <Marker position={[35.3, -120.66]}>
+            <Popup>stuff</Popup>
+          </Marker>
+        )}
 
         {userPosition && (
           <Marker position={userPosition}>
@@ -62,7 +63,7 @@ function LocateButton({ icon, setUserPosition }) {
 
   const handleLocate = () => {
     if (!navigator.geolocation) {
-      alert("Geolocation not supported");
+      alert('Geolocation not supported');
       return;
     }
 
@@ -71,9 +72,9 @@ function LocateButton({ icon, setUserPosition }) {
         const latlng = [pos.coords.latitude, pos.coords.longitude];
         setUserPosition(latlng); // ✅ update parent state
         map.flyTo(latlng, 15);
-        console.log("📍 Current location:", latlng); // ✅ log to console
+        console.log('📍 Current location:', latlng); // ✅ log to console
       },
-      () => alert("Unable to retrieve your location.")
+      () => alert('Unable to retrieve your location.')
     );
   };
 
