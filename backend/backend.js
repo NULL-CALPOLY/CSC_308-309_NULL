@@ -5,6 +5,7 @@ import { config } from 'dotenv';
 import express from 'express';
 import userRouter from './UserFiles/UserRoutes.js';
 import loginRouter from './UserFiles/Credentials/LoginRoutes.js';
+import eventRouter from './EventFiles/EventRoutes.js';
 import cors from 'cors';
 
 // Intialize Express app
@@ -14,6 +15,7 @@ const port = /*process.env.PORT*/ 3000; // if want your own port, just uncomment
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use('/events', eventRouter);
 app.use('/users', userRouter);
 app.use('/logins', loginRouter);
 
@@ -40,8 +42,8 @@ mongoose
 
 // Start the server
 
-app.get("/", (req, res) => {
-  res.send("see github for instructions to use db")
-})
+app.get('/', (req, res) => {
+  res.send('see github for instructions to use db');
+});
 
 export default mongoose;

@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import UserSchema from 'User.js';
 
 const EventSchema = new mongoose.Schema(
   {
@@ -18,15 +17,15 @@ const EventSchema = new mongoose.Schema(
       required: true,
     },
     attendees: {
-      type: UserSchema,
+      type: [mongoose.Schema.Types.ObjectId], // ALL USERIDS MUST BE VALID
       required: false,
     },
-    Host: {
-      type: UserSchema,
+    host: {
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
     },
     blockedUsers: {
-      type: [UserSchema],
+      type: [mongoose.Schema.Types.ObjectId],
       required: false,
     },
     comment: {
@@ -41,6 +40,24 @@ const EventSchema = new mongoose.Schema(
       longitude: {
         type: Number,
         required: true,
+      },
+    },
+    interests: {
+      type: [String],
+      required: true,
+    },
+    time: {
+      start: {
+        type: Number, // e.g., 0930 or 1545
+        required: true,
+        min: 0,
+        max: 2359,
+      },
+      end: {
+        type: Number,
+        required: true,
+        min: 0,
+        max: 2359,
       },
     },
   },

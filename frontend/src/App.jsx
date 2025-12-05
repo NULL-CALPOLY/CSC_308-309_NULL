@@ -11,8 +11,10 @@ const SearchPage = () => <div style={{ padding: 24 }}>Search</div>;
 
 export default function App() {
   return (
-    <>
-      <Navbar />
+
+    <div className="app">
+      <Navbar className="navbar" />
+      <main className="main">
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
@@ -21,6 +23,7 @@ export default function App() {
         <Route path="/register" element={<Registration />} />
         <Route path="*" element={<div style={{ padding: 24 }}>404</div>} />
       </Routes>
-    </>
+    </main>
+    </div>
   );
 }
