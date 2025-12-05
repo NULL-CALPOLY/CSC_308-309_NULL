@@ -29,11 +29,14 @@ csc 308/309 project developed by Brian, Vishnu, Ryan, and Aaron
 1. npm start to run this thing (or node backend/backend.js)
 
 Main Databases:
+
 1. users
 2. logins
 3. events
+4. chats
 
 Database Features
+
 - /users for users
 - /logins for credentials
 - /events for events
@@ -47,6 +50,7 @@ Database Features
     - Ex. /users/search/name/LEBRON%20JAMES
 
 Additional Information
+
 1. If there's bugs, fix if you can. Otherwise just dm Brian.
 2. Feel free to ask Brian for more information, although information about code is commented.
 3. Please feel free to add additional features.

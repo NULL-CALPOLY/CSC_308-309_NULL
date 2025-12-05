@@ -1,5 +1,3 @@
-// basically stolen from backend assignment
-
 import userModel from './UserSchema.js';
 
 // Get all users

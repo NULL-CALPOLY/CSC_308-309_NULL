@@ -13,13 +13,17 @@ router.get('/all', async (req, res) => {
     .getUsers()
     .then((users) => {
       if (!users || users.length === 0)
-        [res.status(404).json({ success: false, message: 'No users found' })];
-      res.status(200).json(users);
+        res.status(404).json({ 
+          success: false, 
+          message: 'No users found' 
+        });
+      else res.status(200).json(users);
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({ 
+        success: false, 
+        message: `Error in the server: ${error}` 
+      });
     });
 });
 
@@ -33,12 +37,10 @@ router.get('/:id', async (req, res) => {
       else res.status(200).json({ success: true, data: user });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({
-          success: false,
-          message: `Error in the server: ${error.message}`,
-        });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error.message}`,
+      });
     });
 });
 
@@ -50,12 +52,10 @@ router.post('/', async (req, res) => {
       res.status(201).json({ success: true, data: user });
     })
     .catch((error) => {
-      res
-        .status(400)
-        .json({
-          success: false,
-          message: `Error creating user: ${error.message}`,
-        });
+      res.status(400).json({
+        success: false,
+        message: `Error creating user: ${error.message}`,
+      });
     });
 });
 
@@ -172,12 +172,10 @@ router.get('/search/interests/:interests', async (req, res) => {
     .findUserByInterests(req.params.interests.split(',').map((i) => i.trim()))
     .then((users) => {
       if (!users || users.length === 0)
-        res
-          .status(404)
-          .json({
-            success: false,
-            message: 'No users found with that interest(s)',
-          });
+        res.status(404).json({
+          success: false,
+          message: 'No users found with that interest(s)',
+        });
       else res.status(200).json({ success: true, data: users });
     })
     .catch((error) => {
@@ -214,12 +212,10 @@ router.get('/search/location/:location', async (req, res) => {
     .findUserByLocation(userLocation[0], userLocation[1], userLocation[2])
     .then((users) => {
       if (!users || users.length === 0)
-        res
-          .status(404)
-          .json({
-            success: false,
-            message: 'No users found with that location',
-          });
+        res.status(404).json({
+          success: false,
+          message: 'No users found with that location',
+        });
       else res.status(200).json({ success: true, data: users });
     })
     .catch((error) => {

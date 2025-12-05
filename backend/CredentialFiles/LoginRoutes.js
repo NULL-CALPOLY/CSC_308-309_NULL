@@ -12,6 +12,8 @@ router.get('/all', async (req, res) => {
   await loginServices
     .getLogins()
     .then((logins) => {
+      if (!logins || logins.length === 0)
+        res.status(404).json({ success: false, message: 'No logins found' });
       res.status(200).json({ success: true, data: logins });
     })
     .catch((error) => {
@@ -24,7 +26,7 @@ router.get('/all', async (req, res) => {
 // Get login by ID
 router.get('/:id', async (req, res) => {
   await loginServices
-    .findUserById(req.params.id)
+    .findLoginById(req.params.id)
     .then((login) => {
       if (!login) {
         res.status(404).json({ success: false, message: 'Login not found' });
@@ -40,19 +42,23 @@ router.get('/:id', async (req, res) => {
 });
 
 // Confirm Login (compare email + password)
-router.post("/login", async (req, res) => {
+router.post('/login', async (req, res) => {
   const { email, password } = req.body;
-  
-  if (!email || !password)
-    return res.status(400).json({ success: false, message: "Email and password required" });
 
+  if (!email || !password)
+    return res
+      .status(400)
+      .json({ success: false, message: 'Email and password required' });
   try {
     const user = await loginServices.authenticate(email, password);
 
     if (!user)
-      return res.status(401).json({ success: false, message: "Invalid email or password" });
-
-    res.status(200).json({ success: true, message: "Login successful", userId: user._id });
+      return res
+        .status(401)
+        .json({ success: false, message: 'Invalid email or password' });
+    res
+      .status(200)
+      .json({ success: true, message: 'Login successful', userId: user._id });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

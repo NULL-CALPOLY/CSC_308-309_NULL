@@ -29,7 +29,7 @@ const UserSchema = new mongoose.Schema(
       enum: ['Male', 'Female', 'Other', 'Do not want to Disclose'],
     },
     interests: {
-      type: [String],
+      type: [{ type: String }],
       required: false,
     },
     radius: {
@@ -37,12 +37,14 @@ const UserSchema = new mongoose.Schema(
       required: true,
     },
     location: {
-      latitude: {
-        type: Number,
+      type: {
+        type: String,
+        enum: ['Point'],
         required: true,
+        default: 'Point',
       },
-      longitude: {
-        type: Number,
+      coordinates: {
+        type: [Number], // [longitude, latitude]
         required: true,
       },
     },
