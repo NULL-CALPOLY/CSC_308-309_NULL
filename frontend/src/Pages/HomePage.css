@@ -1,14 +1,17 @@
-/* index.css */
-html,
-body,
-#root {
-  height: 100%;
-  margin: 0;
+.HomePage {
+  display: flex;
+  height: 100vh; /* full viewport height */
 }
-.container {
-  height: 100vh;
+
+.Event-Column {
+  flex: 1;
+  max-width: 300px;
 }
-.leaflet-container {
-  height: 100%;
-  width: 100%;
+
+.Map {
+  flex: 1 1 auto;
+  align-items: stretch;
+  justify-content: stretch;
+  position: relative;
+  z-index: 0; /* Behind other content */
 }

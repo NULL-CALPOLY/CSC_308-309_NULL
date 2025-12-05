@@ -26,6 +26,9 @@ export default function Navbar() {
         <NavLink to="/signin" className={linkClass}>
           Sign In
         </NavLink>
+        <NavLink to="/register" className={linkClass}>
+          Registration
+        </NavLink>
       </div>
 
       <div className="navbar__profile">
@@ -34,12 +37,6 @@ export default function Navbar() {
           alt="Profile"
           className="navbar__profile-icon"
         />
-      </div>
-
-      <div className="navbar__hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
       </div>
     </nav>
   );

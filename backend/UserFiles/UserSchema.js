@@ -17,24 +17,24 @@ const UserSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    age: {
-      type: Number,
+    dateOfBirth: {
+      type: String,
       required: true,
       trim: true,
     },
     gender: {
       type: String,
       required: true,
+      trim: true
+    },
+    city: {
+      type: String,
+      required: false,
       trim: true,
-      enum: ['Male', 'Female', 'Other', 'Do not want to Disclose'],
     },
     interests: {
       type: [{ type: String }],
       required: false,
-    },
-    radius: {
-      type: Number,
-      required: true,
     },
     location: {
       type: {
@@ -48,7 +48,7 @@ const UserSchema = new mongoose.Schema(
         required: true,
       },
     },
-  },
+    },
   { collection: 'users_list' }
 );
 

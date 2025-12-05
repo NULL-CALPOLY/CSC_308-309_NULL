@@ -130,10 +130,10 @@ router.get('/search/email/:email', async (req, res) => {
     });
 });
 
-// Search users by age
-router.get('/search/age/:age', async (req, res) => {
+// Search users by date of birth
+router.get('/search/dateOfBirth/:dateOfBirth', async (req, res) => {
   await userServices
-    .findUserByAge(req.params.age)
+    .findUserByDateOfBirth(req.params.dateOfBirth)
     .then((users) => {
       if (!users || users.length === 0)
         res
@@ -224,5 +224,6 @@ router.get('/search/location/:location', async (req, res) => {
         .json({ success: false, message: `Error in the server: ${error}` });
     });
 });
+
 
 export default router;
