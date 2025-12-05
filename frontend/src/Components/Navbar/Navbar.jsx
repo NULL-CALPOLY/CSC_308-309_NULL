@@ -26,6 +26,9 @@ export default function Navbar() {
         <NavLink to="/signin" className={linkClass}>
           Sign In
         </NavLink>
+        <NavLink to="/register" className={linkClass}>
+          Registration
+        </NavLink>
       </div>
 
       <div className="navbar__profile">
