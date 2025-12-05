@@ -41,12 +41,8 @@ function findUserByPhoneNumber(phoneNumber) {
   return userModel.find({ phoneNumber: phoneNumber });
 }
 
-function findUserByDateOfBirth(dateOfBirth) {
-  return userModel.find({ dateOfBirth: dateOfBirth });
-}
-
-function findUserByAge(age) {
-  return userModel.find({ age: age });
+function findUserByDateOfBirth(dob) {
+  return userModel.find({ dob: dob });
 }
 
 function findUserByGender(gender) {

@@ -14,7 +14,7 @@ const baseUser = {
     type: 'Point',
     coordinates: [-118.123, 34.123], // [lng, lat]
   },
-  dateOfBirth: new Date('2025-06-15'),
+  dob: new Date('2025-06-15'),
 };
 
 beforeEach(async () => {
@@ -75,13 +75,6 @@ describe('User Services', () => {
     await userModel.create(baseUser);
 
     const results = await userServices.findUserByPhoneNumber('555-1234');
-    expect(results.length).toBe(1);
-  });
-
-  test('should find users by age', async () => {
-    await userModel.create(baseUser);
-
-    const results = await userServices.findUserByAge(30);
     expect(results.length).toBe(1);
   });
 

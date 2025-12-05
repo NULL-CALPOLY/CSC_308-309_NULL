@@ -14,7 +14,7 @@ const testUser = {
     type: 'Point',
     coordinates: [-118.123, 34.123], // [lng, lat]
   },
-  dateOfBirth: new Date('2025-06-15'),
+  dob: new Date('2025-06-15'),
 };
 
 const testUser2 = {
@@ -110,13 +110,6 @@ describe('User Routes', () => {
     const res = await request(app).get('/users/search/email/test@example.com');
     expect(res.status).toBe(200);
     expect(res.body.data[0].email).toBe('test@example.com');
-  });
-
-  test('GET /users/search/age/:age returns matching users', async () => {
-    await userModel.create(testUser);
-    const res = await request(app).get('/users/search/dob/25');
-    expect(res.status).toBe(200);
-    expect(res.body.data[0].age).toBe(25);
   });
 
   test('GET /users/search/gender/:gender returns matching users', async () => {

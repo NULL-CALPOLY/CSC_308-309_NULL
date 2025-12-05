@@ -7,10 +7,6 @@ const UserSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    age: {
-      type: Number,
-      required: false,
-    },
     email: {
       type: String,
       required: true,
@@ -21,7 +17,7 @@ const UserSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    dateOfBirth: {
+    dob: {
       type: Date,
       required: true,
       trim: true,
