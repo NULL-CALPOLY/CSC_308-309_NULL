@@ -11,7 +11,7 @@ import L from "leaflet";
 
 import markerIcon from "../assets/pin.svg";
 import locateIcon from "../assets/location.svg";
-import "./SmallMapComponent.css";
+import "./SmallMapComponent/SmallMapComponent.css";
 
 // Custom marker icon
 delete L.Icon.Default.prototype._getIconUrl;
