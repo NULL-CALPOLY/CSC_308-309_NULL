@@ -45,6 +45,10 @@ function findUserByDateOfBirth(dateOfBirth) {
   return userModel.find({ dateOfBirth: dateOfBirth });
 }
 
+function findUserByAge(age) {
+  return userModel.find({ age: age });
+}
+
 function findUserByGender(gender) {
   return userModel.find({ gender: gender });
 }
@@ -56,6 +60,7 @@ function findUserByInterests(interests) {
 function findUserByCity(city) {
   return userModel.find({ city: city });
 }
+
 function findUserByLocation(latitude, longitude, radiusInMiles) {
   return userModel.find({
     location: {
@@ -64,6 +69,10 @@ function findUserByLocation(latitude, longitude, radiusInMiles) {
       },
     },
   });
+}
+
+function findUserByRadius(radiusInMiles) {
+  return userModel.find({ radius: radiusInMiles });
 }
 
 export default {
@@ -80,4 +89,6 @@ export default {
   addUser,
   deleteUser,
   updateUser,
+  findUserByRadius,
+  findUserByAge,
 };

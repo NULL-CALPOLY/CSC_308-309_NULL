@@ -14,6 +14,7 @@ const baseUser = {
     type: 'Point',
     coordinates: [-118.123, 34.123], // [lng, lat]
   },
+  dateOfBirth: new Date('2025-06-15'),
 };
 
 beforeEach(async () => {

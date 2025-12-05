@@ -7,6 +7,10 @@ const UserSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    age: {
+      type: Number,
+      required: false,
+    },
     email: {
       type: String,
       required: true,
@@ -18,14 +22,14 @@ const UserSchema = new mongoose.Schema(
       trim: true,
     },
     dateOfBirth: {
-      type: String,
+      type: Date,
       required: true,
       trim: true,
     },
     gender: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
     city: {
       type: String,
@@ -48,7 +52,11 @@ const UserSchema = new mongoose.Schema(
         required: true,
       },
     },
+    radius: {
+      type: Number,
+      required: false,
     },
+  },
   { collection: 'users_list' }
 );
 
