@@ -155,4 +155,58 @@ describe('Event Routes', () => {
     expect(res.status).toBe(200);
     expect(res.body.data.length).toBe(1);
   });
+
+  test('PUT /events/:id/attendees/add/:userId adds attendee to event', async () => {
+    const created = await eventModel.create(testEvent);
+    const newUserId = new mongoose.Types.ObjectId();
+
+    const res = await request(app)
+      .put(`/events/${created._id}/attendees/add/${newUserId}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.attendees).toContain(newUserId.toString());
+  });
+
+  test('PUT /events/:id/attendees/remove/:userId removes attendee from event', async () => {
+    const attendeeId = new mongoose.Types.ObjectId();
+    const created = await eventModel.create({
+      ...testEvent,
+      attendees: [attendeeId]
+    });
+
+    const res = await request(app)
+      .put(`/events/${created._id}/attendees/remove/${attendeeId}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.attendees).not.toContain(attendeeId.toString());
+  });
+
+  test('PUT /events/:id/blocked/add/:userId adds user to blocked list', async () => {
+    const created = await eventModel.create(testEvent);
+    const newBlockedId = new mongoose.Types.ObjectId();
+
+    const res = await request(app)
+      .put(`/events/${created._id}/blocked/add/${newBlockedId}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.blockedUsers).toContain(newBlockedId.toString());
+  });
+
+  test('PUT /events/:id/blocked/remove/:userId removes user from blocked list', async () => {
+    const blockedUserId = new mongoose.Types.ObjectId();
+    const created = await eventModel.create({
+      ...testEvent,
+      blockedUsers: [blockedUserId]
+    });
+
+    const res = await request(app)
+      .put(`/events/${created._id}/blocked/remove/${blockedUserId}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.blockedUsers).not.toContain(blockedUserId.toString());
+  });
 });

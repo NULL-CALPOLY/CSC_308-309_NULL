@@ -5,7 +5,6 @@ import mongoose from 'mongoose';
 const baseUser = {
   name: 'John Doe',
   email: 'john@example.com',
-  age: 30,
   gender: 'Male',
   phoneNumber: '555-1234',
   radius: 10,
@@ -14,7 +13,7 @@ const baseUser = {
     type: 'Point',
     coordinates: [-118.123, 34.123], // [lng, lat]
   },
-  dob: new Date('2025-06-15'),
+  dateOfBirth: new Date('1994-06-15'),
 };
 
 beforeEach(async () => {

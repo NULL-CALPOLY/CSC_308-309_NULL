@@ -42,7 +42,19 @@ function findUserByPhoneNumber(phoneNumber) {
 }
 
 function findUserByDateOfBirth(dob) {
-  return userModel.find({ dob: dob });
+  // Match users with the same date (ignoring time)
+  const startDate = new Date(dob);
+  startDate.setUTCHours(0, 0, 0, 0);
+  
+  const endDate = new Date(dob);
+  endDate.setUTCHours(23, 59, 59, 999);
+  
+  return userModel.find({
+    dateOfBirth: {
+      $gte: startDate,
+      $lt: endDate,
+    },
+  });
 }
 
 function findUserByGender(gender) {
@@ -71,6 +83,28 @@ function findUserByRadius(radiusInMiles) {
   return userModel.find({ radius: radiusInMiles });
 }
 
+function calculateAge(dateOfBirth) {
+  const dob = new Date(dateOfBirth);
+  const today = new Date();
+
+  let age = today.getFullYear() - dob.getFullYear();
+  const monthDiff = today.getMonth() - dob.getMonth();
+  const dayDiff = today.getDate() - dob.getDate();
+
+  if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+    age--; // birthday has not occurred yet this year
+  }
+
+  return age;
+}
+
+function findUserByAge(age) {
+  // Find all users and filter by calculated age
+  return userModel.find().then(users => {
+    return users.filter(user => calculateAge(user.dateOfBirth) === age);
+  });
+}
+
 export default {
   getUsers,
   findUserById,
@@ -86,5 +120,6 @@ export default {
   deleteUser,
   updateUser,
   findUserByRadius,
+  calculateAge,
   findUserByAge,
 };

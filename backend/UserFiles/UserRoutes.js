@@ -134,11 +134,11 @@ router.get('/search/email/:email', async (req, res) => {
 router.get('/search/dob/:dob', async (req, res) => {
   const param = req.params.dob;
 
-  // If param is a number, treat as age; otherwise treat as a date string
-  const maybeAge = parseInt(param, 10);
-  if (!Number.isNaN(maybeAge) && `${maybeAge}` === param) {
+  // If param is all digits, treat as age; otherwise treat as a date string
+  if (/^\d+$/.test(param)) {
+    const age = parseInt(param, 10);
     await userServices
-      .findUserByAge(maybeAge)
+      .findUserByAge(age)
       .then((users) => {
         if (!users || users.length === 0) {
           res.status(404).json({ success: false, message: 'No users found with that age' });

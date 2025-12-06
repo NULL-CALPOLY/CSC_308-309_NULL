@@ -6,7 +6,6 @@ import mongoose from 'mongoose';
 const testUser = {
   name: 'Test User',
   email: 'test@example.com',
-  age: 25,
   gender: 'Male',
   phoneNumber: '555-1234',
   radius: 10,
@@ -14,13 +13,12 @@ const testUser = {
     type: 'Point',
     coordinates: [-118.123, 34.123], // [lng, lat]
   },
-  dob: new Date('2025-06-15'),
+  dateOfBirth: new Date('1999-06-15'),
 };
 
 const testUser2 = {
   name: 'Another User',
   email: 'another@example.com',
-  age: 30,
   gender: 'Female',
   phoneNumber: '999-4444',
   radius: 20,
@@ -29,7 +27,7 @@ const testUser2 = {
     coordinates: [-70, 40], // [lng, lat]
   },
   interests: ['music', 'reading'],
-  dateOfBirth: new Date('2025-06-15'),
+  dateOfBirth: new Date('1994-06-15'),
 };
 
 beforeEach(async () => {
@@ -139,5 +137,34 @@ describe('User Routes', () => {
     const res = await request(app).get(`/users/search/location/${loc}`);
     expect(res.status).toBe(200);
     expect(res.body.data.length).toBe(1);
+  });
+
+  test('GET /users/search/dob/:dob finds users by exact date of birth', async () => {
+    await userModel.create(testUser);
+    const dateString = '1999-06-15';
+
+    const res = await request(app).get(`/users/search/dob/${dateString}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.length).toBe(1);
+    expect(new Date(res.body.data[0].dateOfBirth).toISOString())
+      .toBe(new Date(dateString).toISOString());
+  });
+
+  test('GET /users/search/dob/:dob treats numeric input as age', async () => {
+    const currentYear = new Date().getFullYear();
+    const userWithAge25 = { ...testUser, dateOfBirth: new Date(`${currentYear - 25}-06-15`) };
+    await userModel.create(userWithAge25);
+    const expectedAge = 25; 
+    const res = await request(app).get(`/users/search/dob/${expectedAge}`);
+    expect(res.status).toBe(200);
+    expect(res.body.data.length).toBe(1);
+  });
+
+  test('GET /users/search/dob/:dob returns 404 when no DOB match', async () => {
+    await userModel.create(testUser);
+    const res = await request(app).get('/users/search/dob/1999-12-31');
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
   });
 });
