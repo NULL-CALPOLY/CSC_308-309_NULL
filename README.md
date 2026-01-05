@@ -26,7 +26,7 @@ csc 308/309 project developed by Brian, Vishnu, Ryan, and Aaron
 
 # Database Tutorial
 
-1. npm start to run this thing (or node backend/backend.js)
+1. npm run backend:dev to run the backend only (npm run dev to run the entire thing)
 
 Main Databases:
 
