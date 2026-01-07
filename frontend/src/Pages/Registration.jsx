@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SmallMapComponent from '../Components/RegistrationMapComponent/RegistrationMapComponent.jsx'
+import RegistrationMap from "../Components/RegistrationMapComponent/RegistrationMapComponent.jsx";
 import "./Registration.css";
 
 export default function Registration() {
@@ -199,7 +199,7 @@ export default function Registration() {
       )}
     </form>
     <div className="map-column">
-      <SmallMapComponent
+      <RegistrationMap
           onLocationSelect={(lat, lng) =>
         setLocation({ latitude: lat, longitude: lng })
               }

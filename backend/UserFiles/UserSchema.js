@@ -25,8 +25,12 @@ const UserSchema = new mongoose.Schema(
     gender: {
       type: String,
       required: true,
+      trim: true
+    },
+    city: {
+      type: String,
+      required: false,
       trim: true,
-      enum: ['Male', 'Female', 'Other', 'Do not want to Disclose'],
     },
     city: {
       type: String,
@@ -47,7 +51,7 @@ const UserSchema = new mongoose.Schema(
         required: true,
       },
     },
-  },
+    },
   { collection: 'users_list' }
 );
 
