@@ -1,0 +1,62 @@
+/* Main sidebar container */
+.GroupChat_Container {
+  height: 100vh; /* Full screen height */
+  width: 300px;
+  background-color: #ffffff; /* light green */
+  border-left: 2px solid #b5d8b5;
+  box-shadow: -6px 0 18px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0; /* remove default padding for cleaner layout */
+  box-sizing: border-box;
+}
+
+/* Scrollable list area */
+.GropuChat_List {
+  flex: 1; /* fills remaining height */
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Styling each chat item */
+.GropuChat_List > * {
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.GropuChat_List > *:hover {
+  transform: scale(1.02);
+}
+
+/* Optional: pretty scrollbar */
+.GropuChat_List::-webkit-scrollbar {
+  width: 10px;
+}
+
+.GropuChat_List::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+}
+
+.GropuChat_List::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.GroupChat_Title {
+  flex-shrink: 0;
+  padding: 14px 16px;
+  background-color: #dff7df; /* very light green */
+  border-bottom: 1px solid #bcdcbc; 
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2d4a2d; /* dark green text */
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}

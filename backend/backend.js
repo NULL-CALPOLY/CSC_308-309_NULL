@@ -3,9 +3,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { config } from 'dotenv';
 import express from 'express';
+import eventRouter from './EventFiles/EventRoutes.js'; 
 import userRouter from './UserFiles/UserRoutes.js';
 import loginRouter from './UserFiles/Credentials/LoginRoutes.js';
-import eventRouter from './EventFiles/EventRoutes.js';
 import cors from 'cors';
 
 // Intialize Express app

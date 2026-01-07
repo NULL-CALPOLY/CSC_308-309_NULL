@@ -3,6 +3,9 @@ import eventServices from './EventServices.js';
 
 const router = express.Router();
 
+router.get('/', (req, res) => {
+  res.send('Yes, events info is working');
+});
 // Get all events
 router.get('/all', async (req, res) => {
   await eventServices

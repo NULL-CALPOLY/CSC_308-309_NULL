@@ -5,8 +5,8 @@ import {
   Marker,
   Popup,
   useMap,
-  useMapEvents,
 } from 'react-leaflet';
+
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import markerIcon from '../../assets/pin.svg';
@@ -24,13 +24,13 @@ export default function MainMapComponent() {
   const [tracking, setTracking] = useState(false);
 
   return (
-    <div className="map-wrapper">
+    <div className="main-map-wrapper">
       <MapContainer
         center={[35.3, -120.66]}
         zoom={13}
         scrollWheelZoom={true}
         zoomControl={true}
-        className="map-component"
+        className="main-map-component"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -67,7 +67,7 @@ export default function MainMapComponent() {
 }
 
 // “Locate Me” button
-function LocateButton({ icon, setUserPosition, tracking, setTracking }) {
+function LocateButton({ icon, setUserPosition, setTracking }) {
   const map = useMap();
 
   const handleLocate = () => {
@@ -89,7 +89,7 @@ function LocateButton({ icon, setUserPosition, tracking, setTracking }) {
   };
 
   return (
-    <button className="locate-btn" onClick={handleLocate}>
+    <button className="main-locate-btn" onClick={handleLocate}>
       <img src={icon} alt="Locate me" />
     </button>
   );

@@ -1,0 +1,33 @@
+.GroupChat-Container {
+  background-color: #b4f1b4; /* soft light green */
+  padding: 14px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  height: 50px;
+}
+
+.GroupChat-Container:hover {
+  background-color: #b6e8b6; /* slightly darker on hover */
+  transform: scale(1.02);
+}
+
+.GroupChat-Title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2d4a2d; /* dark green text */
+}
+
+
+.GroupChat-LastMessage {
+  width: 75%;
+  font-size: 0.75rem;
+  color: #3d5a3d; /* slightly lighter dark green */
+  opacity: 0.6;
+  margin-top: 4px;
+  white-space: nowrap;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis; /* shows "..." if message is long */
+}
