@@ -11,12 +11,22 @@ router.get('/all', async (req, res) => {
   await eventServices
     .getEvents()
     .then((events) => {
-      res.status(200).json({ success: true, data: events });
+      if (!events || events.length === 0)
+        res.status(404).json({
+          success: false,
+          message: 'No events found',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: events,
+        });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 
@@ -26,8 +36,15 @@ router.get('/:id', async (req, res) => {
     .findEventById(req.params.id)
     .then((event) => {
       if (!event)
-        res.status(404).json({ success: false, message: 'Event not found' });
-      else res.status(200).json({ success: true, data: event });
+        res.status(404).json({
+          success: false,
+          message: 'Event not found',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: event,
+        });
     })
     .catch((error) => {
       res
@@ -41,12 +58,16 @@ router.post('/', async (req, res) => {
   await eventServices
     .addEvent(req.body)
     .then((event) => {
-      res.status(201).json({ success: true, data: event });
+      res.status(201).json({
+        success: true,
+        data: event,
+      });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 
@@ -56,16 +77,21 @@ router.delete('/:id', async (req, res) => {
     .deleteEvent(req.params.id)
     .then((deletedEvent) => {
       if (!deletedEvent)
-        res.status(404).json({ success: false, message: 'Event not found' });
+        res.status(404).json({
+          success: false,
+          message: 'Event not found',
+        });
       else
-        res
-          .status(200)
-          .json({ success: true, message: 'Event deleted successfully' });
+        res.status(200).json({
+          success: true,
+          message: 'Event deleted successfully',
+        });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 
@@ -75,13 +101,21 @@ router.put('/:id', async (req, res) => {
     .updateEvent(req.params.id, req.body)
     .then((event) => {
       if (!event)
-        res.status(404).json({ success: false, message: 'Event not found' });
-      else res.status(200).json({ success: true, data: event });
+        res.status(404).json({
+          success: false,
+          message: 'Event not found',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: event,
+        });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 
@@ -91,15 +125,21 @@ router.get('/search/name/:name', async (req, res) => {
     .findEventByName(req.params.name)
     .then((events) => {
       if (!events || events.length === 0)
-        res
-          .status(404)
-          .json({ success: false, message: 'No events found with that name' });
-      else res.status(200).json({ success: true, data: events });
+        res.status(404).json({
+          success: false,
+          message: 'No events found with that name',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: events,
+        });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 
@@ -109,15 +149,21 @@ router.get('/search/description/:keyword', async (req, res) => {
     .findEventByDescription(req.params.keyword)
     .then((events) => {
       if (!events || events.length === 0)
-        res
-          .status(404)
-          .json({ success: false, message: 'No matching events found' });
-      else res.status(200).json({ success: true, data: events });
+        res.status(404).json({
+          success: false,
+          message: 'No matching events found',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: events,
+        });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 
@@ -127,18 +173,21 @@ router.get('/search/map/:mapComponent', async (req, res) => {
     .findEventByMapComponent(req.params.mapComponent)
     .then((events) => {
       if (!events || events.length === 0)
-        res
-          .status(404)
-          .json({
-            success: false,
-            message: 'No events found for this map component',
-          });
-      else res.status(200).json({ success: true, data: events });
+        res.status(404).json({
+          success: false,
+          message: 'No events found for this map component',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: events,
+        });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 
@@ -148,15 +197,21 @@ router.get('/search/host/:hostId', async (req, res) => {
     .findEventByHost(req.params.hostId)
     .then((events) => {
       if (!events || events.length === 0)
-        res
-          .status(404)
-          .json({ success: false, message: 'No events found for this host' });
-      else res.status(200).json({ success: true, data: events });
+        res.status(404).json({
+          success: false,
+          message: 'No events found for this host',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: events,
+        });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 
@@ -166,18 +221,21 @@ router.get('/search/attendee/:userId', async (req, res) => {
     .findEventByAttendee(req.params.userId)
     .then((events) => {
       if (!events || events.length === 0)
-        res
-          .status(404)
-          .json({
-            success: false,
-            message: 'No events found with that attendee',
-          });
-      else res.status(200).json({ success: true, data: events });
+        res.status(404).json({
+          success: false,
+          message: 'No events found with that attendee',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: events,
+        });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 
@@ -189,18 +247,21 @@ router.get('/search/interests/:interests', async (req, res) => {
     .findEventByInterests(interests)
     .then((events) => {
       if (!events || events.length === 0)
-        res
-          .status(404)
-          .json({
-            success: false,
-            message: 'No events found with those interests',
-          });
-      else res.status(200).json({ success: true, data: events });
+        res.status(404).json({
+          success: false,
+          message: 'No events found with those interests',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: events,
+        });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 
@@ -213,79 +274,101 @@ router.get('/search/location/:location', async (req, res) => {
     .findEventByLocation(latitude, longitude, radius)
     .then((events) => {
       if (!events || events.length === 0)
-        res
-          .status(404)
-          .json({
-            success: false,
-            message: 'No events found at that location',
-          });
-      else res.status(200).json({ success: true, data: events });
+        res.status(404).json({
+          success: false,
+          message: 'No events found at that location',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: events,
+        });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 
 // Search by start time
 router.get('/search/start/:start', async (req, res) => {
+  const start = new Date(req.params.start);
+
   await eventServices
-    .findEventByStart(Number(req.params.start))
+    .findEventByStart(start)
     .then((events) => {
       if (!events.length)
-        res
-          .status(404)
-          .json({
-            success: false,
-            message: 'No events found with that start time',
-          });
-      else res.status(200).json({ success: true, data: events });
+        res.status(404).json({
+          success: false,
+          message: 'No events found with that start time',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: events,
+        });
     })
-    .catch((err) =>
-      res.status(500).json({ success: false, message: `Server error: ${err}` })
-    );
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: `Server error: ${err}`,
+      });
+    });
 });
 
 // Search by end time
 router.get('/search/end/:end', async (req, res) => {
+  const end = new Date(req.params.end);
+
   await eventServices
-    .findEventByEnd(Number(req.params.end))
+    .findEventByEnd(end)
     .then((events) => {
       if (!events.length)
-        res
-          .status(404)
-          .json({
-            success: false,
-            message: 'No events found with that end time',
-          });
-      else res.status(200).json({ success: true, data: events });
+        res.status(404).json({
+          success: false,
+          message: 'No events found with that end time',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: events,
+        });
     })
-    .catch((err) =>
-      res.status(500).json({ success: false, message: `Server error: ${err}` })
-    );
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: `Server error: ${err}`,
+      });
+    });
 });
 
 // Search events between start and end
 router.get('/search/time-range/:start/:end', async (req, res) => {
-  const start = Number(req.params.start);
-  const end = Number(req.params.end);
+  const start = new Date(req.params.start);
+  const end = new Date(req.params.end);
 
   await eventServices
     .findEventsBetween(start, end)
     .then((events) => {
       if (!events.length)
-        res
-          .status(404)
-          .json({
-            success: false,
-            message: 'No events found in that time range',
-          });
-      else res.status(200).json({ success: true, data: events });
+        res.status(404).json({
+          success: false,
+          message: 'No events found in that time range',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: events,
+        });
     })
-    .catch((err) =>
-      res.status(500).json({ success: false, message: `Server error: ${err}` })
-    );
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: `Server error: ${err}`,
+      });
+    });
 });
 
 // Search events where user is blocked
@@ -294,15 +377,117 @@ router.get('/search/blocked/:userId', async (req, res) => {
     .findEventsBlockingUser(req.params.userId)
     .then((events) => {
       if (!events || events.length === 0)
-        res
-          .status(404)
-          .json({ success: false, message: 'No events block this user' });
-      else res.status(200).json({ success: true, data: events });
+        res.status(404).json({
+          success: false,
+          message: 'No events block this user',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: events,
+        });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
+    });
+});
+
+// Add user to attendees
+router.put('/:id/attendees/add/:userId', async (req, res) => {
+  await eventServices
+    .addUserToAttendees(req.params.id, req.params.userId)
+    .then((event) => {
+      if (!event)
+        res.status(404).json({
+          success: false,
+          message: 'Event not found',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: event,
+        });
+    })
+    .catch((error) => {
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
+    });
+});
+
+// Remove user from attendees
+router.put('/:id/attendees/remove/:userId', async (req, res) => {
+  await eventServices
+    .removeUserFromAttendees(req.params.id, req.params.userId)
+    .then((event) => {
+      if (!event)
+        res.status(404).json({
+          success: false,
+          message: 'Event not found',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: event,
+        });
+    })
+    .catch((error) => {
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
+    });
+});
+
+// Add user to blocked users
+router.put('/:id/blocked/add/:userId', async (req, res) => {
+  await eventServices
+    .addUserToBlocked(req.params.id, req.params.userId)
+    .then((event) => {
+      if (!event)
+        res.status(404).json({
+          success: false,
+          message: 'Event not found',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: event,
+        });
+    })
+    .catch((error) => {
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
+    });
+});
+
+// Remove user from blocked users
+router.put('/:id/blocked/remove/:userId', async (req, res) => {
+  await eventServices
+    .removeUserFromBlocked(req.params.id, req.params.userId)
+    .then((event) => {
+      if (!event)
+        res.status(404).json({
+          success: false,
+          message: 'Event not found',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: event,
+        });
+    })
+    .catch((error) => {
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 

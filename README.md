@@ -26,27 +26,37 @@ csc 308/309 project developed by Brian, Vishnu, Ryan, and Aaron
 
 # Database Tutorial
 
-1. npm start to run this thing (or node backend/backend.js)
+1. npm run backend:dev to run the backend only (npm run dev to run the entire thing)
 
 Main Databases:
+
 1. users
 2. logins
 3. events
+4. chats
 
 Database Features
-- /users for users
-- /logins for credentials
-- /events for events
-  - ALL USERIDS IN EVENTS MUST BE VALID IN USERS
-- /(database)/:id for id search
-- /(database)/search/(catagory)/(whatever) for search
-  - CASE SENSITIVE
-  - for multiple inputs in (whatever), seperate by comma
-    - Ex. /users/search/interests/balling,dunking
-  - for spaces use %20
-    - Ex. /users/search/name/LEBRON%20JAMES
+
+- Specific features
+  - /users for users
+    - /search/dob/:dob
+      - Takes a date type input or an age input (JS date object, look it up for format)
+  - /logins for credentials
+  - /events for events
+    - ALL USERIDS IN EVENTS MUST BE VALID IN USERS
+  - /chats for chats
+
+- For all DBs
+  - /(database)/:id for id search
+  - /(database)/search/(catagory)/(whatever) for search
+    - CASE SENSITIVE
+    - for multiple inputs in (whatever), seperate by comma
+      - Ex. /users/search/interests/balling,dunking
+    - for spaces use %20
+      - Ex. /users/search/name/LEBRON%20JAMES
 
 Additional Information
+
 1. If there's bugs, fix if you can. Otherwise just dm Brian.
 2. Feel free to ask Brian for more information, although information about code is commented.
 3. Please feel free to add additional features.

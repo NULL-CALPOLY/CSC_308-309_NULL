@@ -32,7 +32,6 @@ function findLoginByEmail(email) {
   return loginModel.findOne({ email: email });
 }
 
-
 // Find login by ID
 function findLoginById(id) {
   return loginModel.findById(id);

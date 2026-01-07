@@ -17,7 +17,7 @@ const UserSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    DOB: {
+    dateOfBirth: {
       type: Date,
       required: true,
       trim: true,
@@ -25,7 +25,7 @@ const UserSchema = new mongoose.Schema(
     gender: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
     city: {
       type: String,
@@ -38,20 +38,26 @@ const UserSchema = new mongoose.Schema(
       trim: true,
     },
     interests: {
-      type: [String],
+      type: [{ type: String }],
       required: false,
     },
     location: {
-      latitude: {
-        type: Number,
+      type: {
+        type: String,
+        enum: ['Point'],
         required: true,
+        default: 'Point',
       },
-      longitude: {
-        type: Number,
+      coordinates: {
+        type: [{ type: Number }], // [longitude, latitude]
         required: true,
       },
     },
+    radius: {
+      type: Number,
+      required: false,
     },
+  },
   { collection: 'users_list' }
 );
 

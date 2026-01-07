@@ -1,20 +1,18 @@
 import mongoose from 'mongoose';
-import UserSchema from 'User';
-import EventSchema from 'Event';
 
 const GroupChatSchema = new mongoose.Schema(
   {
-    groupName: {
+    name: {
       type: String,
       required: true,
       trim: true,
     },
     members: {
-      type: [UserSchema],
+      type: [{ type: mongoose.Schema.Types.ObjectId }], // User Schema
       required: true,
     },
     events: {
-      type: [EventSchema],
+      type: [{ type: mongoose.Schema.Types.ObjectId }], // Event Schema
       required: true,
     },
     city: {
