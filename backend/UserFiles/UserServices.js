@@ -128,7 +128,7 @@ export default {
   findUserByName,
   findUserByEmail,
   findUserByPhoneNumber,
-  findUserByDOB,
+  findUserByDateOfBirth,
   findUserByGender,
   findUserByInterests,
   findUserByCity,

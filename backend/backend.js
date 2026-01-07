@@ -6,7 +6,6 @@ import express from 'express';
 import eventRouter from './EventFiles/EventRoutes.js'; 
 import userRouter from './UserFiles/UserRoutes.js';
 import loginRouter from './CredentialFiles/LoginRoutes.js';
-import eventRouter from './EventFiles/EventRoutes.js';
 import chatRouter from './ChatFiles/ChatRoutes.js';
 import cors from 'cors';
 
