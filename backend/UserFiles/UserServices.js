@@ -8,9 +8,18 @@ function getUsers() {
 }
 
 // Add a user
-function addUser(user) {
+async function addUser(user) {
+  // Check if email already exists
+  const existingUser = await userModel.findOne({ email: user.email });
+
+  if (existingUser) {
+    const error = new Error("Email already registered");
+    error.status = 409;
+    throw error;
+  }
+
   const newUser = new userModel(user);
-  return newUser.save();
+  return await newUser.save();
 }
 
 // Delete a user
