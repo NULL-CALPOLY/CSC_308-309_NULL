@@ -40,7 +40,7 @@ const EventSchema = new mongoose.Schema(
         default: 'Point',
       },
       coordinates: {
-        type: [Number], // [longitude, latitude]
+        type: [{ type: Number }], // [longitude, latitude]
         required: true,
       },
     },
