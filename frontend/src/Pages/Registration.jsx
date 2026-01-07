@@ -20,55 +20,67 @@ export default function Registration() {
  
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setErrorMsg("");
-    setLoading(true);
+  e.preventDefault();
+  setErrorMsg("");
+  setLoading(true);
 
+  if (!location || !location.latitude || !location.longitude) {
+    setErrorMsg("Please select a location on the map.");
+    setLoading(false);
+    return;
+  }
 
-    if (!location || !location.latitude || !location.longitude) {
-        setErrorMsg("Please select a location on the map.");
-        setLoading(false);
-        return;
-    }
+  try {
+    const res = await fetch("http://localhost:3000/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name,
+        phoneNumber,
+        gender,
+        DOB,
+        city,
+        email,
+        location,
+        interests,
+      }),
+    });
 
-    try {
-      const res = await fetch("http://localhost:3000/users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phoneNumber, gender, DOB, city, email, location, interests}),
-      });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
 
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.message || "Registration failed");
+      // 👇 duplicate email detection
+      if (res.status === 409) {
+        throw new Error("This email is already in use.");
       }
 
-      const data = await res.json();
-      console.log(data);
-      
-
-
-      const loginRes = await fetch("http://localhost:3000/logins", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-      });
-
-      if (!loginRes.ok) {
-          const err = await loginRes.json().catch(() => ({}));
-          console.warn("Login registration failed:", err.message || "Unknown error");
-      } else {
-          const loginData = await loginRes.json();
-          console.log("Login credentials saved:", loginData);
-      }
-
-    } catch (err) {
-      setErrorMsg(err.message);
-    } finally {
-      setLoading(false);
-      navigate('/');
+      throw new Error(err.message || "Registration failed");
     }
-  };
+
+    await res.json();
+
+    // Only create login if user was created
+    const loginRes = await fetch("http://localhost:3000/logins", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!loginRes.ok) {
+      const err = await loginRes.json().catch(() => ({}));
+      console.warn("Login registration failed:", err.message);
+    }
+
+    // ✅ SUCCESS ONLY
+    navigate("/");
+
+  } catch (err) {
+    setErrorMsg(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
   
 
   return (
