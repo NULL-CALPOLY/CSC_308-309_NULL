@@ -43,21 +43,24 @@ router.get('/:id', async (req, res) => {
 });
 
 // Post a new user
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   await userServices
     .addUser(req.body)
     .then((user) => {
-      res.status(201).json({ success: true, data: user });
+      res.status(201).json({
+        success: true,
+        message: "User registered successfully.",
+        data: user,
+      });
     })
     .catch((error) => {
-      res
-        .status(400)
-        .json({
-          success: false,
-          message: `Error creating user: ${error.message}`,
-        });
+      res.status(error.status || 400).json({
+        success: false,
+        message: error.message || "An unexpected error occurred.",
+      });
     });
 });
+
 
 // Delete a user
 router.delete('/:id', async (req, res) => {
