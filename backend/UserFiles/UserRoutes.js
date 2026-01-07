@@ -13,13 +13,17 @@ router.get('/all', async (req, res) => {
     .getUsers()
     .then((users) => {
       if (!users || users.length === 0)
-        [res.status(404).json({ success: false, message: 'No users found' })];
-      res.status(200).json(users);
+        res.status(404).json({ 
+          success: false, 
+          message: 'No users found' 
+        });
+      else res.status(200).json(users);
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({ 
+        success: false, 
+        message: `Error in the server: ${error}` 
+      });
     });
 });
 
@@ -33,12 +37,10 @@ router.get('/:id', async (req, res) => {
       else res.status(200).json({ success: true, data: user });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({
-          success: false,
-          message: `Error in the server: ${error.message}`,
-        });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error.message}`,
+      });
     });
 });
 
@@ -134,21 +136,39 @@ router.get('/search/email/:email', async (req, res) => {
 });
 
 // Search users by date of birth
-router.get('/search/dateOfBirth/:dateOfBirth', async (req, res) => {
-  await userServices
-    .findUserByDateOfBirth(req.params.dateOfBirth)
-    .then((users) => {
-      if (!users || users.length === 0)
-        res
-          .status(404)
-          .json({ success: false, message: 'No users found with that age' });
-      else res.status(200).json({ success: true, data: users });
-    })
-    .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
-    });
+router.get('/search/dob/:dob', async (req, res) => {
+  const param = req.params.dob;
+
+  // If param is all digits, treat as age; otherwise treat as a date string
+  if (/^\d+$/.test(param)) {
+    const age = parseInt(param, 10);
+    await userServices
+      .findUserByAge(age)
+      .then((users) => {
+        if (!users || users.length === 0) {
+          res.status(404).json({ success: false, message: 'No users found with that age' });
+        } else {
+          res.status(200).json({ success: true, data: users });
+        }
+      })
+      .catch((error) => {
+        res.status(500).json({ success: false, message: `Error in the server: ${error}` });
+      });
+  } else {
+    const dob = new Date(param);
+    await userServices
+      .findUserByDateOfBirth(dob)
+      .then((users) => {
+        if (!users || users.length === 0) {
+          res.status(404).json({ success: false, message: 'No users found with that date of birth' });
+        } else {
+          res.status(200).json({ success: true, data: users });
+        }
+      })
+      .catch((error) => {
+        res.status(500).json({ success: false, message: `Error in the server: ${error}` });
+      });
+  }
 });
 
 // Search users by gender
@@ -175,12 +195,10 @@ router.get('/search/interests/:interests', async (req, res) => {
     .findUserByInterests(req.params.interests.split(',').map((i) => i.trim()))
     .then((users) => {
       if (!users || users.length === 0)
-        res
-          .status(404)
-          .json({
-            success: false,
-            message: 'No users found with that interest(s)',
-          });
+        res.status(404).json({
+          success: false,
+          message: 'No users found with that interest(s)',
+        });
       else res.status(200).json({ success: true, data: users });
     })
     .catch((error) => {
@@ -217,12 +235,10 @@ router.get('/search/location/:location', async (req, res) => {
     .findUserByLocation(userLocation[0], userLocation[1], userLocation[2])
     .then((users) => {
       if (!users || users.length === 0)
-        res
-          .status(404)
-          .json({
-            success: false,
-            message: 'No users found with that location',
-          });
+        res.status(404).json({
+          success: false,
+          message: 'No users found with that location',
+        });
       else res.status(200).json({ success: true, data: users });
     })
     .catch((error) => {
@@ -231,6 +247,5 @@ router.get('/search/location/:location', async (req, res) => {
         .json({ success: false, message: `Error in the server: ${error}` });
     });
 });
-
 
 export default router;

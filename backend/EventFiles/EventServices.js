@@ -32,9 +32,9 @@ function findEventById(id) {
 }
 
 // Find event(s) by name
-function findEventByName(eventName) {
+function findEventByName(name) {
   return eventModel
-    .find({ eventName: { $regex: eventName, $options: 'i' } })
+    .find({ name: { $regex: name, $options: 'i' } })
     .populate('attendees host blockedUsers');
 }
 
@@ -117,6 +117,46 @@ function findEventsBlockingUser(userId) {
     .populate('attendees host blockedUsers');
 }
 
+// Add user to attendees
+function addUserToAttendees(eventId, userId) {
+  return eventModel
+    .findByIdAndUpdate(
+      eventId,
+      { $addToSet: { attendees: userId } },
+      { new: true }
+    )
+    .populate('attendees host blockedUsers');
+}
+
+// Remove user from attendees
+function removeUserFromAttendees(eventId, userId) {
+  return eventModel
+    .findByIdAndUpdate(eventId, { $pull: { attendees: userId } }, { new: true })
+    .populate('attendees host blockedUsers');
+}
+
+// Add user to blocked users
+function addUserToBlocked(eventId, userId) {
+  return eventModel
+    .findByIdAndUpdate(
+      eventId,
+      { $addToSet: { blockedUsers: userId } },
+      { new: true }
+    )
+    .populate('attendees host blockedUsers');
+}
+
+// Remove user from blocked users
+function removeUserFromBlocked(eventId, userId) {
+  return eventModel
+    .findByIdAndUpdate(
+      eventId,
+      { $pull: { blockedUsers: userId } },
+      { new: true }
+    )
+    .populate('attendees host blockedUsers');
+}
+
 export default {
   getEvents,
   addEvent,
@@ -134,4 +174,8 @@ export default {
   findEventByEnd,
   findEventsBetween,
   findEventsBlockingUser,
+  addUserToAttendees,
+  removeUserFromAttendees,
+  addUserToBlocked,
+  removeUserFromBlocked,
 };

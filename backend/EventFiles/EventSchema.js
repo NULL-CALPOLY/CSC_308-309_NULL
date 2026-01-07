@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const EventSchema = new mongoose.Schema(
   {
-    eventName: {
+    name: {
       type: String,
       required: true,
       trim: true,
@@ -17,7 +17,7 @@ const EventSchema = new mongoose.Schema(
       required: true,
     },
     attendees: {
-      type: [mongoose.Schema.Types.ObjectId], // ALL USERIDS MUST BE VALID
+      type: [{ type: mongoose.Schema.Types.ObjectId }], // ALL USERIDS MUST BE VALID
       required: false,
     },
     host: {
@@ -25,7 +25,7 @@ const EventSchema = new mongoose.Schema(
       required: true,
     },
     blockedUsers: {
-      type: [mongoose.Schema.Types.ObjectId],
+      type: [{ type: mongoose.Schema.Types.ObjectId }],
       required: false,
     },
     comment: {
@@ -33,31 +33,31 @@ const EventSchema = new mongoose.Schema(
       required: true,
     },
     location: {
-      latitude: {
-        type: Number,
+      type: {
+        type: String,
+        enum: ['Point'],
         required: true,
+        default: 'Point',
       },
-      longitude: {
-        type: Number,
+      coordinates: {
+        type: [{ type: Number }], // [longitude, latitude]
         required: true,
       },
     },
     interests: {
-      type: [String],
+      type: [{ type: String }],
       required: true,
     },
     time: {
       start: {
-        type: Number, // e.g., 0930 or 1545
+        // Year, Month (0-11), Day, Hours, Minutes
+        type: Date,
         required: true,
-        min: 0,
-        max: 2359,
       },
       end: {
-        type: Number,
+        // Year, Month (0-11), Day, Hours, Minutes
+        type: Date,
         required: true,
-        min: 0,
-        max: 2359,
       },
     },
   },
