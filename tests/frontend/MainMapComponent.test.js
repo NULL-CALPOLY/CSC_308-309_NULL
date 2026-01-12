@@ -11,10 +11,8 @@ jest.mock("../../frontend/src/assets/pin.svg", () => "pin.svg");
 jest.mock("../../frontend/src/assets/location.svg", () => "location.svg");
 
 // Mock react-leaflet hooks & components
-jest.mock("react-leaflet");
-
-// Mock leaflet core
-jest.mock("leaflet");
+// `react-leaflet` and `leaflet` are mapped in Jest config to manual mocks
+// so we don't auto-mock them here (the manual mocks live in `tests/__mocks__`).
 
 describe("MainMapComponent", () => {
   beforeEach(() => {

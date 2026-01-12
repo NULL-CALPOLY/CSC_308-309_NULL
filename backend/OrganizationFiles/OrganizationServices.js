@@ -18,11 +18,18 @@ function deleteOrganization(id) {
 
 // Update an organization by ID
 function updateOrganization(id, organizationData) {
+  // Support `phone` alias by mapping it to the stored `phoneNumber` field
+  const updateData = { ...organizationData };
+  if (Object.prototype.hasOwnProperty.call(updateData, 'phone') && !Object.prototype.hasOwnProperty.call(updateData, 'phoneNumber')) {
+    updateData.phoneNumber = updateData.phone;
+    delete updateData.phone;
+  }
+
   return organizationModel
-    .findByIdAndUpdate(id, organizationData, {
+    .findByIdAndUpdate(id, updateData, {
       new: true,
       runValidators: true,
-    })
+    });
 }
 
 // Find organization by iD

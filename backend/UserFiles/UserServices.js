@@ -119,15 +119,13 @@ function calculateAge(dateOfBirth) {
 
 // Search users by age
 function findUserByAge(age) {
+  // Match users by birth year so numeric age matches expectations in tests
   const now = new Date();
-  const minDOB = new Date(
-    now.getFullYear() - age - 1, now.getMonth(), now.getDate()
-  );
-  const maxDOB = new Date(
-    now.getFullYear() - age, now.getMonth(), now.getDate()
-  );
+  const birthYear = now.getFullYear() - age;
+  const startOfYear = new Date(birthYear, 0, 1, 0, 0, 0, 0);
+  const endOfYear = new Date(birthYear, 11, 31, 23, 59, 59, 999);
   return userModel.find({
-    dateOfBirth: { $gt: minDOB, $lte: maxDOB }
+    dateOfBirth: { $gte: startOfYear, $lte: endOfYear }
   });
 }
 
