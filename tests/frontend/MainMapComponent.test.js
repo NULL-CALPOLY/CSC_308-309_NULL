@@ -2,7 +2,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import MainMapComponent from "../../frontend/src/Components/MainMapComponent/MainMapComponent.jsx";
 
 test("renders map component", () => {
-  const { container } = render(<MyMap />);
+  const { container } = render(<MainMapComponent />);
   expect(container).toBeTruthy();
 });
 

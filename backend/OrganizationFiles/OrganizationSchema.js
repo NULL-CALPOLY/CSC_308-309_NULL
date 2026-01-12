@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const OrganizationSchema = new mongoose.Schema(
   {
-    organizationName: {
+    name: {
       type: String,
       required: true,
       trim: true,
@@ -12,21 +12,26 @@ const OrganizationSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    // store canonical phone number in `phoneNumber`, but allow `phone` alias
     phoneNumber: {
       type: String,
-      required: true,
       trim: true,
+      alias: 'phone',
     },
     inviteOnly: {
       type: Boolean,
-      required: true,
+      default: false,
     },
     members: {
-      type: [UserSchema],
-      required: true,
+      type: [{ type: mongoose.Schema.Types.ObjectId }],
+      default: [],
     },
   },
-  { collection: 'organization_list' }
+  { 
+    collection: 'organization_list',
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+  }
 );
 
 const Organization = mongoose.model('Organization', OrganizationSchema);
