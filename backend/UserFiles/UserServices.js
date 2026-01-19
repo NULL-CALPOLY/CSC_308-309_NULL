@@ -11,7 +11,7 @@ async function addUser(user) {
   const existingUser = await userModel.findOne({ email: user.email });
 
   if (existingUser) {
-    const error = new Error("Email already registered");
+    const error = new Error('Email already registered');
     error.status = 409;
     throw error;
   }
@@ -58,10 +58,10 @@ function findUserByDateOfBirth(dob) {
   // Match users with the same date (ignoring time)
   const startDate = new Date(dob);
   startDate.setUTCHours(0, 0, 0, 0);
-  
+
   const endDate = new Date(dob);
   endDate.setUTCHours(23, 59, 59, 999);
-  
+
   return userModel.find({
     dateOfBirth: {
       $gte: startDate,
@@ -119,13 +119,12 @@ function calculateAge(dateOfBirth) {
 
 // Search users by age
 function findUserByAge(age) {
-  // Match users by birth year so numeric age matches expectations in tests
   const now = new Date();
   const birthYear = now.getFullYear() - age;
   const startOfYear = new Date(birthYear, 0, 1, 0, 0, 0, 0);
   const endOfYear = new Date(birthYear, 11, 31, 23, 59, 59, 999);
   return userModel.find({
-    dateOfBirth: { $gte: startOfYear, $lte: endOfYear }
+    dateOfBirth: { $gte: startOfYear, $lte: endOfYear },
   });
 }
 

@@ -160,8 +160,9 @@ describe('Event Routes', () => {
     const created = await eventModel.create(testEvent);
     const newUserId = new mongoose.Types.ObjectId();
 
-    const res = await request(app)
-      .put(`/events/${created._id}/attendees/add/${newUserId}`);
+    const res = await request(app).put(
+      `/events/${created._id}/attendees/add/${newUserId}`
+    );
 
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
@@ -172,11 +173,12 @@ describe('Event Routes', () => {
     const attendeeId = new mongoose.Types.ObjectId();
     const created = await eventModel.create({
       ...testEvent,
-      attendees: [attendeeId]
+      attendees: [attendeeId],
     });
 
-    const res = await request(app)
-      .put(`/events/${created._id}/attendees/remove/${attendeeId}`);
+    const res = await request(app).put(
+      `/events/${created._id}/attendees/remove/${attendeeId}`
+    );
 
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
@@ -187,8 +189,9 @@ describe('Event Routes', () => {
     const created = await eventModel.create(testEvent);
     const newBlockedId = new mongoose.Types.ObjectId();
 
-    const res = await request(app)
-      .put(`/events/${created._id}/blocked/add/${newBlockedId}`);
+    const res = await request(app).put(
+      `/events/${created._id}/blocked/add/${newBlockedId}`
+    );
 
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
@@ -199,11 +202,12 @@ describe('Event Routes', () => {
     const blockedUserId = new mongoose.Types.ObjectId();
     const created = await eventModel.create({
       ...testEvent,
-      blockedUsers: [blockedUserId]
+      blockedUsers: [blockedUserId],
     });
 
-    const res = await request(app)
-      .put(`/events/${created._id}/blocked/remove/${blockedUserId}`);
+    const res = await request(app).put(
+      `/events/${created._id}/blocked/remove/${blockedUserId}`
+    );
 
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);

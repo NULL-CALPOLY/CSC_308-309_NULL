@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import path from 'path';
 import { config } from 'dotenv';
 import express from 'express';
-import eventRouter from './EventFiles/EventRoutes.js'; 
+import eventRouter from './EventFiles/EventRoutes.js';
 import userRouter from './UserFiles/UserRoutes.js';
 import loginRouter from './CredentialFiles/LoginRoutes.js';
 import chatRouter from './ChatFiles/ChatRoutes.js';

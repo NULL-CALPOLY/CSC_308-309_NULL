@@ -9,19 +9,20 @@ router.get('/all', async (req, res) => {
     .getChats()
     .then((chats) => {
       if (!chats || chats.length === 0)
-        res.status(404).json({ 
-          success: false, 
-          message: 'No chats found' 
+        res.status(404).json({
+          success: false,
+          message: 'No chats found',
         });
-      else res.status(200).json({ 
-        success: true, 
-        data: chats 
-      });
+      else
+        res.status(200).json({
+          success: true,
+          data: chats,
+        });
     })
     .catch((error) => {
-      res.status(500).json({ 
-        success: false, 
-        message: `Error in the server: ${error}` 
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
       });
     });
 });
@@ -31,15 +32,15 @@ router.post('/', async (req, res) => {
   await chatServices
     .addChat(req.body)
     .then((chat) => {
-      res.status(201).json({ 
-        success: true, 
-        data: chat 
+      res.status(201).json({
+        success: true,
+        data: chat,
       });
     })
     .catch((error) => {
-      res.status(500).json({ 
-        success: false, 
-        message: `Error in the server: ${error}` 
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
       });
     });
 });
@@ -50,19 +51,20 @@ router.get('/:id', async (req, res) => {
     .findChatById(req.params.id)
     .then((chat) => {
       if (!chat)
-        res.status(404).json({ 
-          success: false, 
-          message: 'Chat not found' 
+        res.status(404).json({
+          success: false,
+          message: 'Chat not found',
         });
-      else res.status(200).json({ 
-        success: true, 
-        data: chat 
-      });
+      else
+        res.status(200).json({
+          success: true,
+          data: chat,
+        });
     })
     .catch((error) => {
-      res.status(500).json({ 
-        success: false, 
-        message: `Error in the server: ${error}` 
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
       });
     });
 });
@@ -73,19 +75,20 @@ router.put('/:id', async (req, res) => {
     .updateChat(req.params.id, req.body)
     .then((chat) => {
       if (!chat)
-        res.status(404).json({ 
-          success: false, 
-          message: 'Chat not found' 
+        res.status(404).json({
+          success: false,
+          message: 'Chat not found',
         });
-      else res.status(200).json({ 
-        success: true, 
-        data: chat 
-      });
+      else
+        res.status(200).json({
+          success: true,
+          data: chat,
+        });
     })
     .catch((error) => {
-      res.status(500).json({ 
-        success: false, 
-        message: `Error in the server: ${error}` 
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
       });
     });
 });
@@ -96,19 +99,20 @@ router.delete('/:id', async (req, res) => {
     .deleteChat(req.params.id)
     .then((chat) => {
       if (!chat)
-        res.status(404).json({ 
-          success: false, 
-          message: 'Chat not found' 
+        res.status(404).json({
+          success: false,
+          message: 'Chat not found',
         });
-      else res.status(200).json({ 
-        success: true, 
-        message: 'Chat deleted successfully' 
-      });
+      else
+        res.status(200).json({
+          success: true,
+          message: 'Chat deleted successfully',
+        });
     })
     .catch((error) => {
-      res.status(500).json({ 
-        success: false, 
-        message: `Error in the server: ${error}` 
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
       });
     });
 });
@@ -119,19 +123,20 @@ router.get('/search/name/:name', async (req, res) => {
     .findChatByName(req.params.name)
     .then((chats) => {
       if (!chats || chats.length === 0)
-        res.status(404).json({ 
-          success: false, 
-          message: 'No chats found with that name' 
+        res.status(404).json({
+          success: false,
+          message: 'No chats found with that name',
         });
-      else res.status(200).json({ 
-        success: true, 
-        data: chats 
-      });
+      else
+        res.status(200).json({
+          success: true,
+          data: chats,
+        });
     })
     .catch((error) => {
-      res.status(500).json({ 
-        success: false, 
-        message: `Error in the server: ${error}` 
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
       });
     });
 });
@@ -142,19 +147,20 @@ router.get('/search/city/:city', async (req, res) => {
     .findChatsByCity(req.params.city)
     .then((chats) => {
       if (!chats || chats.length === 0)
-        res.status(404).json({ 
-          success: false, 
-          message: 'No chats found in that city' 
+        res.status(404).json({
+          success: false,
+          message: 'No chats found in that city',
         });
-      else res.status(200).json({ 
-        success: true, 
-        data: chats 
-      });
+      else
+        res.status(200).json({
+          success: true,
+          data: chats,
+        });
     })
     .catch((error) => {
-      res.status(500).json({ 
-        success: false, 
-        message: `Error in the server: ${error}` 
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
       });
     });
 });
@@ -165,43 +171,45 @@ router.get('/search/user/:userId', async (req, res) => {
     .findChatsByUserID(req.params.userId)
     .then((chats) => {
       if (!chats || chats.length === 0)
-        res.status(404).json({ 
-          success: false, 
-          message: 'No chats found for this user' 
+        res.status(404).json({
+          success: false,
+          message: 'No chats found for this user',
         });
-      else res.status(200).json({ 
-        success: true, 
-        data: chats 
-      });
+      else
+        res.status(200).json({
+          success: true,
+          data: chats,
+        });
     })
     .catch((error) => {
-      res.status(500).json({ 
-        success: false, 
-        message: `Error in the server: ${error}` 
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
       });
     });
 });
 
 // Find chats by interests
 router.get('/search/interests/:interests', async (req, res) => {
-  const interests = req.params.interests.split(',').map(i => i.trim());
+  const interests = req.params.interests.split(',').map((i) => i.trim());
   await chatServices
     .findChatsByInterests(interests)
     .then((chats) => {
       if (!chats || chats.length === 0)
-        res.status(404).json({ 
-          success: false, 
-          message: 'No chats found for these interests' 
+        res.status(404).json({
+          success: false,
+          message: 'No chats found for these interests',
         });
-      else res.status(200).json({ 
-        success: true, 
-        data: chats 
-      });
+      else
+        res.status(200).json({
+          success: true,
+          data: chats,
+        });
     })
     .catch((error) => {
-      res.status(500).json({ 
-        success: false, 
-        message: `Error in the server: ${error}` 
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
       });
     });
 });
@@ -212,19 +220,20 @@ router.get('/search/event/:eventId', async (req, res) => {
     .findChatsByEvent(req.params.eventId)
     .then((chats) => {
       if (!chats || chats.length === 0)
-        res.status(404).json({ 
-          success: false, 
-          message: 'No chats found for this event' 
+        res.status(404).json({
+          success: false,
+          message: 'No chats found for this event',
         });
-      else res.status(200).json({ 
-        success: true, 
-        data: chats 
-      });
+      else
+        res.status(200).json({
+          success: true,
+          data: chats,
+        });
     })
     .catch((error) => {
-      res.status(500).json({ 
-        success: false, 
-        message: `Error in the server: ${error}` 
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
       });
     });
 });
@@ -235,19 +244,20 @@ router.put('/:id/users/add/:userId', async (req, res) => {
     .addUserToChat(req.params.id, req.params.userId)
     .then((chat) => {
       if (!chat)
-        res.status(404).json({ 
-          success: false, 
-          message: 'Chat not found' 
+        res.status(404).json({
+          success: false,
+          message: 'Chat not found',
         });
-      else res.status(200).json({ 
-        success: true, 
-        data: chat 
-      });
+      else
+        res.status(200).json({
+          success: true,
+          data: chat,
+        });
     })
     .catch((error) => {
-      res.status(500).json({ 
-        success: false, 
-        message: `Error in the server: ${error}` 
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
       });
     });
 });
@@ -258,19 +268,20 @@ router.put('/:id/users/remove/:userId', async (req, res) => {
     .removeUserFromChat(req.params.id, req.params.userId)
     .then((chat) => {
       if (!chat)
-        res.status(404).json({ 
-          success: false, 
-          message: 'Chat not found' 
+        res.status(404).json({
+          success: false,
+          message: 'Chat not found',
         });
-      else res.status(200).json({ 
-        success: true, 
-        data: chat 
-      });
+      else
+        res.status(200).json({
+          success: true,
+          data: chat,
+        });
     })
     .catch((error) => {
-      res.status(500).json({ 
-        success: false, 
-        message: `Error in the server: ${error}` 
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
       });
     });
 });
@@ -281,19 +292,20 @@ router.put('/:id/events/add/:eventId', async (req, res) => {
     .addEventToChat(req.params.id, req.params.eventId)
     .then((chat) => {
       if (!chat)
-        res.status(404).json({ 
-          success: false, 
-          message: 'Chat not found' 
+        res.status(404).json({
+          success: false,
+          message: 'Chat not found',
         });
-      else res.status(200).json({ 
-        success: true, 
-        data: chat 
-      });
+      else
+        res.status(200).json({
+          success: true,
+          data: chat,
+        });
     })
     .catch((error) => {
-      res.status(500).json({ 
-        success: false, 
-        message: `Error in the server: ${error}` 
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
       });
     });
 });
@@ -304,19 +316,20 @@ router.put('/:id/events/remove/:eventId', async (req, res) => {
     .removeEventFromChat(req.params.id, req.params.eventId)
     .then((chat) => {
       if (!chat)
-        res.status(404).json({ 
-          success: false, 
-          message: 'Chat not found' 
+        res.status(404).json({
+          success: false,
+          message: 'Chat not found',
         });
-      else res.status(200).json({ 
-        success: true, 
-        data: chat 
-      });
+      else
+        res.status(200).json({
+          success: true,
+          data: chat,
+        });
     })
     .catch((error) => {
-      res.status(500).json({ 
-        success: false, 
-        message: `Error in the server: ${error}` 
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
       });
     });
 });

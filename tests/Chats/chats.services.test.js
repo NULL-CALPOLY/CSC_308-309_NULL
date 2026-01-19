@@ -7,8 +7,8 @@ const testChat = {
   name: 'Test Chat',
   members: [],
   events: [],
-  city: "Pyongyang",
-  interests: ["kpop", "torture"]
+  city: 'Pyongyang',
+  interests: ['kpop', 'torture'],
 };
 
 beforeEach(async () => {
@@ -105,7 +105,9 @@ describe('Chat Routes', () => {
   test('PUT /chats/:id/users/add/:userId adds a member to the chat', async () => {
     const created = await chatModel.create(testChat);
     const userId = new mongoose.Types.ObjectId();
-    const res = await request(app).put(`/chats/${created._id}/users/add/${userId}`);
+    const res = await request(app).put(
+      `/chats/${created._id}/users/add/${userId}`
+    );
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
     expect(res.body.data.members.length).toBeGreaterThan(0);
@@ -114,7 +116,9 @@ describe('Chat Routes', () => {
   test('PUT /chats/:id/users/remove/:userId removes a member from the chat', async () => {
     const userId = new mongoose.Types.ObjectId();
     const created = await chatModel.create({ ...testChat, members: [userId] });
-    const res = await request(app).put(`/chats/${created._id}/users/remove/${userId}`);
+    const res = await request(app).put(
+      `/chats/${created._id}/users/remove/${userId}`
+    );
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
     expect(res.body.data.members.length).toBe(0);
@@ -123,7 +127,9 @@ describe('Chat Routes', () => {
   test('PUT /chats/:id/events/add/:eventId adds an event to the chat', async () => {
     const created = await chatModel.create(testChat);
     const eventId = new mongoose.Types.ObjectId();
-    const res = await request(app).put(`/chats/${created._id}/events/add/${eventId}`);
+    const res = await request(app).put(
+      `/chats/${created._id}/events/add/${eventId}`
+    );
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
     expect(res.body.data.events.length).toBeGreaterThan(0);
@@ -132,7 +138,9 @@ describe('Chat Routes', () => {
   test('PUT /chats/:id/events/remove/:eventId removes an event from the chat', async () => {
     const eventId = new mongoose.Types.ObjectId();
     const created = await chatModel.create({ ...testChat, events: [eventId] });
-    const res = await request(app).put(`/chats/${created._id}/events/remove/${eventId}`);
+    const res = await request(app).put(
+      `/chats/${created._id}/events/remove/${eventId}`
+    );
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
     expect(res.body.data.events.length).toBe(0);

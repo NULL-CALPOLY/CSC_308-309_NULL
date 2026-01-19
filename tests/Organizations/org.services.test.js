@@ -41,19 +41,23 @@ describe('Organization Services', () => {
 
   it('should find organizations by email', async () => {
     await organizationModel.create(testOrganization);
-    const results = await organizationServices.findOrganizationByEmail('techorg@example.com');
+    const results = await organizationServices.findOrganizationByEmail(
+      'techorg@example.com'
+    );
     expect(results.length).toBeGreaterThan(0);
   });
 
   it('should find organizations by phone number', async () => {
     await organizationModel.create(testOrganization);
-    const results = await organizationServices.findOrganizationByPhoneNumber('1234567890');
+    const results =
+      await organizationServices.findOrganizationByPhoneNumber('1234567890');
     expect(results.length).toBeGreaterThan(0);
   });
 
   it('should find organizations by inviteOnly status', async () => {
     await organizationModel.create(testOrganization);
-    const results = await organizationServices.findOrganizationByInviteOnly(false);
+    const results =
+      await organizationServices.findOrganizationByInviteOnly(false);
     expect(results.length).toBeGreaterThan(0);
   });
 
@@ -75,23 +79,40 @@ describe('Organization Services', () => {
 
   it('should find organizations by member', async () => {
     const memberId = new mongoose.Types.ObjectId();
-    const org = await organizationModel.create({ ...testOrganization, members: [memberId] });
-    const results = await organizationServices.findOrganizationByMember(memberId);
+    const org = await organizationModel.create({
+      ...testOrganization,
+      members: [memberId],
+    });
+    const results =
+      await organizationServices.findOrganizationByMember(memberId);
     expect(results.length).toBeGreaterThan(0);
   });
 
   it('should add a user to members', async () => {
     const org = await organizationModel.create(testOrganization);
     const newMember = new mongoose.Types.ObjectId();
-    const updated = await organizationServices.addUserToMembers(org._id, newMember);
-    expect(updated.members.map(id => id.toString())).toContain(newMember.toString());
+    const updated = await organizationServices.addUserToMembers(
+      org._id,
+      newMember
+    );
+    expect(updated.members.map((id) => id.toString())).toContain(
+      newMember.toString()
+    );
   });
 
   it('should remove a user from members', async () => {
     const memberId = new mongoose.Types.ObjectId();
-    const org = await organizationModel.create({ ...testOrganization, members: [memberId] });
-    const updated = await organizationServices.removeUserFromMembers(org._id, memberId);
-    expect(updated.members.map(id => id.toString())).not.toContain(memberId.toString());
+    const org = await organizationModel.create({
+      ...testOrganization,
+      members: [memberId],
+    });
+    const updated = await organizationServices.removeUserFromMembers(
+      org._id,
+      memberId
+    );
+    expect(updated.members.map((id) => id.toString())).not.toContain(
+      memberId.toString()
+    );
   });
 
   it('should get all organizations', async () => {

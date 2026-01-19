@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 export const MapContainer = ({ children }) => (
   <div data-testid="map-container">{children}</div>

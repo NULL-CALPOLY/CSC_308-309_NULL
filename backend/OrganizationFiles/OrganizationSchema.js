@@ -12,7 +12,6 @@ const OrganizationSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    // store canonical phone number in `phoneNumber`, but allow `phone` alias
     phoneNumber: {
       type: String,
       trim: true,
@@ -27,10 +26,10 @@ const OrganizationSchema = new mongoose.Schema(
       default: [],
     },
   },
-  { 
+  {
     collection: 'organization_list',
     toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+    toObject: { virtuals: true },
   }
 );
 

@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   MapContainer,
   TileLayer,
   Marker,
   useMapEvents,
-  useMap
-} from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
+  useMap,
+} from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 
-import markerIcon from "../assets/pin.svg";
-import locateIcon from "../assets/location.svg";
-import "./SmallMapComponent/SmallMapComponent.css";
+import markerIcon from '../assets/pin.svg';
+import locateIcon from '../assets/location.svg';
+import './SmallMapComponent/SmallMapComponent.css';
 
 // Custom marker icon
 delete L.Icon.Default.prototype._getIconUrl;
@@ -33,7 +33,7 @@ export default function RegistrationMap({ onLocationSelect }) {
         className="map-component"
       >
         <TileLayer
-          attribution='&copy; OpenStreetMap contributors'
+          attribution="&copy; OpenStreetMap contributors"
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
@@ -42,14 +42,15 @@ export default function RegistrationMap({ onLocationSelect }) {
           onLocationSelect={onLocationSelect}
         />
 
-        {selectedPosition && (
-          <Marker position={selectedPosition} />
-        )}
+        {selectedPosition && <Marker position={selectedPosition} />}
 
-        <LocateButton icon={locateIcon} setPosition={(pos) => {
-          setSelectedPosition(pos);
-          onLocationSelect(pos[0], pos[1]);
-        }} />
+        <LocateButton
+          icon={locateIcon}
+          setPosition={(pos) => {
+            setSelectedPosition(pos);
+            onLocationSelect(pos[0], pos[1]);
+          }}
+        />
       </MapContainer>
     </div>
   );
@@ -73,7 +74,7 @@ function LocateButton({ icon, setPosition }) {
 
   const handleLocate = () => {
     if (!navigator.geolocation) {
-      alert("Geolocation not supported");
+      alert('Geolocation not supported');
       return;
     }
 
@@ -83,7 +84,7 @@ function LocateButton({ icon, setPosition }) {
         setPosition(latlng);
         map.flyTo(latlng, 15);
       },
-      () => alert("Unable to retrieve location.")
+      () => alert('Unable to retrieve location.')
     );
   };
 

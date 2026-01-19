@@ -3,7 +3,9 @@
   padding: 14px 16px;
   border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.15s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.15s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   height: 50px;
 }
@@ -18,7 +20,6 @@
   font-weight: 600;
   color: #2d4a2d; /* dark green text */
 }
-
 
 .GroupChat-LastMessage {
   width: 75%;

@@ -33,7 +33,9 @@ describe('Organization Routes', () => {
   });
 
   test('POST /organizations creates an organization', async () => {
-    const res = await request(app).post('/organizations').send(testOrganization);
+    const res = await request(app)
+      .post('/organizations')
+      .send(testOrganization);
     expect(res.status).toBe(201);
     expect(res.body.data.name).toBe('Tech Org 2025');
   });
@@ -72,14 +74,18 @@ describe('Organization Routes', () => {
 
   test('GET /organizations/search/email/:email finds organization by email', async () => {
     await organizationModel.create(testOrganization);
-    const res = await request(app).get('/organizations/search/email/techorg@example.com');
+    const res = await request(app).get(
+      '/organizations/search/email/techorg@example.com'
+    );
     expect(res.status).toBe(200);
     expect(res.body.data.length).toBeGreaterThan(0);
   });
 
   test('GET /organizations/search/phone/:phone finds organization by phone', async () => {
     await organizationModel.create(testOrganization);
-    const res = await request(app).get('/organizations/search/phone/1234567890');
+    const res = await request(app).get(
+      '/organizations/search/phone/1234567890'
+    );
     expect(res.status).toBe(200);
     expect(res.body.data.length).toBeGreaterThan(0);
   });

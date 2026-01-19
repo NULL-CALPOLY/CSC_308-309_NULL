@@ -147,15 +147,19 @@ describe('User Routes', () => {
 
     expect(res.status).toBe(200);
     expect(res.body.data.length).toBe(1);
-    expect(new Date(res.body.data[0].dateOfBirth).toISOString())
-      .toBe(new Date(dateString).toISOString());
+    expect(new Date(res.body.data[0].dateOfBirth).toISOString()).toBe(
+      new Date(dateString).toISOString()
+    );
   });
 
   test('GET /users/search/dob/:dob treats numeric input as age', async () => {
     const currentYear = new Date().getFullYear();
-    const userWithAge25 = { ...testUser, dateOfBirth: new Date(`${currentYear - 25}-06-15`) };
+    const userWithAge25 = {
+      ...testUser,
+      dateOfBirth: new Date(`${currentYear - 25}-06-15`),
+    };
     await userModel.create(userWithAge25);
-    const expectedAge = 25; 
+    const expectedAge = 25;
     const res = await request(app).get(`/users/search/dob/${expectedAge}`);
     expect(res.status).toBe(200);
     expect(res.body.data.length).toBe(1);
