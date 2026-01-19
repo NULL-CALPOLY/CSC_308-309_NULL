@@ -78,7 +78,6 @@ describe('Chat Routes', () => {
 
   test('GET /chats/search/user/:userId finds chats by user ID', async () => {
     const userId = new mongoose.Types.ObjectId();
-    const created = await chatModel.create({ ...testChat, members: [userId] });
     const res = await request(app).get(`/chats/search/user/${userId}`);
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
@@ -95,7 +94,6 @@ describe('Chat Routes', () => {
 
   test('GET /chats/search/event/:eventId finds chats by event', async () => {
     const eventId = new mongoose.Types.ObjectId();
-    const created = await chatModel.create({ ...testChat, events: [eventId] });
     const res = await request(app).get(`/chats/search/event/${eventId}`);
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);

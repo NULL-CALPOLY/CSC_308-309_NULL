@@ -130,8 +130,7 @@ export default function Registration() {
                   id="gender"
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
-                  required
-                >
+                  required>
                   <option value="">Select your gender</option>
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>

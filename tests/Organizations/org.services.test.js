@@ -79,10 +79,6 @@ describe('Organization Services', () => {
 
   it('should find organizations by member', async () => {
     const memberId = new mongoose.Types.ObjectId();
-    const org = await organizationModel.create({
-      ...testOrganization,
-      members: [memberId],
-    });
     const results =
       await organizationServices.findOrganizationByMember(memberId);
     expect(results.length).toBeGreaterThan(0);

@@ -3,6 +3,10 @@ import chatServices from './ChatServices.js';
 
 const router = express.Router();
 
+router.get('/', (req, res) => {
+  res.send('Yes, chat info is working');
+});
+
 // Get all chats
 router.get('/all', async (req, res) => {
   await chatServices

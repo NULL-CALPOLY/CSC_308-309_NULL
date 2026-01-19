@@ -30,8 +30,7 @@ export default function RegistrationMap({ onLocationSelect }) {
         zoom={13}
         scrollWheelZoom={true}
         zoomControl={true}
-        className="map-component"
-      >
+        className="map-component">
         <TileLayer
           attribution="&copy; OpenStreetMap contributors"
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

@@ -13,13 +13,20 @@ router.get('/all', async (req, res) => {
     .getLogins()
     .then((logins) => {
       if (!logins || logins.length === 0)
-        res.status(404).json({ success: false, message: 'No logins found' });
-      res.status(200).json({ success: true, data: logins });
+        res.status(404).json({
+          success: false,
+          message: 'No logins found',
+        });
+      res.status(200).json({
+        success: true,
+        data: logins,
+      });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 
@@ -29,15 +36,22 @@ router.get('/:id', async (req, res) => {
     .findLoginById(req.params.id)
     .then((login) => {
       if (!login) {
-        res.status(404).json({ success: false, message: 'Login not found' });
+        res.status(404).json({
+          success: false,
+          message: 'Login not found',
+        });
       } else {
-        res.status(200).json({ success: true, data: login });
+        res.status(200).json({
+          success: true,
+          data: login,
+        });
       }
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 
@@ -46,21 +60,28 @@ router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password)
-    return res
-      .status(400)
-      .json({ success: false, message: 'Email and password required' });
+    return res.status(400).json({
+      success: false,
+      message: 'Email and password required',
+    });
   try {
     const user = await loginServices.authenticate(email, password);
 
     if (!user)
-      return res
-        .status(401)
-        .json({ success: false, message: 'Invalid email or password' });
-    res
-      .status(200)
-      .json({ success: true, message: 'Login successful', userId: user._id });
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid email or password',
+      });
+    res.status(200).json({
+      success: true,
+      message: 'Login successful',
+      userId: user._id,
+    });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 });
 
@@ -69,12 +90,16 @@ router.post('/', async (req, res) => {
   await loginServices
     .addLogin(req.body)
     .then((login) => {
-      res.status(201).json({ success: true, data: login });
+      res.status(201).json({
+        success: true,
+        data: login,
+      });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 
@@ -84,17 +109,22 @@ router.delete('/:id', async (req, res) => {
     .deleteLogin(req.params.id)
     .then((deletedLogin) => {
       if (!deletedLogin) {
-        res.status(404).json({ success: false, message: 'Login not found' });
+        res.status(404).json({
+          success: false,
+          message: 'Login not found',
+        });
       } else {
-        res
-          .status(200)
-          .json({ success: true, message: 'Login deleted successfully' });
+        res.status(200).json({
+          success: true,
+          message: 'Login deleted successfully',
+        });
       }
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 
@@ -104,15 +134,22 @@ router.put('/:id', async (req, res) => {
     .updateLogin(req.params.id, req.body)
     .then((login) => {
       if (!login) {
-        res.status(404).json({ success: false, message: 'Login not found' });
+        res.status(404).json({
+          success: false,
+          message: 'Login not found',
+        });
       } else {
-        res.status(200).json({ success: true, data: login });
+        res.status(200).json({
+          success: true,
+          data: login,
+        });
       }
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 
@@ -122,17 +159,22 @@ router.get('/search/email/:email', async (req, res) => {
     .findLoginByEmail(req.params.email)
     .then((users) => {
       if (!users || users.length === 0) {
-        res
-          .status(404)
-          .json({ success: false, message: 'No logins found with that email' });
+        res.status(404).json({
+          success: false,
+          message: 'No logins found with that email',
+        });
       } else {
-        res.status(200).json({ success: true, data: users });
+        res.status(200).json({
+          success: true,
+          data: users,
+        });
       }
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 

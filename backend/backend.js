@@ -33,12 +33,16 @@ if (process.env.NODE_ENV !== 'test') {
   mongoose
     .connect(uri) // The two defaults weren't needed in latest version of mongoose
     .then(() => {
-      console.log('✅ Connected to MongoDB');
+      console.log('✅ MongoDB connection established');
       app.listen(port, () => {
-        console.log(`🚀 Server is running on port ${port}`);
+        console.log(`🚀 Server listening on port ${port}`);
       });
     })
-    .catch((error) => console.error('❌ MongoDB connection error:', error));
+    .catch((error) => {
+      console.error('❌ Failed to connect to MongoDB');
+      console.error(error);
+      process.exit(1);
+    });
 }
 
 // Start the server

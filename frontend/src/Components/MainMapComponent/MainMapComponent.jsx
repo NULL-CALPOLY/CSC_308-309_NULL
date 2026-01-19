@@ -24,8 +24,7 @@ export default function MainMapComponent() {
         zoom={13}
         scrollWheelZoom={true}
         zoomControl={true}
-        className="main-map-component"
-      >
+        className="main-map-component">
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

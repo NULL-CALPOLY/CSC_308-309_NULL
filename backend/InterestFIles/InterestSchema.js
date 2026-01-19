@@ -2,13 +2,13 @@ import mongoose from 'mongoose';
 
 const InterestSchema = new mongoose.Schema(
   {
-    interestName: {
+    name: {
       type: String,
       required: true,
       trim: true,
     },
     similarInterests: {
-      type: [{ type: String }],
+      type: [{ type: mongoose.Schema.Types.ObjectId }],
       required: false,
     },
   },

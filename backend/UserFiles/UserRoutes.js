@@ -33,8 +33,15 @@ router.get('/:id', async (req, res) => {
     .findUserById(req.params.id)
     .then((user) => {
       if (!user)
-        res.status(404).json({ success: false, message: 'User not found' });
-      else res.status(200).json({ success: true, data: user });
+        res.status(404).json({
+          success: false,
+          message: 'User not found',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: user,
+        });
     })
     .catch((error) => {
       res.status(500).json({
@@ -69,16 +76,21 @@ router.delete('/:id', async (req, res) => {
     .deleteUser(req.params.id)
     .then((deletedUser) => {
       if (!deletedUser)
-        res.status(404).json({ success: false, message: 'User not found' });
+        res.status(404).json({
+          success: false,
+          message: 'User not found',
+        });
       else
-        res
-          .status(200)
-          .json({ success: true, message: 'User deleted successfully' });
+        res.status(200).json({
+          success: true,
+          message: 'User deleted successfully',
+        });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 
@@ -88,13 +100,21 @@ router.put('/:id', async (req, res) => {
     .updateUser(req.params.id, req.body)
     .then((user) => {
       if (!user)
-        res.status(404).json({ success: false, message: 'User not found' });
-      else res.status(200).json({ success: true, data: user });
+        res.status(404).json({
+          success: false,
+          message: 'User not found',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: user,
+        });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 
@@ -104,15 +124,21 @@ router.get('/search/name/:name', async (req, res) => {
     .findUserByName(req.params.name)
     .then((users) => {
       if (!users || users.length === 0)
-        res
-          .status(404)
-          .json({ success: false, message: 'No users found with that name' });
-      else res.status(200).json({ success: true, data: users });
+        res.status(404).json({
+          success: false,
+          message: 'No users found with that name',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: users,
+        });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 
@@ -122,15 +148,21 @@ router.get('/search/email/:email', async (req, res) => {
     .findUserByEmail(req.params.email)
     .then((users) => {
       if (!users || users.length === 0)
-        res
-          .status(404)
-          .json({ success: false, message: 'No users found with that email' });
-      else res.status(200).json({ success: true, data: users });
+        res.status(404).json({
+          success: false,
+          message: 'No users found with that email',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: users,
+        });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 
@@ -145,17 +177,22 @@ router.get('/search/dob/:dob', async (req, res) => {
       .findUserByAge(age)
       .then((users) => {
         if (!users || users.length === 0) {
-          res
-            .status(404)
-            .json({ success: false, message: 'No users found with that age' });
+          res.status(404).json({
+            success: false,
+            message: 'No users found with that age',
+          });
         } else {
-          res.status(200).json({ success: true, data: users });
+          res.status(200).json({
+            success: true,
+            data: users,
+          });
         }
       })
       .catch((error) => {
-        res
-          .status(500)
-          .json({ success: false, message: `Error in the server: ${error}` });
+        res.status(500).json({
+          success: false,
+          message: `Error in the server: ${error}`,
+        });
       });
   } else {
     const dob = new Date(param);
@@ -163,20 +200,22 @@ router.get('/search/dob/:dob', async (req, res) => {
       .findUserByDateOfBirth(dob)
       .then((users) => {
         if (!users || users.length === 0) {
-          res
-            .status(404)
-            .json({
-              success: false,
-              message: 'No users found with that date of birth',
-            });
+          res.status(404).json({
+            success: false,
+            message: 'No users found with that date of birth',
+          });
         } else {
-          res.status(200).json({ success: true, data: users });
+          res.status(200).json({
+            success: true,
+            data: users,
+          });
         }
       })
       .catch((error) => {
-        res
-          .status(500)
-          .json({ success: false, message: `Error in the server: ${error}` });
+        res.status(500).json({
+          success: false,
+          message: `Error in the server: ${error}`,
+        });
       });
   }
 });
@@ -187,15 +226,21 @@ router.get('/search/gender/:gender', async (req, res) => {
     .findUserByGender(req.params.gender)
     .then((users) => {
       if (!users || users.length === 0)
-        res
-          .status(404)
-          .json({ success: false, message: 'No users found with that gender' });
-      else res.status(200).json({ success: true, data: users });
+        res.status(404).json({
+          success: false,
+          message: 'No users found with that gender',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: users,
+        });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 
@@ -212,9 +257,10 @@ router.get('/search/interests/:interests', async (req, res) => {
       else res.status(200).json({ success: true, data: users });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 
@@ -224,15 +270,21 @@ router.get('/search/radius/:radius', async (req, res) => {
     .findUserByRadius(req.params.radius)
     .then((users) => {
       if (!users || users.length === 0)
-        res
-          .status(404)
-          .json({ success: false, message: 'No users found with that radius' });
-      else res.status(200).json({ success: true, data: users });
+        res.status(404).json({
+          success: false,
+          message: 'No users found with that radius',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: users,
+        });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 
@@ -249,12 +301,17 @@ router.get('/search/location/:location', async (req, res) => {
           success: false,
           message: 'No users found with that location',
         });
-      else res.status(200).json({ success: true, data: users });
+      else
+        res.status(200).json({
+          success: true,
+          data: users,
+        });
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
     });
 });
 
