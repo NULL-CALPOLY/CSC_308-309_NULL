@@ -39,16 +39,34 @@ afterAll(async () => {
 });
 
 describe('User Routes', () => {
+  test('GET /users returns working message', async () => {
+    const res = await request(app).get('/users/');
+    expect(res.status).toBe(200);
+    expect(res.text).toBe('Yes, user info is working');
+  });
+
   test('GET /users/all returns 404 when no users exist', async () => {
     const res = await request(app).get('/users/all');
     expect(res.statusCode).toBe(404);
     expect(res.body.success).toBe(false);
   });
 
+  test('GET /users/all returns all users successfully', async () => {
+    await userModel.create(testUser);
+    const res = await request(app).get('/users/all');
+    expect(res.statusCode).toBe(200);
+    expect(res.body.length).toBeGreaterThan(0);
+  });
+
   test('POST /users creates a user', async () => {
     const res = await request(app).post('/users').send(testUser);
     expect(res.status).toBe(201);
     expect(res.body.data.name).toBe('Test User');
+  });
+
+  test('POST /users with invalid data fails', async () => {
+    const res = await request(app).post('/users').send({});
+    expect(res.status).toBeGreaterThanOrEqual(400);
   });
 
   test('GET /users/:id returns a user', async () => {
@@ -103,11 +121,23 @@ describe('User Routes', () => {
     expect(res.body.data[0].name).toBe('Test User');
   });
 
+  test('GET /users/search/name/:name returns 404 when not found', async () => {
+    const res = await request(app).get('/users/search/name/NonExistent');
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
+  });
+
   test('GET /users/search/email/:email returns matching users', async () => {
     await userModel.create(testUser);
     const res = await request(app).get('/users/search/email/test@example.com');
     expect(res.status).toBe(200);
     expect(res.body.data[0].email).toBe('test@example.com');
+  });
+
+  test('GET /users/search/email/:email returns 404 when not found', async () => {
+    const res = await request(app).get('/users/search/email/nonexistent@example.com');
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
   });
 
   test('GET /users/search/gender/:gender returns matching users', async () => {
@@ -117,11 +147,23 @@ describe('User Routes', () => {
     expect(res.body.data[0].gender).toBe('Male');
   });
 
+  test('GET /users/search/gender/:gender returns 404 when not found', async () => {
+    const res = await request(app).get('/users/search/gender/Other');
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
+  });
+
   test('GET /users/search/interests/:interests returns matching users', async () => {
     await userModel.create(testUser2);
     const res = await request(app).get('/users/search/interests/music');
     expect(res.status).toBe(200);
     expect(res.body.data[0].name).toBe('Another User');
+  });
+
+  test('GET /users/search/interests/:interests returns 404 when not found', async () => {
+    const res = await request(app).get('/users/search/interests/nonexistent');
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
   });
 
   test('GET /users/search/radius/:radius returns users by radius', async () => {
@@ -131,12 +173,25 @@ describe('User Routes', () => {
     expect(res.body.data[0].radius).toBe(10);
   });
 
+  test('GET /users/search/radius/:radius returns 404 when not found', async () => {
+    const res = await request(app).get('/users/search/radius/999');
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
+  });
+
   test('GET /users/search/location/:location returns nearby users', async () => {
     await userModel.create(testUser);
     const loc = '34.123,-118.123,10';
     const res = await request(app).get(`/users/search/location/${loc}`);
     expect(res.status).toBe(200);
     expect(res.body.data.length).toBe(1);
+  });
+
+  test('GET /users/search/location/:location returns 404 when not found', async () => {
+    const loc = '0,0,1';
+    const res = await request(app).get(`/users/search/location/${loc}`);
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
   });
 
   test('GET /users/search/dob/:dob finds users by exact date of birth', async () => {

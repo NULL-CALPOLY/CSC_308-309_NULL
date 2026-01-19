@@ -79,9 +79,14 @@ describe('Organization Services', () => {
 
   it('should find organizations by member', async () => {
     const memberId = new mongoose.Types.ObjectId();
+    const org = await organizationModel.create({
+      ...testOrganization,
+      members: [memberId],
+    });
     const results =
       await organizationServices.findOrganizationByMember(memberId);
     expect(results.length).toBeGreaterThan(0);
+    expect(results[0]._id.toString()).toBe(org._id.toString());
   });
 
   it('should add a user to members', async () => {

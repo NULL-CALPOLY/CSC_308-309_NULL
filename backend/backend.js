@@ -7,6 +7,7 @@ import userRouter from './UserFiles/UserRoutes.js';
 import loginRouter from './CredentialFiles/LoginRoutes.js';
 import chatRouter from './ChatFiles/ChatRoutes.js';
 import organizationRouter from './OrganizationFiles/OrganizationRoutes.js';
+import interestRouter from './InterestFIles/InterestRoutes.js';
 import cors from 'cors';
 
 // Intialize Express app
@@ -21,6 +22,7 @@ app.use('/users', userRouter);
 app.use('/organizations', organizationRouter);
 app.use('/logins', loginRouter);
 app.use('/chats', chatRouter);
+app.use('/interests', interestRouter);
 
 // Load environment variables (use process.cwd() so this file works under tests)
 config({ path: path.resolve(process.cwd(), '.env') });
