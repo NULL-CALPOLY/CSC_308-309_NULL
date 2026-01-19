@@ -15,8 +15,8 @@ A full-stack web application for finding and connecting with people based on sha
 - [Development](#development)
 - [API Documentation](#api-documentation)
 - [Code Quality](#code-quality)
-- [Testing](#testing)
-- [Contributing](#contributing)
+- [Testing](#-testing)
+- [Contributing](#-contributing-guidelines)
 
 ---
 
