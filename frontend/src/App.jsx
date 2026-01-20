@@ -12,7 +12,6 @@ const SearchPage = () => <div style={{ padding: 24 }}>Search</div>;
 
 export default function App() {
   return (
-
     <div className="app">
       <Navbar className="navbar" />
       <main className="main">

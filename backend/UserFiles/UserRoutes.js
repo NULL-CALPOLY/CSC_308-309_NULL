@@ -13,16 +13,16 @@ router.get('/all', async (req, res) => {
     .getUsers()
     .then((users) => {
       if (!users || users.length === 0)
-        res.status(404).json({ 
-          success: false, 
-          message: 'No users found' 
+        res.status(404).json({
+          success: false,
+          message: 'No users found',
         });
       else res.status(200).json(users);
     })
     .catch((error) => {
-      res.status(500).json({ 
-        success: false, 
-        message: `Error in the server: ${error}` 
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
       });
     });
 });
@@ -45,24 +45,23 @@ router.get('/:id', async (req, res) => {
 });
 
 // Post a new user
-router.post("/", async (req, res) => {
+router.post('/', async (req, res) => {
   await userServices
     .addUser(req.body)
     .then((user) => {
       res.status(201).json({
         success: true,
-        message: "User registered successfully.",
+        message: 'User registered successfully.',
         data: user,
       });
     })
     .catch((error) => {
       res.status(error.status || 400).json({
         success: false,
-        message: error.message || "An unexpected error occurred.",
+        message: error.message || 'An unexpected error occurred.',
       });
     });
 });
-
 
 // Delete a user
 router.delete('/:id', async (req, res) => {
@@ -146,13 +145,17 @@ router.get('/search/dob/:dob', async (req, res) => {
       .findUserByAge(age)
       .then((users) => {
         if (!users || users.length === 0) {
-          res.status(404).json({ success: false, message: 'No users found with that age' });
+          res
+            .status(404)
+            .json({ success: false, message: 'No users found with that age' });
         } else {
           res.status(200).json({ success: true, data: users });
         }
       })
       .catch((error) => {
-        res.status(500).json({ success: false, message: `Error in the server: ${error}` });
+        res
+          .status(500)
+          .json({ success: false, message: `Error in the server: ${error}` });
       });
   } else {
     const dob = new Date(param);
@@ -160,13 +163,20 @@ router.get('/search/dob/:dob', async (req, res) => {
       .findUserByDateOfBirth(dob)
       .then((users) => {
         if (!users || users.length === 0) {
-          res.status(404).json({ success: false, message: 'No users found with that date of birth' });
+          res
+            .status(404)
+            .json({
+              success: false,
+              message: 'No users found with that date of birth',
+            });
         } else {
           res.status(200).json({ success: true, data: users });
         }
       })
       .catch((error) => {
-        res.status(500).json({ success: false, message: `Error in the server: ${error}` });
+        res
+          .status(500)
+          .json({ success: false, message: `Error in the server: ${error}` });
       });
   }
 });

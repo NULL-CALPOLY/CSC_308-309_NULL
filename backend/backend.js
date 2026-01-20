@@ -1,12 +1,12 @@
 import mongoose from 'mongoose';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import { config } from 'dotenv';
 import express from 'express';
-import eventRouter from './EventFiles/EventRoutes.js'; 
+import eventRouter from './EventFiles/EventRoutes.js';
 import userRouter from './UserFiles/UserRoutes.js';
 import loginRouter from './CredentialFiles/LoginRoutes.js';
 import chatRouter from './ChatFiles/ChatRoutes.js';
+import organizationRouter from './OrganizationFiles/OrganizationRoutes.js';
 import cors from 'cors';
 
 // Intialize Express app
@@ -18,15 +18,12 @@ app.use(cors());
 app.use(express.json());
 app.use('/events', eventRouter);
 app.use('/users', userRouter);
+app.use('/organizations', organizationRouter);
 app.use('/logins', loginRouter);
 app.use('/chats', chatRouter);
 
-// Setup path to .env
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Load environment variables
-config({ path: path.resolve(__dirname, '..', '.env') });
+// Load environment variables (use process.cwd() so this file works under tests)
+config({ path: path.resolve(process.cwd(), '.env') });
 
 // Get MongoDB URI from environment variable
 const uri = process.env.MONGODB_URI;

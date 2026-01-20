@@ -56,9 +56,11 @@ function findChatsByUserID(userId) {
 
 // Find group chats containing any of the given interests
 function findChatsByInterests(interests) {
-  return chatModel.find({
-    interests: { $in: interests },
-  }).populate('members events');
+  return chatModel
+    .find({
+      interests: { $in: interests },
+    })
+    .populate('members events');
 }
 
 // Find group chats containing a specific event
@@ -73,7 +75,11 @@ function findChatsByEvent(eventId) {
 // Add a member to a group chat
 function addUserToChat(groupId, userId) {
   return chatModel
-    .findByIdAndUpdate(groupId, { $addToSet: { members: userId } }, { new: true })
+    .findByIdAndUpdate(
+      groupId,
+      { $addToSet: { members: userId } },
+      { new: true }
+    )
     .populate('members events');
 }
 

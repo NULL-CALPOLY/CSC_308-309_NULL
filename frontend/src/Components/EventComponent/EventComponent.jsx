@@ -5,7 +5,7 @@ import TagComponent from '../InterestTag/InterestTag.jsx';
 export default function EventComponent(props) {
   const [expanded, setExpanded] = useState(false);
   const hasExtra = Boolean(props.description || props.attendees || props.host);
-  const tag = props.interest || "General";
+  const tag = props.interest || 'General';
   console.log(tag);
   console.log(props);
 

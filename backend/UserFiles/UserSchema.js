@@ -32,11 +32,6 @@ const UserSchema = new mongoose.Schema(
       required: false,
       trim: true,
     },
-    city: {
-      type: String,
-      required: true,
-      trim: true,
-    },
     interests: {
       type: [{ type: String }],
       required: false,

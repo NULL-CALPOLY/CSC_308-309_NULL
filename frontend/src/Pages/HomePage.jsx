@@ -65,22 +65,21 @@ const test_Event_List = [
 
 const test_Groupchat_List = [
   {
-    groupChatName: "SLO Basketball",
-    lastMessage: "Anyone playing tonight?"
+    groupChatName: 'SLO Basketball',
+    lastMessage: 'Anyone playing tonight?',
   },
   {
-    groupChatName: "SLO Soccer",
-    lastMessage: "Lets have the game at the lower field"
+    groupChatName: 'SLO Soccer',
+    lastMessage: 'Lets have the game at the lower field',
   },
   {
-    groupChatName: "CPSalsa",
-    lastMessage: "Who is ready to dance?"
+    groupChatName: 'CPSalsa',
+    lastMessage: 'Who is ready to dance?',
   },
   {
-    groupChatName: "CSAI",
-    lastMessage: "There will be presentations this"
-  }
-
+    groupChatName: 'CSAI',
+    lastMessage: 'There will be presentations this',
+  },
 ];
 
 export default function HomePage() {
@@ -144,7 +143,6 @@ export default function HomePage() {
 
 //   fetchEvents();
 // }, []);
-
 
 //   return (
 //     <div className="HomePage">
