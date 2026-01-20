@@ -31,10 +31,24 @@ afterAll(async () => {
 });
 
 describe('Event Routes', () => {
+  test('GET /events returns working message', async () => {
+    const res = await request(app).get('/events/');
+    expect(res.status).toBe(200);
+    expect(res.text).toBe('Yes, events info is working');
+  });
+
   test('GET /events/all returns 404 when no events exist', async () => {
     const res = await request(app).get('/events/all');
     expect(res.statusCode).toBe(404);
     expect(res.body.success).toBe(false);
+  });
+
+  test('GET /events/all returns all events successfully', async () => {
+    await eventModel.create(testEvent);
+    const res = await request(app).get('/events/all');
+    expect(res.statusCode).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.length).toBeGreaterThan(0);
   });
 
   test('POST /events creates an event', async () => {
@@ -43,11 +57,22 @@ describe('Event Routes', () => {
     expect(res.body.data.name).toBe('Tech Meetup 2025');
   });
 
+  test('POST /events with invalid data fails', async () => {
+    const res = await request(app).post('/events').send({});
+    expect(res.status).toBeGreaterThanOrEqual(400);
+  });
+
   test('GET /events/:id returns the created event', async () => {
     const created = await eventModel.create(testEvent);
     const res = await request(app).get(`/events/${created._id}`);
     expect(res.status).toBe(200);
     expect(res.body.data.name).toBe(testEvent.name);
+  });
+
+  test('GET /events/:id returns 404 for non-existent event', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const res = await request(app).get(`/events/${fakeId}`);
+    expect(res.status).toBe(404);
   });
 
   test('PUT /events/:id updates the event', async () => {
@@ -59,12 +84,26 @@ describe('Event Routes', () => {
     expect(res.body.data.description).toBe('Updated description');
   });
 
+  test('PUT /events/:id returns 404 for non-existent event', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const res = await request(app)
+      .put(`/events/${fakeId}`)
+      .send({ description: 'Update' });
+    expect(res.status).toBe(404);
+  });
+
   test('DELETE /events/:id deletes the event', async () => {
     const created = await eventModel.create(testEvent);
     const res = await request(app).delete(`/events/${created._id}`);
     expect(res.status).toBe(200);
     const deleted = await eventModel.findById(created._id);
     expect(deleted).toBeNull();
+  });
+
+  test('DELETE /events/:id returns 404 for non-existent event', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const res = await request(app).delete(`/events/${fakeId}`);
+    expect(res.status).toBe(404);
   });
 
   test('GET /events/search/name/:name finds event by name', async () => {
@@ -74,11 +113,23 @@ describe('Event Routes', () => {
     expect(res.body.data.length).toBeGreaterThan(0);
   });
 
+  test('GET /events/search/name/:name returns 404 when not found', async () => {
+    const res = await request(app).get(`/events/search/name/NonExistent`);
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
+  });
+
   test('GET /events/search/description/:keyword finds event by description', async () => {
     await eventModel.create(testEvent);
     const res = await request(app).get(`/events/search/description/Testing`);
     expect(res.status).toBe(200);
     expect(res.body.data.length).toBeGreaterThan(0);
+  });
+
+  test('GET /events/search/description/:keyword returns 404 when not found', async () => {
+    const res = await request(app).get(`/events/search/description/NonExistent`);
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
   });
 
   test('GET /events/search/map/:mapComponent finds event by map component', async () => {
@@ -88,11 +139,24 @@ describe('Event Routes', () => {
     expect(res.body.data.length).toBeGreaterThan(0);
   });
 
+  test('GET /events/search/map/:mapComponent returns 404 when not found', async () => {
+    const res = await request(app).get(`/events/search/map/NonExistentMap`);
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
+  });
+
   test('GET /events/search/host/:hostId finds events by host', async () => {
     const created = await eventModel.create(testEvent);
     const res = await request(app).get(`/events/search/host/${created.host}`);
     expect(res.status).toBe(200);
     expect(res.body.data.length).toBe(1);
+  });
+
+  test('GET /events/search/host/:hostId returns 404 when not found', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const res = await request(app).get(`/events/search/host/${fakeId}`);
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
   });
 
   test('GET /events/search/attendee/:userId finds events with that attendee', async () => {
@@ -103,6 +167,13 @@ describe('Event Routes', () => {
     expect(res.body.data.length).toBe(1);
   });
 
+  test('GET /events/search/attendee/:userId returns 404 when not found', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const res = await request(app).get(`/events/search/attendee/${fakeId}`);
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
+  });
+
   test('GET /events/search/interests/:interests finds matching events', async () => {
     await eventModel.create(testEvent);
     const res = await request(app).get(
@@ -110,6 +181,14 @@ describe('Event Routes', () => {
     );
     expect(res.status).toBe(200);
     expect(res.body.data.length).toBe(1);
+  });
+
+  test('GET /events/search/interests/:interests returns 404 when not found', async () => {
+    const res = await request(app).get(
+      `/events/search/interests/NonExistentInterest`
+    );
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
   });
 
   test('GET /events/search/location/:location finds events near coordinates', async () => {

@@ -25,8 +25,7 @@ export default function EventComponent(props) {
           <button
             className="SeeToggle"
             type="button"
-            onClick={() => setExpanded(true)}
-          >
+            onClick={() => setExpanded(true)}>
             See more
           </button>
         </div>
@@ -50,8 +49,7 @@ export default function EventComponent(props) {
             <button
               className="SeeToggle"
               type="button"
-              onClick={() => setExpanded(false)}
-            >
+              onClick={() => setExpanded(false)}>
               See less
             </button>
           </div>

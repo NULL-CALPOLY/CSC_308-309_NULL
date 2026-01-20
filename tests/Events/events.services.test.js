@@ -84,12 +84,13 @@ describe('Event Services', () => {
 
   it('should find events by attendee', async () => {
     const attendeeId = new mongoose.Types.ObjectId();
-    const event = await eventModel.create({
+    const eventWithAttendee = await eventModel.create({
       ...testEvent,
       attendees: [attendeeId],
     });
     const results = await eventServices.findEventByAttendee(attendeeId);
     expect(results.length).toBeGreaterThan(0);
+    expect(results[0]._id.toString()).toBe(eventWithAttendee._id.toString());
   });
 
   it('should find events within a time range', async () => {

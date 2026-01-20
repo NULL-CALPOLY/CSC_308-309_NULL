@@ -86,6 +86,7 @@ describe('Organization Services', () => {
     const results =
       await organizationServices.findOrganizationByMember(memberId);
     expect(results.length).toBeGreaterThan(0);
+    expect(results[0]._id.toString()).toBe(org._id.toString());
   });
 
   it('should add a user to members', async () => {

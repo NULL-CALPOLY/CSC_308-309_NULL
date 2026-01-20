@@ -216,4 +216,78 @@ router.get('/search/invite/:invite', async (req, res) => {
     });
 });
 
+// Search by member
+router.get('/search/member/:userId', async (req, res) => {
+  await organizationServices
+    .findOrganizationByMember(req.params.userId)
+    .then((organizations) => {
+      if (!organizations || organizations.length === 0)
+        res.status(404).json({
+          success: false,
+          message: 'No organizations found for this member',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: organizations,
+        });
+    })
+    .catch((error) => {
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
+    });
+});
+
+// Add user to organization members
+router.put('/:id/members/add/:userId', async (req, res) => {
+  await organizationServices
+    .addUserToMembers(req.params.id, req.params.userId)
+    .then((organization) => {
+      if (!organization)
+        res.status(404).json({
+          success: false,
+          message: 'Organization not found',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          message: 'User added to organization successfully',
+          data: organization,
+        });
+    })
+    .catch((error) => {
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
+    });
+});
+
+// Remove user from organization members
+router.put('/:id/members/remove/:userId', async (req, res) => {
+  await organizationServices
+    .removeUserFromMembers(req.params.id, req.params.userId)
+    .then((organization) => {
+      if (!organization)
+        res.status(404).json({
+          success: false,
+          message: 'Organization not found',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          message: 'User removed from organization successfully',
+          data: organization,
+        });
+    })
+    .catch((error) => {
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
+    });
+});
+
 export default router;
