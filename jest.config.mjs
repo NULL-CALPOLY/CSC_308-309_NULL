@@ -5,10 +5,9 @@ export default {
   setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
   // only run backend service/route tests in this project
   testMatch: ['<rootDir>/tests/**/?(*.)+(services|routes).test.js'],
-  // use Babel for JS/JSX and esbuild for .mjs to support JSX and ESM node_modules
+  // use Babel for all JS/JSX files
   transform: {
     '^.+\\.[jt]sx?$': 'babel-jest',
-    '^.+\\.mjs$': 'esbuild-jest',
   },
   // allow transforming node_modules (needed for some ESM packages like bson)
   transformIgnorePatterns: [],

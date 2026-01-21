@@ -1,18 +1,32 @@
 import React from 'react';
 
-export const MapContainer = ({ children }) => (
-  <div data-testid="map-container">{children}</div>
-);
-
-export const TileLayer = () => <div data-testid="tile-layer" />;
-
-export const Marker = ({ children }) => (
-  <div data-testid="marker">{children}</div>
-);
-
-export const Popup = ({ children }) => <div>{children}</div>;
-
-export const useMap = () => ({
+const mockMapInstance = {
   flyTo: jest.fn(),
   setView: jest.fn(),
-});
+  on: jest.fn(),
+  off: jest.fn(),
+};
+
+export const MapContainer = ({ children, ...props }) => {
+  return (
+    <div data-testid="map-container" {...props}>
+      {children}
+    </div>
+  );
+};
+
+export const TileLayer = (props) => <div data-testid="tile-layer" {...props} />;
+
+export const Marker = ({ children, ...props }) => (
+  <div data-testid="marker" {...props}>
+    {children}
+  </div>
+);
+
+export const Popup = ({ children, ...props }) => (
+  <div data-testid="popup" {...props}>
+    {children}
+  </div>
+);
+
+export const useMap = () => mockMapInstance;
