@@ -2,6 +2,12 @@ import mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema(
   {
+    googleId: {
+      type: String,
+      required: false,
+      unique: true,
+      sparse: true,
+    },
     name: {
       type: String,
       required: true,
@@ -9,22 +15,26 @@ const UserSchema = new mongoose.Schema(
     },
     email: {
       type: String,
+      unique: true,
       required: true,
       trim: true,
     },
+    avatar: {
+      type: String,
+    },
     phoneNumber: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
     dateOfBirth: {
       type: Date,
-      required: true,
+      required: false,
       trim: true,
     },
     gender: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
     city: {

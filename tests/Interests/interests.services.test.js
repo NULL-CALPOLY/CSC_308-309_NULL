@@ -115,8 +115,9 @@ describe('Interest Services', () => {
       similarInterests: [music._id],
     });
 
-    const results =
-      await interestServices.findInterestBySimilarInterests(music._id);
+    const results = await interestServices.findInterestBySimilarInterests(
+      music._id
+    );
     expect(results.length).toBeGreaterThan(0);
   });
 
@@ -128,19 +129,16 @@ describe('Interest Services', () => {
       music._id,
       rock._id
     );
-    expect(
-      updated.similarInterests.map((id) => id.toString())
-    ).toContain(rock._id.toString());
+    expect(updated.similarInterests.map((id) => id.toString())).toContain(
+      rock._id.toString()
+    );
   });
 
   test('should not add duplicate similar interests', async () => {
     const music = await interestModel.create(testInterest);
     const rock = await interestModel.create(testInterest2);
 
-    await interestServices.addInterestsToSimilarInterests(
-      music._id,
-      rock._id
-    );
+    await interestServices.addInterestsToSimilarInterests(music._id, rock._id);
     const updated = await interestServices.addInterestsToSimilarInterests(
       music._id,
       rock._id
@@ -157,20 +155,16 @@ describe('Interest Services', () => {
     const rock = await interestModel.create(testInterest2);
 
     // Add similar interest first
-    await interestServices.addInterestsToSimilarInterests(
+    await interestServices.addInterestsToSimilarInterests(music._id, rock._id);
+
+    // Remove similar interest
+    const updated = await interestServices.removeInterestsFromSimilarInterests(
       music._id,
       rock._id
     );
-
-    // Remove similar interest
-    const updated =
-      await interestServices.removeInterestsFromSimilarInterests(
-        music._id,
-        rock._id
-      );
-    expect(
-      updated.similarInterests.map((id) => id.toString())
-    ).not.toContain(rock._id.toString());
+    expect(updated.similarInterests.map((id) => id.toString())).not.toContain(
+      rock._id.toString()
+    );
   });
 
   test('should handle removing nonexistent similar interest', async () => {
@@ -178,11 +172,10 @@ describe('Interest Services', () => {
     const rock = await interestModel.create(testInterest2);
     const notAdded = new mongoose.Types.ObjectId();
 
-    const updated =
-      await interestServices.removeInterestsFromSimilarInterests(
-        music._id,
-        notAdded
-      );
+    const updated = await interestServices.removeInterestsFromSimilarInterests(
+      music._id,
+      notAdded
+    );
     expect(updated.similarInterests.length).toBe(0);
   });
 });

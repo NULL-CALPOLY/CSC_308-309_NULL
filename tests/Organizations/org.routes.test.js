@@ -106,7 +106,9 @@ describe('Organization Routes', () => {
   });
 
   test('GET /organizations/search/name/:name returns 404 when not found', async () => {
-    const res = await request(app).get('/organizations/search/name/NonExistent');
+    const res = await request(app).get(
+      '/organizations/search/name/NonExistent'
+    );
     expect(res.status).toBe(404);
     expect(res.body.success).toBe(false);
   });

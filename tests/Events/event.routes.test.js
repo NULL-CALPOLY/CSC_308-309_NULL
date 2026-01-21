@@ -127,7 +127,9 @@ describe('Event Routes', () => {
   });
 
   test('GET /events/search/description/:keyword returns 404 when not found', async () => {
-    const res = await request(app).get(`/events/search/description/NonExistent`);
+    const res = await request(app).get(
+      `/events/search/description/NonExistent`
+    );
     expect(res.status).toBe(404);
     expect(res.body.success).toBe(false);
   });

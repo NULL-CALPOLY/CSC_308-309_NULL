@@ -128,9 +128,9 @@ describe('Interest Routes', () => {
     expect(res.body.success).toBe(true);
 
     const updated = await interestModel.findById(music._id);
-    expect(
-      updated.similarInterests.map((id) => id.toString())
-    ).toContain(rock._id.toString());
+    expect(updated.similarInterests.map((id) => id.toString())).toContain(
+      rock._id.toString()
+    );
   });
 
   test('DELETE /interests/:id/similar/remove/:similarId removes similar interest', async () => {
@@ -154,8 +154,8 @@ describe('Interest Routes', () => {
     expect(res.body.success).toBe(true);
 
     const updated = await interestModel.findById(music._id);
-    expect(
-      updated.similarInterests.map((id) => id.toString())
-    ).not.toContain(rock._id.toString());
+    expect(updated.similarInterests.map((id) => id.toString())).not.toContain(
+      rock._id.toString()
+    );
   });
 });
