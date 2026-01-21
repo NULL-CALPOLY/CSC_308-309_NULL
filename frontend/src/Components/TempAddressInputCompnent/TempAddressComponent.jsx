@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './TempAddressComponent.css'; // import the CSS file
-import Input from "@cloudscape-design/components/input";
+import Input from '@cloudscape-design/components/input';
 
-export default function TempAddressComponent({ onSelect, placeholder = 'Start typing an address...' }) {
+export default function TempAddressComponent({
+  onSelect,
+  placeholder = 'Start typing an address...',
+}) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [open, setOpen] = useState(false);
@@ -81,8 +84,7 @@ export default function TempAddressComponent({ onSelect, placeholder = 'Start ty
                 setOpen(false);
 
                 onSelect({ address: item.display_name, lat, lng });
-              }}
-            >
+              }}>
               {item.display_name}
             </div>
           ))}

@@ -11,17 +11,17 @@ import './MainMapComponent.css';
 const EventIcon = new L.Icon({
   iconUrl: markerIcon,
   iconRetinaUrl: markerIcon,
-  iconSize: [45, 45], 
-  iconAnchor: [17, 45], 
-  popupAnchor: [0, -40], 
+  iconSize: [45, 45],
+  iconAnchor: [17, 45],
+  popupAnchor: [0, -40],
 });
 
 const currentLocationIcon = new L.Icon({
   iconUrl: circle,
   iconRetinaUrl: circle,
-  iconSize: [20, 20], 
-  iconAnchor: [17, 45], 
-  popupAnchor: [0, -40], 
+  iconSize: [20, 20],
+  iconAnchor: [17, 45],
+  popupAnchor: [0, -40],
 });
 
 export default function MainMapComponent() {
@@ -30,26 +30,26 @@ export default function MainMapComponent() {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-      fetch('http://localhost:3000/events/all')
-        .then((res) => res.json())
-        .then((data) => {
-          if (!data.success) return;
-  
-          // Map API data to match EventComponent props
-          const mappedEvents = data.data.map((event) => {
-            const [lng, lat] = event.location.coordinates;
-            return {
-              eventName: event.name,
-              description: event.description,
-              lat,
-              lng
-            };
-          });
-  
-          setEvents(mappedEvents);
-        })
-        .catch((err) => console.error('Failed to load events:', err));
-    }, []);
+    fetch('http://localhost:3000/events/all')
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.success) return;
+
+        // Map API data to match EventComponent props
+        const mappedEvents = data.data.map((event) => {
+          const [lng, lat] = event.location.coordinates;
+          return {
+            eventName: event.name,
+            description: event.description,
+            lat,
+            lng,
+          };
+        });
+
+        setEvents(mappedEvents);
+      })
+      .catch((err) => console.error('Failed to load events:', err));
+  }, []);
 
   return (
     <div className="main-map-wrapper">
@@ -84,7 +84,6 @@ export default function MainMapComponent() {
             </Popup>
           </Marker>
         ))}
-
 
         <LocateButton
           icon={locateIcon}

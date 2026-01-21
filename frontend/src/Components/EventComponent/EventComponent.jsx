@@ -7,7 +7,9 @@ export default function EventComponent(props) {
   const hasExtra = Boolean(props.description || props.attendees || props.host);
 
   // Split comma-separated interest string into array
-  const tags = props.interest ? props.interest.split(',').map(t => t.trim()) : ['General'];
+  const tags = props.interest
+    ? props.interest.split(',').map((t) => t.trim())
+    : ['General'];
 
   return (
     <div className="Event-Container">
@@ -16,20 +18,18 @@ export default function EventComponent(props) {
 
       <div className="Event-Time">Time: {props.eventTime}</div>
       <div className="Event-Address">
-          Address:{' '}
-          {props.eventAddress ? (
-            <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(props.eventAddress)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {props.eventAddress}
-            </a>
-          ) : (
-            'No address'
-          )}
-        </div>
-
+        Address:{' '}
+        {props.eventAddress ? (
+          <a
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(props.eventAddress)}`}
+            target="_blank"
+            rel="noopener noreferrer">
+            {props.eventAddress}
+          </a>
+        ) : (
+          'No address'
+        )}
+      </div>
 
       {/* Only show tags at top when not expanded */}
       {!expanded && (
@@ -45,8 +45,7 @@ export default function EventComponent(props) {
           <button
             className="SeeToggle"
             type="button"
-            onClick={() => setExpanded(true)}
-          >
+            onClick={() => setExpanded(true)}>
             See more
           </button>
         </div>
@@ -76,8 +75,7 @@ export default function EventComponent(props) {
             <button
               className="SeeToggle"
               type="button"
-              onClick={() => setExpanded(false)}
-            >
+              onClick={() => setExpanded(false)}>
               See less
             </button>
           </div>

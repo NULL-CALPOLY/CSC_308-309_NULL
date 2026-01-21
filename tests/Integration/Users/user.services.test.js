@@ -1,5 +1,5 @@
-import userServices from '../../backend/UserFiles/UserServices.js';
-import userModel from '../../backend/UserFiles/UserSchema.js';
+import userServices from '../../../backend/UserFiles/UserServices.js';
+import userModel from '../../../backend/UserFiles/UserSchema.js';
 import mongoose from 'mongoose';
 
 const baseUser = {

@@ -135,7 +135,9 @@ describe('User Routes', () => {
   });
 
   test('GET /users/search/email/:email returns 404 when not found', async () => {
-    const res = await request(app).get('/users/search/email/nonexistent@example.com');
+    const res = await request(app).get(
+      '/users/search/email/nonexistent@example.com'
+    );
     expect(res.status).toBe(404);
     expect(res.body.success).toBe(false);
   });

@@ -13,15 +13,15 @@ export default function EventColumn() {
   // Fetch events once
   useEffect(() => {
     fetch('http://localhost:3000/events/all')
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (!data.success) return;
 
-        const mappedEvents = data.data.map(event => {
+        const mappedEvents = data.data.map((event) => {
           const start = new Date(event.time.start);
           const end = new Date(event.time.end);
           const eventTime = `${format(start, 'MMM do h:mm a')} - ${format(end, 'h:mm a')}`;
-          const eventAddress = event.address ?? "No address";
+          const eventAddress = event.address ?? 'No address';
 
           return {
             eventName: event.name,
@@ -37,7 +37,7 @@ export default function EventColumn() {
         setEventList(mappedEvents);
         setFilteredEvents(mappedEvents); // show all initially
       })
-      .catch(err => console.error('Failed to load events:', err));
+      .catch((err) => console.error('Failed to load events:', err));
   }, []);
 
   // Update filtered events whenever selectedInterests changes
@@ -45,8 +45,8 @@ export default function EventColumn() {
     if (selectedInterests.length === 0) {
       setFilteredEvents(eventList); // no filter
     } else {
-      const filtered = eventList.filter(event =>
-        event.interests.some(interest => selectedInterests.includes(interest))
+      const filtered = eventList.filter((event) =>
+        event.interests.some((interest) => selectedInterests.includes(interest))
       );
       setFilteredEvents(filtered);
     }

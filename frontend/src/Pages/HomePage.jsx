@@ -6,9 +6,7 @@ import CreateEventButton from '../Components/CreateEventButton/CreateEventButton
 import CreateEventModal from '../Components/CreateEventModal/CreateEventModal.jsx';
 
 export default function HomePage() {
-
   const [showModal, setShowModal] = useState(false);
-
 
   return (
     <div className="HomePage">

@@ -1,5 +1,5 @@
-import organizationServices from '../../backend/OrganizationFiles/OrganizationServices.js';
-import organizationModel from '../../backend/OrganizationFiles/OrganizationSchema.js';
+import organizationServices from '../../../backend/OrganizationFiles/OrganizationServices.js';
+import organizationModel from '../../../backend/OrganizationFiles/OrganizationSchema.js';
 import mongoose from 'mongoose';
 
 const testOrganization = {

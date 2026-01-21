@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './CreateEventModal.css';
-import Multiselect from "@cloudscape-design/components/multiselect";
-import Input from "@cloudscape-design/components/input";
-import Textarea from "@cloudscape-design/components/textarea";
+import Multiselect from '@cloudscape-design/components/multiselect';
+import Input from '@cloudscape-design/components/input';
+import Textarea from '@cloudscape-design/components/textarea';
 import TempAddressComponent from '../TempAddressInputCompnent/TempAddressComponent';
 
 export default function CreateEventModal({ isOpen, onClose }) {
@@ -38,56 +38,57 @@ export default function CreateEventModal({ isOpen, onClose }) {
     e.preventDefault();
 
     try {
-        // Format payload according to your EventSchema
-        const payload = {
+      // Format payload according to your EventSchema
+      const payload = {
         name: formData.name,
         description: formData.description,
         mapComponent: formData.address,
         address: formData.address,
-        host: "64c9f0d2b5e8f3a1c2d4e567", // Replace with actual host ID dynamically
+        host: '64c9f0d2b5e8f3a1c2d4e567', // Replace with actual host ID dynamically
         attendees: [], // optional, empty by default
         blockedUsers: [], // optional
         comment: [], // optional
         location: formData.location, // { type: 'Point', coordinates: [lng, lat] }
         interests: selectedOptions.map((o) => o.value),
         time: {
-            start: formData.startTime,
-            end: formData.endTime,
+          start: formData.startTime,
+          end: formData.endTime,
         },
-        };
-        console.log("Final formData before submit:", formData);
+      };
+      console.log('Final formData before submit:', formData);
 
-        // Send POST request
-        const response = await fetch('http://localhost:3000/events/', {
+      // Send POST request
+      const response = await fetch('http://localhost:3000/events/', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
-        });
+      });
 
-        if (!response.ok) {
+      if (!response.ok) {
         throw new Error(`Server error: ${response.statusText}`);
-        }
+      }
 
-        const result = await response.json();
-        console.log('Event created successfully:', result);
+      const result = await response.json();
+      console.log('Event created successfully:', result);
 
-        // Close modal after successful submission
-        onClose();
+      // Close modal after successful submission
+      onClose();
     } catch (err) {
-        console.error('Failed to create event:', err);
-        alert('Failed to create event. Check console for details.');
+      console.error('Failed to create event:', err);
+      alert('Failed to create event. Check console for details.');
     }
-    };
-
+  };
 
   return (
     <div className="modal-backdrop">
       <div className="modal">
         <header className="modal-header">
           <h2>Create Event</h2>
-          <button className="close-btn" onClick={onClose}>×</button>
+          <button className="close-btn" onClick={onClose}>
+            ×
+          </button>
         </header>
 
         <form className="event-form" onSubmit={handleSubmit}>
@@ -116,22 +117,21 @@ export default function CreateEventModal({ isOpen, onClose }) {
           </div>
 
           {/* Address */}
-        <div className="form-group">
+          <div className="form-group">
             <label>Location</label>
             <TempAddressComponent
-                onSelect={({ address, lat, lng }) => {
+              onSelect={({ address, lat, lng }) => {
                 setFormData((prev) => ({
-                    ...prev,
-                    address, // formatted address string
-                    location: {
+                  ...prev,
+                  address, // formatted address string
+                  location: {
                     type: 'Point',
                     coordinates: [lng, lat], // GeoJSON [longitude, latitude]
-                    },
+                  },
                 }));
-                }}
+              }}
             />
-        </div>
-
+          </div>
 
           {/* Interests */}
           <div className="form-group">
@@ -144,7 +144,7 @@ export default function CreateEventModal({ isOpen, onClose }) {
                 setSelectedOptions(detail.selectedOptions);
                 setFormData({
                   ...formData,
-                  interests: detail.selectedOptions.map(o => o.value),
+                  interests: detail.selectedOptions.map((o) => o.value),
                 });
               }}
             />

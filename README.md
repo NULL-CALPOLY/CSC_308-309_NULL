@@ -2,7 +2,7 @@
 
 A full-stack web application for finding and connecting with people based on shared interests, events, and locations.
 
-**Developed by:**  Vishnu, Ryan, Aaron, and Brian
+**Developed by:** Vishnu, Ryan, Aaron, and Brian
 
 ---
 
@@ -97,12 +97,14 @@ Findr is a location-based social discovery platform that helps users find events
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd CSC_308-309_NULL
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
@@ -128,11 +130,13 @@ Findr is a location-based social discovery platform that helps users find events
 ### Running the Application
 
 - **Full Stack (Backend + Frontend):**
+
   ```bash
   npm run dev
   ```
 
 - **Backend Only:**
+
   ```bash
   npm run backend:dev
   ```
@@ -146,11 +150,13 @@ Findr is a location-based social discovery platform that helps users find events
 ### Code Quality
 
 - **Format Code:**
+
   ```bash
   npm run format
   ```
 
 - **Lint Check:**
+
   ```bash
   npm run lint
   ```
@@ -180,6 +186,7 @@ http://localhost:3000
 ### Available Endpoints
 
 #### Users
+
 - `GET /users/all` - Get all users
 - `GET /users/:id` - Get user by ID
 - `POST /users/` - Create new user
@@ -188,6 +195,7 @@ http://localhost:3000
 - `GET /users/search/{category}/{value}` - Search users
 
 #### Events
+
 - `GET /events/all` - Get all events
 - `GET /events/:id` - Get event by ID
 - `POST /events/` - Create new event
@@ -199,6 +207,7 @@ http://localhost:3000
 - `GET /events/search/{category}/{value}` - Search events
 
 #### Chats
+
 - `GET /chats/all` - Get all chats
 - `GET /chats/:id` - Get chat by ID
 - `POST /chats/` - Create new chat
@@ -207,6 +216,7 @@ http://localhost:3000
 - `GET /chats/search/{category}/{value}` - Search chats
 
 #### Interests
+
 - `GET /interests/all` - Get all interests
 - `GET /interests/:id` - Get interest by ID
 - `POST /interests/` - Create new interest
@@ -215,6 +225,7 @@ http://localhost:3000
 - `GET /interests/search/name/:name` - Search by name
 
 #### Organizations
+
 - `GET /organizations/all` - Get all organizations
 - `GET /organizations/:id` - Get organization by ID
 - `POST /organizations/` - Create new organization
@@ -223,6 +234,7 @@ http://localhost:3000
 - `GET /organizations/search/{category}/{value}` - Search organizations
 
 #### Authentication
+
 - `POST /login/login` - Authenticate user (email + password)
 - `GET /login/:id` - Get login by ID
 - `POST /login/` - Create new login

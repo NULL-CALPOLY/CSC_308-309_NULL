@@ -1,5 +1,5 @@
-import eventServices from '../../backend/EventFiles/EventServices.js';
-import eventModel from '../../backend/EventFiles/EventSchema.js';
+import eventServices from '../../../backend/EventFiles/EventServices.js';
+import eventModel from '../../../backend/EventFiles/EventSchema.js';
 import mongoose from 'mongoose';
 
 const testEvent = {

@@ -17,9 +17,9 @@ import './SmallMapComponent/SmallMapComponent.css';
 const EventIcon = new L.Icon({
   iconUrl: markerIcon,
   iconRetinaUrl: markerIcon,
-  iconSize: [45, 45], 
-  iconAnchor: [17, 45], 
-  popupAnchor: [0, -40], 
+  iconSize: [45, 45],
+  iconAnchor: [17, 45],
+  popupAnchor: [0, -40],
 });
 
 export default function RegistrationMap({ onLocationSelect }) {
@@ -43,7 +43,9 @@ export default function RegistrationMap({ onLocationSelect }) {
           onLocationSelect={onLocationSelect}
         />
 
-        {selectedPosition && <Marker position={selectedPosition} icon={EventIcon} />}
+        {selectedPosition && (
+          <Marker position={selectedPosition} icon={EventIcon} />
+        )}
 
         <LocateButton
           icon={locateIcon}
