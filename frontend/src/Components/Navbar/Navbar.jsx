@@ -37,6 +37,7 @@ export default function Navbar() {
           alt="Profile"
           className="navbar__profile-icon"
         />
+        <button> sign in </button><button> log in </button>
       </div>
     </nav>
   );

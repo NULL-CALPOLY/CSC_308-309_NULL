@@ -1,12 +1,23 @@
 import React from 'react';
 import './InterestTag.css';
 
-export default function TagComponent(props) {
-  const className = `Tag-Container ${props.Interest.trim().toLowerCase()}`;
+const COLORS = {
+  basketball: '#ff6b6b',
+  soccer: '#4dabf7',
+  coding: '#51cf66',
+  dance: '#845ef7',
+  travel: '#ffa94d',
+  gardening: '#28a745',
+  default: '#868e96',
+};
+
+export default function TagComponent({ Interest }) {
+  const tagKey = Interest.trim().toLowerCase();
+  const color = COLORS[tagKey] || COLORS.default;
 
   return (
-    <div className={className}>
-      <div className="Tag-Text">{props.Interest}</div>
+    <div className="Tag-Container" style={{ backgroundColor: color }}>
+      <div className="Tag-Text">{Interest}</div>
     </div>
   );
 }

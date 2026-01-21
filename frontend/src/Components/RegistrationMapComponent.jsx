@@ -9,15 +9,17 @@ import {
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
-import markerIcon from '../assets/pin.svg';
+import markerIcon from '../assets/pin.png';
 import locateIcon from '../assets/location.svg';
 import './SmallMapComponent/SmallMapComponent.css';
 
 // Custom marker icon
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
+const EventIcon = new L.Icon({
   iconUrl: markerIcon,
   iconRetinaUrl: markerIcon,
+  iconSize: [45, 45], 
+  iconAnchor: [17, 45], 
+  popupAnchor: [0, -40], 
 });
 
 export default function RegistrationMap({ onLocationSelect }) {
@@ -41,7 +43,7 @@ export default function RegistrationMap({ onLocationSelect }) {
           onLocationSelect={onLocationSelect}
         />
 
-        {selectedPosition && <Marker position={selectedPosition} />}
+        {selectedPosition && <Marker position={selectedPosition} icon={EventIcon} />}
 
         <LocateButton
           icon={locateIcon}
