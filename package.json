@@ -35,7 +35,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "test": "jest --config=jest.config.cjs",
-    "test:unit": "jest --config=jest.config.cjs test/mockingoose",   
+    "test:unit": "jest --config=jest.config.cjs tests/mockingoose",   
     "test:integration": "jest --config=jest.config.cjs tests/integration",
     "test:coverage": "jest --config=jest.config.cjs --coverage"
   }
