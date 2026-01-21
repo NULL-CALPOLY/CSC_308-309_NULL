@@ -44,7 +44,9 @@ describe('Interests Services (Jest + Mockingoose)', () => {
   test('updateInterest updates interest', async () => {
     const updated = { ...dummyInterest, category: 'Art' };
     mockingoose(interestsModel).toReturn(updated, 'findOneAndUpdate');
-    const result = await interestsServices.updateInterest(dummyInterest._id, { category: 'Art' });
+    const result = await interestsServices.updateInterest(dummyInterest._id, {
+      category: 'Art',
+    });
     expect(result.category).toBe('Art');
   });
 

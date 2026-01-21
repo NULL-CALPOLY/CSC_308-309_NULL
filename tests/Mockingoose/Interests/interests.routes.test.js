@@ -23,7 +23,10 @@ describe('Interests Routes (mocked)', () => {
 
   test('POST /interests creates interest', async () => {
     const newInterest = { name: 'Gaming', category: 'Hobby' };
-    mockingoose(interestsModel).toReturn({ ...newInterest, _id: 'abc123' }, 'save');
+    mockingoose(interestsModel).toReturn(
+      { ...newInterest, _id: 'abc123' },
+      'save'
+    );
 
     const res = await request(app).post('/interests').send(newInterest);
     expect(res.status).toBe(201);
@@ -40,7 +43,9 @@ describe('Interests Routes (mocked)', () => {
   test('PUT /interests/:id updates interest', async () => {
     const updated = { ...dummyInterest, category: 'Art' };
     mockingoose(interestsModel).toReturn(updated, 'findOneAndUpdate');
-    const res = await request(app).put(`/interests/${dummyInterest._id}`).send({ category: 'Art' });
+    const res = await request(app)
+      .put(`/interests/${dummyInterest._id}`)
+      .send({ category: 'Art' });
     expect(res.status).toBe(200);
     expect(res.body.data.category).toBe('Art');
   });

@@ -1,6 +1,6 @@
 import request from 'supertest';
-import app from '../../backend/backend.js';
-import interestModel from '../../backend/InterestFIles/InterestSchema.js';
+import app from '../../../backend/backend.js';
+import interestModel from '../../../backend/InterestFIles/InterestSchema.js';
 import mongoose from 'mongoose';
 
 // Sample interest for tests

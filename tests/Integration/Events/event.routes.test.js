@@ -1,6 +1,6 @@
 import request from 'supertest';
-import app from '../../backend/backend.js';
-import eventModel from '../../backend/EventFiles/EventSchema.js';
+import app from '../../../backend/backend.js';
+import eventModel from '../../../backend/EventFiles/EventSchema.js';
 import mongoose from 'mongoose';
 
 const testEvent = {

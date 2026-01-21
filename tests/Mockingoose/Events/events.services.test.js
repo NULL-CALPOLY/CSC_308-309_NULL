@@ -29,7 +29,11 @@ describe('Event Services (Jest + Mockingoose)', () => {
   });
 
   test('addEvent successfully', async () => {
-    const input = { title: 'Hackathon', location: 'San Francisco', date: new Date() };
+    const input = {
+      title: 'Hackathon',
+      location: 'San Francisco',
+      date: new Date(),
+    };
     mockingoose(eventModel).toReturn({ ...input, _id: 'abc123' }, 'save');
     const result = await eventServices.addEvent(input);
     expect(result).toBeDefined();
@@ -45,7 +49,9 @@ describe('Event Services (Jest + Mockingoose)', () => {
   test('updateEvent updates event', async () => {
     const updated = { ...dummyEvent, location: 'Boston' };
     mockingoose(eventModel).toReturn(updated, 'findOneAndUpdate');
-    const event = await eventServices.updateEvent(dummyEvent._id, { location: 'Boston' });
+    const event = await eventServices.updateEvent(dummyEvent._id, {
+      location: 'Boston',
+    });
     expect(event.location).toBe('Boston');
   });
 

@@ -38,20 +38,27 @@ describe('Credential Services (Jest + Mockingoose)', () => {
 
   test('findCredentialById returns credential', async () => {
     mockingoose(credentialModel).toReturn(dummyCredential, 'findOne');
-    const credential = await credentialServices.findCredentialById(dummyCredential._id);
+    const credential = await credentialServices.findCredentialById(
+      dummyCredential._id
+    );
     expect(credential.userId).toBe('user123');
   });
 
   test('updateCredential updates credential', async () => {
     const updated = { ...dummyCredential, type: 'apikey' };
     mockingoose(credentialModel).toReturn(updated, 'findOneAndUpdate');
-    const result = await credentialServices.updateCredential(dummyCredential._id, { type: 'apikey' });
+    const result = await credentialServices.updateCredential(
+      dummyCredential._id,
+      { type: 'apikey' }
+    );
     expect(result.type).toBe('apikey');
   });
 
   test('deleteCredential deletes credential', async () => {
     mockingoose(credentialModel).toReturn(dummyCredential, 'findOneAndDelete');
-    const result = await credentialServices.deleteCredential(dummyCredential._id);
+    const result = await credentialServices.deleteCredential(
+      dummyCredential._id
+    );
     expect(result.type).toBe('password');
   });
 });

@@ -11,7 +11,7 @@ import MainMapComponent from '../../frontend/src/Components/MainMapComponent/Mai
 // 1. Proper React context setup with react-leaflet MapContainer provider
 // 2. Leaflet DOM rendering which requires a full DOM environment
 // 3. Complex mocking of the useMap hook in the context of a MapContainer
-// 
+//
 // These component tests should be implemented with end-to-end testing tools like:
 // - Cypress (recommended for React + Leaflet)
 // - Playwright
