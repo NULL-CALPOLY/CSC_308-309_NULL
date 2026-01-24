@@ -4,6 +4,7 @@ import MainMapComponent from '../Components/MainMapComponent/MainMapComponent.js
 import EventColumn from '../Components/EventColumn/EventColumn.jsx';
 import GroupChatColumn from '../Components/GroupChatColumn/GroupChatColumn.jsx';
 import GroupChatComponent from '../Components/GroupChatComponent/GroupChatComponent.jsx';
+import FetchEvents from "../Hooks/UseEvents.jsx"
 
 // Example data, replace with Backend call for events
 const test_Event_List = [
@@ -83,6 +84,8 @@ const test_Groupchat_List = [
 ];
 
 export default function HomePage() {
+  const events = FetchEvents();
+
   return (
     <div className="HomePage">
       <div className="GroupChat-Column">
@@ -92,7 +95,7 @@ export default function HomePage() {
         <MainMapComponent />
       </div>
       <div className="Event-Column">
-        <EventColumn eventList={test_Event_List} />
+        <EventColumn eventList={events} />
       </div>
     </div>
   );
