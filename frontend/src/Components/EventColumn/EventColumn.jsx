@@ -23,16 +23,16 @@ export default function EventColumn(props) {
         <input placeholder="Search events…" />
       </div>
       <div className="Event_List">
-        {props.eventList.map((event, index) => (
+        {props.eventList.map((event) => (
           <EventComponent
-            key={index}
+            key={event._id}
             eventName={event.name}
             eventTime={event.time?.start}
             eventAddress={event.location?.coordinates}
             description={event.description}
             attendees={event.attendees}
             host={event.host}
-            interest={event.interests?.[0]}
+            interest={event.interests}
           />
         ))}
       </div>

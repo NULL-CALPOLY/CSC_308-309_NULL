@@ -3,8 +3,8 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import Navbar from './Components/Navbar/Navbar.jsx';
-import HomePage from './Pages/HomePage.jsx';
-import SignIn from './Pages/SignIn.jsx';
+import HomePage from './Pages/Home/HomePage.jsx';
+import SignIn from './Pages/SignIn/SignIn.jsx';
 import Registration from './Pages/Registration.jsx';
 
 const AboutPage = () => <div style={{ padding: 24 }}>About</div>;
