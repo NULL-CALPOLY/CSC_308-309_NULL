@@ -2,8 +2,8 @@ import EventComponent from '../EventComponent/EventComponent.jsx';
 import './EventColumn.css';
 
 export default function EventColumn(props) {
-  console.log("EventColumn received props.eventList:", props.eventList);
-  
+  console.log('EventColumn received props.eventList:', props.eventList);
+
   if (!props.eventList || props.eventList.length === 0) {
     return (
       <div className="Event_Container">

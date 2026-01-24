@@ -4,7 +4,7 @@ import MainMapComponent from '../Components/MainMapComponent/MainMapComponent.js
 import EventColumn from '../Components/EventColumn/EventColumn.jsx';
 import GroupChatColumn from '../Components/GroupChatColumn/GroupChatColumn.jsx';
 import GroupChatComponent from '../Components/GroupChatComponent/GroupChatComponent.jsx';
-import FetchEvents from "../Hooks/UseEvents.jsx"
+import FetchEvents from '../Hooks/UseEvents.jsx';
 
 // Example data, replace with Backend call for events
 const test_Event_List = [
