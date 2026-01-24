@@ -92,6 +92,6 @@
 .Tag-Row {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;          
+  gap: 4px;
   align-items: left;
 }
