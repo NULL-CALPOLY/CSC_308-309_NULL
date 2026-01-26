@@ -52,3 +52,25 @@ body {
   padding-top: 80px; /* adjust to navbar height */
   background-color: #0b0f14;
 }
+
+/* Navbar.css */
+.navbar__link {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  padding-bottom: 2px;
+}
+.navbar__link.active {
+  color: #2563eb;
+  border-bottom: 2px solid #2563eb;
+}
+
+.navbar__profile-link {
+  display: flex;
+  align-items: center;
+}
+
+.navbar__profile-link.active img {
+  border: 2px solid #fff;
+  border-radius: 50%;
+}
