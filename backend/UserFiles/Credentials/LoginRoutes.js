@@ -40,19 +40,25 @@ router.get('/:id', async (req, res) => {
 });
 
 // Confirm Login (compare email + password)
-router.post("/login", async (req, res) => {
+router.post('/login', async (req, res) => {
   const { email, password } = req.body;
-  
+
   if (!email || !password)
-    return res.status(400).json({ success: false, message: "Email and password required" });
+    return res
+      .status(400)
+      .json({ success: false, message: 'Email and password required' });
 
   try {
     const user = await loginServices.authenticate(email, password);
 
     if (!user)
-      return res.status(401).json({ success: false, message: "Invalid email or password" });
+      return res
+        .status(401)
+        .json({ success: false, message: 'Invalid email or password' });
 
-    res.status(200).json({ success: true, message: "Login successful", userId: user._id });
+    res
+      .status(200)
+      .json({ success: true, message: 'Login successful', userId: user._id });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

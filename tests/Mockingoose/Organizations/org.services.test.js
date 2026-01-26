@@ -41,7 +41,9 @@ describe('Organization Services (Jest + Mockingoose)', () => {
   test('updateOrganization updates organization', async () => {
     const updatedOrg = { ...dummyOrg, phone: '0987654321' };
     mockingoose(orgModel).toReturn(updatedOrg, 'findOneAndUpdate');
-    const org = await orgServices.updateOrganization(dummyOrg._id, { phone: '0987654321' });
+    const org = await orgServices.updateOrganization(dummyOrg._id, {
+      phone: '0987654321',
+    });
     expect(org.phone).toBe('0987654321');
   });
 

@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "@babel/eslint-parser": "^7.28.6",
     "@babel/preset-env": "^7.28.5",
     "@babel/preset-react": "^7.28.5",
     "@testing-library/jest-dom": "^6.9.1",
@@ -16,7 +17,8 @@
     "mockingoose": "^2.16.2",
     "mongodb-memory-server": "^11.0.1",
     "prettier": "^3.6.2",
-    "supertest": "^7.2.2"
+    "supertest": "^7.2.2",
+    "whatwg-fetch": "^3.6.20"
   },
   "dependencies": {
     "@cloudscape-design/components": "^3.0.1176",
@@ -38,8 +40,9 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "test": "jest --config=jest.config.cjs",
-    "test:unit": "jest --config=jest.config.cjs tests/mockingoose",   
-    "test:integration": "jest --config=jest.config.cjs tests/integration",
-    "test:coverage": "jest --config=jest.config.cjs --coverage"
+    "test:unit": "jest --config=jest.config.cjs --selectProjects=unit-frontend",
+    "test:integration": "jest --config=jest.config.cjs --selectProjects=integration",
+    "test:coverage": "jest --config=jest.config.cjs --coverage",
+    "test:watch": "jest --config=jest.config.cjs --watch"
   }
 }

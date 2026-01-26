@@ -44,7 +44,9 @@ describe('Organization Routes (Jest + Mockingoose)', () => {
   test('PUT /organizations/:id updates organization', async () => {
     const updatedOrg = { ...dummyOrg, phone: '0987654321' };
     mockingoose(orgModel).toReturn(updatedOrg, 'findOneAndUpdate');
-    const res = await request(app).put(`/organizations/${dummyOrg._id}`).send({ phone: '0987654321' });
+    const res = await request(app)
+      .put(`/organizations/${dummyOrg._id}`)
+      .send({ phone: '0987654321' });
     expect(res.status).toBe(200);
     expect(res.body.data.phone).toBe('0987654321');
   });

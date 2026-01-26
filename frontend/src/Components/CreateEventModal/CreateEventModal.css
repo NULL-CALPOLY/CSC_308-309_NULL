@@ -110,3 +110,9 @@ button.secondary {
   border-radius: 8px;
   cursor: pointer;
 }
+
+.error-text {
+  color: #d13212;
+  font-size: 12px;
+  margin-top: 4px;
+}

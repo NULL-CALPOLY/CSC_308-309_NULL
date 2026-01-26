@@ -39,7 +39,9 @@ describe('Events Routes (mocked)', () => {
   test('PUT /events/:id updates event', async () => {
     const updated = { ...dummyEvent, location: 'Boston' };
     mockingoose(eventModel).toReturn(updated, 'findOneAndUpdate');
-    const res = await request(app).put(`/events/${dummyEvent._id}`).send({ location: 'Boston' });
+    const res = await request(app)
+      .put(`/events/${dummyEvent._id}`)
+      .send({ location: 'Boston' });
     expect(res.status).toBe(200);
     expect(res.body.data.location).toBe('Boston');
   });

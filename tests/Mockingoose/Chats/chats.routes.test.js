@@ -23,7 +23,10 @@ describe('Chat Routes (mocked)', () => {
 
   test('POST /chats adds message', async () => {
     const newMsg = { sender: 'user456', receiver: 'user123', message: 'Hi!' };
-    mockingoose(chatModel).toReturn({ ...newMsg, _id: 'abc123', timestamp: new Date() }, 'save');
+    mockingoose(chatModel).toReturn(
+      { ...newMsg, _id: 'abc123', timestamp: new Date() },
+      'save'
+    );
     const res = await request(app).post('/chats').send(newMsg);
     expect(res.status).toBe(201);
     expect(res.body.data.message).toBe('Hi!');

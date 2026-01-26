@@ -3,7 +3,7 @@ import './CreateEventModal.css';
 import Multiselect from '@cloudscape-design/components/multiselect';
 import Input from '@cloudscape-design/components/input';
 import Textarea from '@cloudscape-design/components/textarea';
-import TempAddressComponent from '../TempAddressInputCompnent/TempAddressComponent';
+import TempAddressComponent from '../TempAddressInputComponent/TempAddressComponent';
 
 export default function CreateEventModal({ isOpen, onClose }) {
   const [formData, setFormData] = useState({
@@ -11,12 +11,14 @@ export default function CreateEventModal({ isOpen, onClose }) {
     description: '',
     address: '',
     interests: [],
+    location: '',
     startTime: '',
     endTime: '',
   });
 
   const [interestOptions, setInterestOptions] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const [errorMessage, setErrorMessage] = useState({});
 
   /* 🔹 Fetch interests from API */
   useEffect(() => {
@@ -34,8 +36,36 @@ export default function CreateEventModal({ isOpen, onClose }) {
 
   if (!isOpen) return null;
 
+  const validateForm = () => {
+    const newErrors = {};
+    const now = new Date();
+
+    if (!formData.name.trim()) newErrors.name = 'Event title is required';
+
+    if (!formData.description.trim())
+      newErrors.description = 'Description is required';
+
+    if (!formData.address) newErrors.address = 'Location is required';
+
+    if (!formData.startTime) newErrors.startTime = 'Start time is required';
+    else if (new Date(formData.startTime) < now)
+      newErrors.startTime = 'Start time cannot be in the past';
+
+    if (!formData.endTime) newErrors.endTime = 'End time is required';
+    else if (new Date(formData.endTime) <= new Date(formData.startTime))
+      newErrors.endTime = 'End time must be after start time';
+
+    if (selectedOptions.length === 0)
+      newErrors.interests = 'Select at least one interest';
+
+    setErrorMessage(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
 
     try {
       // Format payload according to your EventSchema
@@ -45,19 +75,17 @@ export default function CreateEventModal({ isOpen, onClose }) {
         mapComponent: formData.address,
         address: formData.address,
         host: '64c9f0d2b5e8f3a1c2d4e567', // Replace with actual host ID dynamically
-        attendees: [], // optional, empty by default
-        blockedUsers: [], // optional
-        comment: [], // optional
-        location: formData.location, // { type: 'Point', coordinates: [lng, lat] }
+        attendees: [],
+        blockedUsers: [],
+        comment: [],
+        location: formData.location,
         interests: selectedOptions.map((o) => o.value),
         time: {
           start: formData.startTime,
           end: formData.endTime,
         },
       };
-      console.log('Final formData before submit:', formData);
 
-      // Send POST request
       const response = await fetch('http://localhost:3000/events/', {
         method: 'POST',
         headers: {
@@ -73,7 +101,6 @@ export default function CreateEventModal({ isOpen, onClose }) {
       const result = await response.json();
       console.log('Event created successfully:', result);
 
-      // Close modal after successful submission
       onClose();
     } catch (err) {
       console.error('Failed to create event:', err);
@@ -97,11 +124,15 @@ export default function CreateEventModal({ isOpen, onClose }) {
             <label>Event Title</label>
             <Input
               value={formData.name}
-              onChange={({ detail }) =>
-                setFormData({ ...formData, name: detail.value })
-              }
+              onChange={({ detail }) => {
+                setFormData({ ...formData, name: detail.value });
+                setErrorMessage({ ...errorMessage, name: null });
+              }}
               placeholder="Enter event title"
             />
+            {errorMessage.name && (
+              <p className="error-text">{errorMessage.name}</p>
+            )}
           </div>
 
           {/* Description */}
@@ -109,11 +140,15 @@ export default function CreateEventModal({ isOpen, onClose }) {
             <label>Description</label>
             <Textarea
               value={formData.description}
-              onChange={({ detail }) =>
-                setFormData({ ...formData, description: detail.value })
-              }
+              onChange={({ detail }) => {
+                setFormData({ ...formData, description: detail.value });
+                setErrorMessage({ ...errorMessage, description: null });
+              }}
               placeholder="Describe your event"
             />
+            {errorMessage.description && (
+              <p className="error-text">{errorMessage.description}</p>
+            )}
           </div>
 
           {/* Address */}
@@ -121,16 +156,22 @@ export default function CreateEventModal({ isOpen, onClose }) {
             <label>Location</label>
             <TempAddressComponent
               onSelect={({ address, lat, lng }) => {
-                setFormData((prev) => ({
-                  ...prev,
-                  address, // formatted address string
-                  location: {
-                    type: 'Point',
-                    coordinates: [lng, lat], // GeoJSON [longitude, latitude]
-                  },
-                }));
+                {
+                  setFormData((prev) => ({
+                    ...prev,
+                    address, // formatted address string
+                    location: {
+                      type: 'Point',
+                      coordinates: [lng, lat], // GeoJSON [longitude, latitude]
+                    },
+                  }));
+                  setErrorMessage({ ...errorMessage, address: null });
+                }
               }}
             />
+            {errorMessage.address && (
+              <p className="error-text">{errorMessage.address}</p>
+            )}
           </div>
 
           {/* Interests */}
@@ -146,33 +187,51 @@ export default function CreateEventModal({ isOpen, onClose }) {
                   ...formData,
                   interests: detail.selectedOptions.map((o) => o.value),
                 });
+                setErrorMessage({ ...errorMessage, interests: null });
               }}
             />
+            {errorMessage.interests && (
+              <p className="error-text">{errorMessage.interests}</p>
+            )}
           </div>
 
           {/* Date & Time */}
           <div className="datetime-grid">
             <div className="form-group">
-              <label>Start Time</label>
-              <Input
-                type="datetime-local"
-                value={formData.startTime}
-                onChange={({ detail }) =>
-                  setFormData({ ...formData, startTime: detail.value })
-                }
-              />
+              <label htmlFor="startTime">Start Time</label>
+              <div className="awsui_input-container">
+                <Input
+                  ariaLabel="Start Time"
+                  type="datetime-local"
+                  value={formData.startTime}
+                  onChange={({ detail }) => {
+                    setFormData({ ...formData, startTime: detail.value });
+                    setErrorMessage({ ...errorMessage, startTime: null });
+                  }}
+                />
+              </div>
+              {errorMessage.startTime && (
+                <p className="error-text">{errorMessage.startTime}</p>
+              )}
             </div>
 
             <div className="form-group">
-              <label>End Time</label>
-              <Input
-                type="datetime-local"
-                min={formData.startTime}
-                value={formData.endTime}
-                onChange={({ detail }) =>
-                  setFormData({ ...formData, endTime: detail.value })
-                }
-              />
+              <label htmlFor="endTime">End Time</label>
+              <div className="awsui_input-container">
+                <Input
+                  ariaLabel="End Time"
+                  type="datetime-local"
+                  min={formData.startTime}
+                  value={formData.endTime}
+                  onChange={({ detail }) => {
+                    setFormData({ ...formData, endTime: detail.value });
+                    setErrorMessage({ ...errorMessage, endTime: null });
+                  }}
+                />
+              </div>
+              {errorMessage.endTime && (
+                <p className="error-text">{errorMessage.endTime}</p>
+              )}
             </div>
           </div>
 

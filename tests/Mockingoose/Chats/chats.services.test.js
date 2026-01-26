@@ -31,7 +31,10 @@ describe('Chat Services (Jest + Mockingoose)', () => {
 
   test('addChatMessage successfully', async () => {
     const input = { sender: 'user456', receiver: 'user123', message: 'Hi!' };
-    mockingoose(chatModel).toReturn({ ...input, _id: 'abc123', timestamp: new Date() }, 'save');
+    mockingoose(chatModel).toReturn(
+      { ...input, _id: 'abc123', timestamp: new Date() },
+      'save'
+    );
     const result = await chatServices.addChatMessage(input);
     expect(result).toBeDefined();
     expect(result.message).toBe('Hi!');
@@ -46,7 +49,9 @@ describe('Chat Services (Jest + Mockingoose)', () => {
   test('updateChat updates a message', async () => {
     const updated = { ...dummyMessage, message: 'Updated!' };
     mockingoose(chatModel).toReturn(updated, 'findOneAndUpdate');
-    const result = await chatServices.updateChat(dummyMessage._id, { message: 'Updated!' });
+    const result = await chatServices.updateChat(dummyMessage._id, {
+      message: 'Updated!',
+    });
     expect(result.message).toBe('Updated!');
   });
 

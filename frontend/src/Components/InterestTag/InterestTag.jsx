@@ -8,12 +8,28 @@ const COLORS = {
   dance: '#845ef7',
   travel: '#ffa94d',
   gardening: '#28a745',
-  default: '#868e96',
 };
 
+/**
+ * Generates color based on the string/interest
+ * Same interest = Same color
+ */
+function stringToColor(str) {
+  let hash = 0;
+
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  const hue = Math.abs(hash) % 360;
+  return `hsl(${hue}, 65%, 55%)`;
+}
+
 export default function TagComponent({ Interest }) {
-  const tagKey = Interest.trim().toLowerCase();
-  const color = COLORS[tagKey] || COLORS.default;
+  if (!Interest) return null;
+
+  const key = Interest.trim().toLowerCase();
+  const color = COLORS[key] ?? stringToColor(key);
 
   return (
     <div className="Tag-Container" style={{ backgroundColor: color }}>
