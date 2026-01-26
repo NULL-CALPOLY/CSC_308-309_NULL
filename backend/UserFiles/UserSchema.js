@@ -17,7 +17,7 @@ const UserSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    dateOfBirth: {
+    DOB: {
       type: Date,
       required: true,
       trim: true,
