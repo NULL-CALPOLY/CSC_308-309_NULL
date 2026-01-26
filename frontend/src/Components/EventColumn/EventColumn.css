@@ -1,6 +1,6 @@
 /* The sidebar on the right */
 .Event_Container {
-  height: 90vh; /* full height minus navbar */
+  height: 92vh; /* full height minus navbar */
   width: 400px; /* wider than 300px */
   background: #ffffff;
   border-left: 2px solid #bfbfbf;
