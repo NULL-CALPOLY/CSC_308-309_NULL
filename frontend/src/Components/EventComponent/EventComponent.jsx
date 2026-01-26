@@ -18,7 +18,15 @@ export default function EventComponent(props) {
       <div className="Event-Address">Address: {props.eventAddress}</div>
 
       {/* Only show Tag at top when not expanded */}
-      {!expanded && <TagComponent Interest={tag} />}
+      {/* {!expanded && <TagComponent Interest={tag} />} */}
+      {!expanded && (
+        <div className="Tag-Row">
+          {props.interest &&
+            props.interest
+              .slice(0, 2)
+              .map((interest) => <TagComponent Interest={interest} />)}
+        </div>
+      )}
 
       {!expanded && hasExtra && (
         <div className="Event-Footer">
