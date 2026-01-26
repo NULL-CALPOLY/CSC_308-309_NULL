@@ -27,29 +27,7 @@ router.get('/all', async (req, res) => {
     });
 });
 
-// Get a user by ID
-router.get('/:id', async (req, res) => {
-  await userServices
-    .findUserById(req.params.id)
-    .then((user) => {
-      if (!user)
-        res.status(404).json({
-          success: false,
-          message: 'User not found',
-        });
-      else
-        res.status(200).json({
-          success: true,
-          data: user,
-        });
-    })
-    .catch((error) => {
-      res.status(500).json({
-        success: false,
-        message: `Error in the server: ${error.message}`,
-      });
-    });
-});
+
 
 // Post a new user
 router.post('/', async (req, res) => {
@@ -311,6 +289,31 @@ router.get('/search/location/:location', async (req, res) => {
       res.status(500).json({
         success: false,
         message: `Error in the server: ${error}`,
+      });
+    });
+
+});
+
+// Get a user by ID
+router.get('/:id', async (req, res) => {
+  await userServices
+    .findUserById(req.params.id)
+    .then((user) => {
+      if (!user)
+        res.status(404).json({
+          success: false,
+          message: 'User not found',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: user,
+        });
+    })
+    .catch((error) => {
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error.message}`,
       });
     });
 });

@@ -7,6 +7,9 @@ export default function Navbar() {
   const linkClass = ({ isActive }) =>
     isActive ? 'navbar__link active' : 'navbar__link';
 
+    const profileClass = ({ isActive }) =>
+    isActive ? 'navbar__profile-link active' : 'navbar__profile-link';
+
   return (
     <nav className="navbar">
       <div className="navbar__logo">
@@ -31,13 +34,17 @@ export default function Navbar() {
         </NavLink>
       </div>
 
-      <div className="navbar__profile">
+      <NavLink
+        to="/profile"
+        className={profileClass}
+        aria-label="Profile"
+      >
         <img
           src="/profile-icon.svg"
           alt="Profile"
           className="navbar__profile-icon"
         />
-      </div>
+      </NavLink>
     </nav>
   );
 }
