@@ -1,6 +1,6 @@
 import request from 'supertest';
-import app from '../../backend/backend.js';
-import organizationModel from '../../backend/OrganizationFiles/OrganizationSchema.js';
+import app from '../../../backend/backend.js';
+import organizationModel from '../../../backend/OrganizationFiles/OrganizationSchema.js';
 import mongoose from 'mongoose';
 
 // Sample organization for tests

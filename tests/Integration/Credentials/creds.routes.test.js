@@ -1,6 +1,6 @@
 import request from 'supertest';
-import app from '../../backend/backend.js';
-import loginModel from '../../backend/CredentialFiles/LoginSchema.js';
+import app from '../../../backend/backend.js';
+import loginModel from '../../../backend/CredentialFiles/LoginSchema.js';
 import mongoose from 'mongoose';
 
 const testLogin = {

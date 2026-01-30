@@ -88,3 +88,10 @@
 .Event-Extra .Event-Row + .Event-Row {
   margin-top: 6px;
 }
+
+.Tag-Row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: left;
+}

@@ -1,6 +1,6 @@
 import request from 'supertest';
-import app from '../../backend/backend.js';
-import userModel from '../../backend/UserFiles/UserSchema.js';
+import app from '../../../backend/backend.js';
+import userModel from '../../../backend/UserFiles/UserSchema.js';
 import mongoose from 'mongoose';
 
 const testUser = {

@@ -1,6 +1,6 @@
 import request from 'supertest';
-import app from '../../backend/backend.js';
-import chatModel from '../../backend/ChatFiles/ChatSchema.js';
+import app from '../../../backend/backend.js';
+import chatModel from '../../../backend/ChatFiles/ChatSchema.js';
 import mongoose from 'mongoose';
 
 const testChat = {

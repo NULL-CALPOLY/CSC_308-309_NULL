@@ -1,6 +1,5 @@
 //CreateEventModal.test.js to test CreateEventModal.jsx
 
-
 // Mock TempAddressComponent to set a fixed address
 // TempAddressComponent mock
 jest.mock(
@@ -24,9 +23,13 @@ jest.mock('@cloudscape-design/components/multiselect', () => {
   };
 });
 
-
-
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from '@testing-library/react';
 import CreateEventModal from '../../../frontend/src/Components/CreateEventModal/CreateEventModal.jsx';
 // import '../../__mocks__/cloudscape.js';
 
@@ -68,9 +71,15 @@ describe('CreateEventModal', () => {
       render(<CreateEventModal isOpen={true} onClose={mockOnClose} />);
     });
 
-    expect(screen.getByRole('heading', { name: /create event/i })).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/enter event title/i)).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/describe your event/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /create event/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText(/enter event title/i)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText(/describe your event/i)
+    ).toBeInTheDocument();
     expect(screen.getByLabelText(/start time/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/end time/i)).toBeInTheDocument();
     expect(screen.getByTestId('mock-address-button')).toBeInTheDocument();
@@ -95,10 +104,16 @@ describe('CreateEventModal', () => {
     // Fill start/end times
     const now = new Date();
     const startTime = now.toISOString().slice(0, 16);
-    const endTime = new Date(now.getTime() + 60 * 60 * 1000).toISOString().slice(0, 16);
+    const endTime = new Date(now.getTime() + 60 * 60 * 1000)
+      .toISOString()
+      .slice(0, 16);
 
-    fireEvent.change(screen.getByLabelText(/start time/i), { target: { value: startTime } });
-    fireEvent.change(screen.getByLabelText(/end time/i), { target: { value: endTime } });
+    fireEvent.change(screen.getByLabelText(/start time/i), {
+      target: { value: startTime },
+    });
+    fireEvent.change(screen.getByLabelText(/end time/i), {
+      target: { value: endTime },
+    });
 
     // Select first interest (simulate)
     const multiselectButton = screen.getByTestId('mock-multiselect');
@@ -111,7 +126,9 @@ describe('CreateEventModal', () => {
 
     await waitFor(() => {
       // Make sure POST /events fetch was called
-      const postCall = global.fetch.mock.calls.find(call => call[0].includes('/events'));
+      const postCall = global.fetch.mock.calls.find((call) =>
+        call[0].includes('/events')
+      );
       expect(postCall).toBeDefined();
       expect(postCall[1]).toEqual(
         expect.objectContaining({
