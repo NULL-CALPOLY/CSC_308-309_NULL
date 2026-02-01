@@ -22,7 +22,11 @@ main {
 
 .hero-section {
   height: 94vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);/* url('../../assets/hero.svg') no-repeat center center/cover;*/
+  background: linear-gradient(
+    135deg,
+    #667eea 0%,
+    #764ba2 100%
+  ); /* url('../../assets/hero.svg') no-repeat center center/cover;*/
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,7 +58,6 @@ main {
   margin-bottom: 2rem;
   opacity: 0.9;
 }
-
 
 .cta-button {
   display: inline-block;
@@ -88,12 +91,12 @@ main {
 }
 
 .community-section {
-  background:white;
+  background: white;
   /* Removed background to let image show */
 }
 
 .discover-section {
-  background:#f8f9fa;
+  background: #f8f9fa;
   /* Removed background to let image show */
 }
 
@@ -134,7 +137,8 @@ main {
   line-height: 1.6;
 }
 
-.feature-content { /* Increased to better accommodate the features width */
+.feature-content {
+  /* Increased to better accommodate the features width */
 }
 
 .feature-content h2 {
@@ -150,7 +154,7 @@ main {
   margin-bottom: 2rem;
   line-height: 1.6;
 }
-.features{
+.features {
   display: flex;
   justify-content: center;
   gap: 50px;
@@ -158,12 +162,12 @@ main {
   flex-wrap: wrap;
 }
 
-.feature{
+.feature {
   width: 500px;
-  background:#fff;
-  padding:100px;
-  border-radius:10px;
-  box-shadow:0 4px 8px rgba(0,0,0,0.1);
+  background: #fff;
+  padding: 100px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .learn-more {

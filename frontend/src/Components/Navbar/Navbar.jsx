@@ -17,11 +17,7 @@ export default function Navbar() {
       </div>
 
       <div className="navbar__profile">
-        <img
-          src={LEBRON}
-          alt="Profile"
-          className="navbar__profile-icon"
-        />
+        <img src={LEBRON} alt="Profile" className="navbar__profile-icon" />
       </div>
     </nav>
   );
