@@ -1,8 +1,23 @@
 import React, { useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMap,
+  useMapEvents,
+} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import markerIcon from '../assets/pin.svg';
 import locateIcon from '../assets/location.svg';
 import './SmallMapComponent.css';
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconUrl: markerIcon,
+  iconRetinaUrl: markerIcon,
+});
 
 export default function SmallMapComponent() {
   const [userPosition, setUserPosition] = useState(null);

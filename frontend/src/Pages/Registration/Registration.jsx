@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import RegistrationMap from '../../Components/RegistrationMapComponent/RegistrationMapComponent';
+import RegistrationMap from '../Components/RegistrationMapComponent/RegistrationMapComponent.jsx';
 import './Registration.css';
 
 export default function Registration() {
