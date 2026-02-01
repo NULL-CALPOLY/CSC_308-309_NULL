@@ -3,53 +3,19 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import markerIcon from '../../assets/pin.png';
+import markerIcon from '../../assets/pin.svg';
 import locateIcon from '../../assets/location.svg';
-import circle from '../../assets/circle.png';
 import './MainMapComponent.css';
 
-const EventIcon = new L.Icon({
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
   iconUrl: markerIcon,
   iconRetinaUrl: markerIcon,
-  iconSize: [45, 45],
-  iconAnchor: [17, 45],
-  popupAnchor: [0, -40],
-});
-
-const currentLocationIcon = new L.Icon({
-  iconUrl: circle,
-  iconRetinaUrl: circle,
-  iconSize: [20, 20],
-  iconAnchor: [17, 45],
-  popupAnchor: [0, -40],
 });
 
 export default function MainMapComponent() {
   const [userPosition, setUserPosition] = useState(null);
   const [tracking, setTracking] = useState(false);
-  const [events, setEvents] = useState([]);
-
-  useEffect(() => {
-    fetch('http://localhost:3000/events/all')
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data.success) return;
-
-        // Map API data to match EventComponent props
-        const mappedEvents = data.data.map((event) => {
-          const [lng, lat] = event.location.coordinates;
-          return {
-            eventName: event.name,
-            description: event.description,
-            lat,
-            lng,
-          };
-        });
-
-        setEvents(mappedEvents);
-      })
-      .catch((err) => console.error('Failed to load events:', err));
-  }, []);
 
   return (
     <div className="main-map-wrapper">
@@ -64,8 +30,14 @@ export default function MainMapComponent() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
+        {!userPosition && (
+          <Marker position={[35.3, -120.66]}>
+            <Popup>stuff</Popup>
+          </Marker>
+        )}
+
         {userPosition && (
-          <Marker position={userPosition} icon={currentLocationIcon}>
+          <Marker position={userPosition}>
             <Popup>
               You are here <br />
               <b>Lat:</b> {userPosition[0].toFixed(5)} <br />
@@ -73,17 +45,6 @@ export default function MainMapComponent() {
             </Popup>
           </Marker>
         )}
-
-        {events.map((event, idx) => (
-          <Marker key={idx} position={[event.lat, event.lng]} icon={EventIcon}>
-            <Popup>
-              <b>{event.eventName}</b>
-              <br />
-              {event.description}
-              <br />
-            </Popup>
-          </Marker>
-        ))}
 
         <LocateButton
           icon={locateIcon}

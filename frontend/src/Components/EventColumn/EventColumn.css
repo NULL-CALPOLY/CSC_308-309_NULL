@@ -1,7 +1,7 @@
 /* The sidebar on the right */
 .Event_Container {
-  height: 92vh; /* full height minus navbar */
-  width: 400px; /* wider than 300px */
+  height: 100vh; /* full height minus navbar */
+  width: 300px;
   background: #ffffff;
   border-left: 2px solid #bfbfbf;
   box-shadow: -6px 0 18px rgba(0, 0, 0, 0.06);
@@ -9,21 +9,6 @@
   flex-direction: column;
   overflow: hidden; /* prevent double scrolling */
   z-index: 1;
-  transition: width 0.3s ease; /* smooth resizing if needed */
-  padding-right: 90px;
-}
-
-/* Optional: make it responsive on smaller screens */
-@media (max-width: 768px) {
-  .Event_Container {
-    width: 300px;
-  }
-}
-
-@media (max-width: 480px) {
-  .Event_Container {
-    width: 100%; /* full width on mobile */
-  }
 }
 
 /* Search bar stays at the top */
@@ -49,6 +34,11 @@
   font-size: 14px;
   outline: none;
   box-sizing: border-box; /* include padding in width calculation */
+}
+
+.Search_Bar input:focus {
+  border-color: #9bbcff;
+  box-shadow: 0 0 0 3px rgba(155, 188, 255, 0.25);
 }
 
 /* Scrollable list below the search bar */
