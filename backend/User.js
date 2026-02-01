@@ -2,12 +2,6 @@ import mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema(
   {
-    googleId: {
-      type: String,
-      required: false,
-      unique: true,
-      sparse: true,
-    },
     name: {
       type: String,
       required: true,
@@ -15,54 +9,42 @@ const UserSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      unique: true,
       required: true,
-      trim: true,
-    },
-    avatar: {
-      type: String,
-      required: false,
       trim: true,
     },
     phoneNumber: {
       type: String,
-      required: false,
+      required: true,
       trim: true,
     },
     DOB: {
-      type: Date,
-      required: false,
+      type: String,
+      required: true,
       trim: true,
     },
     gender: {
       type: String,
-      required: false,
-      trim: true,
-    },
-    city: {
-      type: String,
-      required: false,
+      required: true,
       trim: true,
     },
     interests: {
       type: [{ type: String }],
       required: false,
     },
-    location: {
-      type: {
-        type: String,
-        enum: ['Point'],
-        required: true,
-        default: 'Point',
-      },
-      coordinates: {
-        type: [{ type: Number }], // [longitude, latitude]
-        required: true,
-      },
+    city: {
+      type: String,
+      required: true,
+      trim: true,
     },
-    radius: {
-      type: Number,
-      required: false,
+    location: {
+      latitude: {
+        type: Number,
+        required: true,
+      },
+      longitude: {
+        type: Number,
+        required: true,
+      },
     },
   },
   { collection: 'users_list' }
