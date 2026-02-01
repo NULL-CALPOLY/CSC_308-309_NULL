@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import RegistrationMap from '../Components/RegistrationMapComponent/RegistrationMapComponent.jsx';
+import { useAuth } from '../../Hooks/useAuth.js';
+import RegistrationMap from '../../Components/RegistrationMapComponent/RegistrationMapComponent.jsx';
 import './Registration.css';
 
 export default function Registration() {
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [DOB, setDOB] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
   const [gender, setGender] = useState('');
   const [interests, setInterests] = useState([]);
   const [city, setCity] = useState('');
@@ -32,15 +33,21 @@ export default function Registration() {
       const res = await fetch('http://localhost:3000/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+        body: JSON.stringify({ 
+          "user": {
           name,
           phoneNumber,
           gender,
-          DOB,
+          dateOfBirth,
           city,
           email,
           location,
-          interests,
+          interests
+          },
+          "login" : {
+            email,
+            password
+          }
         }),
       });
 
@@ -114,10 +121,10 @@ export default function Registration() {
               <label htmlFor="dateOfBirth">Date Of Birth:</label>
               <input
                 type="date"
-                id="DOB"
-                autoComplete="DOB"
-                value={DOB}
-                onChange={(e) => setDOB(e.target.value)}
+                id="dateOfBirth"
+                autoComplete="dateOfBirth"
+                value={dateOfBirth}
+                onChange={(e) => setDateOfBirth(e.target.value)}
                 required
               />
             </div>

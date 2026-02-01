@@ -9,14 +9,15 @@ function getUsers() {
 async function addUser(user) {
   // Check if email already exists
   const existingUser = await userModel.findOne({ email: user.email });
+  console.log(existingUser);
 
   if (existingUser) {
     const error = new Error('Email already registered');
     error.status = 409;
     throw error;
   }
-
-  const newUser = new userModel(user);
+  const formatteduser = formatUser(user);
+  const newUser = new userModel(formatteduser);
   return await newUser.save();
 }
 
@@ -100,6 +101,17 @@ function findUserByLocation(latitude, longitude, radiusInMiles) {
 function findUserByRadius(radiusInMiles) {
   return userModel.find({ radius: radiusInMiles });
 }
+
+function formatUser(user) {
+  return {
+    ...user,
+    location: {
+      type: 'Point',
+      coordinates: [user.location.longitude, user.location.latitude],
+    },
+  };
+}
+
 
 // Calculate age from date of birth (helper function)
 function calculateAge(dateOfBirth) {

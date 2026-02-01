@@ -1,5 +1,6 @@
 import express from 'express';
 import userServices from './UserServices.js';
+import loginServices from '../CredentialFiles/LoginServices.js';
 
 const router = express.Router();
 
@@ -53,21 +54,26 @@ router.get('/:id', async (req, res) => {
 
 // Post a new user
 router.post('/', async (req, res) => {
-  await userServices
-    .addUser(req.body)
-    .then((user) => {
-      res.status(201).json({
-        success: true,
-        message: 'User registered successfully.',
-        data: user,
-      });
-    })
-    .catch((error) => {
-      res.status(error.status || 400).json({
-        success: false,
-        message: error.message || 'An unexpected error occurred.',
-      });
+  try {
+    const { login, user } = req.body;
+    console.log(user);
+    const newUser = await userServices.addUser(user);
+    const { token, newLogin } = await loginServices.addLogin(login);
+
+    res.status(201).json({
+      success: true,
+      message: 'User and login created successfully',
+      user: newUser,
+      login: newLogin,
+      token: token,
     });
+  } catch (error) {
+    res.status(error.status || 500).json({
+      success: false,
+      user: req.body.user,
+      message: error.message || 'Server error',
+    });
+  }
 });
 
 // Delete a user

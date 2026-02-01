@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext.jsx';
 import './SignIn.css';
 
 export default function SignIn() {
@@ -8,6 +9,7 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,19 +17,7 @@ export default function SignIn() {
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:3000/logins/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.message || 'Login failed');
-      }
-
-      const data = await res.json();
-      console.log(data);
+      await login(email, password);
       navigate('/');
     } catch (err) {
       setErrorMsg(err.message);

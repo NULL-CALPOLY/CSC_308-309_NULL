@@ -1,7 +1,15 @@
 import express from 'express';
 import loginServices from './LoginServices.js';
+import jwt from 'jsonwebtoken';
 
 const router = express.Router();
+
+function generateAccessToken(username) {
+  console.log(process.env.TOKEN_SECRET, 'secret token');
+  return jwt.sign({ username: username }, process.env.TOKEN_SECRET, {
+    expiresIn: "600s",
+  });
+}
 
 router.get('/', (req, res) => {
   res.send('Yes, user credentials are working');
@@ -65,17 +73,18 @@ router.post('/login', async (req, res) => {
       message: 'Email and password required',
     });
   try {
-    const user = await loginServices.authenticate(email, password);
+    const { user, token } = await loginServices.authenticate(email, password);
 
     if (!user)
       return res.status(401).json({
         success: false,
-        message: 'Invalid email or password',
+        message: 'Unauthorized: Invalid email or password',
       });
     res.status(200).json({
       success: true,
       message: 'Login successful',
       userId: user._id,
+      userToken: token,
     });
   } catch (err) {
     res.status(500).json({
