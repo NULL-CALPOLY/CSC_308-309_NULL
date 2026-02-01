@@ -7,19 +7,10 @@
 }
 
 .Event-Column {
-  flex: 1;
-  max-width: 300px;
-}
-
-.GroupChat-Column {
-  flex: 1;
   max-width: 300px;
 }
 
 .Map {
-  flex: 1 1 auto;
-  align-items: stretch;
-  justify-content: stretch;
-  position: relative;
-  z-index: 0; /* Behind other content */
+  flex: 1;
+  z-index: 0;
 }
