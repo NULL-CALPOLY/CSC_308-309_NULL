@@ -1,0 +1,266 @@
+body {
+  padding-top: 0;
+}
+
+.landing-page {
+  padding-top: 80px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+main {
+  flex: 1;
+}
+
+.hero-section {
+  height: 94vh;
+  background: linear-gradient(
+    135deg,
+    #667eea 0%,
+    #764ba2 100%
+  ); /* url('../../assets/hero.svg') no-repeat center center/cover;*/
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  padding: 0 20px;
+}
+
+.hero-content {
+  max-width: 800px;
+  padding-bottom: 75px;
+  /*background: rgba(0, 0, 0, 0.5);  Added backdrop for better contrast 
+  padding: 1rem 2rem;
+  border-radius: 10px;
+  display: inline-block;
+  margin-bottom: 1rem;*/
+}
+
+.hero-title {
+  font-size: 4rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.cta-button {
+  display: inline-block;
+  background: #fff;
+  color: #667eea;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-weight: 500;
+  font-size: 1.1rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.cta-button:hover {
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.feature-section {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.connect-section {
+  background: #f8f9fa;
+}
+
+.community-section {
+  background: white;
+  /* Removed background to let image show */
+}
+
+.discover-section {
+  background: #f8f9fa;
+  /* Removed background to let image show */
+}
+
+.feature-content.image-layout {
+  max-width: 1400px;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.feature-image {
+  flex: 1;
+}
+
+.feature-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.feature-text {
+  flex: 1;
+  padding: 2rem;
+}
+
+.feature-text h2 {
+  font-size: 2.5rem;
+  font-weight: 300;
+  margin-bottom: 1rem;
+  color: #202124;
+}
+
+.feature-text p {
+  font-size: 1.2rem;
+  color: #5f6368;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.feature-content {
+  /* Increased to better accommodate the features width */
+}
+
+.feature-content h2 {
+  font-size: 2.5rem;
+  font-weight: 300;
+  margin-bottom: 1rem;
+  color: #202124;
+}
+
+.feature-content p {
+  font-size: 1.2rem;
+  color: #5f6368;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+.features {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  padding: 50px 20px;
+  flex-wrap: wrap;
+}
+
+.feature {
+  width: 500px;
+  background: #fff;
+  padding: 100px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.learn-more {
+  color: #1a73e8;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+}
+
+.learn-more:hover {
+  color: #1557b0;
+}
+
+.newsletter-section {
+  background: #202124;
+  color: white;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.newsletter-content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.newsletter-content h2 {
+  color: white;
+  font-size: 2rem;
+  font-weight: 300;
+  margin-bottom: 1rem;
+}
+
+.newsletter-content p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  opacity: 0.8;
+}
+
+.newsletter-form {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.newsletter-form input {
+  flex: 1;
+  min-width: 250px;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.newsletter-form button {
+  background: #1a73e8;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.newsletter-form button:hover {
+  background: #1557b0;
+}
+
+.footer {
+  background: #f1f3f4;
+  padding: 2rem;
+  text-align: center;
+}
+
+.footer-content p {
+  margin: 0 0 1rem 0;
+  color: #5f6368;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.footer-links a {
+  color: #1a73e8;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}

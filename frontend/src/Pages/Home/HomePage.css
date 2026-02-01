@@ -1,6 +1,9 @@
 .HomePage {
   display: flex;
   height: 100vh; /* full viewport height */
+  padding-top: 80px; /* to account for fixed navbar */
+  box-sizing: border-box;
+  overflow-y: hidden;
 }
 
 .Event-Column {
