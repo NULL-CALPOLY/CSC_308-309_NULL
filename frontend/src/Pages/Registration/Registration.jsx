@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import RegistrationMap from '../Components/RegistrationMapComponent/RegistrationMapComponent.jsx';
+import RegistrationMap from '../../Components/RegistrationMapComponent/RegistrationMapComponent.jsx';
 import './Registration.css';
+import Navbar from '../../Components/NavbarLanding/NavbarLanding.jsx';
 
 export default function Registration() {
   const [name, setName] = useState('');
@@ -70,7 +71,7 @@ export default function Registration() {
       }
 
       // ✅ SUCCESS ONLY
-      navigate('/');
+      navigate('/home');
     } catch (err) {
       setErrorMsg(err.message);
     } finally {
@@ -80,6 +81,7 @@ export default function Registration() {
 
   return (
     <div className="container">
+      <Navbar />
       <div className="registration-container">
         <form onSubmit={handleSubmit} className="registration-form">
           <h2>Register</h2>

@@ -1,5 +1,6 @@
 import React from 'react';
 import './HomePage.css';
+import Navbar from '../../Components/Navbar/Navbar.jsx';
 import MainMapComponent from '../../Components/MainMapComponent/MainMapComponent.jsx';
 import EventColumn from '../../Components/EventColumn/EventColumn.jsx';
 import GroupChatColumn from '../../Components/GroupChatColumn/GroupChatColumn.jsx';
@@ -30,6 +31,7 @@ export default function HomePage() {
 
   return (
     <div className="HomePage">
+      <Navbar />
       <div className="GroupChat-Column">
         <GroupChatColumn groupChatList={test_Groupchat_List} />
       </div>
