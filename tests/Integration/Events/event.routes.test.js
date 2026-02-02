@@ -11,6 +11,7 @@ const testEvent = {
   host: new mongoose.Types.ObjectId(),
   blockedUsers: [new mongoose.Types.ObjectId()],
   comment: ['Looking forward to this!', 'Excited!'],
+  address: '123 Blah, Pyongyang, North Korea',
   location: {
     type: 'Point',
     coordinates: [-118.2437, 34.0522],

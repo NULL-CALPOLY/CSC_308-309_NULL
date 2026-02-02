@@ -30,29 +30,24 @@ export default function LandingPage() {
           <div className="feature-content">
             <section className="features">
               <div className="feature">
-                <h2>Connect with others</h2>
+                <h2>Smart Matchmaking</h2>
                 <p>
-                  Find and connect with people who share your interests and
-                  passions.
+                  Get matched with people based on shared interests, availability, and location.
                 </p>
               </div>
               <div className="feature">
-                <h2>Discover new activities</h2>
+                <h2>Event Creation & RSVP</h2>
                 <p>
-                  Explore a wide range of activities and hobbies to try out.
+                  Create hangouts, study sessions, or group events and see who’s coming.
                 </p>
               </div>
               <div className="feature">
-                <h2>Build lasting connections</h2>
+                <h2>Safety & Verification</h2>
                 <p>
-                  Form meaningful relationships and build a supportive network
-                  of like-minded individuals.
+                  You can definitely, totally trust us with your safety and data.
                 </p>
               </div>
             </section>
-            <a href="/register" className="learn-more">
-              Learn more
-            </a>
           </div>
         </section>
 
@@ -111,6 +106,7 @@ export default function LandingPage() {
             <a href="/privacy">Privacy</a>
             <a href="/terms">Terms</a>
             <a href="/help">Help</a>
+            <a href="/business">"Business"</a>
           </div>
         </div>
       </footer>

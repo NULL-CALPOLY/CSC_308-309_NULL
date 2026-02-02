@@ -38,7 +38,7 @@
   "type": "module",
   "scripts": {
     "backend:dev": "node backend/backend.js",
-    "frontend:dev": "cd frontend && npm run dev",
+    "frontend:dev": "npm run dev --prefix frontend",
     "dev": "npm run backend:dev & npm run frontend:dev",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
