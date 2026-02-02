@@ -13,9 +13,11 @@ import chatRouter from './ChatFiles/ChatRoutes.js';
 import organizationRouter from './OrganizationFiles/OrganizationRoutes.js';
 import interestRouter from './InterestFIles/InterestRoutes.js';
 import cors from 'cors';
-import googleAuthRouter from './OAuth/GoogleAuthRoutes.js';
+// import googleAuthRouter from './OAuth/GoogleAuthRoutes.js';
 import passport from 'passport';
 import session from 'express-session';
+import geocodeRouter from './GeoFiles/GeocodeRoutes.js';
+
 
 // Intialize Express app
 const app = express();
@@ -41,7 +43,8 @@ app.use('/organizations', organizationRouter);
 app.use('/logins', loginRouter);
 app.use('/chats', chatRouter);
 app.use('/interests', interestRouter);
-app.use('/auth', googleAuthRouter);
+// app.use('/auth', googleAuthRouter);
+app.use('/geocode', geocodeRouter);
 
 // Start the server
 app.get('/', (req, res) => {
