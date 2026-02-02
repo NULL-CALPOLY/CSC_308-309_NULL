@@ -21,7 +21,15 @@ export default function App() {
         <main className="main">
           <Routes>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/home" element={<ProtectedRoute > <HomePage /> </ProtectedRoute>} />
+            <Route
+              path="/home"
+              element={
+                <ProtectedRoute>
+                  {' '}
+                  <HomePage />{' '}
+                </ProtectedRoute>
+              }
+            />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/signin" element={<SignIn />} />

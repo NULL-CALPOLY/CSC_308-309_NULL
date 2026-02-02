@@ -7,7 +7,7 @@ import LEBRON from '../../assets/LEBRON.gif';
 import { useAuth } from '../../Hooks/useAuth.js';
 
 export default function LandingPage() {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   return (
     <div className="landing-page">
@@ -25,12 +25,11 @@ export default function LandingPage() {
             </p>
             {!isAuthenticated ? (
               <a href="/register" className="cta-button">
-              Get Started!
+                Get Started!
               </a>
-            ) :
-            (
+            ) : (
               <a href="/home" className="cta-button">
-              Get Started!
+                Get Started!
               </a>
             )}
           </div>
@@ -62,15 +61,13 @@ export default function LandingPage() {
             </section>
             {!isAuthenticated ? (
               <a href="/register" className="learn-more">
-              Learn more
-            </a>
-            ) :
-            (
+                Learn more
+              </a>
+            ) : (
               <a href="/home" className="cta-button">
-              Learn more
+                Learn more
               </a>
             )}
-            
           </div>
         </section>
 
@@ -85,16 +82,15 @@ export default function LandingPage() {
                 Join groups and activities that interest you, and build lasting
                 connections.
               </p>
-              
+
               {!isAuthenticated ? (
-                  <a href="/register" className="learn-more">
-                    Join now
-                  </a>
-                ) :
-                (
-                  <a href="/home" className="cta-button">
+                <a href="/register" className="learn-more">
+                  Join now
+                </a>
+              ) : (
+                <a href="/home" className="cta-button">
                   Learn more
-                  </a>
+                </a>
               )}
             </div>
           </div>
@@ -109,15 +105,14 @@ export default function LandingPage() {
                 expand your horizons.
               </p>
               {!isAuthenticated ? (
-                  <a href="/register" className="learn-more">
-                    Explore
-                  </a>
-                ) :
-                (
-                  <a href="/home" className="cta-button">
+                <a href="/register" className="learn-more">
+                  Explore
+                </a>
+              ) : (
+                <a href="/home" className="cta-button">
                   Learn more
-                  </a>
-                )}
+                </a>
+              )}
             </div>
             <div className="feature-image">
               <img src={LEBRON} alt="Discover" />

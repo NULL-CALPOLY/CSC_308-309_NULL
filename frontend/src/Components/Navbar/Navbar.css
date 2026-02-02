@@ -44,7 +44,6 @@
 /* Remove mobile hamburger completely */
 .navbar__hamburger {
   display: none;
-  
 }
 .navbar__logout-btn {
   background-color: transparent;
@@ -62,7 +61,6 @@
   background-color: #00eb08;
   color: #0b0f14;
 }
-
 
 /* Optional: give the page content padding so it’s not hidden behind the navbar */
 body {

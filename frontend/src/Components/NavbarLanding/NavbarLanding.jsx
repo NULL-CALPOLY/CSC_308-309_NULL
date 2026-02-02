@@ -21,10 +21,15 @@ export default function Navbar() {
       <div className="navbar__links">
         {!isAuthenticated ? (
           <>
-            <NavLink to="/signin" className={({ isActive }) =>`${linkClass({ isActive })} signin`}>
+            <NavLink
+              to="/signin"
+              className={({ isActive }) => `${linkClass({ isActive })} signin`}>
               Sign In
             </NavLink>
-            <NavLink to="/register" className={({ isActive }) =>`${linkClass({ isActive })} signup`} end>
+            <NavLink
+              to="/register"
+              className={({ isActive }) => `${linkClass({ isActive })} signup`}
+              end>
               Registration
             </NavLink>
           </>
@@ -32,9 +37,9 @@ export default function Navbar() {
           <div className="navbar__profile">
             <button onClick={logout} className="navbar__logout-btn">
               Logout
-            </button> 
+            </button>
             <img src={LEBRON} alt="Profile" className="navbar__profile-icon" />
-        </div>
+          </div>
         )}
       </div>
     </nav>

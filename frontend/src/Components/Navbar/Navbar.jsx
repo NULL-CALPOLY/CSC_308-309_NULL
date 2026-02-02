@@ -34,9 +34,9 @@ export default function Navbar() {
             <button onClick={logout} className="navbar__logout-btn">
               Logout
             </button>
-            
+
             <img src={LEBRON} alt="Profile" className="navbar__profile-icon" />
-        </div>
+          </div>
         )}
       </div>
     </nav>
