@@ -5,9 +5,11 @@ import TagComponent from '../InterestTag/InterestTag.jsx';
 export default function EventComponent(props) {
   const [expanded, setExpanded] = useState(false);
   const hasExtra = Boolean(props.description || props.attendees || props.host);
-  const tag = props.interest || 'General';
-  console.log(tag);
-  console.log(props);
+
+  // Split comma-separated interest string into array
+  const tags = props.interest
+    ? props.interest.split(',').map((t) => t.trim())
+    : ['General'];
 
   return (
     <div className="Event-Container">
@@ -15,16 +17,26 @@ export default function EventComponent(props) {
       <hr className="Event-Divider" />
 
       <div className="Event-Time">Time: {props.eventTime}</div>
-      <div className="Event-Address">Address: {props.eventAddress}</div>
+      <div className="Event-Address">
+        Address:{' '}
+        {props.eventAddress ? (
+          <a
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(props.eventAddress)}`}
+            target="_blank"
+            rel="noopener noreferrer">
+            {props.eventAddress}
+          </a>
+        ) : (
+          'No address'
+        )}
+      </div>
 
-      {/* Only show Tag at top when not expanded */}
-      {/* {!expanded && <TagComponent Interest={tag} />} */}
+      {/* Only show tags at top when not expanded */}
       {!expanded && (
-        <div className="Tag-Row">
-          {props.interest &&
-            props.interest
-              .slice(0, 2)
-              .map((interest) => <TagComponent Interest={interest} />)}
+        <div className="Tag-List">
+          {tags.map((tag, idx) => (
+            <TagComponent key={idx} Interest={tag} />
+          ))}
         </div>
       )}
 
@@ -43,17 +55,23 @@ export default function EventComponent(props) {
         <div className="Event-Extra">
           {props.description && (
             <div className="Event-Description">
-              Description : {props.description}
+              Description: {props.description}
             </div>
           )}
           {props.attendees && (
-            <div className="Event-Attendees">Attendees : {props.attendees}</div>
+            <div className="Event-Attendees">
+              Attendees: {props.attendees.join(', ')}
+            </div>
           )}
-          {props.host && <div className="Event-Host">Host : {props.host}</div>}
+          {props.host && <div className="Event-Host">Host: {props.host}</div>}
 
-          {/* When expanded, move Tag to bottom */}
+          {/* When expanded, move tags to bottom */}
           <div className="Event-Footer Expanded-Footer">
-            <TagComponent Interest={tag} />
+            <div className="Tag-List">
+              {tags.map((tag, idx) => (
+                <TagComponent key={idx} Interest={tag} />
+              ))}
+            </div>
             <button
               className="SeeToggle"
               type="button"

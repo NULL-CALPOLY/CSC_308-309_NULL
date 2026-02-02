@@ -6,7 +6,7 @@ export default {
   setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
   // only run integration tests (backend service/route tests)
   testMatch: ['<rootDir>/tests/Integration/**/?(*.)+(services|routes).test.js'],
-  testPathIgnorePatterns: ['/tests/frontend/', '/tests/Mockingoose/'],
+  // testPathIgnorePatterns: ['/tests/frontend/', '/tests/Mockingoose/'],
   // use Babel for all JS/JSX files
   transform: {
     '^.+\\.[jt]sx?$': 'babel-jest',

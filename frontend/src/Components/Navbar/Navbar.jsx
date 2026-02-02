@@ -3,6 +3,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../Hooks/useAuth.ts';
 import './Navbar.css';
+import LEBRON from '../../assets/LEBRON.gif';
 
 export default function Navbar() {
   const { isAuthenticated, logout } = useAuth();
@@ -13,19 +14,12 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar__logo">
-        <h2>Findr</h2>
+        <NavLink to="/" className={linkClass} end>
+          <h2>Findr</h2>
+        </NavLink>
       </div>
 
       <div className="navbar__links">
-        <NavLink to="/" className={linkClass} end>
-          Home
-        </NavLink>
-        <NavLink to="/about" className={linkClass}>
-          About
-        </NavLink>
-        <NavLink to="/search" className={linkClass}>
-          Search
-        </NavLink>
         {!isAuthenticated ? (
           <>
             <NavLink to="/signin" className={linkClass}>
@@ -36,21 +30,15 @@ export default function Navbar() {
             </NavLink>
           </>
         ) : (
-          <button onClick={logout} className="navbar__logout-btn">
-            Logout
-          </button>
+          <div className="navbar__profile">
+            <button onClick={logout} className="navbar__logout-btn">
+              Logout
+            </button>
+            
+            <img src={LEBRON} alt="Profile" className="navbar__profile-icon" />
+        </div>
         )}
       </div>
-
-      {isAuthenticated && (
-        <div className="navbar__profile">
-          <img
-            src="/profile-icon.svg"
-            alt="Profile"
-            className="navbar__profile-icon"
-          />
-        </div>
-      )}
     </nav>
   );
 }

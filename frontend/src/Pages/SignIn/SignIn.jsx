@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Hooks/useAuth';
 import './SignIn.css';
+import Navbar from '../../Components/NavbarLanding/NavbarLanding.jsx';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -18,7 +19,7 @@ export default function SignIn() {
 
     try {
       await login(email, password);
-      navigate('/');
+      navigate('/home');
     } catch (err) {
       setErrorMsg(err.message);
     } finally {
@@ -28,6 +29,7 @@ export default function SignIn() {
 
   return (
     <div className="container">
+      <Navbar />
       <div className="signin-container">
         <form onSubmit={handleSubmit} className="signin-form">
           <h2>Sign In</h2>
