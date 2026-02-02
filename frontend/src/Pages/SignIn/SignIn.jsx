@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './SignIn.css';
+import Navbar from '../../Components/NavbarLanding/NavbarLanding.jsx';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -28,7 +29,7 @@ export default function SignIn() {
 
       const data = await res.json();
       console.log(data);
-      navigate('/');
+      navigate('/home');
     } catch (err) {
       setErrorMsg(err.message);
     } finally {
@@ -38,6 +39,7 @@ export default function SignIn() {
 
   return (
     <div className="container">
+      <Navbar />
       <div className="signin-container">
         <form onSubmit={handleSubmit} className="signin-form">
           <h2>Sign In</h2>

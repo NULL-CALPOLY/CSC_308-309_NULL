@@ -6,6 +6,7 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "babel-jest": "^29.7.0",
+    "concurrently": "^9.2.1",
     "esbuild": "^0.27.2",
     "esbuild-jest": "^0.4.0",
     "eslint": "^9.38.0",
@@ -16,6 +17,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "mockingoose": "^2.16.2",
     "mongodb-memory-server": "^11.0.1",
+    "nodemon": "^3.1.11",
     "prettier": "^3.6.2",
     "supertest": "^7.2.2",
     "whatwg-fetch": "^3.6.20"
@@ -24,7 +26,6 @@
     "@cloudscape-design/components": "^3.0.1176",
     "@cloudscape-design/global-styles": "^1.0.49",
     "bcrypt": "^6.0.0",
-    "concurrently": "^9.2.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
