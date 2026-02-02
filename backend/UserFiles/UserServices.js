@@ -31,9 +31,13 @@ async function authenticateUser(email, password) {
   });
 
   // Generate refresh token (long-lived)
-  const refreshToken = jwt.sign({ id: user._id }, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: '7d',
-  });
+  const refreshToken = jwt.sign(
+    { id: user._id },
+    process.env.REFRESH_TOKEN_SECRET,
+    {
+      expiresIn: '7d',
+    }
+  );
 
   return { user, accessToken, refreshToken };
 }

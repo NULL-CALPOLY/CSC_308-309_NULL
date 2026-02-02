@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const AuthContext = createContext(null);
 
@@ -15,6 +16,7 @@ export const useAuth = () => {
 export const useProvideAuth = () => {
   const [user, setUser] = useState<{ id: string; token: string } | null>(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   // Check session using refresh token (HttpOnly cookie)
   useEffect(() => {
@@ -89,6 +91,7 @@ export const useProvideAuth = () => {
     localStorage.removeItem('userToken');
     localStorage.removeItem('userId');
     sessionStorage.clear(); // Clear any session data
+    navigate('/');
   };
 
   return {
