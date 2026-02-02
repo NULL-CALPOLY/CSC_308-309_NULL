@@ -20,7 +20,7 @@ export const useProvideAuth = () => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const res = await fetch('http://localhost:3000/auth/refresh-token', {
+        const res = await fetch('http://localhost:3000/users/refresh-token', {
           method: 'POST',
           credentials: 'include', // send cookies
         });
@@ -29,7 +29,7 @@ export const useProvideAuth = () => {
           setUser(null);
         } else {
           const data = await res.json();
-          setUser({ id: data.userId, token: data.accessToken });
+          setUser({ id: data.userId, token: data.userToken });
         }
       } catch {
         setUser(null);
@@ -42,7 +42,7 @@ export const useProvideAuth = () => {
   }, []);
 
   const login = async (email: string, password: string) => {
-    const res = await fetch('http://localhost:3000/logins/login', {
+    const res = await fetch('http://localhost:3000/users/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
@@ -60,7 +60,7 @@ export const useProvideAuth = () => {
   };
 
   const register = async (email: string, password: string) => {
-    const res = await fetch('http://localhost:3000/logins', {
+    const res = await fetch('http://localhost:3000/users', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
@@ -76,14 +76,19 @@ export const useProvideAuth = () => {
 
   const logout = async () => {
     try {
-      await fetch('http://localhost:3000/logins/logout', {
+      await fetch('http://localhost:3000/users/logout', {
         method: 'POST',
         credentials: 'include', // clear HttpOnly cookie
       });
     } catch (err) {
       console.error('Logout failed', err);
     }
+
+    // Clear all authentication data
     setUser(null);
+    localStorage.removeItem('userToken');
+    localStorage.removeItem('userId');
+    sessionStorage.clear(); // Clear any session data
   };
 
   return {

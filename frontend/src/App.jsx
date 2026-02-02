@@ -6,7 +6,7 @@ import Navbar from './Components/Navbar/Navbar.jsx';
 import HomePage from './Pages/Home/HomePage.jsx';
 import SignIn from './Pages/SignIn/SignIn.jsx';
 import Registration from './Pages/Registration/Registration.jsx';
-import { AuthProvider } from './contexts/AuthContext.jsx';
+import { AuthProvider } from './Components/AuthProvider.jsx';
 
 const AboutPage = () => <div style={{ padding: 24 }}>About</div>;
 const SearchPage = () => <div style={{ padding: 24 }}>Search</div>;

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../Hooks/useAuth.js';
 import RegistrationMap from '../../Components/RegistrationMapComponent/RegistrationMapComponent.jsx';
 import './Registration.css';
 
@@ -33,21 +32,16 @@ export default function Registration() {
       const res = await fetch('http://localhost:3000/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          "user": {
+        body: JSON.stringify({
           name,
           phoneNumber,
           gender,
           dateOfBirth,
           city,
           email,
+          password,
           location,
-          interests
-          },
-          "login" : {
-            email,
-            password
-          }
+          interests,
         }),
       });
 

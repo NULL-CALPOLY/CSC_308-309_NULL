@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import path from 'path';
 import { config } from 'dotenv';
+import cookieParser from 'cookie-parser';
 
 // Load environment variables FIRST before importing any routes
 config({ path: path.resolve(process.cwd(), '.env') });
@@ -8,7 +9,6 @@ config({ path: path.resolve(process.cwd(), '.env') });
 import express from 'express';
 import eventRouter from './EventFiles/EventRoutes.js';
 import userRouter from './UserFiles/UserRoutes.js';
-import loginRouter from './CredentialFiles/LoginRoutes.js';
 import chatRouter from './ChatFiles/ChatRoutes.js';
 import organizationRouter from './OrganizationFiles/OrganizationRoutes.js';
 import interestRouter from './InterestFIles/InterestRoutes.js';
@@ -22,8 +22,14 @@ const app = express();
 const port = /*process.env.PORT*/ 3000; // if want your own port, just uncomment. Otherwise, default is 3000
 
 // Middleware
-app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: 'http://localhost:5173', // frontend origin
+    credentials: true,
+  })
+);
 
 app.use(
   session({
@@ -38,7 +44,6 @@ app.use(passport.session());
 app.use('/events', eventRouter);
 app.use('/users', userRouter);
 app.use('/organizations', organizationRouter);
-app.use('/logins', loginRouter);
 app.use('/chats', chatRouter);
 app.use('/interests', interestRouter);
 app.use('/auth', googleAuthRouter);
