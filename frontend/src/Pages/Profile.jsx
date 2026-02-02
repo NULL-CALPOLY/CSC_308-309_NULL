@@ -2,22 +2,21 @@ import React, { useState, useEffect } from 'react';
 import './Profile.css';
 
 export default function Profile() {
-  const USER_ID = '695ea916d421330d6bd92a4b'; // 👈 Replace with function to utilize id from sign in
+  const USER_ID = '695ea916d421330d6bd92a4b'; 
 
-  // User state
+
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [DOB, setDOB] = useState('');
+  const [dateOfBirth, setdateOfBirth] = useState('');
   const [gender, setGender] = useState('');
   const [interests, setInterests] = useState([]);
   const [city, setCity] = useState('');
   const [email, setEmail] = useState('');
-
+  const [interestInput, setInterestInput] = useState('');
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
   const [isEditing, setIsEditing] = useState(false);
 
-  // Fetch user on mount
   useEffect(() => {
     const fetchUser = async () => {
       setLoading(true);
@@ -32,7 +31,7 @@ export default function Profile() {
 
         setName(user.name || '');
         setPhoneNumber(user.phoneNumber || '');
-        setDOB(user.DOB ? new Date(user.DOB).toISOString().substr(0, 10) : '');
+        setdateOfBirth(user.dateOfBirth || '');
         setGender(user.gender || '');
         setCity(user.city || '');
         setEmail(user.email || '');
@@ -43,9 +42,22 @@ export default function Profile() {
         setLoading(false);
       }
     };
+    
 
     fetchUser();
   }, []);
+
+
+  const handleInputChange = (e) => {
+                   const value = e.target.value;
+                   setInterestInput(value);
+
+                   const cleaned = value
+                  .split(',')
+                  .map(i => i.trim())
+                  .filter(i => i.length > 0); 
+                  setInterests(cleaned);
+                };
 
   // Handle update
   const handleSubmit = async (e) => {
@@ -60,7 +72,7 @@ export default function Profile() {
         body: JSON.stringify({
           name,
           phoneNumber,
-          DOB,
+          dateOfBirth,
           gender,
           city,
           email,
@@ -74,10 +86,9 @@ export default function Profile() {
 
       const updatedUser = json.data;
 
-      // Update local state from DB
       setName(updatedUser.name || '');
       setPhoneNumber(updatedUser.phoneNumber || '');
-      setDOB(updatedUser.DOB ? new Date(updatedUser.DOB).toISOString().substr(0, 10) : '');
+      setdateOfBirth(updatedUser.dateOfBirth || '');
       setGender(updatedUser.gender || '');
       setCity(updatedUser.city || '');
       setEmail(updatedUser.email || '');
@@ -129,14 +140,18 @@ export default function Profile() {
           </div>
 
           <div className="profile-grid">
-            {/* Phone */}
             <div className="profile-field">
               <label>Phone</label>
               {isEditing ? (
                 <input
                   type="tel"
                   value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  onChange={(e) => 
+                    {
+                    const digitsOnly = e.target.value.replace(/\D/g, '').slice(0, 10);
+                    setPhoneNumber(digitsOnly);
+                    }
+                  }
                   placeholder="Phone number"
                 />
               ) : (
@@ -144,21 +159,22 @@ export default function Profile() {
               )}
             </div>
 
-            {/* DOB */}
             <div className="profile-field">
               <label>Date of Birth</label>
               {isEditing ? (
                 <input
                   type="date"
-                  value={DOB}
-                  onChange={(e) => setDOB(e.target.value)}
+                  value={dateOfBirth}
+                  onChange={(e) => setdateOfBirth(e.target.value)}
                 />
               ) : (
-                <span>{DOB ? new Date(DOB).toLocaleDateString() : '—'}</span>
+                
+
+                <span>{dateOfBirth?.split('T')[0] ?? '—'}</span>
               )}
             </div>
 
-            {/* Gender */}
+
             <div className="profile-field">
               <label>Gender</label>
               {isEditing ? (
@@ -175,7 +191,6 @@ export default function Profile() {
               )}
             </div>
 
-            {/* City */}
             <div className="profile-field">
               <label>City</label>
               {isEditing ? (
@@ -189,17 +204,14 @@ export default function Profile() {
               )}
             </div>
 
-            {/* Interests */}
             <div className="profile-field full">
               <label>Interests</label>
               {isEditing ? (
                 <input
                   type="text"
-                  value={interests.join(', ')}
-                  onChange={(e) =>
-                    setInterests(e.target.value.split(',').map((i) => i.trim()))
-                  }
-                  placeholder="Comma-separated interests"
+                  value={interestInput}
+                  onChange= {handleInputChange}
+                  placeholder="Enter your interests"
                 />
               ) : (
                 <span>{interests.length ? interests.join(', ') : '—'}</span>
@@ -211,11 +223,13 @@ export default function Profile() {
             type="submit"
             className="profile-edit-btn"
             onClick={(e) => {
-              if (!isEditing) {
-                e.preventDefault();
-                setIsEditing(true);
-              }
+                if (!isEditing) {
+                  e.preventDefault();
+                  setInterestInput(interests.join(', ')); // 👈 THIS LINE
+                  setIsEditing(true);
+                }
             }}
+
           >
             {isEditing ? (loading ? 'Saving…' : 'Save Profile') : 'Edit Profile'}
           </button>
