@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Hooks/useAuth';
 import './SignIn.css';
-import Navbar from '../../Components/NavbarLanding/NavbarLanding.jsx';
+import Navbar from '../../Components/Navbar/Navbar.jsx';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
