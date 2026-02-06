@@ -137,10 +137,6 @@ main {
   line-height: 1.6;
 }
 
-.feature-content {
-  /* Increased to better accommodate the features width */
-}
-
 .feature-content h2 {
   font-size: 2.5rem;
   font-weight: 300;
