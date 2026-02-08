@@ -33,19 +33,22 @@ export default function LandingPage() {
               <div className="feature">
                 <h2>Smart Matchmaking</h2>
                 <p>
-                  Get matched with people based on shared interests, availability, and location.
+                  Get matched with people based on shared interests,
+                  availability, and location.
                 </p>
               </div>
               <div className="feature">
                 <h2>Event Creation & RSVP</h2>
                 <p>
-                  Create hangouts, study sessions, or group events and see who’s coming.
+                  Create hangouts, study sessions, or group events and see who’s
+                  coming.
                 </p>
               </div>
               <div className="feature">
                 <h2>Safety & Verification</h2>
                 <p>
-                  You can definitely, totally trust us with your safety and data.
+                  You can definitely, totally trust us with your safety and
+                  data.
                 </p>
               </div>
             </section>
@@ -83,7 +86,14 @@ export default function LandingPage() {
               </a>
             </div>
             <div className="feature-image">
-              <video src={LEBRON} autoPlay muted loop playsInLine poster={LEBRONposter} />
+              <video
+                src={LEBRON}
+                autoPlay
+                muted
+                loop
+                playsInLine
+                poster={LEBRONposter}
+              />
             </div>
           </div>
         </section>
