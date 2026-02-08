@@ -10,6 +10,7 @@ const testEvent = {
   attendees: [],
   blockedUsers: [],
   interests: ['music', 'tech'],
+  address: '123 Test St, Testville',
   location: { type: 'Point', coordinates: [-118.24, 34.05] },
   time: { start: new Date(), end: new Date(Date.now() + 3600000) }, // 1 hour later
 };
