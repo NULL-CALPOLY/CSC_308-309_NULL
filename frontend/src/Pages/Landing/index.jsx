@@ -3,7 +3,8 @@ import { Routes, Route } from 'react-router-dom';
 import './index.css';
 import NavbarLanding from '../../Components/NavbarLanding/NavbarLanding.jsx';
 import community from '../../assets/community.svg';
-import LEBRON from '../../assets/LEBRON.gif';
+import LEBRON from '../../assets/LEBRON.mp4';
+import LEBRONposter from '../../assets/LEBRON.jpg';
 
 export default function LandingPage() {
   return (
@@ -82,7 +83,7 @@ export default function LandingPage() {
               </a>
             </div>
             <div className="feature-image">
-              <img src={LEBRON} alt="Discover" />
+              <video src={LEBRON} autoPlay muted loop playsInLine poster={LEBRONposter} />
             </div>
           </div>
         </section>
