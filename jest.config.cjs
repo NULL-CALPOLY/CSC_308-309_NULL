@@ -1,6 +1,8 @@
 const path = require('path');
 
 module.exports = {
+  // Ignore integration-level manual mocks to avoid duplicate mock filenames
+  modulePathIgnorePatterns: ['<rootDir>/tests/Integration/__mocks__'],
   projects: [
     // Frontend unit tests
     {
