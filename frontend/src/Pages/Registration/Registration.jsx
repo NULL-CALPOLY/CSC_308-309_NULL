@@ -59,11 +59,14 @@ export default function Registration() {
       await res.json();
 
       // Only create login if user was created
-      const loginRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}logins`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
+      const loginRes = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}logins`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
       if (!loginRes.ok) {
         const err = await loginRes.json().catch(() => ({}));

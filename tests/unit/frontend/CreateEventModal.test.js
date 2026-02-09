@@ -36,7 +36,6 @@ jest.mock('@cloudscape-design/components/textarea', () => {
 
 import { render, screen } from '@testing-library/react';
 
-
 const mockOnClose = jest.fn();
 
 beforeEach(() => {

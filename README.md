@@ -120,25 +120,25 @@ Findr is a location-based social discovery platform that helps users find events
    ```
 
 3. **Set up environment variables**
-    - Create a `.env` file in the root directory
-    - Add your MongoDB connection string:
-       ```
-       MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/dbname
-       ```
-    - **Important:** Add `.env` to `.gitignore` before committing
+   - Create a `.env` file in the root directory
+   - Add your MongoDB connection string:
+     ```
+     MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/dbname
+     ```
+   - **Important:** Add `.env` to `.gitignore` before committing
 
 4. **Configure frontend API base URL**
-    - Local development (frontend/.env):
-       ```
-       VITE_API_BASE_URL=http://localhost:3000/
-       ```
-    - Production build (frontend/.env.production):
-       ```
-       VITE_API_BASE_URL=https://<your-azure-backend-url>/
-       ```
-    - The frontend reads `VITE_API_BASE_URL` at build time.
+   - Local development (frontend/.env):
+     ```
+     VITE_API_BASE_URL=http://localhost:3000/
+     ```
+   - Production build (frontend/.env.production):
+     ```
+     VITE_API_BASE_URL=https://<your-azure-backend-url>/
+     ```
+   - The frontend reads `VITE_API_BASE_URL` at build time.
 
-4. **Verify setup**
+5. **Verify setup**
    ```bash
    npm run lint
    npm run format

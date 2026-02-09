@@ -11,7 +11,7 @@ module.exports = {
       transform: {
         '^.+\\.[jt]sx?$': [
           'babel-jest',
-          { configFile: path.join(__dirname, 'babel.config.cjs') }
+          { configFile: path.join(__dirname, 'babel.config.cjs') },
         ],
       },
       transformIgnorePatterns: [
@@ -31,7 +31,7 @@ module.exports = {
       },
       setupFiles: [
         '<rootDir>/tests/setupNode.cjs',
-        '<rootDir>/frontend/jest.setup.js'
+        '<rootDir>/frontend/jest.setup.js',
       ],
       setupFilesAfterEnv: ['<rootDir>/tests/setupDOM.cjs'],
       testMatch: [
@@ -48,7 +48,7 @@ module.exports = {
       transform: {
         '^.+\\.[jt]sx?$': [
           'babel-jest',
-          { configFile: path.join(__dirname, 'babel.config.cjs') }
+          { configFile: path.join(__dirname, 'babel.config.cjs') },
         ],
       },
       setupFiles: ['<rootDir>/tests/setupNode.cjs'],

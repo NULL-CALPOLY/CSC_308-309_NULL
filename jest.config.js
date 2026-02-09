@@ -20,7 +20,7 @@ export default {
       },
       setupFiles: [
         '<rootDir>/tests/setupNode.cjs',
-        '<rootDir>/frontend/jest.setup.js'
+        '<rootDir>/frontend/jest.setup.js',
       ],
       setupFilesAfterEnv: ['<rootDir>/tests/setupDOM.js'],
       testMatch: ['<rootDir>/tests/unit/**/*.test.js'],
