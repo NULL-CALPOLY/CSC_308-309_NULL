@@ -19,19 +19,26 @@ export default function CreateEventModal({ isOpen, onClose }) {
   const [interestOptions, setInterestOptions] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [errorMessage, setErrorMessage] = useState({});
-
+  const [isLoadingInterests, setIsLoadingInterests] = useState(false);
   /* 🔹 Fetch interests from API */
   useEffect(() => {
+    setIsLoadingInterests(true);
     fetch('http://localhost:3000/interests/all')
       .then((res) => res.json())
       .then((data) => {
-        const mappedOptions = data.map((interest) => ({
+        // Ensure unique options by filtering duplicates
+        const uniqueInterests = data.filter(
+          (interest, index, self) =>
+            index === self.findIndex((i) => i.name === interest.name)
+        );
+        const mappedOptions = uniqueInterests.map((interest) => ({
           label: interest.name,
           value: interest.name,
         }));
         setInterestOptions(mappedOptions);
       })
-      .catch((err) => console.error('Failed to load interests:', err));
+      .catch((err) => console.error('Failed to load interests:', err))
+      .finally(() => setIsLoadingInterests(false));
   }, []);
 
   if (!isOpen) return null;
@@ -182,13 +189,21 @@ export default function CreateEventModal({ isOpen, onClose }) {
               options={interestOptions}
               selectedOptions={selectedOptions}
               onChange={({ detail }) => {
-                setSelectedOptions(detail.selectedOptions);
+                const uniqueSelected = detail.selectedOptions.filter(
+                  (option, index, self) =>
+                    index === self.findIndex((o) => o.value === option.value)
+                );
+                setSelectedOptions(uniqueSelected);
                 setFormData({
                   ...formData,
-                  interests: detail.selectedOptions.map((o) => o.value),
+                  interests: uniqueSelected.map((o) => o.value),
                 });
                 setErrorMessage({ ...errorMessage, interests: null });
               }}
+              filteringType="auto"
+              keepOpen={false}
+              loading={isLoadingInterests}
+              disabled={isLoadingInterests}
             />
             {errorMessage.interests && (
               <p className="error-text">{errorMessage.interests}</p>

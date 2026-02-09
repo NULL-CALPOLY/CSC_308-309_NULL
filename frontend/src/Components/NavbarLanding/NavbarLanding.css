@@ -1,86 +1,74 @@
-.navbar {
-  top: 0;
-  left: 0;
-  width: 100%; /* Span the entire viewport width */
-  z-index: 1000;
-  height: 80px;
-
-  background: white; /* dark techy background */
-  color: #fff;
-  padding: 1rem 3rem;
-
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
-  border-bottom: 1px solid rgba(100, 255, 218, 0.15);
-}
-
-.navbar-left {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-}
-
-/* Logo / brand */
-.navbar__logo h2 {
-  margin: 0;
-  font-family: 'Consolas', 'Courier New', monospace;
-  font-family: 'Consolas', 'Courier New', monospace;
-  color: #00eb08;
-  letter-spacing: 1px;
-  font-weight: 700;
-  padding-bottom: 2px;
-}
-
-.navbar__logo a {
-  text-decoration: none;
-}
-
 .navbar__links {
   display: flex;
-  gap: 2.5rem;
-  padding-top: 4px;
-  padding-bottom: 0px;
+  align-items: center;
+  gap: 1rem;
+  height: 60px;
 }
 
-.navbar__links a {
-  text-decoration: none;
-  color: #595959;
-  font-weight: 500;
-  font-size: 1rem;
-
-  padding-bottom: 4px; /* reserve space */
-  border-bottom: 2px solid transparent;
-
-  transition: all 0.2s ease;
-}
-
-.navbar__link.active {
-  border-bottom-color: #2563eb;
-}
-
-.navbar__links a:hover {
-  color: #2563eb;
-  transform: translateY(-2px);
-}
-
-/* Remove mobile hamburger completely */
-.navbar__hamburger {
-  display: none;
-}
-
-/* Navbar.css */
 .navbar__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
   text-decoration: none;
-  color: #333;
-  font-weight: 500;
-  padding-bottom: 0px;
+  color: #00eb08;
+  font-family: 'Consolas', monospace;
+  font-size: 0.95rem;
+  padding: 0 0.8rem;
+  border-radius: 5px;
+  transition: all 0.2s ease-in-out;
 }
 
 .navbar__link.active {
-  color: #2563eb;
-  border-bottom: 2px solid #2563eb;
+  background-color: #00eb08;
+  color: #0b0f14;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+}
+
+/* Hover for all links */
+.navbar__link:hover {
+  background-color: rgba(0, 235, 8, 0.1);
+}
+
+/* Sign In button: outlined with subtle haze */
+.navbar__link.signin {
+  border: 2px solid rgba(0, 235, 8, 0.4);
+  background-color: transparent;
+  color: #00eb08;
+  font-weight: 500;
+  padding: 0.4rem 1rem;
+  border-radius: 5px;
+  transition: all 0.3s ease-in-out;
+
+  /* Hazy glow even when idle */
+  box-shadow: 0 0 8px rgba(0, 235, 8, 0.2);
+}
+
+.navbar__link.signin:hover {
+  background-color: #00eb08;
+  color: #0b0f14;
+  box-shadow: 0 0 5px rgba(0, 235, 8, 0.5); /* stronger haze on hover */
+}
+
+/* Sign Up button: solid style with subtle haze */
+.navbar__link.signup {
+  background-color: #00eb08;
+  color: #0b0f14;
+  font-weight: 600;
+  border: 2px solid rgba(0, 235, 8, 0.4); /* slightly visible even when idle */
+  padding: 0.4rem 1rem;
+  border-radius: 5px;
+  transition: all 0.3s ease-in-out;
+
+  /* Hazy glow even when idle */
+  box-shadow: 0 0 8px rgba(0, 235, 8, 0.2);
+}
+
+.navbar__link.signup:hover {
+  background-color: #00c400;
+  border-color: #00c400;
+  box-shadow: 0 0 16px rgba(0, 235, 8, 0.5); /* stronger haze on hover */
 }

@@ -6,9 +6,9 @@ import mongoose from 'mongoose';
 const testUser = {
   name: 'Test User',
   email: 'test@example.com',
+  password: 'password123',
   gender: 'Male',
   phoneNumber: '555-1234',
-  radius: 10,
   location: {
     type: 'Point',
     coordinates: [-118.123, 34.123], // [lng, lat]
@@ -19,9 +19,9 @@ const testUser = {
 const testUser2 = {
   name: 'Another User',
   email: 'another@example.com',
+  password: 'password456',
   gender: 'Female',
   phoneNumber: '999-4444',
-  radius: 20,
   location: {
     type: 'Point',
     coordinates: [-70, 40], // [lng, lat]

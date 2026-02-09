@@ -4,8 +4,11 @@ import './index.css';
 import NavbarLanding from '../../Components/NavbarLanding/NavbarLanding.jsx';
 import community from '../../assets/community.svg';
 import LEBRON from '../../assets/LEBRON.gif';
+import { useAuth } from '../../Hooks/useAuth.js';
 
 export default function LandingPage() {
+  const { isAuthenticated } = useAuth();
+
   return (
     <div className="landing-page">
       <header>
@@ -20,9 +23,15 @@ export default function LandingPage() {
               Your go-to platform for connecting with others and discovering new
               interests
             </p>
-            <a href="/register" className="cta-button">
-              Get Started!
-            </a>
+            {!isAuthenticated ? (
+              <a href="/register" className="cta-button">
+                Get Started!
+              </a>
+            ) : (
+              <a href="/home" className="cta-button">
+                Get Started!
+              </a>
+            )}
           </div>
         </section>
 
@@ -32,22 +41,34 @@ export default function LandingPage() {
               <div className="feature">
                 <h2>Smart Matchmaking</h2>
                 <p>
-                  Get matched with people based on shared interests, availability, and location.
+                  Get matched with people based on shared interests,
+                  availability, and location.
                 </p>
               </div>
               <div className="feature">
                 <h2>Event Creation & RSVP</h2>
                 <p>
-                  Create hangouts, study sessions, or group events and see who’s coming.
+                  Create hangouts, study sessions, or group events and see who’s
+                  coming.
                 </p>
               </div>
               <div className="feature">
                 <h2>Safety & Verification</h2>
                 <p>
-                  You can definitely, totally trust us with your safety and data.
+                  You can definitely, totally trust us with your safety and
+                  data.
                 </p>
               </div>
             </section>
+            {!isAuthenticated ? (
+              <a href="/register" className="learn-more">
+                Learn more
+              </a>
+            ) : (
+              <a href="/home" className="cta-button">
+                Learn more
+              </a>
+            )}
           </div>
         </section>
 
@@ -62,9 +83,16 @@ export default function LandingPage() {
                 Join groups and activities that interest you, and build lasting
                 connections.
               </p>
-              <a href="/register" className="learn-more">
-                Join now
-              </a>
+
+              {!isAuthenticated ? (
+                <a href="/register" className="learn-more">
+                  Join now
+                </a>
+              ) : (
+                <a href="/home" className="cta-button">
+                  Learn more
+                </a>
+              )}
             </div>
           </div>
         </section>
@@ -77,9 +105,15 @@ export default function LandingPage() {
                 Explore activities and hobbies you've never tried before, and
                 expand your horizons.
               </p>
-              <a href="/register" className="learn-more">
-                Explore
-              </a>
+              {!isAuthenticated ? (
+                <a href="/register" className="learn-more">
+                  Explore
+                </a>
+              ) : (
+                <a href="/home" className="cta-button">
+                  Learn more
+                </a>
+              )}
             </div>
             <div className="feature-image">
               <img src={LEBRON} alt="Discover" />
