@@ -30,7 +30,7 @@ export default function Registration() {
     }
 
     try {
-      const res = await fetch('http://localhost:3000/users', {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -59,7 +59,7 @@ export default function Registration() {
       await res.json();
 
       // Only create login if user was created
-      const loginRes = await fetch('http://localhost:3000/logins', {
+      const loginRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}logins`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
