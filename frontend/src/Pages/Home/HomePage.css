@@ -1,16 +1,35 @@
+/* Full page container */
 .HomePage {
-  display: flex;
-  height: 100vh; /* full viewport height */
-  padding-top: 80px; /* to account for fixed navbar */
-  box-sizing: border-box;
-  overflow-y: hidden;
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
-.Event-Column {
-  max-width: 300px;
-}
 
+/* === MAP = background layer === */
 .Map {
-  flex: 1;
+  position: absolute;
+  inset: 0;              /* fills entire screen */
   z-index: 0;
+}
+
+
+/* === COLUMN = overlay layer === */
+.Event-Column {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  height: 100vh;
+  width: 380px;
+
+  z-index: 10;           /* above map */
+  pointer-events: none;  /* lets map clicks pass through */
+}
+
+
+/* allow interaction ONLY inside column */
+.Event-Column > * {
+  pointer-events: auto;
 }

@@ -1,5 +1,5 @@
 // EventColumn.jsx
-import EventComponent from '../EventComponent/EventComponent.jsx';
+import EventComponent from '../EventComponent/EventComponent2.jsx';
 import './EventColumn.css';
 import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
