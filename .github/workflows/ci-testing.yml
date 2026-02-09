@@ -2,7 +2,7 @@ name: CI Testing
 
 on:
   push:
-    branches: [main, 70-set-up-a-cicd-pipeline]
+    branches: [main]
   pull_request:
     branches: [main]
 
