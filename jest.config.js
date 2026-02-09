@@ -18,7 +18,10 @@ export default {
         '^react-leaflet$': '<rootDir>/tests/__mocks__/react-leaflet.js',
         '^leaflet$': '<rootDir>/tests/__mocks__/leaflet.js',
       },
-      setupFiles: ['<rootDir>/tests/setupNode.cjs'],
+      setupFiles: [
+        '<rootDir>/tests/setupNode.cjs',
+        '<rootDir>/frontend/jest.setup.js',
+      ],
       setupFilesAfterEnv: ['<rootDir>/tests/setupDOM.js'],
       testMatch: ['<rootDir>/tests/unit/**/*.test.js'],
       moduleFileExtensions: ['js', 'jsx'],

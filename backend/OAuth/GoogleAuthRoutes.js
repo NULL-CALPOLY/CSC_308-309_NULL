@@ -19,7 +19,6 @@ const envPath = [
 config({ path: envPath });
 import User from '../UserFiles/UserSchema.js';
 
-
 const router = express.Router();
 
 // Configure Passport Google OAuth strategy

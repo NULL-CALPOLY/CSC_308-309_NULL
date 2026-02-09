@@ -30,7 +30,7 @@ export default function MainMapComponent() {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/events/all')
+    fetch(`${import.meta.env.VITE_API_BASE_URL}events/all`)
       .then((res) => res.json())
       .then((data) => {
         if (!data.success) return;

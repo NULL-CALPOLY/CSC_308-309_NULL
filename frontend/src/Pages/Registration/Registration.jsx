@@ -41,7 +41,6 @@ export default function Registration() {
           .map((i) => i.trim())
           .filter(Boolean),
       });
-
       navigate('/home');
     } catch (err) {
       setError(err.message || 'Something went wrong');

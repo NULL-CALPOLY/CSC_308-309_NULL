@@ -31,7 +31,7 @@ describe('Interest Services', () => {
 
   test('should return all interests', async () => {
     await interestModel.create(testInterest);
-    const rock = await interestModel.create(testInterest2);
+    await interestModel.create(testInterest2);
 
     const interests = await interestServices.getInterests();
     expect(interests.length).toBe(2);
