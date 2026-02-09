@@ -3,10 +3,22 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { config } from 'dotenv';
 import path from 'path';
+
+// Load .env.test for tests/CI, fallback to .env
+const envPath = [
+  path.resolve(process.cwd(), '.env.test'),
+  path.resolve(process.cwd(), '.env'),
+].find((p) => {
+  try {
+    require('fs').accessSync(p);
+    return true;
+  } catch {
+    return false;
+  }
+});
+config({ path: envPath });
 import User from '../UserFiles/UserSchema.js';
 
-// Load environment variables
-config({ path: path.resolve(process.cwd(), '.env') });
 
 const router = express.Router();
 

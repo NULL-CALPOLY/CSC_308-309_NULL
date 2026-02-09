@@ -5,6 +5,7 @@ import NavbarLanding from '../../Components/NavbarLanding/NavbarLanding.jsx';
 import community from '../../assets/community.svg';
 import LEBRON from '../../assets/LEBRON.gif';
 import { useAuth } from '../../Hooks/useAuth.js';
+import LEBRONposter from '../../assets/LEBRON.jpg';
 
 export default function LandingPage() {
   const { isAuthenticated } = useAuth();
@@ -116,7 +117,14 @@ export default function LandingPage() {
               )}
             </div>
             <div className="feature-image">
-              <img src={LEBRON} alt="Discover" />
+              <video
+                src={LEBRON}
+                autoPlay
+                muted
+                loop
+                playsInLine
+                poster={LEBRONposter}
+              />
             </div>
           </div>
         </section>
