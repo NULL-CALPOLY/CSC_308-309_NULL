@@ -20,7 +20,6 @@ jobs:
         run: |
           npm install
           npm install --prefix frontend
-        
 
       - name: Run lint
         run: npm run lint

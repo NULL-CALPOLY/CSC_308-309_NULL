@@ -9,7 +9,10 @@ module.exports = {
       displayName: 'unit-frontend',
       testEnvironment: 'jest-environment-jsdom',
       transform: {
-        '^.+\\.[jt]sx?$': 'babel-jest',
+        '^.+\\.[jt]sx?$': [
+          'babel-jest',
+          { configFile: path.join(__dirname, 'babel.config.cjs') }
+        ],
       },
       transformIgnorePatterns: [
         'node_modules/(?!(react-leaflet|@react-leaflet|@cloudscape-design)/)',
@@ -26,7 +29,10 @@ module.exports = {
         '^leaflet$': '<rootDir>/tests/__mocks__/leaflet.js',
         // Removed custom react and react-dom mappers to fix CI resolution errors
       },
-      setupFiles: ['<rootDir>/tests/setupNode.cjs'],
+      setupFiles: [
+        '<rootDir>/tests/setupNode.cjs',
+        '<rootDir>/frontend/jest.setup.js'
+      ],
       setupFilesAfterEnv: ['<rootDir>/tests/setupDOM.cjs'],
       testMatch: [
         '<rootDir>/tests/unit/**/*.test.js',
@@ -40,7 +46,10 @@ module.exports = {
       displayName: 'integration',
       testEnvironment: 'node',
       transform: {
-        '^.+\\.[jt]sx?$': 'babel-jest',
+        '^.+\\.[jt]sx?$': [
+          'babel-jest',
+          { configFile: path.join(__dirname, 'babel.config.cjs') }
+        ],
       },
       setupFiles: ['<rootDir>/tests/setupNode.cjs'],
       setupFilesAfterEnv: ['<rootDir>/tests/setupMemoryServer.cjs'],

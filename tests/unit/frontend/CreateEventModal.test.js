@@ -2,6 +2,8 @@
 // Note: This test suite is currently disabled due to complexity with Cloudscape component mocks
 // and async state management in the form submission flow.
 
+import CreateEventModal from '../../../frontend/src/Components/CreateEventModal/CreateEventModal.jsx';
+
 jest.mock(
   '../../../frontend/src/Components/TempAddressInputComponent/TempAddressComponent.jsx',
   () => {
@@ -33,7 +35,7 @@ jest.mock('@cloudscape-design/components/textarea', () => {
 });
 
 import { render, screen } from '@testing-library/react';
-import CreateEventModal from '../../../frontend/src/Components/CreateEventModal/CreateEventModal.jsx';
+
 
 const mockOnClose = jest.fn();
 
