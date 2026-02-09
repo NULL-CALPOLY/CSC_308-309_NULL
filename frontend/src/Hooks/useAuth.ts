@@ -1,6 +1,21 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+export interface RegisterData {
+  name: string;
+  phoneNumber: string;
+  gender: string;
+  dateOfBirth: string;
+  city: string;
+  email: string;
+  password: string;
+  location: {
+    latitude: number;
+    longitude: number;
+  };
+  interests: string[];
+}
+
 export const AuthContext = createContext(null);
 
 // Hook to access auth context in components
@@ -15,6 +30,7 @@ export const useAuth = () => {
 // Hook that contains all authentication logic
 export const useProvideAuth = () => {
   const [user, setUser] = useState<{ id: string; token: string } | null>(null);
+  const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -61,19 +77,41 @@ export const useProvideAuth = () => {
     return { id: data.userId, token: data.accessToken };
   };
 
-  const register = async (email: string, password: string) => {
-    const res = await fetch('http://localhost:3000/users', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
+  const register = async (userData: RegisterData) => {
+    setError('');
+    setLoading(true);
 
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || 'Registration failed');
+    try {
+      const res = await fetch('http://localhost:3000/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+
+        if (res.status === 409) {
+          throw new Error('This email is already in use.');
+        }
+
+        throw new Error(err.message || 'Registration failed');
+      }
+
+      const data = await res.json();
+
+      setUser({
+        id: data.userId || data.user?._id,
+        token: data.token,
+      });
+
+      return data;
+    } catch (err: any) {
+      setError(err.message || 'Something went wrong');
+      throw err;
+    } finally {
+      setLoading(false);
     }
-
-    return await res.json();
   };
 
   const logout = async () => {

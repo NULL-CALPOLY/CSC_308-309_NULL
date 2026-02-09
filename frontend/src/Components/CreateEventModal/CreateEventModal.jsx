@@ -27,8 +27,9 @@ export default function CreateEventModal({ isOpen, onClose }) {
       .then((res) => res.json())
       .then((data) => {
         // Ensure unique options by filtering duplicates
-        const uniqueInterests = data.filter((interest, index, self) =>
-          index === self.findIndex((i) => i.name === interest.name)
+        const uniqueInterests = data.filter(
+          (interest, index, self) =>
+            index === self.findIndex((i) => i.name === interest.name)
         );
         const mappedOptions = uniqueInterests.map((interest) => ({
           label: interest.name,
@@ -183,26 +184,27 @@ export default function CreateEventModal({ isOpen, onClose }) {
           {/* Interests */}
           <div className="form-group">
             <label>Interests</label>
-              <Multiselect
-                placeholder="Select interests"
-                options={interestOptions}
-                selectedOptions={selectedOptions}
-                onChange={({ detail }) => {
-                  const uniqueSelected = detail.selectedOptions.filter((option, index, self) =>
+            <Multiselect
+              placeholder="Select interests"
+              options={interestOptions}
+              selectedOptions={selectedOptions}
+              onChange={({ detail }) => {
+                const uniqueSelected = detail.selectedOptions.filter(
+                  (option, index, self) =>
                     index === self.findIndex((o) => o.value === option.value)
-                  );
-                  setSelectedOptions(uniqueSelected);
-                  setFormData({
-                    ...formData,
-                    interests: uniqueSelected.map((o) => o.value),
-                  });
-                  setErrorMessage({ ...errorMessage, interests: null });
-                }}
-                filteringType="auto"
-                keepOpen={false}
-                loading={isLoadingInterests}
-                disabled={isLoadingInterests}
-              />
+                );
+                setSelectedOptions(uniqueSelected);
+                setFormData({
+                  ...formData,
+                  interests: uniqueSelected.map((o) => o.value),
+                });
+                setErrorMessage({ ...errorMessage, interests: null });
+              }}
+              filteringType="auto"
+              keepOpen={false}
+              loading={isLoadingInterests}
+              disabled={isLoadingInterests}
+            />
             {errorMessage.interests && (
               <p className="error-text">{errorMessage.interests}</p>
             )}

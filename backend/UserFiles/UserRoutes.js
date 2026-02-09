@@ -76,10 +76,31 @@ router.post('/', async (req, res) => {
   try {
     const newUser = await userServices.addUser(req.body);
 
+    const accessToken = jwt.sign(
+      { id: newUser._id },
+      process.env.JWT_TOKEN_SECRET,
+      { expiresIn: '15m' }
+    );
+
+    const refreshToken = jwt.sign(
+      { id: newUser._id },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    // store refresh token cookie (same as login)
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
     res.status(201).json({
       success: true,
       message: 'User created successfully',
       user: newUser,
+      token: accessToken,
     });
   } catch (error) {
     res.status(error.status || 500).json({

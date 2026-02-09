@@ -51,7 +51,6 @@ function getUsers() {
 async function addUser(user) {
   // Check if email already exists
   const existingUser = await userModel.findOne({ email: user.email });
-  console.log(existingUser);
 
   if (existingUser) {
     const error = new Error('Email already registered');
