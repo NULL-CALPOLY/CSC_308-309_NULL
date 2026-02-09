@@ -31,7 +31,7 @@ describe('Interest Services', () => {
 
   test('should return all interests', async () => {
     await interestModel.create(testInterest);
-    await interestModel.create(testInterest2);
+    const rock = await interestModel.create(testInterest2);
 
     const interests = await interestServices.getInterests();
     expect(interests.length).toBe(2);
@@ -110,7 +110,7 @@ describe('Interest Services', () => {
 
   test('should find interests by similar interests', async () => {
     const music = await interestModel.create(testInterest);
-    const rock = await interestModel.create({
+    await interestModel.create({
       ...testInterest2,
       similarInterests: [music._id],
     });
