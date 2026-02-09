@@ -2,8 +2,19 @@ import mongoose from 'mongoose';
 import path from 'path';
 import { config } from 'dotenv';
 
-// Load environment variables FIRST before importing any routes
-config({ path: path.resolve(process.cwd(), '.env') });
+// Load .env.test for tests/CI, fallback to .env
+const envPath = [
+  path.resolve(process.cwd(), '.env.test'),
+  path.resolve(process.cwd(), '.env'),
+].find((p) => {
+  try {
+    require('fs').accessSync(p);
+    return true;
+  } catch {
+    return false;
+  }
+});
+config({ path: envPath });
 
 import express from 'express';
 import eventRouter from './EventFiles/EventRoutes.js';
