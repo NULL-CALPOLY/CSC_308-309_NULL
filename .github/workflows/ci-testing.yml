@@ -26,7 +26,6 @@ jobs:
         with:
           node-version: '24.x'
 
-
       - name: Install backend dependencies
         run: npm install
         working-directory: backend
@@ -42,7 +41,6 @@ jobs:
       - name: Run tests
         run: npm run test
         working-directory: backend
-
 
       - name: Build frontend
         run: npm run build
