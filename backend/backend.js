@@ -60,8 +60,8 @@ app.get('/', (req, res) => {
 });
 
 // Start listening on port
-app.listen(port, () => {
-  console.log(`🚀 Server listening on port ${port}`);
+app.listen(process.env.PORT || port, () => {
+  console.log(`🚀 Server listening on port ${process.env.PORT || port}`);
 });
 
 // Get MongoDB URI from environment variable
