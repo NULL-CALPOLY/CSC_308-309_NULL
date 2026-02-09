@@ -66,22 +66,32 @@ Findr is a location-based social discovery platform that helps users find events
 
 ```
 .
-├── backend/                    # Express server & API
-│   ├── UserFiles/             # User routes, schema, services
-│   ├── EventFiles/            # Event management
-│   ├── ChatFiles/             # Group chat functionality
-│   ├── InterestFIles/         # Interest management
-│   ├── OrganizationFiles/     # Organization management
-│   ├── CredentialFiles/       # Authentication & login
-│   └── backend.js             # Server entry point
-├── frontend/                   # React application
-│   └── src/
-│       ├── Components/        # Reusable React components
-│       ├── Pages/            # Page components
-│       └── main.jsx          # Frontend entry point
-├── tests/                      # Test files for all modules
-├── package.json               # Dependencies & scripts
-└── README.md                  # This file
+├── backend/                             # Express server & API
+│   ├── backend.js                       # Server entry point
+│   ├── UserFiles/                       # User routes, schema, services
+│   ├── EventFiles/                      # Event routes, schema, services
+│   ├── ChatFiles/                       # Group chat routes, schema, services
+│   ├── InterestFIles/                   # Interest routes, schema, services
+│   ├── OrganizationFiles/               # Organization routes, schema, services
+│   └── CredentialFiles/                 # Authentication & login
+├── frontend/                             # React application (Vite)
+│   ├── public/                          # Static assets
+│   ├── src/
+│   │   ├── Components/                  # Reusable React components
+│   │   ├── Pages/                       # Page-level components
+│   │   ├── Hooks/                       # Custom hooks
+│   │   ├── assets/                      # Images and media
+│   │   ├── App.jsx                      # App shell
+│   │   └── main.jsx                     # Frontend entry point
+│   ├── .env                             # Local frontend env vars
+│   └── .env.production                  # Production frontend env vars
+├── tests/                                # Test files
+│   ├── unit/                            # Unit tests (frontend)
+│   ├── Integration/                     # Integration tests (backend)
+│   └── __mocks__/                        # Test mocks
+├── .github/workflows/                    # CI/CD workflows
+├── package.json                          # Root scripts & dependencies
+└── README.md                             # This file
 ```
 
 ---
@@ -110,12 +120,23 @@ Findr is a location-based social discovery platform that helps users find events
    ```
 
 3. **Set up environment variables**
-   - Create a `.env` file in the root directory
-   - Add your MongoDB connection string:
-     ```
-     MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/dbname
-     ```
-   - **Important:** Add `.env` to `.gitignore` before committing
+    - Create a `.env` file in the root directory
+    - Add your MongoDB connection string:
+       ```
+       MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/dbname
+       ```
+    - **Important:** Add `.env` to `.gitignore` before committing
+
+4. **Configure frontend API base URL**
+    - Local development (frontend/.env):
+       ```
+       VITE_API_BASE_URL=http://localhost:3000/
+       ```
+    - Production build (frontend/.env.production):
+       ```
+       VITE_API_BASE_URL=https://<your-azure-backend-url>/
+       ```
+    - The frontend reads `VITE_API_BASE_URL` at build time.
 
 4. **Verify setup**
    ```bash
@@ -179,9 +200,17 @@ Findr is a location-based social discovery platform that helps users find events
 
 ### Base URL
 
-```
-http://localhost:3000
-```
+- Local: `http://localhost:3000`
+- Production: your Azure backend URL
+- Frontend uses `VITE_API_BASE_URL` to select the correct base URL.
+
+---
+
+## ✅ Testing
+
+- Run all tests: `npm run test`
+- Frontend unit tests use Jest + Babel transforms to support Vite `import.meta.env`.
+- If you add new Vite env variables, update `frontend/jest.setup.js` accordingly.
 
 ### Available Endpoints
 
