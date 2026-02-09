@@ -4,8 +4,9 @@
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  display: flex;
+  align-items: flex-start;
 }
-
 
 /* === MAP = background layer === */
 .Map {
@@ -17,7 +18,7 @@
 
 /* === COLUMN = overlay layer === */
 .Event-Column {
-  position: absolute;
+  position: relative;
   top: 0;
   left: 0;
 
@@ -33,3 +34,17 @@
 .Event-Column > * {
   pointer-events: auto;
 }
+
+.Create-Event-Button {
+  margin-left: 15px;
+  margin-bottom: 100px;
+
+  height: 100vh;            /* take full height */
+  display: flex;
+  align-items: flex-end;    
+  padding-bottom: 20px;    
+
+  z-index: 15;
+}
+
+

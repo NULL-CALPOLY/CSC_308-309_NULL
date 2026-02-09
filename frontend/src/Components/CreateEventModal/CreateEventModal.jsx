@@ -4,8 +4,11 @@ import Multiselect from '@cloudscape-design/components/multiselect';
 import Input from '@cloudscape-design/components/input';
 import Textarea from '@cloudscape-design/components/textarea';
 import TempAddressComponent from '../TempAddressInputComponent/TempAddressComponent';
+import { useAuth } from '../../Hooks/useAuth';
 
 export default function CreateEventModal({ isOpen, onClose }) {
+
+  const {user} = useAuth();
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -81,7 +84,7 @@ export default function CreateEventModal({ isOpen, onClose }) {
         description: formData.description,
         mapComponent: formData.address,
         address: formData.address,
-        host: '64c9f0d2b5e8f3a1c2d4e567', // Replace with actual host ID dynamically
+        host: user.id,
         attendees: [],
         blockedUsers: [],
         comment: [],

@@ -1,7 +1,5 @@
 .create-event-btn {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
+  position: relative;   /* or just delete position entirely */
 
   width: 56px;
   height: 56px;
@@ -15,5 +13,4 @@
   color: white;
   border: none;
   cursor: pointer;
-  z-index: 3000;
 }

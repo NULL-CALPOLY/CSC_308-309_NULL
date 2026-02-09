@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import './EventComponent.css';
 import TagComponent from '../InterestTag/InterestTag.jsx';
+import { useAuth } from '../../Hooks/useAuth.js';
 
 export default function EventComponent(props) {
+
+
   // Mock user object
-  const user = { id: '64c9f0d2b5e8f3a1c2d4e567', name: 'Test User' }; // <-- change id to test host vs guest
+  const { user } = useAuth();
 
   const [expanded, setExpanded] = useState(false);
   const hasExtra = Boolean(props.description || props.attendees || props.host);
@@ -28,6 +31,14 @@ export default function EventComponent(props) {
     alert(`Editing event "${props.eventName}"!`);
     // navigate to edit page or open modal
   };
+
+  // const handleDelete = () => {
+  //   try {
+  //       const res = fetch(`http://localhost:3000/events/${props.eventId}`, {
+  //         method: 'DELETE',
+  //         credentials: 'include',
+  //       });
+  // };
 
   return (
     <div className="Event-Container">
