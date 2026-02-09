@@ -24,8 +24,7 @@ module.exports = {
         '\\.(svg|png|jpg|jpeg|gif)$': '<rootDir>/tests/__mocks__/fileMock.js',
         '^react-leaflet$': '<rootDir>/tests/__mocks__/react-leaflet.js',
         '^leaflet$': '<rootDir>/tests/__mocks__/leaflet.js',
-        '^react$': '<rootDir>/frontend/node_modules/react',
-        '^react-dom$': '<rootDir>/frontend/node_modules/react-dom',
+        // Removed custom react and react-dom mappers to fix CI resolution errors
       },
       setupFiles: ['<rootDir>/tests/setupNode.cjs'],
       setupFilesAfterEnv: ['<rootDir>/tests/setupDOM.cjs'],
