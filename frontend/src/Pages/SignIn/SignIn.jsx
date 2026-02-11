@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../Hooks/useAuth';
 import './SignIn.css';
-import Navbar from '../../Components/Navbar/Navbar.jsx';
+import Navbar from '../../Components/NavbarLanding/NavbarLanding.jsx';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -10,7 +9,6 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate();
-  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,7 +16,22 @@ export default function SignIn() {
     setLoading(true);
 
     try {
-      await login(email, password);
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}logins/login`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        }
+      );
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Login failed');
+      }
+
+      const data = await res.json();
+      console.log(data);
       navigate('/home');
     } catch (err) {
       setErrorMsg(err.message);
