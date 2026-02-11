@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../Hooks/useAuth';
 import './SignIn.css';
-import Navbar from '../../Components/Navbar/Navbar.jsx';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -10,7 +8,6 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate();
-  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,8 +15,20 @@ export default function SignIn() {
     setLoading(true);
 
     try {
-      await login(email, password);
-      navigate('/home');
+      const res = await fetch('http://localhost:3000/logins/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Login failed');
+      }
+
+      const data = await res.json();
+      console.log(data);
+      navigate('/');
     } catch (err) {
       setErrorMsg(err.message);
     } finally {
@@ -29,7 +38,6 @@ export default function SignIn() {
 
   return (
     <div className="container">
-      <Navbar />
       <div className="signin-container">
         <form onSubmit={handleSubmit} className="signin-form">
           <h2>Sign In</h2>
