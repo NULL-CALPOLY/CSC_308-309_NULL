@@ -37,7 +37,14 @@ export default function CreateEventModal({ isOpen, onClose }) {
         }));
         setInterestOptions(mappedOptions);
       })
-      .catch((err) => console.error('Failed to load interests:', err))
+      .catch((err) =>
+        console.error(
+          import.meta.env.VITE_TEST_VAR,
+          'Failed to load interests:',
+          err,
+          import.meta.env.VITE_API_BASE_URL
+        )
+      )
       .finally(() => setIsLoadingInterests(false));
   }, []);
 

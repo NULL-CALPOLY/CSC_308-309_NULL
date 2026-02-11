@@ -2,7 +2,7 @@
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../Hooks/useAuth.ts';
 import './NavbarLanding.css';
-import LEBRON from '../../assets/LEBRON.gif';
+import LEBRON from '../../assets/LEBRON.mp4';
 
 export default function Navbar() {
   const { isAuthenticated, logout } = useAuth();

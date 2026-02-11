@@ -3,7 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import './index.css';
 import NavbarLanding from '../../Components/NavbarLanding/NavbarLanding.jsx';
 import community from '../../assets/community.svg';
-import LEBRON from '../../assets/LEBRON.gif';
+import LEBRON from '../../assets/LEBRON.mp4';
 import { useAuth } from '../../Hooks/useAuth.js';
 import LEBRONposter from '../../assets/LEBRON.jpg';
 
