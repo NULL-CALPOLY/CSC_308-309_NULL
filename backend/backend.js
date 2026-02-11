@@ -19,7 +19,7 @@ config({ path: envPath });
 import express from 'express';
 import eventRouter from './EventFiles/EventRoutes.js';
 import userRouter from './UserFiles/UserRoutes.js';
-import loginRouter from './CredentialFiles/LoginRoutes.js';
+import loginRouter from './UserFiles/Credentials/LoginRoutes.js';
 import chatRouter from './ChatFiles/ChatRoutes.js';
 import organizationRouter from './OrganizationFiles/OrganizationRoutes.js';
 import interestRouter from './InterestFIles/InterestRoutes.js';

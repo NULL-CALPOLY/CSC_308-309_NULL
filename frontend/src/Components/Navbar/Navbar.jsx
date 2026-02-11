@@ -2,7 +2,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './Navbar.css';
-import LEBRON from '../../assets/LEBRON.gif';
+import LEBRON from '../../assets/LEBRON.mp4';
 
 export default function Navbar() {
   const linkClass = ({ isActive }) =>
@@ -17,7 +17,13 @@ export default function Navbar() {
       </div>
 
       <div className="navbar__profile">
-        <img src={LEBRON} alt="Profile" className="navbar__profile-icon" />
+        <video
+          src={LEBRON}
+          autoPlay
+          loop
+          muted
+          className="navbar__profile-icon"
+        />
       </div>
     </nav>
   );

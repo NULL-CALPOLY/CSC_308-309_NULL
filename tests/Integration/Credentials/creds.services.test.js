@@ -1,5 +1,5 @@
-import loginServices from '../../../backend/CredentialFiles/LoginServices.js';
-import loginModel from '../../../backend/CredentialFiles/LoginSchema.js';
+import loginServices from '../../../backend/UserFiles/Credentials/LoginServices.js';
+import loginModel from '../../../backend/UserFiles/Credentials/LoginSchema.js';
 import mongoose from 'mongoose';
 
 const testLogin = {
