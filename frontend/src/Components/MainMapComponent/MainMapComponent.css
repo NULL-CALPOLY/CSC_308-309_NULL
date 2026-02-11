@@ -24,7 +24,7 @@
 /* Floating locate-me button */
 .main-locate-btn {
   position: absolute;
-  bottom: 10px;
+  bottom: 100px;
   right: 15px;
   background: white;
   border: none;
