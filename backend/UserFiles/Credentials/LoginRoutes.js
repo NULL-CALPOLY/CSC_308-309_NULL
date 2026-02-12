@@ -12,7 +12,11 @@ router.get('/all', async (req, res) => {
   await loginServices
     .getLogins()
     .then((logins) => {
-      res.status(200).json({ success: true, data: logins });
+      if (!logins || logins.length === 0) {
+        res.status(404).json({ success: false, message: 'No logins found' });
+      } else {
+        res.status(200).json({ success: true, data: logins });
+      }
     })
     .catch((error) => {
       res
