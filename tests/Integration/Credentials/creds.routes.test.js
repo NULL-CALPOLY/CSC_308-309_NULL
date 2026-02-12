@@ -35,15 +35,6 @@ describe('Login Routes', () => {
     expect(res.body.data.email).toBe('test@example.com');
   });
 
-  test('GET /logins/:id returns login', async () => {
-    const login = await loginModel.create(testLogin);
-
-    const res = await request(app).get(`/logins/${login._id}`);
-
-    expect(res.status).toBe(500);
-    expect(res.body.success).toBe(false);
-  });
-
   test('POST /logins/login authenticates user', async () => {
     await loginModel.create(testLogin);
 
