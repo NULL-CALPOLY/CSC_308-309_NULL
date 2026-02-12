@@ -2,7 +2,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './Navbar.css';
-import LEBRON from '../../assets/LEBRON.mp4';
+import LEBRON from '../../assets/LEBRON.gif';
 
 export default function Navbar() {
   const linkClass = ({ isActive }) =>
