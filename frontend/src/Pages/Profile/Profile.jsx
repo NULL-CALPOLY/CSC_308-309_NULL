@@ -82,7 +82,7 @@ export default function Profile() {
     setLoading(true);
 
     try {
-      const res = await fetch(`http://localhost:3000/users/${USER_ID}`, {
+      const res = await fetch(`http://localhost:3000/users/${user.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -127,9 +127,8 @@ export default function Profile() {
 
   return (
     <div>
-      <Navbar page='/home'/>
+      <Navbar page="/home" />
       <div className="container">
-
         <div className="profile-container">
           <form onSubmit={handleSubmit} className="profile-card">
             <div className="profile-header">

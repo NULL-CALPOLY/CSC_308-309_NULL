@@ -5,7 +5,7 @@ import { useAuth } from '../../Hooks/useAuth.ts';
 import './Navbar.css';
 import LEBRON from '../../assets/LEBRON.mp4';
 
-export default function Navbar({page = '/'}) {
+export default function Navbar({ page = '/' }) {
   const { isAuthenticated, logout } = useAuth();
 
   const linkClass = ({ isActive }) =>
@@ -25,10 +25,15 @@ export default function Navbar({page = '/'}) {
       <div className="navbar__links">
         {!isAuthenticated ? (
           <>
-            <NavLink to="/signin" className={linkClass}>
+            <NavLink
+              to="/signin"
+              className={({ isActive }) => `${linkClass({ isActive })} signin`}>
               Sign In
             </NavLink>
-            <NavLink to="/register" className={linkClass} end>
+            <NavLink
+              to="/register"
+              className={({ isActive }) => `${linkClass({ isActive })} signup`}
+              end>
               Registration
             </NavLink>
           </>

@@ -13,7 +13,7 @@ export default function LandingPage() {
   return (
     <div className="landing-page">
       <header>
-        <Navbar page='/home'/>
+        <Navbar page="/home" />
       </header>
 
       <main>
@@ -126,7 +126,6 @@ export default function LandingPage() {
                 poster={LEBRONposter}
               />
             </div>
-            
           </div>
         </section>
 

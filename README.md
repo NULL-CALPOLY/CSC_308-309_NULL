@@ -89,7 +89,7 @@ Findr is a location-based social discovery platform that helps users find events
 │   ├── Integration/                     # Integration tests (backend)
 │   └── __mocks__/                        # Test mocks
 ├── .env                                  # env vars for mongo connection and tokens
-├── .env.test                             # mock tokens for testing  
+├── .env.test                             # mock tokens for testing
 ├── .github/workflows/                    # CI/CD workflows
 ├── package.json                          # Root scripts & dependencies
 └── README.md                             # This file

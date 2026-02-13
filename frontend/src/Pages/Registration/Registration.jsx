@@ -42,7 +42,7 @@ export default function Registration() {
 
   return (
     <div className="container">
-      <Navbar page='/'/>
+      <Navbar page="/" />
       <div className="registration-container">
         <form onSubmit={handleSubmit} className="registration-form">
           <h2>Register</h2>
