@@ -68,12 +68,11 @@ Findr is a location-based social discovery platform that helps users find events
 .
 ├── backend/                             # Express server & API
 │   ├── backend.js                       # Server entry point
-│   ├── UserFiles/                       # User routes, schema, services
+│   ├── UserFiles/                       # User routes, schema, services including auth
 │   ├── EventFiles/                      # Event routes, schema, services
 │   ├── ChatFiles/                       # Group chat routes, schema, services
-│   ├── InterestFIles/                   # Interest routes, schema, services
-│   ├── OrganizationFiles/               # Organization routes, schema, services
-│   └── CredentialFiles/                 # Authentication & login
+│   ├── InterestFiles/                   # Interest routes, schema, services
+│   └── OrganizationFiles/               # Organization routes, schema, services
 ├── frontend/                             # React application (Vite)
 │   ├── public/                          # Static assets
 │   ├── src/
@@ -89,6 +88,8 @@ Findr is a location-based social discovery platform that helps users find events
 │   ├── unit/                            # Unit tests (frontend)
 │   ├── Integration/                     # Integration tests (backend)
 │   └── __mocks__/                        # Test mocks
+├── .env                                  # env vars for mongo connection and tokens
+├── .env.test                             # mock tokens for testing  
 ├── .github/workflows/                    # CI/CD workflows
 ├── package.json                          # Root scripts & dependencies
 └── README.md                             # This file
@@ -121,11 +122,25 @@ Findr is a location-based social discovery platform that helps users find events
 
 3. **Set up environment variables**
    - Create a `.env` file in the root directory
-   - Add your MongoDB connection string:
+   - Add env variables:
      ```
      MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/dbname
+     GOOGLE_CLIENT_ID=
+     GOOGLE_CLIENT_SECRET=
+     SESSION_SECRET=
+     JWT_TOKEN_SECRET=
+     REFRESH_TOKEN_SECRET=
      ```
    - **Important:** Add `.env` to `.gitignore` before committing
+
+   - Create a `.env.test` file in the root directory
+   - file should include:
+     ```
+     GOOGLE_CLIENT_ID=dummy
+     GOOGLE_CLIENT_SECRET=dummy
+     JWT_TOKEN_SECRET=dummy_jwt_token
+     REFRESH_TOKEN_SECRET=dummy_refresh_token
+     ```
 
 4. **Configure frontend API base URL**
    - Local development (frontend/.env):
@@ -216,9 +231,12 @@ Findr is a location-based social discovery platform that helps users find events
 
 #### Users
 
+- `POST /users/` - Create new User
 - `GET /users/all` - Get all users
+- `POST /users/login` - Authenticate user (email + password)
 - `GET /users/:id` - Get user by ID
-- `POST /users/` - Create new user
+- `POST /users/refresh-token` - Refreshes User's token
+- `POST /users/logout` - Logout User
 - `PUT /users/:id` - Update user
 - `DELETE /users/:id` - Delete user
 - `GET /users/search/{category}/{value}` - Search users
@@ -261,14 +279,6 @@ Findr is a location-based social discovery platform that helps users find events
 - `PUT /organizations/:id/members/add/:userId` - Add member
 - `PUT /organizations/:id/members/remove/:userId` - Remove member
 - `GET /organizations/search/{category}/{value}` - Search organizations
-
-#### Authentication
-
-- `POST /login/login` - Authenticate user (email + password)
-- `GET /login/:id` - Get login by ID
-- `POST /login/` - Create new login
-- `PUT /login/:id` - Update login
-- `DELETE /login/:id` - Delete login
 
 ### Search Parameters
 
@@ -349,6 +359,6 @@ This project is developed as part of CSC 308/309 coursework.
 ## 👥 Team
 
 - **Vishnu** - Developer/Designer
-- **Ryan** - Developer
-- **Aaron** - Developer
 - **Brian** - Developer
+- **Aaron** - Developer
+- **Ryan** - Developer

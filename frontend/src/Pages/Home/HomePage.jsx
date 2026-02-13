@@ -12,7 +12,7 @@ export default function HomePage() {
   return (
     <div className="HomePage">
       <header>
-        <Navbar />
+        <Navbar page='/'/>
       </header>
       <div className="Map">
         <MainMapComponent />

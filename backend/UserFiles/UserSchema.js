@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const UserSchema = new mongoose.Schema(
   {
@@ -17,6 +19,12 @@ const UserSchema = new mongoose.Schema(
       type: String,
       unique: true,
       required: true,
+      trim: true,
+      lowercase: true,
+    },
+    password: {
+      type: String,
+      required: false, // Made optional for OAuth users
       trim: true,
     },
     avatar: {
@@ -51,21 +59,28 @@ const UserSchema = new mongoose.Schema(
       type: {
         type: String,
         enum: ['Point'],
-        required: true,
         default: 'Point',
       },
       coordinates: {
-        type: [{ type: Number }], // [longitude, latitude]
-        required: true,
+        type: [Number],
       },
-    },
-    radius: {
-      type: Number,
-      required: false,
     },
   },
   { collection: 'users_list' }
 );
+
+UserSchema.pre('save', async function (next) {
+  if (!this.isModified('password') || !this.password) return next();
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
+
+UserSchema.set('toJSON', {
+  transform: (_, ret) => {
+    delete ret.password;
+    return ret;
+  },
+});
 
 const User = mongoose.model('User', UserSchema);
 

@@ -1,10 +1,10 @@
 /* Page wrapper */
 .container {
   display: flex;
-  flex-direction: column;  /* stack nav + card vertically */
-  align-items: center;     /* center horizontally */
+  flex-direction: column; /* stack nav + card vertically */
+  align-items: center; /* center horizontally */
   padding: 2rem;
-  background: #121212; 
+  background: #121212;
   min-height: 100vh;
 }
 
@@ -13,13 +13,6 @@
   width: 100%;
   max-width: 820px;
 }
-
-/* Center the back button above the card */
-.profile-nav {
-  text-align: center;      /* centers the button horizontally */
-  margin-bottom: 1.5rem;   /* space between button and card */
-}
-
 
 /* Card */
 .profile-card {
@@ -52,7 +45,7 @@
   font-weight: 700;
   color: #ffffff;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* Header text */
@@ -134,7 +127,9 @@
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.15s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease;
   box-shadow: 0 6px 12px rgba(108, 99, 255, 0.4);
 }
 
@@ -169,7 +164,6 @@
 .back-btn:hover {
   background: #e6e6e6;
 }
-
 
 /* Responsive */
 @media (max-width: 680px) {

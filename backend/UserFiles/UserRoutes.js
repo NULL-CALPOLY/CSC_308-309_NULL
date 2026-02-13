@@ -1,5 +1,6 @@
 import express from 'express';
 import userServices from './UserServices.js';
+import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
@@ -27,28 +28,92 @@ router.get('/all', async (req, res) => {
     });
 });
 
+/*
+ * Endpoint for USER LOGIN
+ */
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
 
-
-// Post a new user
-router.post('/', async (req, res) => {
-  await userServices
-    .addUser(req.body)
-    .then((user) => {
-      res.status(201).json({
-        success: true,
-        message: 'User registered successfully.',
-        data: user,
-      });
-    })
-    .catch((error) => {
-      res.status(error.status || 400).json({
-        success: false,
-        message: error.message || 'An unexpected error occurred.',
-      });
+  if (!email || !password)
+    return res.status(400).json({
+      success: false,
+      message: 'Email and password required',
     });
+
+  try {
+    const result = await userServices.authenticateUser(email, password);
+    if (!result)
+      return res
+        .status(401)
+        .json({ success: false, message: 'Invalid email or password' });
+
+    const { user, accessToken, refreshToken } = result;
+
+    // Set refresh token as HttpOnly cookie
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: false, // must be false on localhost
+      sameSite: 'lax', // avoids cross-site cookie issues
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.status(200).json({
+      success: true,
+      userId: user._id,
+      accessToken,
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
 });
 
-// Delete a user
+/*
+ * Endpoint for USER REGISTRATION
+ * Takes user data and password, creates new user in database
+ */
+
+router.post('/', async (req, res) => {
+  try {
+    const newUser = await userServices.addUser(req.body);
+
+    const accessToken = jwt.sign(
+      { id: newUser._id },
+      process.env.JWT_TOKEN_SECRET,
+      { expiresIn: '15m' }
+    );
+
+    const refreshToken = jwt.sign(
+      { id: newUser._id },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    // store refresh token cookie (same as login)
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'User created successfully',
+      user: newUser,
+      token: accessToken,
+    });
+  } catch (error) {
+    res.status(error.status || 500).json({
+      success: false,
+      message: error.message || 'Server error',
+    });
+  }
+});
+
+/*
+ * Endpoint for DELETE USER
+ */
+
 router.delete('/:id', async (req, res) => {
   await userServices
     .deleteUser(req.params.id)
@@ -72,6 +137,55 @@ router.delete('/:id', async (req, res) => {
     });
 });
 
+/*
+ * Endpoint to REFRESH ACCESS TOKEN using refresh token
+ */
+router.post('/refresh-token', (req, res) => {
+  const token = req.cookies.refreshToken;
+
+  if (!token)
+    return res
+      .status(401)
+      .json({ success: false, message: 'No refresh token provided' });
+
+  try {
+    const payload = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+
+    // Generate a new access token
+    const newAccessToken = jwt.sign(
+      { id: payload.id },
+      process.env.JWT_TOKEN_SECRET,
+      { expiresIn: '15m' }
+    );
+
+    res.status(200).json({
+      success: true,
+      userId: payload.id,
+      accessToken: newAccessToken,
+    });
+  } catch (err) {
+    return res
+      .status(403)
+      .json({ success: false, message: 'Invalid refresh token' });
+  }
+});
+
+/*
+ * Endpoint to LOGOUT and clear refresh token
+ */
+router.post('/logout', (req, res) => {
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+  });
+
+  res.status(200).json({
+    success: true,
+    message: 'Logout successful',
+  });
+});
+
 // Update a user
 router.put('/:id', async (req, res) => {
   await userServices
@@ -92,6 +206,30 @@ router.put('/:id', async (req, res) => {
       res.status(500).json({
         success: false,
         message: `Error in the server: ${error}`,
+      });
+    });
+});
+
+// Get a user by ID
+router.get('/:id', async (req, res) => {
+  await userServices
+    .findUserById(req.params.id)
+    .then((user) => {
+      if (!user)
+        res.status(404).json({
+          success: false,
+          message: 'User not found',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: user,
+        });
+    })
+    .catch((error) => {
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error.message}`,
       });
     });
 });
@@ -291,7 +429,6 @@ router.get('/search/location/:location', async (req, res) => {
         message: `Error in the server: ${error}`,
       });
     });
-
 });
 
 // Get a user by ID
