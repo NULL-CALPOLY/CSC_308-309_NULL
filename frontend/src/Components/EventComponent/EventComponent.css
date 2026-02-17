@@ -95,3 +95,19 @@
   gap: 4px;
   align-items: left;
 }
+
+.ViewEventBtn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  background: #6c63ff;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  margin-left: 0.5rem;
+}
+
+.ViewEventBtn:hover {
+  background: #5a52e0;
+}
+

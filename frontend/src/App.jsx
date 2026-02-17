@@ -6,6 +6,7 @@ import HomePage from './Pages/Home/HomePage.jsx';
 import SignIn from './Pages/SignIn/SignIn.jsx';
 import Registration from './Pages/Registration/Registration.jsx';
 import LandingPage from './Pages/Landing/index.jsx';
+import EventDetails from './Pages/EventDetails/EventDetails.jsx'
 
 const AboutPage = () => <div style={{ padding: 24 }}>About</div>;
 const SearchPage = () => <div style={{ padding: 24 }}>Search</div>;
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="/search" element={<SearchPage />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/register" element={<Registration />} />
+          <Route path="/events/:id" element={<EventDetails/>} />
           <Route path="*" element={<div style={{ padding: 24 }}>404</div>} />
         </Routes>
       </main>

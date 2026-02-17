@@ -24,6 +24,7 @@ export default function EventColumn() {
           const eventAddress = event.address ?? 'No address';
 
           return {
+            id: event._id,
             eventName: event.name,
             description: event.description,
             eventTime,
@@ -58,9 +59,10 @@ export default function EventColumn() {
         <SearchBar onSelectionChange={setSelectedInterests} />
       </div>
       <div className="Event_List">
-        {filteredEvents.map((event, index) => (
+        {filteredEvents.map((event) => (
           <EventComponent
-            key={index}
+            eventId={event.id}
+            key={event.id}
             eventName={event.eventName}
             eventTime={event.eventTime}
             eventAddress={event.eventAddress}
