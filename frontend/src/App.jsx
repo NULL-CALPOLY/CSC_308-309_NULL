@@ -7,7 +7,8 @@ import SignIn from './Pages/SignIn/SignIn.jsx';
 import Registration from './Pages/Registration/Registration.jsx';
 import { AuthProvider } from './Components/AuthProvider.jsx';
 import Navbar from './Components/Navbar/Navbar.jsx';
-import LandingPage from './Pages/Landing/index.jsx';
+import LandingPage from './Pages/Landing/Landing.jsx';
+import Profile from './Pages/Profile/Profile.jsx';
 import ProtectedRoute from './Components/ProtectedComponent.jsx';
 
 const AboutPage = () => <div style={{ padding: 24 }}>About</div>;
@@ -17,7 +18,6 @@ export default function App() {
   return (
     <AuthProvider>
       <div className="app">
-        <Navbar className="navbar" />
         <main className="main">
           <Routes>
             <Route path="/" element={<LandingPage />} />
@@ -27,6 +27,15 @@ export default function App() {
                 <ProtectedRoute>
                   {' '}
                   <HomePage />{' '}
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  {' '}
+                  <Profile />{' '}
                 </ProtectedRoute>
               }
             />

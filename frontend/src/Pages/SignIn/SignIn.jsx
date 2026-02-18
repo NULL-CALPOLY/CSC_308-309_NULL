@@ -29,7 +29,7 @@ export default function SignIn() {
 
   return (
     <div className="container">
-      <Navbar />
+      <Navbar page="/" />
       <div className="signin-container">
         <form onSubmit={handleSubmit} className="signin-form">
           <h2>Sign In</h2>

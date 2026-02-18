@@ -26,7 +26,7 @@ export default function CreateEventModal({ isOpen, onClose }) {
   /* 🔹 Fetch interests from API */
   useEffect(() => {
     setIsLoadingInterests(true);
-    fetch('http://localhost:3000/interests/all')
+    fetch(`${import.meta.env.VITE_API_BASE_URL}interests/all`)
       .then((res) => res.json())
       .then((data) => {
         // Ensure unique options by filtering duplicates
@@ -40,7 +40,14 @@ export default function CreateEventModal({ isOpen, onClose }) {
         }));
         setInterestOptions(mappedOptions);
       })
-      .catch((err) => console.error('Failed to load interests:', err))
+      .catch((err) =>
+        console.error(
+          import.meta.env.VITE_TEST_VAR,
+          'Failed to load interests:',
+          err,
+          import.meta.env.VITE_API_BASE_URL
+        )
+      )
       .finally(() => setIsLoadingInterests(false));
   }, []);
 
@@ -96,13 +103,16 @@ export default function CreateEventModal({ isOpen, onClose }) {
         },
       };
 
-      const response = await fetch('http://localhost:3000/events/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}events/`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Server error: ${response.statusText}`);

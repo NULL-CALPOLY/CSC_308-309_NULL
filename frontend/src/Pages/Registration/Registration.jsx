@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import RegistrationMap from '../../Components/RegistrationMapComponent/RegistrationMapComponent.jsx';
 import './Registration.css';
 import Navbar from '../../Components/Navbar/Navbar.jsx';
 import { useAuth } from '../../Hooks/useAuth.js';
@@ -13,7 +12,6 @@ export default function Registration() {
   const [interests, setInterests] = useState('');
   const [city, setCity] = useState('');
   const [email, setEmail] = useState('');
-  const [location, setLocation] = useState(null); // silently set by map
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -21,10 +19,6 @@ export default function Registration() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!location) {
-      return;
-    }
 
     try {
       await register({
@@ -35,13 +29,11 @@ export default function Registration() {
         city,
         email,
         password,
-        location,
         interests: interests
           .split(',')
           .map((i) => i.trim())
           .filter(Boolean),
       });
-
       navigate('/home');
     } catch (err) {
       setError(err.message || 'Something went wrong');
@@ -50,7 +42,7 @@ export default function Registration() {
 
   return (
     <div className="container">
-      <Navbar />
+      <Navbar page="/" />
       <div className="registration-container">
         <form onSubmit={handleSubmit} className="registration-form">
           <h2>Register</h2>
@@ -170,13 +162,6 @@ export default function Registration() {
             <p style={{ marginTop: '0.75rem', color: '#ff6b6b' }}>{error}</p>
           )}
         </form>
-        <div className="map-column">
-          <RegistrationMap
-            onLocationSelect={(lat, lng) =>
-              setLocation({ latitude: lat, longitude: lng })
-            }
-          />
-        </div>
       </div>
     </div>
   );

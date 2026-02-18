@@ -1,5 +1,5 @@
 // EventColumn.jsx
-import EventComponent from '../EventComponent/EventComponent2.jsx';
+import EventComponent from '../EventComponent/EventComponent.jsx';
 import './EventColumn.css';
 import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
@@ -12,7 +12,7 @@ export default function EventColumn() {
 
   // Fetch events once
   useEffect(() => {
-    fetch('http://localhost:3000/events/all')
+    fetch(`${import.meta.env.VITE_API_BASE_URL}events/all`)
       .then((res) => res.json())
       .then((data) => {
         if (!data.success) return;

@@ -16,10 +16,13 @@ export default [
   },
   // Backend & General JS files
   {
-    files: ['backend/**/*.js', 'tests/**/*.js'],
+    files: ['backend/**/*.js', 'tests/**/*.js', 'tests/**/*.jsx'],
     languageOptions: {
       ecmaVersion: 2021,
       sourceType: 'module',
+      parserOptions: {
+        ecmaFeatures: { jsx: true },
+      },
       globals: {
         ...globals.node,
       },
@@ -28,7 +31,11 @@ export default [
       ...js.configs.recommended.rules,
       'no-unused-vars': [
         'warn',
-        { argsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' },
+        {
+          argsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+          varsIgnorePattern: '^React$',
+        },
       ],
       'no-console': 'off' /*['warn', { allow: ['warn', 'error'] }]*/,
       'prefer-const': 'warn',
@@ -37,8 +44,13 @@ export default [
   },
   // Jest test files
   {
-    files: ['tests/**/*.js'],
+    files: ['tests/**/*.js', 'tests/**/*.jsx'],
     languageOptions: {
+      ecmaVersion: 2021,
+      sourceType: 'module',
+      parserOptions: {
+        ecmaFeatures: { jsx: true },
+      },
       globals: {
         ...globals.jest,
       },
@@ -46,7 +58,11 @@ export default [
     rules: {
       'no-unused-vars': [
         'warn',
-        { argsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' },
+        {
+          argsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+          varsIgnorePattern: '^React$',
+        },
       ],
     },
   },
@@ -70,20 +86,29 @@ export default [
       ...js.configs.recommended.rules,
       'no-unused-vars': [
         'warn',
-        { argsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' },
+        {
+          argsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+          varsIgnorePattern: '^React$',
+        },
       ],
       'prefer-const': 'warn',
       'no-var': 'error',
     },
   },
-  // Mock files (CommonJS)
+  // Mock files
   {
     files: ['tests/__mocks__/**/*'],
     languageOptions: {
-      sourceType: 'commonjs',
+      ecmaVersion: 2021,
+      sourceType: 'module',
+      parserOptions: {
+        ecmaFeatures: { jsx: true },
+      },
       globals: {
         ...globals.node,
         jest: 'readonly',
+        React: 'readonly',
       },
     },
   },

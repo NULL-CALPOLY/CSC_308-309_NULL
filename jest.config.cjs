@@ -1,13 +1,18 @@
 const path = require('path');
 
 module.exports = {
+  // Ignore integration-level manual mocks to avoid duplicate mock filenames
+  modulePathIgnorePatterns: ['<rootDir>/tests/Integration/__mocks__'],
   projects: [
     // Frontend unit tests
     {
       displayName: 'unit-frontend',
       testEnvironment: 'jest-environment-jsdom',
       transform: {
-        '^.+\\.[jt]sx?$': 'babel-jest',
+        '^.+\\.[jt]sx?$': [
+          'babel-jest',
+          { configFile: path.join(__dirname, 'babel.config.cjs') },
+        ],
       },
       transformIgnorePatterns: [
         'node_modules/(?!(react-leaflet|@react-leaflet|@cloudscape-design)/)',
@@ -22,10 +27,12 @@ module.exports = {
         '\\.(svg|png|jpg|jpeg|gif)$': '<rootDir>/tests/__mocks__/fileMock.js',
         '^react-leaflet$': '<rootDir>/tests/__mocks__/react-leaflet.js',
         '^leaflet$': '<rootDir>/tests/__mocks__/leaflet.js',
-        '^react$': '<rootDir>/frontend/node_modules/react',
-        '^react-dom$': '<rootDir>/frontend/node_modules/react-dom',
+        // Removed custom react and react-dom mappers to fix CI resolution errors
       },
-      setupFiles: ['<rootDir>/tests/setupNode.cjs'],
+      setupFiles: [
+        '<rootDir>/tests/setupNode.cjs',
+        '<rootDir>/frontend/jest.setup.js',
+      ],
       setupFilesAfterEnv: ['<rootDir>/tests/setupDOM.cjs'],
       testMatch: [
         '<rootDir>/tests/unit/**/*.test.js',
@@ -39,7 +46,10 @@ module.exports = {
       displayName: 'integration',
       testEnvironment: 'node',
       transform: {
-        '^.+\\.[jt]sx?$': 'babel-jest',
+        '^.+\\.[jt]sx?$': [
+          'babel-jest',
+          { configFile: path.join(__dirname, 'babel.config.cjs') },
+        ],
       },
       setupFiles: ['<rootDir>/tests/setupNode.cjs'],
       setupFilesAfterEnv: ['<rootDir>/tests/setupMemoryServer.cjs'],

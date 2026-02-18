@@ -1,10 +1,11 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import './index.css';
-import NavbarLanding from '../../Components/NavbarLanding/NavbarLanding.jsx';
+import './Landing.css';
+import Navbar from '../../Components/Navbar/Navbar.jsx';
 import community from '../../assets/community.svg';
-import LEBRON from '../../assets/LEBRON.gif';
+import LEBRON from '../../assets/LEBRON.mp4';
 import { useAuth } from '../../Hooks/useAuth.js';
+import LEBRONposter from '../../assets/LEBRON.jpg';
 
 export default function LandingPage() {
   const { isAuthenticated } = useAuth();
@@ -12,7 +13,7 @@ export default function LandingPage() {
   return (
     <div className="landing-page">
       <header>
-        <NavbarLanding />
+        <Navbar page="/home" />
       </header>
 
       <main>
@@ -116,7 +117,14 @@ export default function LandingPage() {
               )}
             </div>
             <div className="feature-image">
-              <img src={LEBRON} alt="Discover" />
+              <video
+                src={LEBRON}
+                autoPlay
+                muted
+                loop
+                playsInline
+                poster={LEBRONposter}
+              />
             </div>
           </div>
         </section>

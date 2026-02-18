@@ -4,12 +4,16 @@ import MainMapComponent from '../../Components/MainMapComponent/MainMapComponent
 import EventColumn from '../../Components/EventColumn/EventColumn.jsx';
 import CreateEventButton from '../../Components/CreateEventButton/CreateEventButton.jsx';
 import CreateEventModal from '../../Components/CreateEventModal/CreateEventModal.jsx';
+import Navbar from '../../Components/Navbar/Navbar.jsx';
 
 export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
 
   return (
     <div className="HomePage">
+      <header>
+        <Navbar page="/" />
+      </header>
       <div className="Map">
         <MainMapComponent />
       </div>
