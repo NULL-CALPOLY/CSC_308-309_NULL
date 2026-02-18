@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import './TempAddressComponent.css'; // import the CSS file
+import React, { useEffect, useRef, useState } from 'react';
+import './TempAddressComponent.css';
 import Input from '@cloudscape-design/components/input';
 
 export default function TempAddressComponent({
@@ -9,8 +9,11 @@ export default function TempAddressComponent({
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const containerRef = useRef(null);
 
+  // Close dropdown if user clicks outside
   useEffect(() => {
     const handler = (e) => {
       if (containerRef.current && !containerRef.current.contains(e.target)) {
@@ -22,8 +25,12 @@ export default function TempAddressComponent({
   }, []);
 
   useEffect(() => {
-    if (query.length < 10) {
+    const q = query.trim();
+
+    // Partial address autocomplete (3+ chars)
+    if (q.length < 3) {
       setResults([]);
+      setOpen(false);
       return;
     }
 
@@ -31,34 +38,49 @@ export default function TempAddressComponent({
 
     const fetchAddresses = async () => {
       try {
+        setLoading(true);
+
+        // Use OUR backend geocode API (fast + cached)
         const res = await fetch(
-          `https://nominatim.openstreetmap.org/search?` +
-            new URLSearchParams({
-              q: query,
-              format: 'json',
-              addressdetails: '1',
-              limit: '5',
-            }),
-          {
-            headers: { 'User-Agent': 'EventApp/1.0' },
-            signal: controller.signal,
-          }
+          `http://localhost:3000/geocode/search?q=${encodeURIComponent(q)}`,
+          { signal: controller.signal }
         );
 
+        if (!res.ok) {
+          setResults([]);
+          setOpen(false);
+          return;
+        }
+
         const data = await res.json();
-        setResults(data);
+        setResults(Array.isArray(data) ? data : []);
         setOpen(true);
       } catch (err) {
         if (err.name !== 'AbortError') console.error('Geocoding error:', err);
+      } finally {
+        setLoading(false);
       }
     };
 
-    const debounce = setTimeout(fetchAddresses, 300);
+    // Debounce so we don't spam while typing
+    const debounce = setTimeout(fetchAddresses, 250);
+
     return () => {
       clearTimeout(debounce);
       controller.abort();
     };
   }, [query]);
+
+  const pick = (item) => {
+    const lat = parseFloat(item.lat);
+    const lng = parseFloat(item.lon);
+
+    setQuery(item.display_name);
+    setOpen(false);
+    setResults([]);
+
+    onSelect?.({ address: item.display_name, lat, lng });
+  };
 
   return (
     <div ref={containerRef} className="autocomplete-container">
@@ -67,9 +89,15 @@ export default function TempAddressComponent({
         value={query}
         placeholder={placeholder}
         onChange={({ detail }) => setQuery(detail.value)}
-        onFocus={() => query.length >= 3 && setOpen(true)}
+        onFocus={() => results.length > 0 && setOpen(true)}
         className="autocomplete-input"
       />
+
+      {loading && (
+        <div style={{ fontSize: 12, marginTop: 4 }}>
+          Searching…
+        </div>
+      )}
 
       {open && results.length > 0 && (
         <div className="autocomplete-dropdown">
@@ -77,14 +105,8 @@ export default function TempAddressComponent({
             <div
               key={item.place_id}
               className="autocomplete-item"
-              onClick={() => {
-                const lat = parseFloat(item.lat);
-                const lng = parseFloat(item.lon);
-                setQuery(item.display_name);
-                setOpen(false);
-
-                onSelect({ address: item.display_name, lat, lng });
-              }}>
+              onMouseDown={() => pick(item)}
+            >
               {item.display_name}
             </div>
           ))}

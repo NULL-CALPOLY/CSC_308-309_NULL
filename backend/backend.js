@@ -1,66 +1,56 @@
-import mongoose from 'mongoose';
-import path from 'path';
-import { config } from 'dotenv';
-
-// Load environment variables FIRST before importing any routes
-config({ path: path.resolve(process.cwd(), '.env') });
-
 import express from 'express';
-import eventRouter from './EventFiles/EventRoutes.js';
-import userRouter from './UserFiles/UserRoutes.js';
-import loginRouter from './CredentialFiles/LoginRoutes.js';
-import chatRouter from './ChatFiles/ChatRoutes.js';
-import organizationRouter from './OrganizationFiles/OrganizationRoutes.js';
-import interestRouter from './InterestFIles/InterestRoutes.js';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 import cors from 'cors';
-// import googleAuthRouter from './OAuth/GoogleAuthRoutes.js';
-import passport from 'passport';
 import session from 'express-session';
+import passport from 'passport';
+import { fetch as undiciFetch } from 'undici';
+
+// Routers
+import eventRouter from './EventFiles/EventRoutes.js';
+import interestRouter from './InterestFiles/InterestRoutes.js';
 import geocodeRouter from './GeoFiles/GeocodeRoutes.js';
+import googleAuthRouter from './OAuth/GoogleAuthRoutes.js';
 
+// Load environment variables
+dotenv.config();
 
-// Intialize Express app
+// Polyfill fetch for Node 16
+if (!globalThis.fetch) {
+  globalThis.fetch = undiciFetch;
+}
+
 const app = express();
-const port = /*process.env.PORT*/ 3000; // if want your own port, just uncomment. Otherwise, default is 3000
+const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
+// Session + Passport (if used in your project)
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || 'some-secret',
+    secret: process.env.SESSION_SECRET || 'dev-secret',
     resave: false,
     saveUninitialized: false,
   })
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Routes
 app.use('/events', eventRouter);
-app.use('/users', userRouter);
-app.use('/organizations', organizationRouter);
-app.use('/logins', loginRouter);
-app.use('/chats', chatRouter);
 app.use('/interests', interestRouter);
-// app.use('/auth', googleAuthRouter);
 app.use('/geocode', geocodeRouter);
+app.use('/auth', googleAuthRouter);
 
-// Start the server
-app.get('/', (req, res) => {
-  res.send('see github for instructions to use db');
-});
-
-// Start listening on port
-app.listen(port, () => {
-  console.log(`🚀 Server listening on port ${port}`);
-});
-
-// Get MongoDB URI from environment variable
+// MongoDB Connection (SAFE VERSION)
 const uri = process.env.MONGODB_URI;
 
-// Connect to MongoDB (non-blocking)
-if (process.env.NODE_ENV !== 'test') {
+if (!uri) {
+  console.warn('⚠️ MONGODB_URI not set — skipping MongoDB connection');
+} else {
   mongoose
     .connect(uri)
     .then(() => {
@@ -72,4 +62,12 @@ if (process.env.NODE_ENV !== 'test') {
     });
 }
 
+// Only start server if NOT in test environment
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(port, () => {
+    console.log(`🚀 Server listening on port ${port}`);
+  });
+}
+
+// Export app for testing
 export default app;
