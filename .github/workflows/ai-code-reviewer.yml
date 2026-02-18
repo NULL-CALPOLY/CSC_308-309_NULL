@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   ai-review:
+    if: github.event.pull_request.head.repo.fork == false
     runs-on: ubuntu-latest
     steps:
       - name: Generate AI review

@@ -1,84 +1,49 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import RegistrationMap from '../../Components/RegistrationMapComponent/RegistrationMapComponent';
+import RegistrationMap from '../../Components/RegistrationMapComponent/RegistrationMapComponent.jsx';
 import './Registration.css';
-import Navbar from '../../Components/NavbarLanding/NavbarLanding.jsx';
+import Navbar from '../../Components/Navbar/Navbar.jsx';
+import { useAuth } from '../../Hooks/useAuth.js';
 
 export default function Registration() {
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [DOB, setDOB] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
   const [gender, setGender] = useState('');
-  const [interests, setInterests] = useState([]);
+  const [interests, setInterests] = useState('');
   const [city, setCity] = useState('');
   const [email, setEmail] = useState('');
   const [location, setLocation] = useState(null); // silently set by map
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { register, loading } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMsg('');
-    setLoading(true);
 
-    if (!location || !location.latitude || !location.longitude) {
-      setErrorMsg('Please select a location on the map.');
-      setLoading(false);
+    if (!location) {
       return;
     }
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}users`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          phoneNumber,
-          gender,
-          DOB,
-          city,
-          email,
-          location,
-          interests,
-        }),
+      await register({
+        name,
+        phoneNumber,
+        gender,
+        dateOfBirth,
+        city,
+        email,
+        password,
+        location,
+        interests: interests
+          .split(',')
+          .map((i) => i.trim())
+          .filter(Boolean),
       });
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-
-        // 👇 duplicate email detection
-        if (res.status === 409) {
-          throw new Error('This email is already in use.');
-        }
-
-        throw new Error(err.message || 'Registration failed');
-      }
-
-      await res.json();
-
-      // Only create login if user was created
-      const loginRes = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}logins`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password }),
-        }
-      );
-
-      if (!loginRes.ok) {
-        const err = await loginRes.json().catch(() => ({}));
-        console.warn('Login registration failed:', err.message);
-      }
-
-      // ✅ SUCCESS ONLY
       navigate('/home');
     } catch (err) {
-      setErrorMsg(err.message);
-    } finally {
-      setLoading(false);
+      setError(err.message || 'Something went wrong');
     }
   };
 
@@ -105,7 +70,7 @@ export default function Registration() {
             <div className="form-field">
               <label htmlFor="phoneNumber">Phone Number:</label>
               <input
-                type="phoneNumber"
+                type="tel"
                 id="phoneNumber"
                 autoComplete="phoneNumber"
                 value={phoneNumber}
@@ -119,10 +84,10 @@ export default function Registration() {
               <label htmlFor="dateOfBirth">Date Of Birth:</label>
               <input
                 type="date"
-                id="DOB"
-                autoComplete="DOB"
-                value={DOB}
-                onChange={(e) => setDOB(e.target.value)}
+                id="dateOfBirth"
+                autoComplete="dateOfBirth"
+                value={dateOfBirth}
+                onChange={(e) => setDateOfBirth(e.target.value)}
                 required
               />
             </div>
@@ -163,12 +128,9 @@ export default function Registration() {
               <input
                 type="text"
                 id="interests"
-                value={interests.join(', ')}
-                onChange={(e) =>
-                  setInterests(e.target.value.split(',').map((i) => i.trim()))
-                }
+                value={interests}
+                onChange={(e) => setInterests(e.target.value)}
                 placeholder="Enter your interests"
-                required
               />
             </div>
 
@@ -203,8 +165,8 @@ export default function Registration() {
             {loading ? 'Registering...' : 'Register'}
           </button>
 
-          {errorMsg && (
-            <p style={{ marginTop: '0.75rem', color: '#ff6b6b' }}>{errorMsg}</p>
+          {error && (
+            <p style={{ marginTop: '0.75rem', color: '#ff6b6b' }}>{error}</p>
           )}
         </form>
         <div className="map-column">

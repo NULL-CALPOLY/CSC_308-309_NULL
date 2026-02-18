@@ -4,9 +4,12 @@ import './index.css';
 import NavbarLanding from '../../Components/NavbarLanding/NavbarLanding.jsx';
 import community from '../../assets/community.svg';
 import LEBRON from '../../assets/LEBRON.mp4';
+import { useAuth } from '../../Hooks/useAuth.ts';
 import LEBRONposter from '../../assets/LEBRON.jpg';
 
 export default function LandingPage() {
+  const { isAuthenticated } = useAuth();
+
   return (
     <div className="landing-page">
       <header>
@@ -21,9 +24,15 @@ export default function LandingPage() {
               Your go-to platform for connecting with others and discovering new
               interests
             </p>
-            <a href="/register" className="cta-button">
-              Get Started!
-            </a>
+            {!isAuthenticated ? (
+              <a href="/register" className="cta-button">
+                Get Started!
+              </a>
+            ) : (
+              <a href="/home" className="cta-button">
+                Get Started!
+              </a>
+            )}
           </div>
         </section>
 
@@ -52,6 +61,15 @@ export default function LandingPage() {
                 </p>
               </div>
             </section>
+            {!isAuthenticated ? (
+              <a href="/register" className="learn-more">
+                Learn more
+              </a>
+            ) : (
+              <a href="/home" className="cta-button">
+                Learn more
+              </a>
+            )}
           </div>
         </section>
 
@@ -66,9 +84,16 @@ export default function LandingPage() {
                 Join groups and activities that interest you, and build lasting
                 connections.
               </p>
-              <a href="/register" className="learn-more">
-                Join now
-              </a>
+
+              {!isAuthenticated ? (
+                <a href="/register" className="learn-more">
+                  Join now
+                </a>
+              ) : (
+                <a href="/home" className="cta-button">
+                  Learn more
+                </a>
+              )}
             </div>
           </div>
         </section>
@@ -81,9 +106,15 @@ export default function LandingPage() {
                 Explore activities and hobbies you've never tried before, and
                 expand your horizons.
               </p>
-              <a href="/register" className="learn-more">
-                Explore
-              </a>
+              {!isAuthenticated ? (
+                <a href="/register" className="learn-more">
+                  Explore
+                </a>
+              ) : (
+                <a href="/home" className="cta-button">
+                  Learn more
+                </a>
+              )}
             </div>
             <div className="feature-image">
               <video
