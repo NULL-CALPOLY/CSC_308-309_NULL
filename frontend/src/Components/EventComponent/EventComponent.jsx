@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './EventComponent.css';
 import TagComponent from '../InterestTag/InterestTag.jsx';
 import { useAuth } from '../../Hooks/useAuth.js';
@@ -6,11 +7,11 @@ import { useAuth } from '../../Hooks/useAuth.js';
 export default function EventComponent(props) {
 
 
-  // Mock user object
-  const { user } = useAuth();
-
+  const { user, isAuthenticated } = useAuth();
+  const [attendees, setAttendees] = useState(props.attendees || []);
   const [expanded, setExpanded] = useState(false);
-  const hasExtra = Boolean(props.description || props.attendees || props.host);
+  const navigate = useNavigate();
+
 
   const tags = props.interest
     ? props.interest.split(',').map((t) => t.trim())
@@ -19,26 +20,39 @@ export default function EventComponent(props) {
   // Check if logged-in user is the host
   const isHost = user && props.host === user.id;
 
-  const handleJoin = () => {
-    console.log(`User ${user?.id} joining event ${props.eventId}`);
-    alert(`Joined event "${props.eventName}"!`);
-    // call your join event API here
-    // to go to event info page, need to click read more 
+  const isAttending = attendees?.some(
+    (a) => (typeof a === 'object' ? a._id : a) === user?.id
+  );
+
+  const handleAttend = async () => {
+    if (!isAuthenticated || !user?.id) return;
+
+    const route = isAttending ? 'remove' : 'add';
+
+    await fetch(
+      `http://localhost:3000/events/${props.eventId}/attendees/${route}/${user.id}`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+    );
+
+    setAttendees((prev) =>
+      isAttending
+        ? prev.filter((a) => (typeof a === 'object' ? a._id : a) !== user.id)
+        : [...prev, user.id]
+    );
   };
 
   const handleEdit = () => {
-    console.log(`Navigating to edit event ${props.eventId}`);
-    alert(`Editing event "${props.eventName}"!`);
-    // navigate to edit page or open modal
+    navigate(`/events/${props.eventId}`);
   };
 
-  // const handleDelete = () => {
-  //   try {
-  //       const res = fetch(`http://localhost:3000/events/${props.eventId}`, {
-  //         method: 'DELETE',
-  //         credentials: 'include',
-  //       });
-  // };
+  const goToEventDetails = () => {
+    navigate(`/events/${props.eventId}`);
+  };
 
   return (
     <div className="Event-Container">
@@ -65,7 +79,6 @@ export default function EventComponent(props) {
         )}
       </div>
 
-      {/* Only show tags at top when not expanded */}
       {!expanded && (
         <div className="Tag-List">
           {tags.map((tag, idx) => (
@@ -74,7 +87,6 @@ export default function EventComponent(props) {
         </div>
       )}
 
-      {/* Footer buttons */}
       {!expanded && (
         <div className="Event-Footer">
           {isHost ? (
@@ -82,20 +94,18 @@ export default function EventComponent(props) {
               Edit Event
             </button>
           ) : (
-            <button className="ActionButton" onClick={handleJoin}>
-              Join Event
+            <button className="ActionButton" onClick={handleAttend}>
+              {isAttending ? 'Leave Event' : 'Join Event'}
             </button>
           )}
 
-          {hasExtra && (
-            <button
-              className="SeeToggle"
-              type="button"
-              onClick={() => setExpanded(true)}
-            >
-              See more
-            </button>
-          )}
+          <button
+            className="ViewEventBtn"
+            type="button"
+            onClick={goToEventDetails}
+          >
+            View Event
+          </button>
         </div>
       )}
 
@@ -107,14 +117,15 @@ export default function EventComponent(props) {
               Description: {props.description}
             </div>
           )}
+
           {props.attendees && (
             <div className="Event-Attendees">
-              Attendees: {props.attendees.join(', ')}
+              Attendees: {props.attendees.length}
             </div>
           )}
+
           {props.host && <div className="Event-Host">Host: {props.host}</div>}
 
-          {/* When expanded, move tags to bottom */}
           <div className="Event-Footer Expanded-Footer">
             <div className="Tag-List">
               {tags.map((tag, idx) => (
@@ -127,8 +138,8 @@ export default function EventComponent(props) {
                 Edit Event
               </button>
             ) : (
-              <button className="ActionButton" onClick={handleJoin}>
-                Join Event
+              <button className="ActionButton" onClick={handleAttend}>
+                {isAttending ? 'Leave Event' : 'Join Event'}
               </button>
             )}
 
@@ -138,6 +149,15 @@ export default function EventComponent(props) {
               onClick={() => setExpanded(false)}
             >
               See less
+            </button>
+
+            {/* 👇 ALSO AVAILABLE WHEN EXPANDED */}
+            <button
+              className="ViewEventBtn"
+              type="button"
+              onClick={goToEventDetails}
+            >
+              View Event
             </button>
           </div>
         </div>
