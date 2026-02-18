@@ -65,18 +65,42 @@ export default function EventDetails() {
     e.preventDefault();
     if (!user?.token) return;
 
-    const res = await fetch(`http://localhost:3000/events/${id}`, {
-      method: 'PUT',
+    try {
+      const payload = {
+        name: event.name,
+        description: event.description,
+        address: event.address,
+        interests: event.interests,
+        time: {
+          start: event.time.start,
+          end: event.time.end,
+        },
+      };
+
+      const res = await fetch(`http://localhost:3000/events/${id}`, {
+        method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${user.token}`,
       },
-      body: JSON.stringify(event),
+      body: JSON.stringify(payload),
     });
 
     const json = await res.json();
-    if (json.success) setIsEditing(false);
-  };
+
+    if (!res.ok || !json.success) {
+      throw new Error(json.message || 'Failed to update event');
+    }
+
+    // Update local state with saved data
+    setEvent((prev) => ({ ...prev, ...payload }));
+    setIsEditing(false);
+
+  } catch (err) {
+    console.error('Update failed:', err);
+    alert(err.message);
+  }
+};
 
   if (authLoading || loading) return <div className="event-container">Loading event…</div>;
   if (errorMsg) return <div className="event-container error">{errorMsg}</div>;
@@ -100,7 +124,9 @@ export default function EventDetails() {
                   onChange={(e) => setEvent({ ...event, name: e.target.value })}
                 />
               ) : (
-                <h2>{event.name}</h2>
+                <div className='event-name'>
+                  <h2>{event.name}</h2>
+                </div>
               )}
               <p className="event-sub">
                 {new Date(event.time.start).toLocaleString()} –{' '}
@@ -171,6 +197,7 @@ export default function EventDetails() {
           {/* Only show edit if logged in and is the host */}
           {isAuthenticated && isHost && (
             <button
+              type={isEditing ? 'submit' : 'button'}
               className="event-action-btn"
               onClick={(e) => {
                 if (!isEditing) {

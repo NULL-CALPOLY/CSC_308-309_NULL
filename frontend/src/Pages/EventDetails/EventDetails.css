@@ -17,6 +17,10 @@
   margin-bottom: 1.5rem;
 }
 
+.event-name h2{
+  color: #ffffff;
+}
+
 .event-card {
   background: #1e1e1e;
   border-radius: 16px;

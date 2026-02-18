@@ -189,6 +189,7 @@ export default function CreateEventModal({ isOpen, onClose }) {
                 }
               }}
             />
+
             {errorMessage.address && (
               <p className="error-text">{errorMessage.address}</p>
             )}

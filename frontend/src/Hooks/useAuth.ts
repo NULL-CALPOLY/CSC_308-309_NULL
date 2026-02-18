@@ -47,7 +47,7 @@ export const useProvideAuth = () => {
           setUser(null);
         } else {
           const data = await res.json();
-          setUser({ id: data.userId, token: data.userToken });
+          setUser({ id: data.userId, token: data.accessToken });
         }
       } catch {
         setUser(null);
