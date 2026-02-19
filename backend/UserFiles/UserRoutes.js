@@ -164,12 +164,10 @@ router.post('/refresh-token', (req, res) => {
       accessToken: newAccessToken,
     });
   } catch (err) {
-    return res
-      .status(403)
-      .json({
-        success: false,
-        message: `Invalid refresh token: ${err.message}`,
-      });
+    return res.status(403).json({
+      success: false,
+      message: `Invalid refresh token: ${err.message}`,
+    });
   }
 });
 
