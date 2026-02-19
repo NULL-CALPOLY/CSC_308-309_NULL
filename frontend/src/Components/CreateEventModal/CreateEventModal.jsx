@@ -4,11 +4,10 @@ import Multiselect from '@cloudscape-design/components/multiselect';
 import Input from '@cloudscape-design/components/input';
 import Textarea from '@cloudscape-design/components/textarea';
 import TempAddressComponent from '../TempAddressInputComponent/TempAddressComponent';
-import { useAuth } from '../../Hooks/useAuth';
+import { useAuth } from '../../Hooks/useAuth.ts';
 
 export default function CreateEventModal({ isOpen, onClose }) {
-
-  const {user} = useAuth();
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
     description: '',

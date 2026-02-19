@@ -5,13 +5,10 @@ import TagComponent from '../InterestTag/InterestTag.jsx';
 import { useAuth } from '../../Hooks/useAuth.js';
 
 export default function EventComponent(props) {
-
-
   const { user, isAuthenticated } = useAuth();
   const [attendees, setAttendees] = useState(props.attendees || []);
   const [expanded, setExpanded] = useState(false);
   const navigate = useNavigate();
-
 
   const tags = props.interest
     ? props.interest.split(',').map((t) => t.trim())
@@ -70,8 +67,7 @@ export default function EventComponent(props) {
               props.eventAddress
             )}`}
             target="_blank"
-            rel="noopener noreferrer"
-          >
+            rel="noopener noreferrer">
             {props.eventAddress}
           </a>
         ) : (
@@ -102,8 +98,7 @@ export default function EventComponent(props) {
           <button
             className="ViewEventBtn"
             type="button"
-            onClick={goToEventDetails}
-          >
+            onClick={goToEventDetails}>
             View Event
           </button>
         </div>
@@ -146,8 +141,7 @@ export default function EventComponent(props) {
             <button
               className="SeeToggle"
               type="button"
-              onClick={() => setExpanded(false)}
-            >
+              onClick={() => setExpanded(false)}>
               See less
             </button>
 
@@ -155,8 +149,7 @@ export default function EventComponent(props) {
             <button
               className="ViewEventBtn"
               type="button"
-              onClick={goToEventDetails}
-            >
+              onClick={goToEventDetails}>
               View Event
             </button>
           </div>

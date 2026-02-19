@@ -6,7 +6,7 @@ export default {
       displayName: 'unit-frontend',
       testEnvironment: 'jest-environment-jsdom',
       transform: {
-        '^.+\\.[jt]sx?$': 'babel-jest',
+        '^.+\\.(ts|tsx|js|jsx)$': 'babel-jest',
       },
       transformIgnorePatterns: [
         'node_modules/(?!(react-leaflet|@react-leaflet)/)',

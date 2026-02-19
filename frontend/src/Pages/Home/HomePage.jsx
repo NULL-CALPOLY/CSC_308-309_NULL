@@ -20,7 +20,7 @@ export default function HomePage() {
       <div className="Event-Column">
         <EventColumn eventList />
       </div>
-      <div className='Create-Event-Button'>
+      <div className="Create-Event-Button">
         <CreateEventButton onClick={() => setShowModal(true)} />
         <CreateEventModal
           isOpen={showModal}

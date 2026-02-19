@@ -1,8 +1,16 @@
 //CreateEventModal.test.js to test CreateEventModal.jsx
 // Note: This test suite is currently disabled due to complexity with Cloudscape component mocks
 // and async state management in the form submission flow.
-
+import { render, screen } from '@testing-library/react';
 import CreateEventModal from '../../../frontend/src/Components/CreateEventModal/CreateEventModal.jsx';
+
+jest.mock('../../../frontend/src/Hooks/useAuth.ts', () => ({
+  useAuth: () => ({
+    user: { id: 'test-user-id', token: 'test-token' },
+    isAuthenticated: true,
+    loading: false,
+  }),
+}));
 
 jest.mock(
   '../../../frontend/src/Components/TempAddressInputComponent/TempAddressComponent.jsx',
@@ -34,8 +42,6 @@ jest.mock('@cloudscape-design/components/textarea', () => {
   };
 });
 
-import { render, screen } from '@testing-library/react';
-
 const mockOnClose = jest.fn();
 
 beforeEach(() => {
@@ -51,8 +57,6 @@ describe('CreateEventModal', () => {
   });
 
   it.skip('renders modal and submits form', () => {
-    // TODO: Refactor test with proper async form handling and Cloudscape mocks
-    // Currently disabled to avoid Jest timeout issues
     render(<CreateEventModal isOpen={true} onClose={mockOnClose} />);
     expect(
       screen.getByRole('heading', { name: /create event/i })

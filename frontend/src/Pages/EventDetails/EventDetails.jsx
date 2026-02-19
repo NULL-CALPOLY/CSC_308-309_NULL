@@ -79,36 +79,36 @@ export default function EventDetails() {
 
       const res = await fetch(`http://localhost:3000/events/${id}`, {
         method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${user.token}`,
-      },
-      body: JSON.stringify(payload),
-    });
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify(payload),
+      });
 
-    const json = await res.json();
+      const json = await res.json();
 
-    if (!res.ok || !json.success) {
-      throw new Error(json.message || 'Failed to update event');
+      if (!res.ok || !json.success) {
+        throw new Error(json.message || 'Failed to update event');
+      }
+
+      // Update local state with saved data
+      setEvent((prev) => ({ ...prev, ...payload }));
+      setIsEditing(false);
+    } catch (err) {
+      console.error('Update failed:', err);
+      alert(err.message);
     }
+  };
 
-    // Update local state with saved data
-    setEvent((prev) => ({ ...prev, ...payload }));
-    setIsEditing(false);
-
-  } catch (err) {
-    console.error('Update failed:', err);
-    alert(err.message);
-  }
-};
-
-  if (authLoading || loading) return <div className="event-container">Loading event…</div>;
+  if (authLoading || loading)
+    return <div className="event-container">Loading event…</div>;
   if (errorMsg) return <div className="event-container error">{errorMsg}</div>;
   if (!event) return null;
 
   return (
     <div className="container">
-      <Navbar page='/home' />
+      <Navbar page="/home" />
 
       <div className="event-container">
         <form className="event-card" onSubmit={handleUpdate}>
@@ -124,7 +124,7 @@ export default function EventDetails() {
                   onChange={(e) => setEvent({ ...event, name: e.target.value })}
                 />
               ) : (
-                <div className='event-name'>
+                <div className="event-name">
                   <h2>{event.name}</h2>
                 </div>
               )}
@@ -141,7 +141,9 @@ export default function EventDetails() {
               {isEditing ? (
                 <textarea
                   value={event.description}
-                  onChange={(e) => setEvent({ ...event, description: e.target.value })}
+                  onChange={(e) =>
+                    setEvent({ ...event, description: e.target.value })
+                  }
                 />
               ) : (
                 <span>{event.description}</span>
@@ -153,7 +155,9 @@ export default function EventDetails() {
               {isEditing ? (
                 <input
                   value={event.address}
-                  onChange={(e) => setEvent({ ...event, address: e.target.value })}
+                  onChange={(e) =>
+                    setEvent({ ...event, address: e.target.value })
+                  }
                 />
               ) : (
                 <span>{event.address}</span>
@@ -188,8 +192,7 @@ export default function EventDetails() {
             <button
               type="button"
               className="event-action-btn"
-              onClick={handleAttend}
-            >
+              onClick={handleAttend}>
               {isAttending ? 'Leave Event' : 'Join Event'}
             </button>
           )}
@@ -204,8 +207,7 @@ export default function EventDetails() {
                   e.preventDefault();
                   setIsEditing(true);
                 }
-              }}
-            >
+              }}>
               {isEditing ? 'Save Changes' : 'Edit Event'}
             </button>
           )}
@@ -216,7 +218,9 @@ export default function EventDetails() {
               <p className="muted">No comments yet</p>
             ) : (
               event.comment.map((c, i) => (
-                <div key={i} className="comment">{c}</div>
+                <div key={i} className="comment">
+                  {c}
+                </div>
               ))
             )}
           </div>
