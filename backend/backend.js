@@ -37,10 +37,11 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: 'http://localhost:5173', // frontend origin
+    origin: (origin, callback) => callback(null, true), // allow all
     credentials: true,
   })
 );
+app.options('/*splat', cors());
 
 app.use(
   session({
