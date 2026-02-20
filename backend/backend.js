@@ -30,7 +30,7 @@ import session from 'express-session';
 
 // Intialize Express app
 const app = express();
-const port = /*process.env.PORT*/ 3000; // if want your own port, just uncomment. Otherwise, default is 3000
+const port = process.env.PORT || 3000;
 
 app.use(
   cors({
