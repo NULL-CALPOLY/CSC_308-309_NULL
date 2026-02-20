@@ -33,7 +33,7 @@ export default function Profile() {
       setLoading(true);
       setErrorMsg('');
       try {
-        const res = await fetch(`http://localhost:3000/users/${user.id}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}users/${user.id}`, {
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
@@ -82,7 +82,7 @@ export default function Profile() {
     setLoading(true);
 
     try {
-      const res = await fetch(`http://localhost:3000/users/${user.id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}users/${user.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -20,7 +20,7 @@ export default function EventDetails() {
     const fetchEvent = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`http://localhost:3000/events/${id}`);
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}events/${id}`);
         const json = await res.json();
 
         if (!res.ok || !json.success) {
@@ -44,7 +44,7 @@ export default function EventDetails() {
     const route = isAttending ? 'remove' : 'add';
 
     await fetch(
-      `http://localhost:3000/events/${id}/attendees/${route}/${user.id}`,
+      `${import.meta.env.VITE_API_BASE_URL}events/${id}/attendees/${route}/${user.id}`,
       {
         method: 'PUT',
         headers: {
@@ -77,7 +77,7 @@ export default function EventDetails() {
         },
       };
 
-      const res = await fetch(`http://localhost:3000/events/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}events/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

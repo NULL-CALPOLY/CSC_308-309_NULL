@@ -27,7 +27,7 @@ export default function EventComponent(props) {
     const route = isAttending ? 'remove' : 'add';
 
     await fetch(
-      `http://localhost:3000/events/${props.eventId}/attendees/${route}/${user.id}`,
+      `${import.meta.env.VITE_API_BASE_URL}events/${props.eventId}/attendees/${route}/${user.id}`,
       {
         method: 'PUT',
         headers: {

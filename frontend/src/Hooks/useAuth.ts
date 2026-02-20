@@ -38,7 +38,7 @@ export const useProvideAuth = () => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/users/refresh-token`, {
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}users/refresh-token`, {
           method: 'POST',
           credentials: 'include', // send cookies
         });
