@@ -39,8 +39,6 @@ app.use(
   })
 );
 
-app.options('/*', cors()); // preflight — must be BEFORE routes
-
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
