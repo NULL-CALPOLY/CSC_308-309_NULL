@@ -46,6 +46,7 @@
     "backend:dev": "node backend/backend.js",
     "frontend:dev": "npm run dev --prefix frontend",
     "dev": "npm run backend:dev & npm run frontend:dev",
+    "start": "node backend/backend.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
