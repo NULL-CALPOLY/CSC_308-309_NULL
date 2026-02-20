@@ -32,16 +32,18 @@ import session from 'express-session';
 const app = express();
 const port = /*process.env.PORT*/ 3000; // if want your own port, just uncomment. Otherwise, default is 3000
 
-// Middleware
-app.use(express.json());
-app.use(cookieParser());
 app.use(
   cors({
-    origin: (origin, callback) => callback(null, true), // allow all
+    origin: (origin, callback) => callback(null, true),
     credentials: true,
   })
 );
-app.options('/*splat', cors());
+
+app.options('/*', cors()); // preflight — must be BEFORE routes
+
+// Middleware
+app.use(express.json());
+app.use(cookieParser());
 
 app.use(
   session({
