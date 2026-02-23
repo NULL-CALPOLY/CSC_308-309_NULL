@@ -25,9 +25,9 @@ export default function LandingPage() {
               interests
             </p>
             {!isAuthenticated ? (
-              <a href="/register" className="cta-button">
+              <Link href="/register" className="cta-button">
                 Get Started!
-              </a>
+              </Link>
             ) : (
               <Link to="/home" className="cta-button">
                 Get Started!
