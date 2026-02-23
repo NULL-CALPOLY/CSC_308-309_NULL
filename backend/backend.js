@@ -3,6 +3,7 @@ import path from 'path';
 import { config } from 'dotenv';
 import cookieParser from 'cookie-parser';
 import MongoStore from 'connect-mongo';
+import fs from 'fs';
 
 // Load .env.test for tests/CI, fallback to .env
 const envPath = [
@@ -10,7 +11,7 @@ const envPath = [
   path.resolve(process.cwd(), '.env'),
 ].find((p) => {
   try {
-    require('fs').accessSync(p);
+    fs.accessSync(p);
     return true;
   } catch {
     return false;
