@@ -55,6 +55,9 @@
     "test:integration": "jest --config=jest.config.cjs --selectProjects=integration",
     "test:coverage": "jest --config=jest.config.cjs --coverage",
     "test:watch": "jest --config=jest.config.cjs --watch"
+  },
+  "overrides": {
+    "minimatch": "^10.2.1"
   }
 }
  
