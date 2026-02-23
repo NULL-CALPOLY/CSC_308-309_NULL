@@ -5,6 +5,7 @@ A full-stack web application for finding and connecting with people based on sha
 **Developed by:** Vishnu, Ryan, Aaron, and Brian
 
 **Live App:** [https://delightful-dune-0c8056b0f.6.azurestaticapps.net](https://delightful-dune-0c8056b0f.6.azurestaticapps.net)
+
 **API:** [https://findr-ggfjetd2gqe2gday.westus3-01.azurewebsites.net](https://findr-ggfjetd2gqe2gday.westus3-01.azurewebsites.net)
 
 ---
@@ -12,14 +13,14 @@ A full-stack web application for finding and connecting with people based on sha
 ## 📋 Table of Contents
 
 - [Project Overview](#-project-overview)
-- [Tech Stack](#-tech-stack)
+- [Tech Stack](#%EF%B8%8F-tech-stack)
 - [Project Structure](#-project-structure)
 - [Getting Started](#-getting-started)
 - [Development](#-development)
 - [Environment Variables](#-environment-variables)
 - [API Documentation](#-api-documentation)
 - [Testing](#-testing)
-- [Deployment](#-deployment)
+- [Deployment](#%EF%B8%8F-deployment)
 - [Contributing](#-contributing-guidelines)
 
 ---
