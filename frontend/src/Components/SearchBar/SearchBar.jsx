@@ -8,7 +8,7 @@ export default function SearchBar({ onSelectionChange }) {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_BASE_URL}interests/all`)
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/interests/all`)
       .then((res) => res.json())
       .then((data) => {
         const mappedOptions = data.map((interest) => ({

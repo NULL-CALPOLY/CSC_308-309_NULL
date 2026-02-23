@@ -27,7 +27,10 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: 'http://localhost:3000/auth/google/callback',
+      callbackURL:
+        process.env.NODE_ENV === 'production'
+          ? `${process.env.BACKEND_URL}/auth/google/callback`
+          : 'http://localhost:3000/auth/google/callback',
     },
     async (accessToken, refreshToken, profile, done) => {
       console.log('Google profile:', profile);
@@ -76,7 +79,11 @@ router.get(
   '/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
-    res.redirect('/'); // or frontend URL
+    const redirectUrl =
+      process.env.NODE_ENV === 'production'
+        ? process.env.FRONTEND_URL
+        : 'http://localhost:5173';
+    res.redirect(redirectUrl);
   }
 );
 
@@ -93,7 +100,11 @@ router.get('/logout', (req, res) => {
   req.logout(() => {
     req.session.destroy();
     res.clearCookie('connect.sid');
-    res.redirect('/');
+    const redirectUrl =
+      process.env.NODE_ENV === 'production'
+        ? process.env.FRONTEND_URL
+        : 'http://localhost:5173';
+    res.redirect(redirectUrl);
   });
 });
 

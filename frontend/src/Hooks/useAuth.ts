@@ -38,7 +38,7 @@ export const useProvideAuth = () => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}users/refresh-token`, {
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/refresh-token`, {
           method: 'POST',
           credentials: 'include', // send cookies
         });
@@ -60,7 +60,7 @@ export const useProvideAuth = () => {
   }, []);
 
   const login = async (email: string, password: string) => {
-    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}users/login`, {
+    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
@@ -82,10 +82,11 @@ export const useProvideAuth = () => {
     setLoading(true);
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}users`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData),
+        credentials: 'include', // needed so the refreshToken cookie is saved
       });
 
       if (!res.ok) {
@@ -116,7 +117,7 @@ export const useProvideAuth = () => {
 
   const logout = async () => {
     try {
-      await fetch(`${import.meta.env.VITE_API_BASE_URL}users/logout`, {
+      await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/logout`, {
         method: 'POST',
         credentials: 'include', // clear HttpOnly cookie
       });

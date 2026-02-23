@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Link } from 'react-router-dom';
 import './Landing.css';
 import Navbar from '../../Components/Navbar/Navbar.jsx';
 import community from '../../assets/community.svg';
@@ -29,9 +29,9 @@ export default function LandingPage() {
                 Get Started!
               </a>
             ) : (
-              <a href="/home" className="cta-button">
+              <Link to="/home" className="cta-button">
                 Get Started!
-              </a>
+              </Link>
             )}
           </div>
         </section>
@@ -66,9 +66,9 @@ export default function LandingPage() {
                 Learn more
               </a>
             ) : (
-              <a href="/home" className="cta-button">
+              <Link to="/home" className="learn-more">
                 Learn more
-              </a>
+              </Link>
             )}
           </div>
         </section>
@@ -90,9 +90,9 @@ export default function LandingPage() {
                   Join now
                 </a>
               ) : (
-                <a href="/home" className="cta-button">
-                  Learn more
-                </a>
+                <Link to="/home" className="learn-more">
+                  Join now
+                </Link>
               )}
             </div>
           </div>
@@ -111,9 +111,9 @@ export default function LandingPage() {
                   Explore
                 </a>
               ) : (
-                <a href="/home" className="cta-button">
-                  Learn more
-                </a>
+                <Link to="/home" className="learn-more">
+                  Explore
+                </Link>
               )}
             </div>
             <div className="feature-image">
