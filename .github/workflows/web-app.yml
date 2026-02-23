@@ -30,8 +30,13 @@ jobs:
         run: npm install
         working-directory: backend
 
+        # temp step remove after
+      - name: Check contents before zip, remove after debug
+        run: ls -la
+        working-directory: backend
+
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+        run: zip release.zip ./* -r --exclude "*.git*"
         working-directory: backend
 
       - name: Upload artifact for deployment job
@@ -59,6 +64,12 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_279E0CACD94F4DC5857221B996FF891F }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_6E0336538D584BBBBC2F591E668F894A }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_6AF3A4BCA207417991FF46E765AFB33D }}
+
+      - name: Disable Oryx build
+        uses: azure/appservice-settings@v1
+        with:
+          app-name: 'Findr'
+          app-settings-json: '[{"name": "SCM_DO_BUILD_DURING_DEPLOYMENT", "value": "false"}]'
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
