@@ -20,9 +20,7 @@ export default function EventDetails() {
     const fetchEvent = async () => {
       setLoading(true);
       try {
-        const res = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/events/${id}`
-        );
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/${id}`);
         const json = await res.json();
 
         if (!res.ok || !json.success) {
@@ -79,17 +77,14 @@ export default function EventDetails() {
         },
       };
 
-      const res = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}events/${id}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${user.token}`,
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify(payload),
+      });
 
       const json = await res.json();
 
