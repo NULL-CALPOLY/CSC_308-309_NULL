@@ -35,15 +35,15 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 if (process.env.NODE_ENV === 'production' && !process.env.FRONTEND_URL) {
-  console.error('❌ FRONTEND_URL is not set. CORS will block all frontend requests.');
+  console.error(
+    '❌ FRONTEND_URL is not set. CORS will block all frontend requests.'
+  );
 }
 
 app.use(
   cors({
     origin:
-      process.env.NODE_ENV === 'production'
-        ? process.env.FRONTEND_URL
-        : true, // Allow all in dev
+      process.env.NODE_ENV === 'production' ? process.env.FRONTEND_URL : true, // Allow all in dev
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],

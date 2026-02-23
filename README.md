@@ -49,6 +49,7 @@ Findr is a location-based social discovery platform that helps users find events
 ## 🛠️ Tech Stack
 
 ### Backend
+
 - **Runtime:** Node.js (ESM)
 - **Framework:** Express.js v5
 - **Database:** MongoDB with Mongoose
@@ -57,6 +58,7 @@ Findr is a location-based social discovery platform that helps users find events
 - **Other:** cookie-parser, cors, dotenv
 
 ### Frontend
+
 - **Framework:** React 18 with Vite
 - **Routing:** React Router v7
 - **Maps:** React-Leaflet + Leaflet
@@ -65,12 +67,14 @@ Findr is a location-based social discovery platform that helps users find events
 - **Language:** JSX + TypeScript (hooks)
 
 ### Testing
+
 - **Framework:** Jest + Supertest
 - **In-memory DB:** mongodb-memory-server
 - **Mocking:** mockingoose
 - **Frontend:** @testing-library/react
 
 ### DevOps
+
 - **Backend Hosting:** Azure App Service
 - **Frontend Hosting:** Azure Static Web Apps
 - **CI/CD:** GitHub Actions (via Azure deployment)
@@ -138,12 +142,14 @@ Findr is a location-based social discovery platform that helps users find events
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd CSC_308-309_NULL
    ```
 
 2. **Install all dependencies**
+
    ```bash
    npm install
    cd frontend && npm install && cd ..
@@ -162,21 +168,21 @@ Findr is a location-based social discovery platform that helps users find events
 
 ### Running the Application
 
-| Command | Description |
-|---|---|
-| `npm run dev` | Start backend + frontend concurrently |
-| `npm run backend:dev` | Start backend only (`localhost:3000`) |
+| Command                | Description                            |
+| ---------------------- | -------------------------------------- |
+| `npm run dev`          | Start backend + frontend concurrently  |
+| `npm run backend:dev`  | Start backend only (`localhost:3000`)  |
 | `npm run frontend:dev` | Start frontend only (`localhost:5173`) |
 
 > The frontend proxies all `/api/*` requests to the backend in dev, so cookies work correctly across ports.
 
 ### Code Quality
 
-| Command | Description |
-|---|---|
-| `npm run format` | Format all files with Prettier |
-| `npm run lint` | Check for lint errors |
-| `npm run lint:fix` | Auto-fix lint errors |
+| Command            | Description                    |
+| ------------------ | ------------------------------ |
+| `npm run format`   | Format all files with Prettier |
+| `npm run lint`     | Check for lint errors          |
+| `npm run lint:fix` | Auto-fix lint errors           |
 
 ---
 
@@ -222,70 +228,71 @@ VITE_API_BASE_URL=https://findr-ggfjetd2gqe2gday.westus3-01.azurewebsites.net
 ## 🔌 API Documentation
 
 ### Base URL
+
 - **Local:** `http://localhost:3000`
 - **Production:** `https://findr-ggfjetd2gqe2gday.westus3-01.azurewebsites.net`
 
 ### Authentication
 
-| Method | Endpoint | Description |
-|---|---|---|
-| `POST` | `/users/login` | Login with email + password |
-| `POST` | `/users/logout` | Logout and clear refresh token cookie |
-| `POST` | `/users/refresh-token` | Get new access token via HttpOnly cookie |
-| `GET` | `/auth/google` | Initiate Google OAuth |
-| `GET` | `/auth/google/callback` | Google OAuth callback |
-| `GET` | `/auth/me` | Get current OAuth session user |
+| Method | Endpoint                | Description                              |
+| ------ | ----------------------- | ---------------------------------------- |
+| `POST` | `/users/login`          | Login with email + password              |
+| `POST` | `/users/logout`         | Logout and clear refresh token cookie    |
+| `POST` | `/users/refresh-token`  | Get new access token via HttpOnly cookie |
+| `GET`  | `/auth/google`          | Initiate Google OAuth                    |
+| `GET`  | `/auth/google/callback` | Google OAuth callback                    |
+| `GET`  | `/auth/me`              | Get current OAuth session user           |
 
 ### Users
 
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/users/all` | Get all users |
-| `GET` | `/users/:id` | Get user by ID |
-| `POST` | `/users` | Register new user |
-| `PUT` | `/users/:id` | Update user |
-| `DELETE` | `/users/:id` | Delete user |
+| Method   | Endpoint     | Description       |
+| -------- | ------------ | ----------------- |
+| `GET`    | `/users/all` | Get all users     |
+| `GET`    | `/users/:id` | Get user by ID    |
+| `POST`   | `/users`     | Register new user |
+| `PUT`    | `/users/:id` | Update user       |
+| `DELETE` | `/users/:id` | Delete user       |
 
 ### Events
 
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/events/all` | Get all events |
-| `GET` | `/events/:id` | Get event by ID |
-| `POST` | `/events` | Create event |
-| `PUT` | `/events/:id` | Update event |
-| `DELETE` | `/events/:id` | Delete event |
-| `PUT` | `/events/:id/attendees/add/:userId` | RSVP to event |
-| `PUT` | `/events/:id/attendees/remove/:userId` | Un-RSVP from event |
+| Method   | Endpoint                               | Description        |
+| -------- | -------------------------------------- | ------------------ |
+| `GET`    | `/events/all`                          | Get all events     |
+| `GET`    | `/events/:id`                          | Get event by ID    |
+| `POST`   | `/events`                              | Create event       |
+| `PUT`    | `/events/:id`                          | Update event       |
+| `DELETE` | `/events/:id`                          | Delete event       |
+| `PUT`    | `/events/:id/attendees/add/:userId`    | RSVP to event      |
+| `PUT`    | `/events/:id/attendees/remove/:userId` | Un-RSVP from event |
 
 ### Chats
 
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/chats/all` | Get all chats |
-| `GET` | `/chats/:id` | Get chat by ID |
-| `POST` | `/chats` | Create chat |
-| `PUT` | `/chats/:id/users/add/:userId` | Add member |
-| `PUT` | `/chats/:id/users/remove/:userId` | Remove member |
+| Method | Endpoint                          | Description    |
+| ------ | --------------------------------- | -------------- |
+| `GET`  | `/chats/all`                      | Get all chats  |
+| `GET`  | `/chats/:id`                      | Get chat by ID |
+| `POST` | `/chats`                          | Create chat    |
+| `PUT`  | `/chats/:id/users/add/:userId`    | Add member     |
+| `PUT`  | `/chats/:id/users/remove/:userId` | Remove member  |
 
 ### Interests
 
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/interests/all` | Get all interests |
-| `GET` | `/interests/:id` | Get interest by ID |
-| `POST` | `/interests` | Create interest |
-| `GET` | `/interests/search/name/:name` | Search by name |
+| Method | Endpoint                       | Description        |
+| ------ | ------------------------------ | ------------------ |
+| `GET`  | `/interests/all`               | Get all interests  |
+| `GET`  | `/interests/:id`               | Get interest by ID |
+| `POST` | `/interests`                   | Create interest    |
+| `GET`  | `/interests/search/name/:name` | Search by name     |
 
 ### Organizations
 
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/organizations/all` | Get all organizations |
-| `GET` | `/organizations/:id` | Get organization by ID |
-| `POST` | `/organizations` | Create organization |
-| `PUT` | `/organizations/:id/members/add/:userId` | Add member |
-| `PUT` | `/organizations/:id/members/remove/:userId` | Remove member |
+| Method | Endpoint                                    | Description            |
+| ------ | ------------------------------------------- | ---------------------- |
+| `GET`  | `/organizations/all`                        | Get all organizations  |
+| `GET`  | `/organizations/:id`                        | Get organization by ID |
+| `POST` | `/organizations`                            | Create organization    |
+| `PUT`  | `/organizations/:id/members/add/:userId`    | Add member             |
+| `PUT`  | `/organizations/:id/members/remove/:userId` | Remove member          |
 
 ---
 
@@ -293,13 +300,13 @@ VITE_API_BASE_URL=https://findr-ggfjetd2gqe2gday.westus3-01.azurewebsites.net
 
 ### Run Tests
 
-| Command | Description |
-|---|---|
-| `npm run test` | Run all tests |
-| `npm run test:unit` | Run frontend unit tests only |
+| Command                    | Description                        |
+| -------------------------- | ---------------------------------- |
+| `npm run test`             | Run all tests                      |
+| `npm run test:unit`        | Run frontend unit tests only       |
 | `npm run test:integration` | Run backend integration tests only |
-| `npm run test:coverage` | Run tests with coverage report |
-| `npm run test:watch` | Run tests in watch mode |
+| `npm run test:coverage`    | Run tests with coverage report     |
+| `npm run test:watch`       | Run tests in watch mode            |
 
 ### Test Structure
 
@@ -326,17 +333,17 @@ The app is deployed on Azure:
 
 ### Required Azure App Service Environment Variables (Backend)
 
-| Variable | Description |
-|---|---|
-| `NODE_ENV` | `production` |
-| `MONGODB_URI` | MongoDB Atlas connection string |
-| `SESSION_SECRET` | Random secret for express-session |
-| `JWT_TOKEN_SECRET` | Secret for signing access tokens |
-| `REFRESH_TOKEN_SECRET` | Secret for signing refresh tokens |
-| `FRONTEND_URL` | `https://delightful-dune-0c8056b0f.6.azurestaticapps.net` |
-| `BACKEND_URL` | `https://findr-ggfjetd2gqe2gday.westus3-01.azurewebsites.net` |
-| `GOOGLE_CLIENT_ID` | Google OAuth client ID |
-| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret |
+| Variable               | Description                                                   |
+| ---------------------- | ------------------------------------------------------------- |
+| `NODE_ENV`             | `production`                                                  |
+| `MONGODB_URI`          | MongoDB Atlas connection string                               |
+| `SESSION_SECRET`       | Random secret for express-session                             |
+| `JWT_TOKEN_SECRET`     | Secret for signing access tokens                              |
+| `REFRESH_TOKEN_SECRET` | Secret for signing refresh tokens                             |
+| `FRONTEND_URL`         | `https://delightful-dune-0c8056b0f.6.azurestaticapps.net`     |
+| `BACKEND_URL`          | `https://findr-ggfjetd2gqe2gday.westus3-01.azurewebsites.net` |
+| `GOOGLE_CLIENT_ID`     | Google OAuth client ID                                        |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret                                    |
 
 > **Note:** Do not configure CORS in the Azure portal — Express handles CORS. Having both configured causes conflicts.
 
@@ -345,11 +352,13 @@ The app is deployed on Azure:
 ## 📝 Contributing Guidelines
 
 1. Pull latest from `main` and create a feature branch:
+
    ```bash
    git checkout -b feature/your-feature
    ```
 
 2. Before committing:
+
    ```bash
    npm run format
    npm run lint:fix
