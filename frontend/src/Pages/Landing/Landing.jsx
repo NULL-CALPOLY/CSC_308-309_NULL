@@ -25,7 +25,7 @@ export default function LandingPage() {
               interests
             </p>
             {!isAuthenticated ? (
-              <Link href="/register" className="cta-button">
+              <Link to="/register" className="cta-button">
                 Get Started!
               </Link>
             ) : (
@@ -62,9 +62,9 @@ export default function LandingPage() {
               </div>
             </section>
             {!isAuthenticated ? (
-              <a href="/register" className="learn-more">
+              <Link to="/register" className="learn-more">
                 Learn more
-              </a>
+              </Link>
             ) : (
               <Link to="/home" className="learn-more">
                 Learn more
@@ -86,9 +86,9 @@ export default function LandingPage() {
               </p>
 
               {!isAuthenticated ? (
-                <a href="/register" className="learn-more">
+                <Link to="/register" className="learn-more">
                   Join now
-                </a>
+                </Link>
               ) : (
                 <Link to="/home" className="learn-more">
                   Join now
@@ -107,9 +107,9 @@ export default function LandingPage() {
                 expand your horizons.
               </p>
               {!isAuthenticated ? (
-                <a href="/register" className="learn-more">
+                <Link to="/register" className="learn-more">
                   Explore
-                </a>
+                </Link>
               ) : (
                 <Link to="/home" className="learn-more">
                   Explore
