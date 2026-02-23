@@ -38,10 +38,13 @@ export const useProvideAuth = () => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/refresh-token`, {
-          method: 'POST',
-          credentials: 'include', // send cookies
-        });
+        const res = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/users/refresh-token`,
+          {
+            method: 'POST',
+            credentials: 'include', // send cookies
+          }
+        );
 
         if (!res.ok) {
           setUser(null);
@@ -60,12 +63,15 @@ export const useProvideAuth = () => {
   }, []);
 
   const login = async (email: string, password: string) => {
-    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-      credentials: 'include', // cookies
-    });
+    const res = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/users/login`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+        credentials: 'include', // cookies
+      }
+    );
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));

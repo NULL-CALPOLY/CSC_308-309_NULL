@@ -47,23 +47,27 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGODB_URI,
-      ttl: 14 * 24 * 60 * 60, // Sessions will expire in 14 days
-      autoRemove: 'native', // Let MongoDB handle the cleanup
-    }),
-    cookie: {
-      secure: process.env.NODE_ENV === 'production', // true if HTTPS
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // Needed for cross-domain cookies
-      maxAge: 1000 * 60 * 60 * 24, // 24 hours
-    },
-  })
-);
+const sessionConfig = {
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production', // true if HTTPS
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // Needed for cross-domain cookies
+    maxAge: 1000 * 60 * 60 * 24, // 24 hours
+  },
+};
+
+// Only use MongoStore outside of tests (MONGODB_URI not available in test env)
+if (process.env.NODE_ENV !== 'test') {
+  sessionConfig.store = MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI,
+    ttl: 14 * 24 * 60 * 60, // Sessions will expire in 14 days
+    autoRemove: 'native', // Let MongoDB handle the cleanup
+  });
+}
+
+app.use(session(sessionConfig));
 
 app.use(passport.initialize());
 app.use(passport.session());

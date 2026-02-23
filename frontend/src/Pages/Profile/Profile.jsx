@@ -33,11 +33,14 @@ export default function Profile() {
       setLoading(true);
       setErrorMsg('');
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/${user.id}`, {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        });
+        const res = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/users/${user.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          }
+        );
         const json = await res.json();
 
         if (!res.ok || !json.success)
@@ -82,19 +85,22 @@ export default function Profile() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/${user.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          phoneNumber,
-          dateOfBirth,
-          gender,
-          city,
-          email,
-          interests,
-        }),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/users/${user.id}`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name,
+            phoneNumber,
+            dateOfBirth,
+            gender,
+            city,
+            email,
+            interests,
+          }),
+        }
+      );
 
       const json = await res.json();
 
