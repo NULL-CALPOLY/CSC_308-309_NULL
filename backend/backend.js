@@ -44,6 +44,8 @@ app.use(
         ? process.env.FRONTEND_URL
         : true, // Allow all in dev
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
 
