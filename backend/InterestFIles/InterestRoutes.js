@@ -17,7 +17,11 @@ router.get('/all', async (req, res) => {
           success: false,
           message: 'No interests found',
         });
-      else res.status(200).json(interests);
+      else
+        res.status(200).json({
+          success: true,
+          data: interests,
+        });
     })
     .catch((error) => {
       res.status(500).json({

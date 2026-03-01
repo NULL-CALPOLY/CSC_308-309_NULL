@@ -133,7 +133,7 @@ export default function Profile() {
 
   return (
     <div>
-      <Navbar page="/home" />
+      <Navbar page="/" />
       <div className="container">
         <div className="profile-container">
           <form onSubmit={handleSubmit} className="profile-card">

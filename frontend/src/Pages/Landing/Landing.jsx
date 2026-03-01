@@ -13,7 +13,7 @@ export default function LandingPage() {
   return (
     <div className="landing-page">
       <header>
-        <Navbar page="/home" />
+        <Navbar page="/" />
       </header>
 
       <main>
