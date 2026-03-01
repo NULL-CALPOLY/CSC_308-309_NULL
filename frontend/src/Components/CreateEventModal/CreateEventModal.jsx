@@ -3,7 +3,7 @@ import './CreateEventModal.css';
 import Multiselect from '@cloudscape-design/components/multiselect';
 import Input from '@cloudscape-design/components/input';
 import Textarea from '@cloudscape-design/components/textarea';
-import TempAddressComponent from '../TempAddressInputComponent/TempAddressComponent';
+import AddressAutocomplete from '../AddressAutocomplete/AddressAutocomplete';
 import { useAuth } from '../../Hooks/useAuth.ts';
 
 export default function CreateEventModal({ isOpen, onClose }) {
@@ -13,7 +13,7 @@ export default function CreateEventModal({ isOpen, onClose }) {
     description: '',
     address: '',
     interests: [],
-    location: '',
+    location: null,
     startTime: '',
     endTime: '',
   });
@@ -22,13 +22,12 @@ export default function CreateEventModal({ isOpen, onClose }) {
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [errorMessage, setErrorMessage] = useState({});
   const [isLoadingInterests, setIsLoadingInterests] = useState(false);
-  /* 🔹 Fetch interests from API */
+
   useEffect(() => {
     setIsLoadingInterests(true);
     fetch(`${import.meta.env.VITE_API_BASE_URL}/interests/all`)
       .then((res) => res.json())
       .then((data) => {
-        // Ensure unique options by filtering duplicates
         const uniqueInterests = data.filter(
           (interest, index, self) =>
             index === self.findIndex((i) => i.name === interest.name)
@@ -39,14 +38,7 @@ export default function CreateEventModal({ isOpen, onClose }) {
         }));
         setInterestOptions(mappedOptions);
       })
-      .catch((err) =>
-        console.error(
-          import.meta.env.VITE_TEST_VAR,
-          'Failed to load interests:',
-          err,
-          import.meta.env.VITE_API_BASE_URL
-        )
-      )
+      .catch((err) => console.error('Failed to load interests:', err))
       .finally(() => setIsLoadingInterests(false));
   }, []);
 
@@ -57,11 +49,9 @@ export default function CreateEventModal({ isOpen, onClose }) {
     const now = new Date();
 
     if (!formData.name.trim()) newErrors.name = 'Event title is required';
-
-    if (!formData.description.trim())
-      newErrors.description = 'Description is required';
-
-    if (!formData.address) newErrors.address = 'Location is required';
+    if (!formData.description.trim()) newErrors.description = 'Description is required';
+    if (!formData.address || !formData.location)
+      newErrors.address = 'Please select an address from the suggestions';
 
     if (!formData.startTime) newErrors.startTime = 'Start time is required';
     else if (new Date(formData.startTime) < now)
@@ -80,11 +70,9 @@ export default function CreateEventModal({ isOpen, onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) return;
 
     try {
-      // Format payload according to your EventSchema
       const payload = {
         name: formData.name,
         description: formData.description,
@@ -106,20 +94,15 @@ export default function CreateEventModal({ isOpen, onClose }) {
         `${import.meta.env.VITE_API_BASE_URL}/events/`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         }
       );
 
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.statusText}`);
-      }
+      if (!response.ok) throw new Error(`Server error: ${response.statusText}`);
 
       const result = await response.json();
       console.log('Event created successfully:', result);
-
       onClose();
     } catch (err) {
       console.error('Failed to create event:', err);
@@ -173,25 +156,29 @@ export default function CreateEventModal({ isOpen, onClose }) {
           {/* Address */}
           <div className="form-group">
             <label>Location</label>
-            <TempAddressComponent
+            <AddressAutocomplete
+              placeholder="Search for a location…"
+              error={errorMessage.address}
               onSelect={({ address, lat, lng }) => {
-                {
+                if (!address) {
                   setFormData((prev) => ({
                     ...prev,
-                    address, // formatted address string
-                    location: {
-                      type: 'Point',
-                      coordinates: [lng, lat], // GeoJSON [longitude, latitude]
-                    },
+                    address: '',
+                    location: null,
                   }));
-                  setErrorMessage({ ...errorMessage, address: null });
+                  return;
                 }
+                setFormData((prev) => ({
+                  ...prev,
+                  address,
+                  location: {
+                    type: 'Point',
+                    coordinates: [lng, lat],
+                  },
+                }));
+                setErrorMessage((prev) => ({ ...prev, address: null }));
               }}
             />
-
-            {errorMessage.address && (
-              <p className="error-text">{errorMessage.address}</p>
-            )}
           </div>
 
           {/* Interests */}
@@ -227,17 +214,15 @@ export default function CreateEventModal({ isOpen, onClose }) {
           <div className="datetime-grid">
             <div className="form-group">
               <label htmlFor="startTime">Start Time</label>
-              <div className="awsui_input-container">
-                <Input
-                  ariaLabel="Start Time"
-                  type="datetime-local"
-                  value={formData.startTime}
-                  onChange={({ detail }) => {
-                    setFormData({ ...formData, startTime: detail.value });
-                    setErrorMessage({ ...errorMessage, startTime: null });
-                  }}
-                />
-              </div>
+              <Input
+                ariaLabel="Start Time"
+                type="datetime-local"
+                value={formData.startTime}
+                onChange={({ detail }) => {
+                  setFormData({ ...formData, startTime: detail.value });
+                  setErrorMessage({ ...errorMessage, startTime: null });
+                }}
+              />
               {errorMessage.startTime && (
                 <p className="error-text">{errorMessage.startTime}</p>
               )}
@@ -245,18 +230,16 @@ export default function CreateEventModal({ isOpen, onClose }) {
 
             <div className="form-group">
               <label htmlFor="endTime">End Time</label>
-              <div className="awsui_input-container">
-                <Input
-                  ariaLabel="End Time"
-                  type="datetime-local"
-                  min={formData.startTime}
-                  value={formData.endTime}
-                  onChange={({ detail }) => {
-                    setFormData({ ...formData, endTime: detail.value });
-                    setErrorMessage({ ...errorMessage, endTime: null });
-                  }}
-                />
-              </div>
+              <Input
+                ariaLabel="End Time"
+                type="datetime-local"
+                min={formData.startTime}
+                value={formData.endTime}
+                onChange={({ detail }) => {
+                  setFormData({ ...formData, endTime: detail.value });
+                  setErrorMessage({ ...errorMessage, endTime: null });
+                }}
+              />
               {errorMessage.endTime && (
                 <p className="error-text">{errorMessage.endTime}</p>
               )}

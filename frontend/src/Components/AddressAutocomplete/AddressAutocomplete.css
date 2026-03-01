@@ -1,0 +1,192 @@
+
+
+   .aac-root {
+    position: relative;
+    width: 100%;
+    font-family: inherit;
+  }
+  
+ 
+  .aac-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 10px;
+    border: 1.5px solid #d0d5dd;
+    border-radius: 8px;
+    background: #fff;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  
+  .aac-input-wrap:focus-within {
+    border-color: #2e7dff;
+    box-shadow: 0 0 0 3px rgba(46, 125, 255, 0.15);
+  }
+  
+  .aac-input-wrap.aac-error {
+    border-color: #d13212;
+  }
+  
+  .aac-input-wrap.aac-error:focus-within {
+    box-shadow: 0 0 0 3px rgba(209, 50, 18, 0.12);
+  }
+  
+  /* ── Location pin icon ─────────────────────────────────────── */
+  .aac-icon {
+    display: flex;
+    align-items: center;
+    color: #667085;
+    flex-shrink: 0;
+  }
+  
+  /* ── Text input ────────────────────────────────────────────── */
+  .aac-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 14px;
+    color: #101828;
+    padding: 10px 0;
+    min-width: 0;
+  }
+  
+  .aac-input::placeholder {
+    color: #98a2b3;
+  }
+  
+  /* ── Suffix (spinner / clear) ──────────────────────────────── */
+  .aac-suffix {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    height: 20px;
+    width: 20px;
+    justify-content: center;
+  }
+  
+  /* Spinner */
+  .aac-spinner {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border: 2px solid #d0d5dd;
+    border-top-color: #2e7dff;
+    border-radius: 50%;
+    animation: aac-spin 0.65s linear infinite;
+  }
+  
+  @keyframes aac-spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  /* Clear button */
+  .aac-clear {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    padding: 2px;
+    cursor: pointer;
+    color: #98a2b3;
+    border-radius: 4px;
+    transition: color 0.15s, background 0.15s;
+  }
+  
+  .aac-clear:hover {
+    color: #344054;
+    background: #f2f4f7;
+  }
+  
+ 
+  .aac-error-text {
+    color: #d13212;
+    font-size: 12px;
+    margin: 4px 0 0;
+  }
+  
+  
+  .aac-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1.5px solid #e4e7ec;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(16, 24, 40, 0.12);
+    z-index: 9999;
+    list-style: none;
+    margin: 0;
+    padding: 4px 0 0;
+    overflow: hidden;
+    animation: aac-appear 0.12s ease-out;
+  }
+  
+  @keyframes aac-appear {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* ── Option row ────────────────────────────────────────────── */
+  .aac-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  
+  .aac-option:hover,
+  .aac-option--active {
+    background: #f5f8ff;
+  }
+  
+  .aac-option-icon {
+    color: #2e7dff;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  
+  .aac-option-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  
+  .aac-option-main {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #101828;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .aac-option-sub {
+    font-size: 11.5px;
+    color: #667085;
+  }
+ 
+  .aac-footer {
+    padding: 7px 12px;
+    font-size: 11px;
+    color: #98a2b3;
+    background: #fafafa;
+    border-top: 1px solid #f2f4f7;
+    text-align: right;
+  }
+  
+  .aac-footer a {
+    color: #667085;
+    text-decoration: none;
+  }
+  
+  .aac-footer a:hover {
+    text-decoration: underline;
+  }
+
+  

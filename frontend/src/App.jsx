@@ -1,4 +1,3 @@
-// src/App.jsx
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import HomePage from './Pages/Home/HomePage.jsx';
@@ -9,6 +8,7 @@ import LandingPage from './Pages/Landing/Landing.jsx';
 import Profile from './Pages/Profile/Profile.jsx';
 import ProtectedRoute from './Components/ProtectedComponent.jsx';
 import EventDetails from './Pages/EventDetails/EventDetails.jsx';
+import TestAddress from './TestAddress';
 
 const AboutPage = () => <div style={{ padding: 24 }}>About</div>;
 const SearchPage = () => <div style={{ padding: 24 }}>Search</div>;
@@ -24,8 +24,7 @@ export default function App() {
               path="/home"
               element={
                 <ProtectedRoute>
-                  {' '}
-                  <HomePage />{' '}
+                  <HomePage />
                 </ProtectedRoute>
               }
             />
@@ -33,8 +32,7 @@ export default function App() {
               path="/profile"
               element={
                 <ProtectedRoute>
-                  {' '}
-                  <Profile />{' '}
+                  <Profile />
                 </ProtectedRoute>
               }
             />
@@ -43,6 +41,7 @@ export default function App() {
             <Route path="/signin" element={<SignIn />} />
             <Route path="/register" element={<Registration />} />
             <Route path="/events/:id" element={<EventDetails />} />
+            <Route path="/test" element={<TestAddress />} />
             <Route path="*" element={<div style={{ padding: 24 }}>404</div>} />
           </Routes>
         </main>
