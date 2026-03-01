@@ -39,7 +39,8 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.19.3",
     "passport": "^0.7.0",
-    "passport-google-oauth20": "^2.0.0"
+    "passport-google-oauth20": "^2.0.0",
+    "undici": "^7.21.0"
   },
   "type": "module",
   "scripts": {
