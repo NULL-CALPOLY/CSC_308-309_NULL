@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { useNavigate } from 'react-router-dom';
 
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -20,8 +21,8 @@ const currentLocationIcon = new L.Icon({
   iconUrl: circle,
   iconRetinaUrl: circle,
   iconSize: [20, 20],
-  iconAnchor: [17, 45],
-  popupAnchor: [0, -40],
+  iconAnchor: [10, 10],
+  popupAnchor: [0, -10],
 });
 
 export default function MainMapComponent() {
@@ -35,18 +36,37 @@ export default function MainMapComponent() {
       .then((data) => {
         if (!data.success) return;
 
-        // Map API data to match EventComponent props
-        const mappedEvents = data.data.map((event) => {
-          const [lng, lat] = event.location.coordinates;
-          return {
-            eventName: event.name,
-            description: event.description,
-            lat,
-            lng,
-          };
-        });
+        const mappedEvents = data.data
+          .filter((event) => {
+            // Only include events that have valid coordinates
+            const coords = event.location?.coordinates;
+            return (
+              Array.isArray(coords) &&
+              coords.length === 2 &&
+              coords[0] !== 0 &&
+              coords[1] !== 0
+            );
+          })
+          .map((event) => {
+            // GeoJSON stores [longitude, latitude] — we destructure correctly
+            const [lng, lat] = event.location.coordinates;
+            return {
+              id: event._id,
+              eventName: event.name,
+              description: event.description,
+              address: event.address ?? 'No address',
+              lat,
+              lng,
+              interests: event.interests ?? [],
+              attendees: event.attendees ?? [],
+              startTime: event.time?.start ?? null,
+              endTime: event.time?.end ?? null,
+              host: event.host,
+            };
+          });
 
         setEvents(mappedEvents);
+        console.log(`📍 Loaded ${mappedEvents.length} events onto map`);
       })
       .catch((err) => console.error('Failed to load events:', err));
   }, []);
@@ -64,6 +84,7 @@ export default function MainMapComponent() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
+        {/* Current user location marker */}
         {userPosition && (
           <Marker position={userPosition} icon={currentLocationIcon}>
             <Popup>
@@ -74,15 +95,9 @@ export default function MainMapComponent() {
           </Marker>
         )}
 
-        {events.map((event, idx) => (
-          <Marker key={idx} position={[event.lat, event.lng]} icon={EventIcon}>
-            <Popup>
-              <b>{event.eventName}</b>
-              <br />
-              {event.description}
-              <br />
-            </Popup>
-          </Marker>
+        {/* Event markers */}
+        {events.map((event) => (
+          <EventMarker key={event.id} event={event} />
         ))}
 
         <LocateButton
@@ -98,7 +113,61 @@ export default function MainMapComponent() {
   );
 }
 
-// “Locate Me” button
+// Individual event marker with popup
+function EventMarker({ event }) {
+  const navigate = useNavigate();
+
+  const formatTime = (isoString) => {
+    if (!isoString) return 'TBD';
+    return new Date(isoString).toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+    });
+  };
+
+  return (
+    <Marker position={[event.lat, event.lng]} icon={EventIcon}>
+      <Popup className="event-popup">
+        <div className="popup-content">
+          <div className="popup-title">{event.eventName}</div>
+
+          <div className="popup-row">
+            <span className="popup-icon">📍</span>
+            <span>{event.address}</span>
+          </div>
+
+          <div className="popup-row">
+            <span className="popup-icon">🕐</span>
+            <span>{formatTime(event.startTime)}</span>
+          </div>
+
+          <div className="popup-row">
+            <span className="popup-icon">👥</span>
+            <span>{event.attendees.length} attending</span>
+          </div>
+
+          {event.interests.length > 0 && (
+            <div className="popup-tags">
+              {event.interests.slice(0, 3).map((tag, i) => (
+                <span key={i} className="popup-tag">{tag}</span>
+              ))}
+            </div>
+          )}
+
+          <button
+            className="popup-btn"
+            onClick={() => navigate(`/events/${event.id}`)}>
+            View Event
+          </button>
+        </div>
+      </Popup>
+    </Marker>
+  );
+}
+
+// "Locate Me" button
 function LocateButton({ icon, setUserPosition, setTracking }) {
   const map = useMap();
 
@@ -111,9 +180,9 @@ function LocateButton({ icon, setUserPosition, setTracking }) {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const latlng = [pos.coords.latitude, pos.coords.longitude];
-        setUserPosition(latlng); // ✅ update parent state
+        setUserPosition(latlng);
         map.flyTo(latlng, 15);
-        console.log('📍 Current location:', latlng); // ✅ log to console
+        console.log('📍 Current location:', latlng);
         setTracking((prev) => !prev);
       },
       () => alert('Unable to retrieve your location.')
@@ -151,7 +220,6 @@ function LiveLocation({ setUserPosition }) {
       }
     );
 
-    // ✅ Cleanup watcher on unmount
     return () => navigator.geolocation.clearWatch(watchId);
   }, [map, setUserPosition]);
 
