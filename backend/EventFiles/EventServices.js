@@ -5,6 +5,22 @@ function getEvents() {
   return eventModel.find().populate('attendees host blockedUsers');
 }
 
+function getNearbyEvents(lat, lng, limit = 10) {
+  return eventModel
+    .find({
+      location: {
+        $near: {
+          $geometry: {
+            type: 'Point',
+            coordinates: [parseFloat(lng), parseFloat(lat)],
+          },
+        },
+      },
+    })
+    .limit(parseInt(limit))
+    .populate('attendees host blockedUsers');
+}
+
 // Add a new event
 function addEvent(event) {
   const newEvent = new eventModel(event);
@@ -159,6 +175,7 @@ function removeUserFromBlocked(eventId, userId) {
 
 export default {
   getEvents,
+  getNearbyEvents,
   addEvent,
   deleteEvent,
   updateEvent,

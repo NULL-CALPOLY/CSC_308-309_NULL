@@ -1,6 +1,6 @@
 /* === Outer wrapper (sits above map) === */
 .Event_Container {
-  position: absolute; /* float over map */
+  position: absolute;
   top: 0;
   left: 0;
   height: 100vh;
@@ -9,18 +9,34 @@
   display: flex;
   flex-direction: column;
 
-  /* glass effect */
   background: rgba(255, 255, 255, 0.18);
   backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: (14px);
+  -webkit-backdrop-filter: blur(14px);
 
   border-right: 1px solid rgba(255, 255, 255, 0.25);
 
   padding: 14px;
-  overflow: hidden;
   box-sizing: border-box;
 
   z-index: 10;
+
+  /* prevent horizontal scroll */
+  overflow-x: hidden;
+  overflow-y: hidden; /* keep vertical scroll inside Event_List */
+}
+
+/* === Scrollable list area === */
+.Event_List {
+  width: 100%;
+  flex: 1;
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  /* prevent horizontal scroll */
+  overflow-x: hidden;
 }
 
 /* === Search bar area === */
@@ -36,17 +52,6 @@
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
-/* === Scrollable list area === */
-.Event_List {
-  width: 100%;
-  flex: 1;
-  overflow-y: auto;
-  scrollbar-gutter: stable both-edges;
-
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
 
 /* === Make event cards "float" === */
 .Event_List > * {
@@ -69,19 +74,6 @@
     0 4px 10px rgba(0, 0, 0, 0.12);
 }
 
-/* === Scrollbar styling (clean like Maps) === */
-.Event_List::-webkit-scrollbar {
-  width: 6px;
-}
-
-.Event_List::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.25);
-  border-radius: 10px;
-}
-
-.Event_List::-webkit-scrollbar-track {
-  background: transparent;
-}
 
 /* === Mobile responsive === */
 @media (max-width: 768px) {
