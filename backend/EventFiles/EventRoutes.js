@@ -30,6 +30,23 @@ router.get('/all', async (req, res) => {
     });
 });
 
+router.get('/nearby', async (req, res) => {
+  const { lat, lng, limit } = req.query;
+
+  if (!lat || !lng) {
+    return res.status(400).json({ success: false, message: 'Missing lat/lng' });
+  }
+
+  try {
+    const events = await eventServices.getNearbyEvents(lat, lng, limit);
+    res.json({ success: true, data: events });
+  } catch (err) {
+    console.error('Nearby events error:', err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+
 // Get event by ID
 router.get('/:id', async (req, res) => {
   await eventServices
