@@ -22,8 +22,8 @@ config({ path: envPath });
 import express from 'express';
 import eventRouter from './EventFiles/EventRoutes.js';
 import userRouter from './UserFiles/UserRoutes.js';
-import chatRouter from './ChatFiles/ChatRoutes.js';
 import organizationRouter from './OrganizationFiles/OrganizationRoutes.js';
+import commentRouter from './CommentFiles/CommentsRoutes.js';
 import interestRouter from './InterestFIles/InterestRoutes.js';
 import cors from 'cors';
 import googleAuthRouter from './OAuth/GoogleAuthRoutes.js';
@@ -81,8 +81,8 @@ app.use(passport.session());
 
 app.use('/events', eventRouter);
 app.use('/users', userRouter);
+app.use('/comments', commentRouter);
 app.use('/organizations', organizationRouter);
-app.use('/chats', chatRouter);
 app.use('/interests', interestRouter);
 app.use('/auth', googleAuthRouter);
 

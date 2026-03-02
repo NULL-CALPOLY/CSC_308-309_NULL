@@ -8,14 +8,25 @@ export default function EventDetails() {
   const { id } = useParams();
   const { user, isAuthenticated, loading: authLoading } = useAuth();
 
+
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
   const [isEditing, setIsEditing] = useState(false);
 
+  /* 🔽 COMMENTS STATE (ADDED) */
+  const [comments, setComments] = useState(null);
+  const [commentText, setCommentText] = useState('');
+  const [commentsLoading, setCommentsLoading] = useState(true);
+
+
+  const [currentUserName, setCurrentUserName] = useState(null);
+
+
   const isHost = event?.host === user?.id;
   const isAttending = event?.attendees?.includes(user?.id);
 
+  /* ===================== EVENT FETCH ===================== */
   useEffect(() => {
     const fetchEvent = async () => {
       setLoading(true);
@@ -40,6 +51,37 @@ export default function EventDetails() {
     fetchEvent();
   }, [id]);
 
+  /* ===================== COMMENTS FETCH ===================== */
+  useEffect(() => {
+    const fetchComments = async () => {
+      setCommentsLoading(true);
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/comments/event/${id}`
+        );
+        const json = await res.json();
+
+        if (!res.ok || !json.success) {
+          // Auto-create comments thread if none exists
+          await fetch(
+            `${import.meta.env.VITE_API_BASE_URL}/comments/event/${id}`,
+            { method: 'POST' }
+          );
+          setComments({ messages: [] });
+        } else {
+          setComments(json.data);
+        }
+      } catch (err) {
+        console.error('Failed to load comments:', err);
+      } finally {
+        setCommentsLoading(false);
+      }
+    };
+
+    fetchComments();
+  }, [id]);
+
+  /* ===================== ATTEND / LEAVE ===================== */
   const handleAttend = async () => {
     if (!isAuthenticated || !user?.id) return;
 
@@ -63,6 +105,7 @@ export default function EventDetails() {
     }));
   };
 
+  /* ===================== UPDATE EVENT ===================== */
   const handleUpdate = async (e) => {
     e.preventDefault();
     if (!user?.token) return;
@@ -97,11 +140,73 @@ export default function EventDetails() {
         throw new Error(json.message || 'Failed to update event');
       }
 
-      // Update local state with saved data
       setEvent((prev) => ({ ...prev, ...payload }));
       setIsEditing(false);
     } catch (err) {
       console.error('Update failed:', err);
+      alert(err.message);
+    }
+  };
+
+  useEffect(() => {
+    if (!isAuthenticated || !user?.id) return;
+
+    const fetchUser = async () => {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/users/${user.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          }
+        );
+
+        const json = await res.json();
+
+        if (res.ok && json.success) {
+          setCurrentUserName(json.data.name || '');
+        }
+      } catch (err) {
+        console.error('Failed to fetch user name:', err);
+      }
+    };
+
+    fetchUser();
+  }, [isAuthenticated, user]);
+
+
+  /* ===================== ADD COMMENT ===================== */
+  const handleAddComment = async () => {
+    if (!commentText.trim() || !user) return;
+
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/comments/event/${id}/message`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: 
+            JSON.stringify({
+              name: currentUserName || 'Anonymous',
+              message: commentText,
+              createdAt: new Date().toISOString(),
+            }),
+        }
+      );
+
+      const json = await res.json();
+
+      if (!res.ok || !json.success) {
+        throw new Error(json.message || 'Failed to post comment');
+      }
+
+      setComments(json.data);
+      setCommentText('');
+    } catch (err) {
+      console.error(err);
       alert(err.message);
     }
   };
@@ -126,7 +231,9 @@ export default function EventDetails() {
               {isEditing ? (
                 <input
                   value={event.name}
-                  onChange={(e) => setEvent({ ...event, name: e.target.value })}
+                  onChange={(e) =>
+                    setEvent({ ...event, name: e.target.value })
+                  }
                 />
               ) : (
                 <div className="event-name">
@@ -182,7 +289,9 @@ export default function EventDetails() {
                   onChange={(e) =>
                     setEvent({
                       ...event,
-                      interests: e.target.value.split(',').map((i) => i.trim()),
+                      interests: e.target.value
+                        .split(',')
+                        .map((i) => i.trim()),
                     })
                   }
                 />
@@ -192,7 +301,6 @@ export default function EventDetails() {
             </div>
           </div>
 
-          {/* Only show join/leave if logged in and not the host */}
           {isAuthenticated && !isHost && (
             <button
               type="button"
@@ -202,7 +310,6 @@ export default function EventDetails() {
             </button>
           )}
 
-          {/* Only show edit if logged in and is the host */}
           {isAuthenticated && isHost && (
             <button
               type={isEditing ? 'submit' : 'button'}
@@ -217,16 +324,42 @@ export default function EventDetails() {
             </button>
           )}
 
+          {/* ===================== COMMENTS SECTION ===================== */}
           <div className="event-comments">
             <h3>Comments</h3>
-            {event.comment.length === 0 ? (
+
+            {commentsLoading ? (
+              <p className="muted">Loading comments…</p>
+            ) : comments?.messages?.length === 0 ? (
               <p className="muted">No comments yet</p>
             ) : (
-              event.comment.map((c, i) => (
+               comments.messages.map((msg, i) => (
                 <div key={i} className="comment">
-                  {c}
+                  <div className="comment-header">
+                    <strong>{msg.name}</strong>
+                      <span className="comment-time">
+                        {msg.createdAt && new Date(msg.createdAt).toLocaleString()}
+                      </span>
+                  </div>
+                  <p>{msg.message}</p>
                 </div>
-              ))
+))
+            )}
+            
+            {isAuthenticated && (isHost || isAttending) && (
+              <div className="comment-input">
+                <textarea
+                  placeholder="Write a comment…"
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="event-action-btn"
+                  onClick={handleAddComment}>
+                  Post Comment
+                </button>
+              </div>
             )}
           </div>
         </form>
