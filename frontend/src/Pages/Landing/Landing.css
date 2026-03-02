@@ -1,9 +1,8 @@
-body {
-  padding-top: 0;
+body:has(.landing-page) {
+  overflow: auto;
 }
 
 .landing-page {
-  padding-top: 80px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;

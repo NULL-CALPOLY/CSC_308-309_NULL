@@ -5,15 +5,16 @@ import Navbar from '../../Components/Navbar/Navbar.jsx';
 import community from '../../assets/community.svg';
 import LEBRON from '../../assets/LEBRON.mp4';
 import { useAuth } from '../../Hooks/useAuth.js';
-import LEBRONposter from '../../assets/LEBRON.jpg';
+import { useModal } from '../../Components/ModalContext.jsx';
 
 export default function LandingPage() {
   const { isAuthenticated } = useAuth();
+  const { openSignIn, openRegister } = useModal();
 
   return (
     <div className="landing-page">
       <header>
-        <Navbar page="/home" />
+        <Navbar page="/" />
       </header>
 
       <main>
@@ -25,9 +26,9 @@ export default function LandingPage() {
               interests
             </p>
             {!isAuthenticated ? (
-              <Link to="/register" className="cta-button">
+              <button className="cta-button" onClick={openSignIn}>
                 Get Started!
-              </Link>
+              </button>
             ) : (
               <Link to="/home" className="cta-button">
                 Get Started!
@@ -62,12 +63,12 @@ export default function LandingPage() {
               </div>
             </section>
             {!isAuthenticated ? (
-              <Link to="/register" className="learn-more">
-                Learn more
-              </Link>
+              <button className="cta-button" onClick={openSignIn}>
+                Get Started!
+              </button>
             ) : (
-              <Link to="/home" className="learn-more">
-                Learn more
+              <Link to="/home" className="cta-button">
+                Get Started!
               </Link>
             )}
           </div>
@@ -86,12 +87,12 @@ export default function LandingPage() {
               </p>
 
               {!isAuthenticated ? (
-                <Link to="/register" className="learn-more">
-                  Join now
-                </Link>
+                <button className="cta-button" onClick={openSignIn}>
+                  Get Started!
+                </button>
               ) : (
-                <Link to="/home" className="learn-more">
-                  Join now
+                <Link to="/home" className="cta-button">
+                  Get Started!
                 </Link>
               )}
             </div>
@@ -107,12 +108,12 @@ export default function LandingPage() {
                 expand your horizons.
               </p>
               {!isAuthenticated ? (
-                <Link to="/register" className="learn-more">
-                  Explore
-                </Link>
+                <button className="cta-button" onClick={openSignIn}>
+                  Get Started!
+                </button>
               ) : (
-                <Link to="/home" className="learn-more">
-                  Explore
+                <Link to="/home" className="cta-button">
+                  Get Started!
                 </Link>
               )}
             </div>
@@ -123,7 +124,6 @@ export default function LandingPage() {
                 muted
                 loop
                 playsInline
-                poster={LEBRONposter}
               />
             </div>
           </div>

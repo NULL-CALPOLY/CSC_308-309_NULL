@@ -6,10 +6,35 @@ const router = express.Router();
 router.get('/', (req, res) => {
   res.send('Yes, events info is working');
 });
+
 // Get all events
 router.get('/all', async (req, res) => {
   await eventServices
     .getEvents()
+    .then((events) => {
+      if (!events || events.length === 0)
+        res.status(404).json({
+          success: false,
+          message: 'No events found',
+        });
+      else
+        res.status(200).json({
+          success: true,
+          data: events,
+        });
+    })
+    .catch((error) => {
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
+    });
+});
+
+// Gets all future events
+router.get('/upcoming', async (req, res) => {
+  await eventServices
+    .findUpcomingEvent()
     .then((events) => {
       if (!events || events.length === 0)
         res.status(404).json({
