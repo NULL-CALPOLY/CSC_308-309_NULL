@@ -197,6 +197,9 @@ JWT_TOKEN_SECRET=your_jwt_secret
 REFRESH_TOKEN_SECRET=your_refresh_secret
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
+CLOUDINARY_CLOUD_NAME=cloud_name
+CLOUDINARY_KEY=cloudinary_key
+CLOUDINARY_SECRET=cloudinary_secret
 ```
 
 ### Backend — `.env.test` (root)
@@ -222,7 +225,6 @@ VITE_API_BASE_URL=https://findr-ggfjetd2gqe2gday.westus3-01.azurewebsites.net
 ```
 
 > **Note:** `.env` files are gitignored. Never commit secrets.
-
 ---
 
 ## 🔌 API Documentation
