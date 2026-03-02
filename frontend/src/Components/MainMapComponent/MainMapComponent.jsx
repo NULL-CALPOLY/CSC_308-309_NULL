@@ -9,7 +9,7 @@ import locateIcon from '../../assets/location.svg';
 import circle from '../../assets/circle.png';
 import './MainMapComponent.css';
 
-const EventIcon = new L.DivIcon({
+const EventIcon = L.divIcon({
   html: `<img src="${markerIcon}" class="event-marker-img" />`,
   iconSize: [45, 45],
   iconAnchor: [22, 45],
@@ -17,7 +17,7 @@ const EventIcon = new L.DivIcon({
   className: 'event-marker-wrapper',
 });
 
-const currentLocationIcon = new L.Icon({
+const currentLocationIcon = L.icon({
   iconUrl: circle,
   iconRetinaUrl: circle,
   iconSize: [20, 20],
@@ -39,16 +39,25 @@ export default function MainMapComponent() {
 
         const mappedEvents = data.data.map((event) => {
           const [lng, lat] = event.location.coordinates;
-          const startDate = event.time?.start ? new Date(event.time.start) : null;
+          const startDate = event.time?.start
+            ? new Date(event.time.start)
+            : null;
           return {
             eventId: event._id,
             eventName: event.name,
             description: event.description,
             eventDate: startDate
-              ? startDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+              ? startDate.toLocaleDateString(undefined, {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+                })
               : 'TBD',
             eventTime: startDate
-              ? startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+              ? startDate.toLocaleTimeString([], {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })
               : 'TBD',
             lat,
             lng,
@@ -84,15 +93,14 @@ export default function MainMapComponent() {
         )}
 
         {events.map((event, idx) => (
-          <Marker
-            key={idx}
-            position={[event.lat, event.lng]}
-            icon={EventIcon}>
+          <Marker key={idx} position={[event.lat, event.lng]} icon={EventIcon}>
             <Popup className="event-map-popup">
               <div className="map-popup-content">
                 <div className="map-popup-title">{event.eventName}</div>
                 {event.description && (
-                  <div className="map-popup-description">{event.description}</div>
+                  <div className="map-popup-description">
+                    {event.description}
+                  </div>
                 )}
                 <div className="map-popup-datetime">
                   {event.eventDate} &bull; {event.eventTime}

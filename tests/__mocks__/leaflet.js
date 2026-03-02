@@ -4,7 +4,13 @@ const L = {
       this.options = options;
     }
   },
+  DivIcon: class DivIcon {
+    constructor(options) {
+      this.options = options;
+    }
+  },
   icon: jest.fn((options) => ({ options })),
+  divIcon: jest.fn((options) => ({ options })),
   map: jest.fn(() => ({
     setView: jest.fn().mockReturnThis(),
     on: jest.fn().mockReturnThis(),
