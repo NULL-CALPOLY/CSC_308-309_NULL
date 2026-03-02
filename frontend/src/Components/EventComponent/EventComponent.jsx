@@ -86,11 +86,13 @@ export default function EventComponent(props) {
       {!expanded && (
         <div className="Event-Footer">
           {isHost ? (
-            <button className="ActionButton" onClick={handleEdit}>
+            <button className="ActionButton EditButton" onClick={handleEdit}>
               Edit Event
             </button>
           ) : (
-            <button className="ActionButton" onClick={handleAttend}>
+            <button
+              className={`ActionButton ${isAttending ? 'LeaveButton' : 'JoinButton'}`}
+              onClick={handleAttend}>
               {isAttending ? 'Leave Event' : 'Join Event'}
             </button>
           )}
@@ -127,13 +129,14 @@ export default function EventComponent(props) {
                 <TagComponent key={idx} Interest={tag} />
               ))}
             </div>
-
             {isHost ? (
-              <button className="ActionButton" onClick={handleEdit}>
+              <button className="ActionButton EditButton" onClick={handleEdit}>
                 Edit Event
               </button>
             ) : (
-              <button className="ActionButton" onClick={handleAttend}>
+              <button
+                className={`ActionButton ${isAttending ? 'LeaveButton' : 'JoinButton'}`}
+                onClick={handleAttend}>
                 {isAttending ? 'Leave Event' : 'Join Event'}
               </button>
             )}

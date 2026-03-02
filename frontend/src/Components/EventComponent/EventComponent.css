@@ -34,7 +34,7 @@
   font-weight: 700;
   font-size: 17px;
   line-height: 1.3;
-  color: #39ff78;
+  color: #000000;
   margin-bottom: 10px;
   letter-spacing: 0.2px;
 }
@@ -42,14 +42,15 @@
 /* === Divider === */
 .Event-Divider {
   border: 0;
-  border-top: 1px solid rgba(57, 255, 120, 0.25);
+  border-top: 1px solid;
+  color: rgba(0, 0, 0, 0.25);
   margin: 8px 0 12px;
 }
 
 /* === Event Info === */
 .Event-DateTime {
   font-size: 13px;
-  color: #39ff78;
+  color: #000000;
   font-weight: 600;
   margin-bottom: 6px;
   letter-spacing: 0.3px;
@@ -113,7 +114,7 @@
   border-radius: 8px;
   border: 1.5px solid #39ff78;
   background: transparent;
-  color: #39ff78;
+  color: #000000;
   font-weight: 600;
   font-size: 13px;
   cursor: pointer;
@@ -126,8 +127,50 @@
 
 .ActionButton:hover {
   background: #39ff78;
-  color: #1a1d23;
+  color: #000000;
   box-shadow: 0 0 12px rgba(57, 255, 120, 0.45);
+}
+
+/* === Join (Green) === */
+.JoinButton {
+  border-color: #2e7d32;
+  background: #2e7d32;
+  color: #ffffff;
+}
+
+.JoinButton:hover {
+  background: #1b5e20;
+  border-color: #1b5e20;
+  box-shadow: 0 0 12px rgba(46, 125, 50, 0.55);
+  color: #ffffff;
+}
+
+/* === Leave (Red) === */
+.LeaveButton {
+  border-color: #c62828;
+  background: #c62828;
+  color: #ffffff;
+}
+
+.LeaveButton:hover {
+  background: #8e1a1a;
+  border-color: #8e1a1a;
+  box-shadow: 0 0 12px rgba(198, 40, 40, 0.55);
+  color: #ffffff;
+}
+
+/* === Edit (Purple) === */
+.EditButton {
+  border-color: #7b1fa2;
+  background: #7b1fa2;
+  color: #ffffff;
+}
+
+.EditButton:hover {
+  background: #4a148c;
+  border-color: #4a148c;
+  box-shadow: 0 0 12px rgba(123, 31, 162, 0.55);
+  color: #ffffff;
 }
 
 /* === View Event Button === */
