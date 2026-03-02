@@ -25,7 +25,7 @@ export default function SearchBar({ onSelectionChange, onDateChange }) {
 
   const interestOptions = interests.map(i => ({
     label: i.name,
-    value: i._id,
+    value: i.name,
   }));
 
   const filteredOptions = interestOptions.filter((option) =>

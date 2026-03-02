@@ -25,6 +25,7 @@ import userRouter from './UserFiles/UserRoutes.js';
 import chatRouter from './ChatFiles/ChatRoutes.js';
 import organizationRouter from './OrganizationFiles/OrganizationRoutes.js';
 import interestRouter from './InterestFIles/InterestRoutes.js';
+import cloudinaryRouter from './Cloudinary.js';
 import cors from 'cors';
 import googleAuthRouter from './OAuth/GoogleAuthRoutes.js';
 import passport from 'passport';
@@ -84,6 +85,7 @@ app.use('/users', userRouter);
 app.use('/organizations', organizationRouter);
 app.use('/chats', chatRouter);
 app.use('/interests', interestRouter);
+app.use('/image', cloudinaryRouter);
 app.use('/auth', googleAuthRouter);
 
 // Start the server

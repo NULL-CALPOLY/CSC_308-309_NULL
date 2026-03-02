@@ -20,7 +20,7 @@
 .ed-wrapper {
   max-width: 780px;
   margin: 0 auto;
-  padding: 2rem 1.5rem 4rem;
+  padding: calc(var(--nav-h) + 24px) 1.5rem 4rem;
 }
 
 .ed-back {

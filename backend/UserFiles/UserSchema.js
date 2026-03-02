@@ -64,6 +64,11 @@ const UserSchema = new mongoose.Schema(
         type: [Number],
       },
     },
+    profileImage: {
+      type: String,
+      default: null,
+      required: false,
+    },
   },
   { collection: 'users_list' }
 );

@@ -2,18 +2,17 @@
   --nav-h: 80px;
 }
 
-html,
-body,
-#root {
+html, body, #root {
   margin: 0;
-  background: white;
+  padding: 0;
+  height: 100%;
 }
+
 .app {
   position: relative;
-  /* Removed height to allow natural scrolling */
+  height: 100%;
 }
+
 .main {
-  /* Removed position: fixed to allow scrolling on pages like landing */
-  background: white;
-  color: white;
+  height: 100%;
 }
