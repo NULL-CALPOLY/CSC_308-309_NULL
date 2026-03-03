@@ -9,6 +9,7 @@ export default function SearchBar({ onSelectionChange, onDateChange }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);
 
   const handleCheckboxChange = (interestValue, isChecked) => {
     setCheckedInterests((prev) => {
@@ -38,6 +39,11 @@ export default function SearchBar({ onSelectionChange, onDateChange }) {
     onDateChange({ startDate: '', endDate: '' });
   };
 
+  const handleGridScroll = (e) => {
+    const el = e.target;
+    setIsScrolledToBottom(el.scrollHeight - el.scrollTop <= el.clientHeight + 2);
+  };
+
   return (
     <div className="searchbar-container">
 
@@ -50,18 +56,20 @@ export default function SearchBar({ onSelectionChange, onDateChange }) {
         className="searchbar-input"
       />
 
-      <div className="checkbox-grid">
-        {filteredOptions.map((interest) => (
-          <div key={interest.value} className="checkbox-item">
-            <Checkbox
-              checked={checkedInterests[interest.value] || false}
-              onChange={({ detail }) =>
-                handleCheckboxChange(interest.value, detail.checked)
-              }>
-              {interest.label}
-            </Checkbox>
-          </div>
-        ))}
+      <div className={`checkbox-grid-wrapper ${isScrolledToBottom ? 'scrolled-to-bottom' : ''}`}>
+        <div className="checkbox-grid" onScroll={handleGridScroll}>
+          {filteredOptions.map((interest) => (
+            <div key={interest.value} className="checkbox-item">
+              <Checkbox
+                checked={checkedInterests[interest.value] || false}
+                onChange={({ detail }) =>
+                  handleCheckboxChange(interest.value, detail.checked)
+                }>
+                {interest.label}
+              </Checkbox>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* ── Date filter ── */}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './EventDetails.css';
 import Navbar from '../../Components/Navbar/Navbar';
@@ -21,7 +21,12 @@ export default function EventDetails() {
   const [editErrors, setEditErrors] = useState({});
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [selectedInterests, setSelectedInterests] = useState([]);
-  const [commentInput, setCommentInput] = useState('');
+
+  // Comments state
+  const [comments, setComments] = useState(null);
+  const [commentText, setCommentText] = useState('');
+  const [commentsLoading, setCommentsLoading] = useState(true);
+  const [currentUserName, setCurrentUserName] = useState(null);
 
   React.useEffect(() => {
     if (rawEvent) {
@@ -34,6 +39,58 @@ export default function EventDetails() {
       );
     }
   }, [rawEvent]);
+
+  // Fetch comments
+  useEffect(() => {
+    const fetchComments = async () => {
+      setCommentsLoading(true);
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/comments/event/${id}`
+        );
+        const json = await res.json();
+
+        if (!res.ok || !json.success) {
+          // Auto-create comments thread if none exists
+          await fetch(
+            `${import.meta.env.VITE_API_BASE_URL}/comments/event/${id}`,
+            { method: 'POST' }
+          );
+          setComments({ messages: [] });
+        } else {
+          setComments(json.data);
+        }
+      } catch (err) {
+        console.error('Failed to load comments:', err);
+      } finally {
+        setCommentsLoading(false);
+      }
+    };
+
+    fetchComments();
+  }, [id]);
+
+  // Fetch current user's name for comments
+  useEffect(() => {
+    if (!isAuthenticated || !user?.id) return;
+
+    const fetchUser = async () => {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/users/${user.id}`,
+          { headers: { Authorization: `Bearer ${user.token}` } }
+        );
+        const json = await res.json();
+        if (res.ok && json.success) {
+          setCurrentUserName(json.data.name || '');
+        }
+      } catch (err) {
+        console.error('Failed to fetch user name:', err);
+      }
+    };
+
+    fetchUser();
+  }, [isAuthenticated, user]);
 
   if (loading) return <div className="ed-loading">Loading event…</div>;
   if (fetchError) return <div className="ed-loading ed-error">{fetchError}</div>;
@@ -139,6 +196,34 @@ export default function EventDetails() {
       if (!res.ok || !json.success) throw new Error(json.message || 'Failed to delete');
       navigate('/home');
     } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const handleAddComment = async () => {
+    if (!commentText.trim() || !user) return;
+
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/comments/event/${id}/message`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: currentUserName || 'Anonymous',
+            message: commentText,
+            createdAt: new Date().toISOString(),
+          }),
+        }
+      );
+
+      const json = await res.json();
+      if (!res.ok || !json.success) throw new Error(json.message || 'Failed to post comment');
+
+      setComments(json.data);
+      setCommentText('');
+    } catch (err) {
+      console.error(err);
       alert(err.message);
     }
   };
@@ -362,27 +447,42 @@ export default function EventDetails() {
           <div className="ed-comments">
             <h3>Comments</h3>
 
-            <div className="ed-comment-input-row">
-              <input
-                className="ed-comment-input"
-                placeholder="Write a comment… (coming soon)"
-                value={commentInput}
-                onChange={(e) => setCommentInput(e.target.value)}
-                disabled
-              />
-              <button type="button" className="ed-btn ed-btn--primary" disabled>
-                Post
-              </button>
-            </div>
+            {isAuthenticated && (isHost || isAttending) && (
+              <div className="ed-comment-input-row">
+                <input
+                  className="ed-comment-input"
+                  placeholder="Write a comment…"
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="ed-btn ed-btn--primary"
+                  onClick={handleAddComment}
+                >
+                  Post
+                </button>
+              </div>
+            )}
 
-            {!event.comment?.length ? (
+            {commentsLoading ? (
+              <p className="ed-muted">Loading comments…</p>
+            ) : !comments?.messages?.length ? (
               <p className="ed-muted">No comments yet. Be the first!</p>
             ) : (
-              event.comment.map((c, i) => (
+              comments.messages.map((msg, i) => (
                 <div key={i} className="ed-comment">
-                  <div className="ed-comment-avatar">U</div>
+                  <div className="ed-comment-avatar">
+                    {(msg.name?.charAt(0) || 'U').toUpperCase()}
+                  </div>
                   <div className="ed-comment-body">
-                    <p>{c}</p>
+                    <div className="ed-comment-header">
+                      <strong>{msg.name}</strong>
+                      <span className="ed-comment-time">
+                        {msg.createdAt && new Date(msg.createdAt).toLocaleString()}
+                      </span>
+                    </div>
+                    <p>{msg.message}</p>
                   </div>
                 </div>
               ))
