@@ -28,8 +28,8 @@ const EventSchema = new mongoose.Schema(
       type: [{ type: mongoose.Schema.Types.ObjectId }],
       required: false,
     },
-    comment: {
-      type: [{ type: String }],
+    comments: {
+      type: [{ type: mongoose.Schema.Types.ObjectId }],
       required: true,
     },
     address: {

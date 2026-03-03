@@ -418,22 +418,74 @@
   line-height: 1.6;
 }
 
-.ed-confirm-card strong {
-  color: #fff;
+
+/* ===================== COMMENTS SECTION ===================== */
+
+.event-comments {
+  margin-top: 2.5rem;
 }
 
-.ed-confirm-actions {
+.event-comments h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.event-comments .comment {
   display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
-@keyframes backdrop-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+.event-comments .comment strong {
+  font-size: 0.85rem;
+  color: #cfcfff;
 }
 
-@keyframes modal-in {
-  from { opacity: 0; transform: translateY(12px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+.event-comments .comment p {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #e6e6e6;
+}
+
+/* Comment input area */
+.comment-input {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.comment-input textarea {
+  resize: none;
+  min-height: 80px;
+  background: #2b2b2b;
+  color: #f1f1f1;xq
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: none;
+  font-family: inherit;
+}
+
+.comment-input textarea::placeholder {
+  color: #888;
+}
+
+.comment-input button {
+  align-self: flex-end;
+  width: auto;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.85rem;
+  border-radius: 10px;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.comment-time {
+  font-size: 0.8rem;
+  opacity: 0.7;
 }
