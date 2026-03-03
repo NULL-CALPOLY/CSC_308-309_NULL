@@ -9,7 +9,9 @@ export default function useInterests() {
   useEffect(() => {
     const fetchInterests = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/interests/all`);
+        const response = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/interests/all`
+        );
         const result = await response.json();
 
         if (result.success) {
@@ -22,9 +24,7 @@ export default function useInterests() {
       } finally {
         setLoading(false);
       }
-      
     };
-    
 
     fetchInterests();
   }, []);

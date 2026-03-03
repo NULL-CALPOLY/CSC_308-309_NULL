@@ -15,7 +15,9 @@
   font-size: 0.875rem;
   box-sizing: border-box;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .searchbar-input::placeholder {
@@ -87,16 +89,16 @@
 }
 
 /* ── Cloudscape checkbox overrides ── */
-.checkbox-item [class*="awsui_label"] {
+.checkbox-item [class*='awsui_label'] {
   color: #1a1a2e !important;
   font-size: 0.82rem !important;
 }
 
-.checkbox-item [class*="awsui_outline"] {
+.checkbox-item [class*='awsui_outline'] {
   border-color: rgba(124, 58, 237, 0.35) !important;
 }
 
-.checkbox-item [class*="awsui_checked"] [class*="awsui_outline"] {
+.checkbox-item [class*='awsui_checked'] [class*='awsui_outline'] {
   background: #7c3aed !important;
   border-color: #7c3aed !important;
 }
@@ -146,7 +148,9 @@
   font-size: 0.78rem;
   box-sizing: border-box;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
   margin-bottom: 0;
 }
 

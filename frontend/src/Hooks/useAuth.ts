@@ -38,11 +38,17 @@ export const useProvideAuth = () => {
   const navigate = useNavigate();
 
   // ── Helper: fetch full user profile (name + profileImage) ──
-  const fetchUserProfile = async (id: string, token: string): Promise<Partial<UserState>> => {
+  const fetchUserProfile = async (
+    id: string,
+    token: string
+  ): Promise<Partial<UserState>> => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/users/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       if (!res.ok) return {};
       const json = await res.json();
       return {
@@ -117,7 +123,8 @@ export const useProvideAuth = () => {
 
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        if (res.status === 409) throw new Error('This email is already in use.');
+        if (res.status === 409)
+          throw new Error('This email is already in use.');
         throw new Error(err.message || 'Registration failed');
       }
 
@@ -153,12 +160,12 @@ export const useProvideAuth = () => {
 
   // ── Call this after a successful profile image upload ──
   const updateProfileImage = (imageUrl: string | null) => {
-    setUser((prev) => prev ? { ...prev, profileImage: imageUrl } : prev);
+    setUser((prev) => (prev ? { ...prev, profileImage: imageUrl } : prev));
   };
 
   // ── Call this after a successful profile name update ──
   const updateProfileName = (name: string) => {
-    setUser((prev) => prev ? { ...prev, name } : prev);
+    setUser((prev) => (prev ? { ...prev, name } : prev));
   };
 
   return {

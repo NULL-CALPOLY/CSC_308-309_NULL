@@ -37,8 +37,7 @@ export default function HomePage() {
           className="col-close-btn"
           onClick={() => setColOpen(false)}
           title="Close panel"
-          aria-label="Close event panel"
-        >
+          aria-label="Close event panel">
           <img src={ArrowIcon} alt="" />
         </button>
         <EventColumn onRefetchReady={(fn) => (refetchEvents.current = fn)} />
@@ -49,8 +48,7 @@ export default function HomePage() {
         className="col-open-btn"
         onClick={() => setColOpen(true)}
         title="Open event panel"
-        aria-label="Open event panel"
-      >
+        aria-label="Open event panel">
         <img src={HamburgerIcon} alt="" />
       </button>
 

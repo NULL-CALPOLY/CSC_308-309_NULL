@@ -11,8 +11,12 @@
 }
 
 @keyframes backdrop-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .modal {
@@ -31,8 +35,14 @@
 }
 
 @keyframes modal-in {
-  from { opacity: 0; transform: translateY(16px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .modal,
@@ -68,7 +78,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .close-btn:hover {
@@ -124,7 +136,9 @@
   outline: none;
   width: 100%;
   box-sizing: border-box;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .form-group input::placeholder,
@@ -166,7 +180,10 @@ button.primary {
   font-weight: 700;
   cursor: pointer;
   letter-spacing: 0.03em;
-  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  transition:
+    background 0.2s,
+    transform 0.15s,
+    box-shadow 0.2s;
 }
 
 button.primary:hover {
@@ -184,7 +201,10 @@ button.secondary {
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  transition:
+    border-color 0.2s,
+    color 0.2s,
+    background 0.2s;
 }
 
 button.secondary:hover {
@@ -200,42 +220,42 @@ button.secondary:hover {
 }
 
 /* ── Cloudscape overrides ── */
-[class*="awsui_input"],
-[class*="awsui_textarea"] {
+[class*='awsui_input'],
+[class*='awsui_textarea'] {
   background: rgba(255, 255, 255, 0.05) !important;
   border-color: rgba(255, 255, 255, 0.1) !important;
   color: #fff !important;
   border-radius: 8px !important;
 }
 
-[class*="awsui_placeholder"] {
+[class*='awsui_placeholder'] {
   color: rgba(255, 255, 255, 0.2) !important;
 }
 
-[class*="awsui_trigger"] {
+[class*='awsui_trigger'] {
   background: rgba(255, 255, 255, 0.05) !important;
   border-color: rgba(255, 255, 255, 0.1) !important;
   color: #fff !important;
   border-radius: 8px !important;
 }
 
-[class*="awsui_dropdown"] {
+[class*='awsui_dropdown'] {
   background: #1a1a1a !important;
   border-color: rgba(255, 255, 255, 0.12) !important;
   border-radius: 10px !important;
 }
 
-[class*="awsui_option"]:hover,
-[class*="awsui_item"]:hover {
+[class*='awsui_option']:hover,
+[class*='awsui_item']:hover {
   background: rgba(255, 255, 255, 0.06) !important;
 }
 
-[class*="awsui_selected"] {
+[class*='awsui_selected'] {
   background: rgba(124, 58, 237, 0.2) !important;
   color: #a78bfa !important;
 }
 
-[class*="awsui_token"] {
+[class*='awsui_token'] {
   background: rgba(124, 58, 237, 0.25) !important;
   border-color: rgba(124, 58, 237, 0.5) !important;
   color: #a78bfa !important;

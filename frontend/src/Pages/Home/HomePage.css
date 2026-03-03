@@ -59,7 +59,9 @@ body:has(.HomePage) {
   align-items: center;
   justify-content: center;
   z-index: 20;
-  transition: background 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
   pointer-events: auto;
   box-sizing: content-box;
   padding: 0;
@@ -103,7 +105,10 @@ body:has(.HomePage) {
   opacity: 0;
   pointer-events: none;
   transform: translateX(-8px);
-  transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    background 0.2s;
 }
 
 .col-open-btn img {

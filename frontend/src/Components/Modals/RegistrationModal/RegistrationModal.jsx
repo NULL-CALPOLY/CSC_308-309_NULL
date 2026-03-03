@@ -5,7 +5,15 @@ import useInterests from '../../../Hooks/useInterests';
 import './RegistrationModal.css';
 
 // ── Validators ──
-const validate = ({ email, password, name, phoneNumber, dateOfBirth, gender, city }) => {
+const validate = ({
+  email,
+  password,
+  name,
+  phoneNumber,
+  dateOfBirth,
+  gender,
+  city,
+}) => {
   const errors = {};
 
   if (!email) errors.email = 'Email is required.';
@@ -43,7 +51,11 @@ const validate = ({ email, password, name, phoneNumber, dateOfBirth, gender, cit
   } else {
     const dob = new Date(dateOfBirth);
     const today = new Date();
-    const eighteenYearsAgo = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+    const eighteenYearsAgo = new Date(
+      today.getFullYear() - 18,
+      today.getMonth(),
+      today.getDate()
+    );
     if (dob > today) {
       errors.dateOfBirth = 'Date of birth cannot be in the future.';
     } else if (dob > eighteenYearsAgo) {
@@ -57,7 +69,11 @@ const validate = ({ email, password, name, phoneNumber, dateOfBirth, gender, cit
   return errors;
 };
 
-export default function RegistrationModal({ isOpen, onClose, onSwitchToSignIn }) {
+export default function RegistrationModal({
+  isOpen,
+  onClose,
+  onSwitchToSignIn,
+}) {
   const { interests, loading: interestsLoading } = useInterests();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -75,42 +91,61 @@ export default function RegistrationModal({ isOpen, onClose, onSwitchToSignIn })
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    const handleKey = (e) => { if (e.key === 'Escape') onClose(); };
+    const handleKey = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
     if (isOpen) document.addEventListener('keydown', handleKey);
     return () => document.removeEventListener('keydown', handleKey);
   }, [isOpen, onClose]);
 
   React.useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [isOpen]);
 
   if (!isOpen) return null;
 
   const toggleInterest = (interest) => {
-    setSelectedInterests(prev =>
-      prev.includes(interest) ? prev.filter(i => i !== interest) : [...prev, interest]
+    setSelectedInterests((prev) =>
+      prev.includes(interest)
+        ? prev.filter((i) => i !== interest)
+        : [...prev, interest]
     );
   };
 
   const removeInterest = (interest) => {
-    setSelectedInterests(prev => prev.filter(i => i !== interest));
+    setSelectedInterests((prev) => prev.filter((i) => i !== interest));
   };
 
-  const filteredInterests = interests.filter(i =>
+  const filteredInterests = interests.filter((i) =>
     i.name.toLowerCase().includes(interestSearch.toLowerCase())
   );
 
   // Clear individual field error on change
   const clearError = (field) => {
-    if (errors[field]) setErrors(prev => { const e = { ...prev }; delete e[field]; return e; });
+    if (errors[field])
+      setErrors((prev) => {
+        const e = { ...prev };
+        delete e[field];
+        return e;
+      });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitError('');
 
-    const validationErrors = validate({ email, password, name, phoneNumber, dateOfBirth, gender, city });
+    const validationErrors = validate({
+      email,
+      password,
+      name,
+      phoneNumber,
+      dateOfBirth,
+      gender,
+      city,
+    });
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
@@ -119,8 +154,13 @@ export default function RegistrationModal({ isOpen, onClose, onSwitchToSignIn })
     setErrors({});
     try {
       await register({
-        name, phoneNumber, gender, dateOfBirth,
-        city, email, password,
+        name,
+        phoneNumber,
+        gender,
+        dateOfBirth,
+        city,
+        email,
+        password,
         interests: selectedInterests,
       });
       onClose();
@@ -133,85 +173,138 @@ export default function RegistrationModal({ isOpen, onClose, onSwitchToSignIn })
   return (
     <div className="rmodal__overlay" onClick={onClose}>
       <div className="rmodal__card" onClick={(e) => e.stopPropagation()}>
-
-        <button className="rmodal__close" onClick={onClose} aria-label="Close">✕</button>
+        <button className="rmodal__close" onClick={onClose} aria-label="Close">
+          ✕
+        </button>
         <h2 className="rmodal__title">Create account</h2>
         <p className="rmodal__subtitle">Join Findr today</p>
 
         <form onSubmit={handleSubmit} className="rmodal__form" noValidate>
-
           {/* ── Row 1: Email + Password ── */}
           <div className="rmodal__grid">
             <div className="rmodal__field">
-              <label htmlFor="reg-email">Email <span className="rmodal__required">*</span></label>
+              <label htmlFor="reg-email">
+                Email <span className="rmodal__required">*</span>
+              </label>
               <input
-                id="reg-email" type="email" autoComplete="email"
+                id="reg-email"
+                type="email"
+                autoComplete="email"
                 value={email}
-                onChange={(e) => { setEmail(e.target.value); clearError('email'); }}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  clearError('email');
+                }}
                 placeholder="you@example.com"
                 className={errors.email ? 'input--error' : ''}
               />
-              {errors.email && <span className="rmodal__field-error">{errors.email}</span>}
+              {errors.email && (
+                <span className="rmodal__field-error">{errors.email}</span>
+              )}
             </div>
             <div className="rmodal__field">
-              <label htmlFor="reg-password">Password <span className="rmodal__required">*</span></label>
+              <label htmlFor="reg-password">
+                Password <span className="rmodal__required">*</span>
+              </label>
               <input
-                id="reg-password" type="password" autoComplete="new-password"
+                id="reg-password"
+                type="password"
+                autoComplete="new-password"
                 value={password}
-                onChange={(e) => { setPassword(e.target.value); clearError('password'); }}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  clearError('password');
+                }}
                 placeholder="••••••••"
                 className={errors.password ? 'input--error' : ''}
               />
-              {errors.password && <span className="rmodal__field-error">{errors.password}</span>}
+              {errors.password && (
+                <span className="rmodal__field-error">{errors.password}</span>
+              )}
             </div>
           </div>
 
           {/* ── Row 2: Name + Phone ── */}
           <div className="rmodal__grid">
             <div className="rmodal__field">
-              <label htmlFor="reg-name">Full Name <span className="rmodal__required">*</span></label>
+              <label htmlFor="reg-name">
+                Full Name <span className="rmodal__required">*</span>
+              </label>
               <input
-                id="reg-name" type="text" autoComplete="name"
+                id="reg-name"
+                type="text"
+                autoComplete="name"
                 value={name}
-                onChange={(e) => { setName(e.target.value); clearError('name'); }}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  clearError('name');
+                }}
                 placeholder="Your name"
                 className={errors.name ? 'input--error' : ''}
               />
-              {errors.name && <span className="rmodal__field-error">{errors.name}</span>}
+              {errors.name && (
+                <span className="rmodal__field-error">{errors.name}</span>
+              )}
             </div>
             <div className="rmodal__field">
-              <label htmlFor="reg-phone">Phone Number <span className="rmodal__required">*</span></label>
+              <label htmlFor="reg-phone">
+                Phone Number <span className="rmodal__required">*</span>
+              </label>
               <input
-                id="reg-phone" type="tel" autoComplete="tel"
+                id="reg-phone"
+                type="tel"
+                autoComplete="tel"
                 value={phoneNumber}
-                onChange={(e) => { setPhoneNumber(e.target.value); clearError('phoneNumber'); }}
+                onChange={(e) => {
+                  setPhoneNumber(e.target.value);
+                  clearError('phoneNumber');
+                }}
                 placeholder="+1 2345678900"
                 className={errors.phoneNumber ? 'input--error' : ''}
               />
-              {errors.phoneNumber && <span className="rmodal__field-error">{errors.phoneNumber}</span>}
+              {errors.phoneNumber && (
+                <span className="rmodal__field-error">
+                  {errors.phoneNumber}
+                </span>
+              )}
             </div>
           </div>
 
           {/* ── Row 3: DOB + Gender ── */}
           <div className="rmodal__grid">
             <div className="rmodal__field">
-              <label htmlFor="reg-dob">Date of Birth <span className="rmodal__required">*</span></label>
+              <label htmlFor="reg-dob">
+                Date of Birth <span className="rmodal__required">*</span>
+              </label>
               <input
-                id="reg-dob" type="date"
+                id="reg-dob"
+                type="date"
                 value={dateOfBirth}
-                onChange={(e) => { setDateOfBirth(e.target.value); clearError('dateOfBirth'); }}
+                onChange={(e) => {
+                  setDateOfBirth(e.target.value);
+                  clearError('dateOfBirth');
+                }}
                 className={errors.dateOfBirth ? 'input--error' : ''}
               />
-              {errors.dateOfBirth && <span className="rmodal__field-error">{errors.dateOfBirth}</span>}
+              {errors.dateOfBirth && (
+                <span className="rmodal__field-error">
+                  {errors.dateOfBirth}
+                </span>
+              )}
             </div>
             <div className="rmodal__field">
-              <label htmlFor="reg-gender">Gender <span className="rmodal__required">*</span></label>
+              <label htmlFor="reg-gender">
+                Gender <span className="rmodal__required">*</span>
+              </label>
               <div className="rmodal__select-wrapper">
                 <select
-                  id="reg-gender" value={gender}
-                  onChange={(e) => { setGender(e.target.value); clearError('gender'); }}
-                  className={errors.gender ? 'input--error' : ''}
-                >
+                  id="reg-gender"
+                  value={gender}
+                  onChange={(e) => {
+                    setGender(e.target.value);
+                    clearError('gender');
+                  }}
+                  className={errors.gender ? 'input--error' : ''}>
                   <option value="">Select gender</option>
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
@@ -221,21 +314,31 @@ export default function RegistrationModal({ isOpen, onClose, onSwitchToSignIn })
                 </select>
                 <span className="rmodal__chevron">▼</span>
               </div>
-              {errors.gender && <span className="rmodal__field-error">{errors.gender}</span>}
+              {errors.gender && (
+                <span className="rmodal__field-error">{errors.gender}</span>
+              )}
             </div>
           </div>
 
           {/* ── Row 4: City ── */}
           <div className="rmodal__field">
-            <label htmlFor="reg-city">City <span className="rmodal__required">*</span></label>
+            <label htmlFor="reg-city">
+              City <span className="rmodal__required">*</span>
+            </label>
             <input
-              id="reg-city" type="text"
+              id="reg-city"
+              type="text"
               value={city}
-              onChange={(e) => { setCity(e.target.value); clearError('city'); }}
+              onChange={(e) => {
+                setCity(e.target.value);
+                clearError('city');
+              }}
               placeholder="Your city"
               className={errors.city ? 'input--error' : ''}
             />
-            {errors.city && <span className="rmodal__field-error">{errors.city}</span>}
+            {errors.city && (
+              <span className="rmodal__field-error">{errors.city}</span>
+            )}
           </div>
 
           {/* ── Interests multiselect ── */}
@@ -244,25 +347,32 @@ export default function RegistrationModal({ isOpen, onClose, onSwitchToSignIn })
             <div className="rmodal__multiselect">
               <div
                 className="rmodal__multiselect-trigger"
-                onClick={() => !interestsLoading && setDropdownOpen(o => !o)}
+                onClick={() => !interestsLoading && setDropdownOpen((o) => !o)}
                 style={{
                   opacity: interestsLoading ? 0.5 : 1,
-                  cursor: interestsLoading ? 'not-allowed' : 'pointer'
-                }}
-              >
+                  cursor: interestsLoading ? 'not-allowed' : 'pointer',
+                }}>
                 {interestsLoading ? (
-                  <span className="rmodal__placeholder">Loading interests...</span>
+                  <span className="rmodal__placeholder">
+                    Loading interests...
+                  </span>
                 ) : selectedInterests.length === 0 ? (
-                  <span className="rmodal__placeholder">Select interests...</span>
+                  <span className="rmodal__placeholder">
+                    Select interests...
+                  </span>
                 ) : (
                   <div className="rmodal__tags">
-                    {selectedInterests.map(i => (
+                    {selectedInterests.map((i) => (
                       <span key={i} className="rmodal__tag">
                         {i}
                         <button
                           type="button"
-                          onClick={(e) => { e.stopPropagation(); removeInterest(i); }}
-                        >✕</button>
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeInterest(i);
+                          }}>
+                          ✕
+                        </button>
                       </span>
                     ))}
                   </div>
@@ -281,15 +391,20 @@ export default function RegistrationModal({ isOpen, onClose, onSwitchToSignIn })
                     onClick={(e) => e.stopPropagation()}
                   />
                   <ul>
-                    {filteredInterests.map(interest => (
+                    {filteredInterests.map((interest) => (
                       <li
                         key={interest._id}
-                        className={selectedInterests.includes(interest.name) ? 'selected' : ''}
-                        onClick={() => toggleInterest(interest.name)}
-                        >
-                        <span className="rmodal__check">{selectedInterests.includes(interest.name) ? '✓' : ''}</span>
+                        className={
+                          selectedInterests.includes(interest.name)
+                            ? 'selected'
+                            : ''
+                        }
+                        onClick={() => toggleInterest(interest.name)}>
+                        <span className="rmodal__check">
+                          {selectedInterests.includes(interest.name) ? '✓' : ''}
+                        </span>
                         {interest.name}
-                        </li>
+                      </li>
                     ))}
                   </ul>
                 </div>
@@ -306,7 +421,10 @@ export default function RegistrationModal({ isOpen, onClose, onSwitchToSignIn })
 
         <p className="rmodal__footer">
           Already have an account?{' '}
-          <button type="button" className="rmodal__switch" onClick={onSwitchToSignIn}>
+          <button
+            type="button"
+            className="rmodal__switch"
+            onClick={onSwitchToSignIn}>
             Sign in
           </button>
         </p>

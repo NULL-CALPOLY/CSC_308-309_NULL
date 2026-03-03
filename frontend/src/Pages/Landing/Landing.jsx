@@ -118,13 +118,7 @@ export default function LandingPage() {
               )}
             </div>
             <div className="feature-image">
-              <video
-                src={LEBRON}
-                autoPlay
-                muted
-                loop
-                playsInline
-              />
+              <video src={LEBRON} autoPlay muted loop playsInline />
             </div>
           </div>
         </section>

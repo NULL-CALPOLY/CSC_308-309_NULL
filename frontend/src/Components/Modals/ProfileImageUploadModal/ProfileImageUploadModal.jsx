@@ -9,17 +9,27 @@ async function getCroppedBlob(imageSrc, cropPx) {
     const image = new Image();
     image.onload = () => {
       const canvas = document.createElement('canvas');
-      canvas.width  = cropPx.width;
+      canvas.width = cropPx.width;
       canvas.height = cropPx.height;
       const ctx = canvas.getContext('2d');
       ctx.drawImage(
         image,
-        cropPx.x, cropPx.y, cropPx.width, cropPx.height,
-        0, 0, cropPx.width, cropPx.height
+        cropPx.x,
+        cropPx.y,
+        cropPx.width,
+        cropPx.height,
+        0,
+        0,
+        cropPx.width,
+        cropPx.height
       );
-      canvas.toBlob((blob) => {
-        blob ? resolve(blob) : reject(new Error('Canvas is empty'));
-      }, 'image/jpeg', 0.92);
+      canvas.toBlob(
+        (blob) => {
+          blob ? resolve(blob) : reject(new Error('Canvas is empty'));
+        },
+        'image/jpeg',
+        0.92
+      );
     };
     image.onerror = reject;
     image.src = imageSrc;
@@ -27,23 +37,28 @@ async function getCroppedBlob(imageSrc, cropPx) {
 }
 
 // existingPublicId: if set, PATCH (replace + delete old) instead of POST (fresh upload)
-export default function ProfileImageUploadModal({ isOpen, onClose, onSuccess, existingPublicId }) {
-  const [step, setStep]                 = useState('select'); // 'select' | 'crop' | 'uploading' | 'done'
-  const [imageSrc, setImageSrc]         = useState(null);
-  const [error, setError]               = useState('');
-  const [isDragging, setIsDragging]     = useState(false);
+export default function ProfileImageUploadModal({
+  isOpen,
+  onClose,
+  onSuccess,
+  existingPublicId,
+}) {
+  const [step, setStep] = useState('select'); // 'select' | 'crop' | 'uploading' | 'done'
+  const [imageSrc, setImageSrc] = useState(null);
+  const [error, setError] = useState('');
+  const [isDragging, setIsDragging] = useState(false);
 
   // Crop state
-  const [crop, setCrop]                 = useState({ x: 0, y: 0 });
-  const [zoom, setZoom]                 = useState(1);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
   const [isDraggingCrop, setIsDraggingCrop] = useState(false);
-  const [dragStart, setDragStart]       = useState(null);
-  const [imageSize, setImageSize]       = useState({ w: 0, h: 0 });
+  const [dragStart, setDragStart] = useState(null);
+  const [imageSize, setImageSize] = useState({ w: 0, h: 0 });
   const [renderedSize, setRenderedSize] = useState({ w: 0, h: 0 });
 
   const cropContainerRef = useRef(null);
-  const fileInputRef     = useRef(null);
-  const croppedBlobRef   = useRef(null);
+  const fileInputRef = useRef(null);
+  const croppedBlobRef = useRef(null);
 
   console.log(existingPublicId);
 
@@ -106,12 +121,15 @@ export default function ProfileImageUploadModal({ isOpen, onClose, onSuccess, ex
     setDragStart({ x: e.clientX - crop.x, y: e.clientY - crop.y });
   };
 
-  const onMouseMove = useCallback((e) => {
-    if (!isDraggingCrop || !dragStart) return;
-    const newX = e.clientX - dragStart.x;
-    const newY = e.clientY - dragStart.y;
-    setCrop(clampCrop(newX, newY, imageSize.w, imageSize.h, zoom));
-  }, [isDraggingCrop, dragStart, imageSize, zoom, clampCrop]);
+  const onMouseMove = useCallback(
+    (e) => {
+      if (!isDraggingCrop || !dragStart) return;
+      const newX = e.clientX - dragStart.x;
+      const newY = e.clientY - dragStart.y;
+      setCrop(clampCrop(newX, newY, imageSize.w, imageSize.h, zoom));
+    },
+    [isDraggingCrop, dragStart, imageSize, zoom, clampCrop]
+  );
 
   const onMouseUp = () => setIsDraggingCrop(false);
 
@@ -145,17 +163,17 @@ export default function ProfileImageUploadModal({ isOpen, onClose, onSuccess, ex
 
       // Top-left corner of the zoomed rendered image
       const renderedImgLeft = imgCenterX - (renderedSize.w * zoom) / 2;
-      const renderedImgTop  = imgCenterY - (renderedSize.h * zoom) / 2;
+      const renderedImgTop = imgCenterY - (renderedSize.h * zoom) / 2;
 
       // Top-left corner of the crop window on screen
       const cropLeft = containerW / 2 - CROP_SIZE / 2;
-      const cropTop  = containerH / 2 - CROP_SIZE / 2;
+      const cropTop = containerH / 2 - CROP_SIZE / 2;
 
       // Crop box relative to the zoomed rendered image, then scale back to natural pixels
       const cropPx = {
-        x:      Math.round(((cropLeft - renderedImgLeft) / zoom) * scaleX),
-        y:      Math.round(((cropTop  - renderedImgTop)  / zoom) * scaleY),
-        width:  Math.round((CROP_SIZE / zoom) * scaleX),
+        x: Math.round(((cropLeft - renderedImgLeft) / zoom) * scaleX),
+        y: Math.round(((cropTop - renderedImgTop) / zoom) * scaleY),
+        width: Math.round((CROP_SIZE / zoom) * scaleX),
         height: Math.round((CROP_SIZE / zoom) * scaleY),
       };
 
@@ -192,10 +210,10 @@ export default function ProfileImageUploadModal({ isOpen, onClose, onSuccess, ex
         );
       } else {
         // No previous image — fresh upload
-        res = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/image/upload`,
-          { method: 'POST', body: formData }
-        );
+        res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/image/upload`, {
+          method: 'POST',
+          body: formData,
+        });
       }
 
       const text = await res.text();
@@ -203,9 +221,12 @@ export default function ProfileImageUploadModal({ isOpen, onClose, onSuccess, ex
       try {
         json = JSON.parse(text);
       } catch {
-        throw new Error('Server returned an unexpected response. Please try again.');
+        throw new Error(
+          'Server returned an unexpected response. Please try again.'
+        );
       }
-      if (!res.ok || !json.success) throw new Error(json.message || 'Upload failed');
+      if (!res.ok || !json.success)
+        throw new Error(json.message || 'Upload failed');
 
       setStep('done');
       onSuccess?.(json);
@@ -218,26 +239,29 @@ export default function ProfileImageUploadModal({ isOpen, onClose, onSuccess, ex
   return (
     <div className="iup-backdrop" onClick={onClose}>
       <div className="iup-card" onClick={(e) => e.stopPropagation()}>
-
         <div className="iup-header">
           <h2>
-            {step === 'select'    && 'Upload Photo'}
-            {step === 'crop'      && 'Crop Photo'}
+            {step === 'select' && 'Upload Photo'}
+            {step === 'crop' && 'Crop Photo'}
             {step === 'uploading' && 'Uploading…'}
-            {step === 'done'      && 'Upload Complete'}
+            {step === 'done' && 'Upload Complete'}
           </h2>
-          <button className="iup-close" onClick={onClose}>✕</button>
+          <button className="iup-close" onClick={onClose}>
+            ✕
+          </button>
         </div>
 
         {/* ── STEP: SELECT ── */}
         {step === 'select' && (
           <div
             className={`iup-dropzone ${isDragging ? 'iup-dropzone--active' : ''}`}
-            onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setIsDragging(true);
+            }}
             onDragLeave={() => setIsDragging(false)}
             onDrop={onDrop}
-            onClick={() => fileInputRef.current?.click()}
-          >
+            onClick={() => fileInputRef.current?.click()}>
             <div className="iup-dropzone-icon">📁</div>
             <p className="iup-dropzone-title">Drop your image here</p>
             <p className="iup-dropzone-sub">or click to browse</p>
@@ -265,8 +289,7 @@ export default function ProfileImageUploadModal({ isOpen, onClose, onSuccess, ex
               onMouseUp={onMouseUp}
               onMouseLeave={onMouseUp}
               onWheel={onWheel}
-              style={{ cursor: isDraggingCrop ? 'grabbing' : 'grab' }}
-            >
+              style={{ cursor: isDraggingCrop ? 'grabbing' : 'grab' }}>
               <img
                 src={imageSrc}
                 className="iup-crop-image"
@@ -281,7 +304,10 @@ export default function ProfileImageUploadModal({ isOpen, onClose, onSuccess, ex
 
               {/* Dark overlay with circular cutout */}
               <div className="iup-crop-overlay">
-                <div className="iup-crop-window" style={{ width: CROP_SIZE, height: CROP_SIZE }} />
+                <div
+                  className="iup-crop-window"
+                  style={{ width: CROP_SIZE, height: CROP_SIZE }}
+                />
               </div>
             </div>
 
@@ -296,7 +322,9 @@ export default function ProfileImageUploadModal({ isOpen, onClose, onSuccess, ex
                 onChange={(e) => {
                   const z = parseFloat(e.target.value);
                   setZoom(z);
-                  setCrop((c) => clampCrop(c.x, c.y, imageSize.w, imageSize.h, z));
+                  setCrop((c) =>
+                    clampCrop(c.x, c.y, imageSize.w, imageSize.h, z)
+                  );
                 }}
                 className="iup-zoom-slider"
               />
@@ -304,10 +332,14 @@ export default function ProfileImageUploadModal({ isOpen, onClose, onSuccess, ex
             </div>
 
             <div className="iup-actions">
-              <button className="iup-btn iup-btn--ghost" onClick={() => setStep('select')}>
+              <button
+                className="iup-btn iup-btn--ghost"
+                onClick={() => setStep('select')}>
                 Change Photo
               </button>
-              <button className="iup-btn iup-btn--primary" onClick={confirmCrop}>
+              <button
+                className="iup-btn iup-btn--primary"
+                onClick={confirmCrop}>
                 Upload Photo
               </button>
             </div>
@@ -334,7 +366,6 @@ export default function ProfileImageUploadModal({ isOpen, onClose, onSuccess, ex
         )}
 
         {error && <p className="iup-error">{error}</p>}
-
       </div>
     </div>
   );

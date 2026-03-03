@@ -19,7 +19,10 @@
   white-space: nowrap;
 
   box-shadow: 0 4px 18px rgba(124, 58, 237, 0.45);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    filter 0.15s ease;
 }
 
 .create-event-btn:hover {
@@ -39,5 +42,3 @@
   height: 16px;
   flex-shrink: 0;
 }
-
-

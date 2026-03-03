@@ -79,14 +79,12 @@ export default function EventComponent(props) {
         )}
       </div>
 
-
       <div className="Tag-List">
         {tags.map((tag, idx) => (
           <TagComponent key={idx} Interest={tag} />
         ))}
       </div>
 
-      
       <div className="Event-Footer">
         <button
           className="SeeToggle"
@@ -112,7 +110,10 @@ export default function EventComponent(props) {
         )}
 
         {isAuthenticated && (
-          <button className="ViewEventBtn" type="button" onClick={goToEventDetails}>
+          <button
+            className="ViewEventBtn"
+            type="button"
+            onClick={goToEventDetails}>
             View Event
           </button>
         )}
@@ -128,9 +129,7 @@ export default function EventComponent(props) {
           )}
 
           {attendees && (
-            <div className="Event-Attendees">
-              Attendees: {attendees.length}
-            </div>
+            <div className="Event-Attendees">Attendees: {attendees.length}</div>
           )}
 
           {props.host && <div className="Event-Host">Host: {props.host}</div>}

@@ -13,13 +13,17 @@ export default function Navbar({ page = '/' }) {
   return (
     <nav className="navbar">
       <div className="navbar__logo">
-        <NavLink to={page} className={linkClass} end><h2>Findr</h2></NavLink>
+        <NavLink to={page} className={linkClass} end>
+          <h2>Findr</h2>
+        </NavLink>
       </div>
 
       <div className="navbar__explore">
-        <NavLink to="/home" className={({ isActive }) =>
-          isActive ? 'navbar__explore-link active' : 'navbar__explore-link'
-        }>
+        <NavLink
+          to="/home"
+          className={({ isActive }) =>
+            isActive ? 'navbar__explore-link active' : 'navbar__explore-link'
+          }>
           Explore
         </NavLink>
       </div>
@@ -27,19 +31,26 @@ export default function Navbar({ page = '/' }) {
       <div className="navbar__links">
         {!isAuthenticated ? (
           <>
-            <button className="navbar__link signin" onClick={openSignIn}>Sign In</button>
-            <button className="navbar__link signup" onClick={openRegister}>Registration</button>
+            <button className="navbar__link signin" onClick={openSignIn}>
+              Sign In
+            </button>
+            <button className="navbar__link signup" onClick={openRegister}>
+              Registration
+            </button>
           </>
         ) : (
           <div className="navbar__profile">
-            <button onClick={logout} className="navbar__logout-btn">Logout</button>
+            <button onClick={logout} className="navbar__logout-btn">
+              Logout
+            </button>
             <NavLink
               to="/profile"
               className={({ isActive }) =>
-                isActive ? 'navbar__profile-link active' : 'navbar__profile-link'
+                isActive
+                  ? 'navbar__profile-link active'
+                  : 'navbar__profile-link'
               }
-              end
-            >
+              end>
               {user?.profileImage ? (
                 <img
                   src={user.profileImage}

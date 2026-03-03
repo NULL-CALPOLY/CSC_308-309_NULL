@@ -33,12 +33,12 @@ const uploadToCloudinary = (buffer, options = {}) =>
 const buildImageUrl = (publicId) =>
   cloudinary.url(publicId, {
     fetch_format: 'auto',
-    quality:      'auto',
-    width:        500,
-    height:       500,
-    crop:         'auto',
-    gravity:      'auto',
-    secure:       true,
+    quality: 'auto',
+    width: 500,
+    height: 500,
+    crop: 'auto',
+    gravity: 'auto',
+    secure: true,
   });
 
 // ─────────────────────────────────────────
@@ -62,20 +62,28 @@ router.get('/:publicId', (req, res) => {
 router.post('/upload', upload.single('file'), async (req, res) => {
   try {
     if (!req.file?.buffer) {
-      return res.status(400).json({ success: false, message: 'No file provided.' });
+      return res
+        .status(400)
+        .json({ success: false, message: 'No file provided.' });
     }
 
     const result = await uploadToCloudinary(req.file.buffer);
 
     res.status(201).json({
-      success:  true,
-      message:  'Image uploaded successfully.',
+      success: true,
+      message: 'Image uploaded successfully.',
       publicId: result.public_id,
       imageUrl: result.secure_url,
     });
   } catch (error) {
     console.error('Cloudinary upload error:', error);
-    res.status(500).json({ success: false, message: 'Upload failed.', error: error.message });
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: 'Upload failed.',
+        error: error.message,
+      });
   }
 });
 
@@ -86,7 +94,9 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 router.patch('/:publicId', upload.single('file'), async (req, res) => {
   try {
     if (!req.file?.buffer) {
-      return res.status(400).json({ success: false, message: 'No file provided.' });
+      return res
+        .status(400)
+        .json({ success: false, message: 'No file provided.' });
     }
 
     const { publicId } = req.params;
@@ -101,14 +111,20 @@ router.patch('/:publicId', upload.single('file'), async (req, res) => {
     });
 
     res.status(200).json({
-      success:  true,
-      message:  'Image updated successfully.',
+      success: true,
+      message: 'Image updated successfully.',
       publicId: result.public_id,
       imageUrl: result.secure_url,
     });
   } catch (error) {
     console.error('Cloudinary update error:', error);
-    res.status(500).json({ success: false, message: 'Update failed.', error: error.message });
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: 'Update failed.',
+        error: error.message,
+      });
   }
 });
 
@@ -122,17 +138,24 @@ router.delete('/:publicId', async (req, res) => {
     const result = await cloudinary.uploader.destroy(publicId);
 
     if (result.result !== 'ok') {
-      return res.status(404).json({ success: false, message: 'Image not found or already deleted.' });
+      return res
+        .status(404)
+        .json({
+          success: false,
+          message: 'Image not found or already deleted.',
+        });
     }
 
-    res.status(200).json({ success: true, message: 'Image deleted successfully.' });
+    res
+      .status(200)
+      .json({ success: true, message: 'Image deleted successfully.' });
   } catch (error) {
     console.error('Cloudinary delete error:', error);
     res.status(500).json({
-        success: false,
-        message: 'Delete failed.',
-        error: error.message,
-      });
+      success: false,
+      message: 'Delete failed.',
+      error: error.message,
+    });
   }
 });
 

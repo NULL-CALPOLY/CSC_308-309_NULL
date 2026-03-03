@@ -92,8 +92,11 @@ export default function MainMapComponent() {
           </Marker>
         )}
 
-        {events.map((event, idx) => (
-          <Marker key={idx} position={[event.lat, event.lng]} icon={EventIcon}>
+        {events.map((event) => (
+          <Marker
+            key={event.eventId}
+            position={[event.lat, event.lng]}
+            icon={EventIcon}>
             <Popup className="event-map-popup">
               <div className="map-popup-content">
                 <div className="map-popup-title">{event.eventName}</div>
@@ -105,11 +108,14 @@ export default function MainMapComponent() {
                 <div className="map-popup-datetime">
                   {event.eventDate} &bull; {event.eventTime}
                 </div>
-                <button
-                  className="map-popup-btn"
-                  onClick={() => navigate(`/events/${event.eventId}`)}>
-                  View Event
-                </button>
+                {event.eventId && (
+                  <button
+                    className="map-popup-btn"
+                    data-testid="view-event-button"
+                    onClick={() => navigate(`/events/${event.eventId}`)}>
+                    View Event
+                  </button>
+                )}
               </div>
             </Popup>
           </Marker>
