@@ -9,7 +9,7 @@ import { useModal } from '../../Components/ModalContext.jsx';
 
 export default function LandingPage() {
   const { isAuthenticated } = useAuth();
-  const { openSignIn, openRegister } = useModal();
+  const { openSignIn } = useModal();
 
   return (
     <div className="landing-page">
