@@ -76,6 +76,11 @@ body:has(.HomePage) {
   border-color: rgba(124, 58, 237, 0.45);
 }
 
+.col-closed .col-close-btn {
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* ── Hamburger – top-left of map, hidden when column is open ── */
 .col-open-btn {
   position: absolute;
