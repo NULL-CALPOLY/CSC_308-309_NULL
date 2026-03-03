@@ -91,6 +91,11 @@
   margin-top: 8px;
 }
 
+.Tag-List--collapsed {
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
 .Event-Footer {
   display: flex;
   justify-content: flex-end;
@@ -191,15 +196,18 @@
 }
 
 .SeeToggle {
-  background: none;
-  border: none;
+  appearance: none;
+  -webkit-appearance: none;
+  background: none !important;
+  border: none !important;
   padding: 0;
   font-size: 12px;
   color: #7c3aed;
   font-weight: 600;
   cursor: pointer;
-  opacity: 0.7;
+  margin-right: auto;
   transition: opacity 0.2s ease;
+  opacity: 0.75;
 }
 
 .SeeToggle:hover {

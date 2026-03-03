@@ -17,7 +17,8 @@ export default function EventComponent(props) {
     : ['General'];
 
   // Check if logged-in user is the host
-  const isHost = user && props.host === user.id;
+  const hostId = typeof props.host === 'object' ? props.host?._id : props.host;
+  const isHost = user && hostId === user.id;
 
   const isAttending = attendees?.some(
     (a) => (typeof a === 'object' ? a._id : a) === user?.id
@@ -80,11 +81,10 @@ export default function EventComponent(props) {
       </div>
 
       <div className="Tag-List">
-        {tags.map((tag, idx) => (
+        {tags.slice(0, 3).map((tag, idx) => (
           <TagComponent key={idx} Interest={tag} />
         ))}
       </div>
-
       <div className="Event-Footer">
         <button
           className="SeeToggle"
@@ -132,7 +132,14 @@ export default function EventComponent(props) {
             <div className="Event-Attendees">Attendees: {attendees.length}</div>
           )}
 
-          {props.host && <div className="Event-Host">Host: {props.host}</div>}
+          {props.host && (
+            <div className="Event-Host">
+              Host:{' '}
+              {typeof props.host === 'object'
+                ? props.host.name || 'Unknown'
+                : props.host}
+            </div>
+          )}
 
           <div className="Event-Footer Expanded-Footer">
             <div className="Tag-List">

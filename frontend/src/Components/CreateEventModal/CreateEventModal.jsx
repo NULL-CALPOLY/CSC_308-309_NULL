@@ -229,7 +229,7 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
                 setErrorMessage({ ...errorMessage, interests: null });
               }}
               filteringType="auto"
-              keepOpen={false}
+              keepOpen={true}
               statusType={interestsLoading ? 'loading' : 'finished'}
               loadingText="Loading interests..."
             />

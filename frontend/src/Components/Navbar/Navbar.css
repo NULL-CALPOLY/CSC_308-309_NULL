@@ -76,6 +76,7 @@ body {
 
 .navbar__explore-link:hover {
   color: #fff;
+  text-decoration: none;
 }
 
 .navbar__explore-link:hover::after,
@@ -107,6 +108,7 @@ body {
 
 .navbar__link:hover {
   color: #fff;
+  text-decoration: none;
 }
 
 .navbar__link.active {

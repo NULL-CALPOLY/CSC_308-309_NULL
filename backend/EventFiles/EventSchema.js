@@ -17,15 +17,16 @@ const EventSchema = new mongoose.Schema(
       required: true,
     },
     attendees: {
-      type: [{ type: mongoose.Schema.Types.ObjectId }], // ALL USERIDS MUST BE VALID
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
       required: false,
     },
     host: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
       required: true,
     },
     blockedUsers: {
-      type: [{ type: mongoose.Schema.Types.ObjectId }],
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
       required: false,
     },
     comments: {
