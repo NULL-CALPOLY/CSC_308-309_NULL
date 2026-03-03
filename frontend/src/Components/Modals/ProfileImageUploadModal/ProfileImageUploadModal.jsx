@@ -60,8 +60,6 @@ export default function ProfileImageUploadModal({
   const fileInputRef = useRef(null);
   const croppedBlobRef = useRef(null);
 
-  console.log(existingPublicId);
-
   // Reset on close
   useEffect(() => {
     if (!isOpen) {
