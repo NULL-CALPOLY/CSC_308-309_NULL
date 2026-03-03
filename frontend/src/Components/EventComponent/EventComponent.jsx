@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './EventComponent.css';
 import TagComponent from '../InterestTag/InterestTag.jsx';
 import { useAuth } from '../../Hooks/useAuth.js';
+import { useModal } from '../ModalContext.jsx';
 
 export default function EventComponent(props) {
   const { user, isAuthenticated } = useAuth();
   const [attendees, setAttendees] = useState(props.attendees || []);
   const [expanded, setExpanded] = useState(false);
+  const { openSignIn } = useModal();
   const navigate = useNavigate();
 
   const tags = props.interest
@@ -57,8 +59,10 @@ export default function EventComponent(props) {
       <hr className="Event-Divider" />
 
       <div className="Event-DateTime">
-        Date: {props.eventDate} | Time: {props.eventTime}
+        <span>📅 {props.eventDate}</span>
+        <span>🕒 {props.eventTime}</span>
       </div>
+
       <div className="Event-Address">
         Address:{' '}
         {props.eventAddress ? (
@@ -75,36 +79,44 @@ export default function EventComponent(props) {
         )}
       </div>
 
-      {!expanded && (
-        <div className="Tag-List">
-          {tags.map((tag, idx) => (
-            <TagComponent key={idx} Interest={tag} />
-          ))}
-        </div>
-      )}
 
-      {!expanded && (
-        <div className="Event-Footer">
-          {isHost ? (
-            <button className="ActionButton EditButton" onClick={handleEdit}>
-              Edit Event
-            </button>
-          ) : (
-            <button
-              className={`ActionButton ${isAttending ? 'LeaveButton' : 'JoinButton'}`}
-              onClick={handleAttend}>
-              {isAttending ? 'Leave Event' : 'Join Event'}
-            </button>
-          )}
+      <div className="Tag-List">
+        {tags.map((tag, idx) => (
+          <TagComponent key={idx} Interest={tag} />
+        ))}
+      </div>
 
+      
+      <div className="Event-Footer">
+        <button
+          className="SeeToggle"
+          type="button"
+          onClick={() => setExpanded((prev) => !prev)}>
+          {expanded ? 'See less' : 'See more'}
+        </button>
+
+        {!isAuthenticated ? (
+          <button className="SignInPromptBtn" onClick={openSignIn}>
+            Sign in to join
+          </button>
+        ) : isHost ? (
+          <button className="ActionButton EditButton" onClick={handleEdit}>
+            Edit Event
+          </button>
+        ) : (
           <button
-            className="ViewEventBtn"
-            type="button"
-            onClick={goToEventDetails}>
+            className={`ActionButton ${isAttending ? 'LeaveButton' : 'JoinButton'}`}
+            onClick={handleAttend}>
+            {isAttending ? 'Leave Event' : 'Join Event'}
+          </button>
+        )}
+
+        {isAuthenticated && (
+          <button className="ViewEventBtn" type="button" onClick={goToEventDetails}>
             View Event
           </button>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Expanded section */}
       {expanded && (
@@ -115,9 +127,9 @@ export default function EventComponent(props) {
             </div>
           )}
 
-          {props.attendees && (
+          {attendees && (
             <div className="Event-Attendees">
-              Attendees: {props.attendees.length}
+              Attendees: {attendees.length}
             </div>
           )}
 
@@ -129,32 +141,6 @@ export default function EventComponent(props) {
                 <TagComponent key={idx} Interest={tag} />
               ))}
             </div>
-            {isHost ? (
-              <button className="ActionButton EditButton" onClick={handleEdit}>
-                Edit Event
-              </button>
-            ) : (
-              <button
-                className={`ActionButton ${isAttending ? 'LeaveButton' : 'JoinButton'}`}
-                onClick={handleAttend}>
-                {isAttending ? 'Leave Event' : 'Join Event'}
-              </button>
-            )}
-
-            <button
-              className="SeeToggle"
-              type="button"
-              onClick={() => setExpanded(false)}>
-              See less
-            </button>
-
-            {/* 👇 ALSO AVAILABLE WHEN EXPANDED */}
-            <button
-              className="ViewEventBtn"
-              type="button"
-              onClick={goToEventDetails}>
-              View Event
-            </button>
           </div>
         </div>
       )}

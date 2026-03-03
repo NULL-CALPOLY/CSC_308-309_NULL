@@ -1,16 +1,31 @@
 import './HomePage.css';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import MainMapComponent from '../../Components/MainMapComponent/MainMapComponent.jsx';
 import EventColumn from '../../Components/EventColumn/EventColumn.jsx';
 import CreateEventButton from '../../Components/CreateEventButton/CreateEventButton.jsx';
 import CreateEventModal from '../../Components/CreateEventModal/CreateEventModal.jsx';
 import Navbar from '../../Components/Navbar/Navbar.jsx';
+import HamburgerIcon from '../../assets/Hamburger.svg';
+import ArrowIcon from '../../assets/Arrow.svg';
+
+const MOBILE_BP = 768;
 
 export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
+  const [colOpen, setColOpen] = useState(() => window.innerWidth > MOBILE_BP);
+  const refetchEvents = useRef(null);
+
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth <= MOBILE_BP) setColOpen(false);
+    };
+    window.addEventListener('resize', onResize);
+    onResize();
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   return (
-    <div className="HomePage">
+    <div className={`HomePage${colOpen ? '' : ' col-closed'}`}>
       <header>
         <Navbar page="/" />
       </header>
@@ -18,15 +33,38 @@ export default function HomePage() {
         <MainMapComponent />
       </div>
       <div className="Event-Column">
-        <EventColumn eventList />
+        <button
+          className="col-close-btn"
+          onClick={() => setColOpen(false)}
+          title="Close panel"
+          aria-label="Close event panel"
+        >
+          <img src={ArrowIcon} alt="" />
+        </button>
+        <EventColumn onRefetchReady={(fn) => (refetchEvents.current = fn)} />
       </div>
+
+      {/* Hamburger – slides in when column is closed */}
+      <button
+        className="col-open-btn"
+        onClick={() => setColOpen(true)}
+        title="Open event panel"
+        aria-label="Open event panel"
+      >
+        <img src={HamburgerIcon} alt="" />
+      </button>
+
       <div className="Create-Event-Button">
         <CreateEventButton onClick={() => setShowModal(true)} />
-        <CreateEventModal
-          isOpen={showModal}
-          onClose={() => setShowModal(false)}
-        />
       </div>
+      <CreateEventModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onSuccess={() => {
+          setShowModal(false);
+          refetchEvents.current?.();
+        }}
+      />
     </div>
   );
 }

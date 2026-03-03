@@ -1,113 +1,174 @@
+/* ── Reset & base ── */
+body {
+  margin: 0;
+  padding-top: 72px;
+  background-color: #0a0a0a;
+}
+
+/* ── Navbar shell ── */
 .navbar {
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100%; /* Span the entire viewport width */
+  width: 100%;
+  /* height: 72px; */
+  height: var(--nav-h);
   z-index: 1000;
-  height: 80px;
+  box-sizing: border-box;
 
-  background: white; /* dark techy background */
-  color: #fff;
-  padding: 1rem 3rem;
+  background: #000000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 
+  padding: 0 3rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
-  border-bottom: 1px solid rgba(100, 255, 218, 0.15);
+  box-shadow: 0 1px 0 rgba(124, 58, 237, 0.2);
 }
 
-/* Logo / brand */
+
+/* ── Logo ── */
 .navbar__logo h2 {
   margin: 0;
   font-family: 'Consolas', 'Courier New', monospace;
-  font-family: 'Consolas', 'Courier New', monospace;
-  color: #00eb08;
-  letter-spacing: 1px;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #fff;
+  text-transform: uppercase;
 }
 
-.navbar__profile {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: auto;
-  gap: 1rem;
+.navbar__logo h2 span {
+  color: #7c3aed;
 }
 
-.navbar__profile-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 2px solid #00eb08;
+/* ── Explore link wrapper — always centered ── */
+.navbar__explore {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
-/* Remove mobile hamburger completely */
-.navbar__hamburger {
-  display: none;
-}
-.navbar__logout-btn {
-  background-color: transparent;
-  border: 2px solid #00eb08;
-  color: #00eb08;
-  padding: 0.3rem 0.8rem;
-  border-radius: 5px;
-  cursor: pointer;
-  font-family: 'Consolas', monospace;
-  font-size: 0.9rem;
-  transition: all 0.2s ease-in-out;
-}
-
-.navbar__logout-btn:hover {
-  background-color: #00eb08;
-  color: #0b0f14;
-}
-
-/* Optional: give the page content padding so it’s not hidden behind the navbar */
-body {
-  margin: 0;
-  padding-top: 80px; /* adjust to navbar height */
-  background-color: #0b0f14;
-}
-
-/* Navbar.css */
-.navbar__link {
+/* ── Explore link ── */
+.navbar__explore-link {
+  position: relative;
   text-decoration: none;
-  color: #333;
-  font-weight: 500;
-  padding-bottom: 2px;
-}
-.navbar__link.active {
-  color: #2563eb;
-  border-bottom: 2px solid #2563eb;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.3rem 0;
+  transition: color 0.2s;
 }
 
+.navbar__explore-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background-color: #7c3aed;
+  transition: width 0.25s ease;
+}
+
+.navbar__explore-link:hover {
+  color: #fff;
+}
+
+.navbar__explore-link:hover::after,
+.navbar__explore-link.active::after {
+  width: 100%;
+}
+
+.navbar__explore-link.active {
+  color: #fff;
+}
+
+/* ── Right side links container ── */
 .navbar__links {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  height: 60px;
+  gap: 0.75rem;
+  height: 72px;
 }
 
-.navbar__link.signin,
-.navbar__link.signup {
-  border: 2px solid rgba(0, 235, 8, 0.4);
-  background-color: transparent;
-  color: #00eb08;
+/* ── Generic nav link ── */
+.navbar__link {
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.5);
   font-weight: 500;
-  padding: 0.4rem 1rem;
-  border-radius: 5px;
-  transition: all 0.3s ease-in-out;
-
-  /* Hazy glow even when idle */
-  box-shadow: 0 0 8px rgba(0, 235, 8, 0.2);
+  font-size: 0.9rem;
+  padding-bottom: 2px;
+  transition: color 0.2s;
 }
 
-/* Hover effect: fill slightly and brighten glow */
-.navbar__link.signin:hover,
+.navbar__link:hover {
+  color: #fff;
+}
+
+.navbar__link.active {
+  color: #fff;
+  border-bottom: 2px solid #7c3aed;
+}
+
+/* ── Sign In button ── */
+.navbar__link.signin {
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.75);
+  padding: 0.4rem 1.1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: all 0.2s ease;
+}
+
+.navbar__link.signin:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ── Register button ── */
+.navbar__link.signup {
+  background: #7c3aed;
+  border: 1.5px solid #7c3aed;
+  color: #fff;
+  padding: 0.4rem 1.1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  transition: all 0.2s ease;
+}
+
 .navbar__link.signup:hover {
-  background-color: #00eb08;
-  color: #0b0f14;
-  box-shadow: 0 0 5px rgba(0, 235, 8, 0.5); /* stronger haze on hover */
+  background: #6d28d9;
+  border-color: #6d28d9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
+}
+
+/* ── Profile section ── */
+.navbar__profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: auto;
+}
+
+.navbar__profile-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2px solid #7c3aed;
+  object-fit: cover;
+  transition: border-color 0.2s;
 }
 
 .navbar__profile-link {
@@ -115,7 +176,35 @@ body {
   align-items: center;
 }
 
-.navbar__profile-link.active img {
-  border: 2px solid #fff;
-  border-radius: 50%;
+.navbar__profile-link:hover .navbar__profile-icon {
+  border-color: #a78bfa;
+}
+
+.navbar__profile-link.active .navbar__profile-icon {
+  border-color: #fff;
+}
+
+/* ── Logout button ── */
+.navbar__logout-btn {
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+  padding: 0.35rem 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Consolas', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: all 0.2s ease;
+}
+
+.navbar__logout-btn:hover {
+  border-color: #7c3aed;
+  color: #a78bfa;
+  background: rgba(124, 58, 237, 0.1);
+}
+
+.navbar__hamburger {
+  display: none;
 }

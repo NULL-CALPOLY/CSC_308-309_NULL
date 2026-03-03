@@ -79,12 +79,12 @@
 /* === White-themed Map Popup === */
 .event-map-popup .leaflet-popup-content-wrapper {
   background: #ffffff;
-  color: #1a1d23;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
+  color: #1a1a2e;
+  border: 1px solid rgba(124, 58, 237, 0.15);
+  border-radius: 14px;
   box-shadow:
-    0 4px 16px rgba(0, 0, 0, 0.18),
-    0 1px 4px rgba(0, 0, 0, 0.1);
+    0 4px 16px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(124, 58, 237, 0.08);
   padding: 0;
 }
 
@@ -105,7 +105,7 @@
 }
 
 .event-map-popup .leaflet-popup-close-button:hover {
-  color: #1a1d23 !important;
+  color: #7c3aed !important;
 }
 
 .map-popup-content {
@@ -128,7 +128,7 @@
 .map-popup-title {
   font-size: 15px;
   font-weight: 700;
-  color: #1a1d23;
+  color: #1a1a2e;
   line-height: 1.3;
   margin-bottom: 2px;
   white-space: nowrap;
@@ -150,17 +150,17 @@
 .map-popup-datetime {
   font-size: 12px;
   font-weight: 600;
-  color: #1a8a3c;
+  color: #7c3aed;
   letter-spacing: 0.2px;
 }
 
 .map-popup-btn {
   margin-top: 6px;
   padding: 6px 14px;
-  border-radius: 8px;
+  border-radius: 7px;
   border: none;
-  background: #39ff78;
-  color: #1a1d23;
+  background: #7c3aed;
+  color: #ffffff;
   font-weight: 700;
   font-size: 12px;
   cursor: pointer;
@@ -172,6 +172,6 @@
 }
 
 .map-popup-btn:hover {
-  background: #2ce066;
-  box-shadow: 0 0 12px rgba(57, 255, 120, 0.5);
+  background: #6d28d9;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
 }

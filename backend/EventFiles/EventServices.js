@@ -93,6 +93,12 @@ function findEventByStart(startTime) {
     .populate('attendees host blockedUsers');
 }
 
+function findUpcomingEvent() {
+  return eventModel
+    .find({ 'time.start': { $gte: new Date() } })
+    .populate('attendees host blockedUsers');
+}
+
 // Find events by EXACT end time
 function findEventByEnd(endTime) {
   return eventModel
@@ -171,6 +177,7 @@ export default {
   findEventByInterests,
   findEventByLocation,
   findEventByStart,
+  findUpcomingEvent,
   findEventByEnd,
   findEventsBetween,
   findEventsBlockingUser,

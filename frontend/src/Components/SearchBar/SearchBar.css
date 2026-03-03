@@ -1,25 +1,149 @@
 .searchbar-container {
-  max-width: 500px;
-  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .searchbar-input {
   width: 100%;
   padding: 8px 12px;
-  margin-bottom: 12px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(124, 58, 237, 0.25);
+  background: #fff;
+  color: #1a1a2e;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.875rem;
   box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.searchbar-input::placeholder {
+  color: #aab0bc;
+}
+
+.searchbar-input:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
 }
 
 .checkbox-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 columns */
-  gap: 8px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+  max-height: 150px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124, 58, 237, 0.3) transparent;
+}
+
+.checkbox-grid::-webkit-scrollbar {
+  width: 4px;
+}
+
+.checkbox-grid::-webkit-scrollbar-thumb {
+  background: rgba(124, 58, 237, 0.3);
+  border-radius: 10px;
+}
+
+.checkbox-grid::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .checkbox-item {
   display: flex;
   align-items: center;
-  word-wrap: break-word; /* wrap long labels */
+  word-wrap: break-word;
+  font-size: 0.82rem;
+  color: #1a1a2e;
+}
+
+/* ── Cloudscape checkbox overrides ── */
+.checkbox-item [class*="awsui_label"] {
+  color: #1a1a2e !important;
+  font-size: 0.82rem !important;
+}
+
+.checkbox-item [class*="awsui_outline"] {
+  border-color: rgba(124, 58, 237, 0.35) !important;
+}
+
+.checkbox-item [class*="awsui_checked"] [class*="awsui_outline"] {
+  background: #7c3aed !important;
+  border-color: #7c3aed !important;
+}
+
+/* ── Date filter ── */
+.date-filter {
+  margin-top: 10px;
+  border-top: 1px solid rgba(124, 58, 237, 0.15);
+  padding-top: 10px;
+}
+
+.date-filter__label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #555e6e;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 6px 0;
+}
+
+.date-filter__inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.date-filter__field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.date-filter__field label {
+  font-size: 0.72rem;
+  color: #888;
+  font-weight: 500;
+}
+
+.date-input {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(124, 58, 237, 0.25);
+  background: #fff;
+  color: #1a1a2e;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.78rem;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  margin-bottom: 0;
+}
+
+.date-input:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
+}
+
+.date-filter__clear {
+  margin-top: 8px;
+  background: none;
+  border: none;
+  color: #7c3aed;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  opacity: 0.8;
+  transition: opacity 0.15s;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.date-filter__clear:hover {
+  opacity: 1;
+  text-decoration: underline;
 }
