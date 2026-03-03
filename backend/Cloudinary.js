@@ -77,13 +77,11 @@ router.post('/upload', upload.single('file'), async (req, res) => {
     });
   } catch (error) {
     console.error('Cloudinary upload error:', error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: 'Upload failed.',
-        error: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: 'Upload failed.',
+      error: error.message,
+    });
   }
 });
 
@@ -118,13 +116,11 @@ router.patch('/:publicId', upload.single('file'), async (req, res) => {
     });
   } catch (error) {
     console.error('Cloudinary update error:', error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: 'Update failed.',
-        error: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: 'Update failed.',
+      error: error.message,
+    });
   }
 });
 
@@ -138,12 +134,10 @@ router.delete('/:publicId', async (req, res) => {
     const result = await cloudinary.uploader.destroy(publicId);
 
     if (result.result !== 'ok') {
-      return res
-        .status(404)
-        .json({
-          success: false,
-          message: 'Image not found or already deleted.',
-        });
+      return res.status(404).json({
+        success: false,
+        message: 'Image not found or already deleted.',
+      });
     }
 
     res

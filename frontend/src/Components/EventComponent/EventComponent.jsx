@@ -85,6 +85,7 @@ export default function EventComponent(props) {
           <TagComponent key={idx} Interest={tag} />
         ))}
       </div>
+
       <div className="Event-Footer">
         <button
           className="SeeToggle"
@@ -132,14 +133,7 @@ export default function EventComponent(props) {
             <div className="Event-Attendees">Attendees: {attendees.length}</div>
           )}
 
-          {props.host && (
-            <div className="Event-Host">
-              Host:{' '}
-              {typeof props.host === 'object'
-                ? props.host.name || 'Unknown'
-                : props.host}
-            </div>
-          )}
+          {props.host && <div className="Event-Host">Host: {props.host}</div>}
 
           <div className="Event-Footer Expanded-Footer">
             <div className="Tag-List">
