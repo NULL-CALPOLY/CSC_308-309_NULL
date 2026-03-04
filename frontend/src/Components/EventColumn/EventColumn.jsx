@@ -13,8 +13,7 @@ export default function EventColumn({ onRefetchReady }) {
 
   useEffect(() => {
     if (onRefetchReady) onRefetchReady(refetch);
-    }, [refetch, onRefetchReady]
-  );
+  }, [refetch, onRefetchReady]);
 
   useEffect(() => {
     let filtered = eventList;
@@ -26,7 +25,9 @@ export default function EventColumn({ onRefetchReady }) {
     // Date filter
     if (dateRange.startDate) {
       const start = new Date(dateRange.startDate);
-      filtered = filtered.filter((event) => new Date(event.eventStart) >= start);
+      filtered = filtered.filter(
+        (event) => new Date(event.eventStart) >= start
+      );
     }
     if (dateRange.endDate) {
       const end = new Date(dateRange.endDate);
@@ -36,7 +37,6 @@ export default function EventColumn({ onRefetchReady }) {
 
     setFilteredEvents(filtered);
   }, [selectedInterests, dateRange, eventList]);
-
 
   return (
     <div className="Event_Container">

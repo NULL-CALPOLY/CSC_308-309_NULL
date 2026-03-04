@@ -4,7 +4,7 @@ import './Landing.css';
 import Navbar from '../../Components/Navbar/Navbar.jsx';
 import community from '../../assets/community.svg';
 import LEBRON from '../../assets/LEBRON.mp4';
-import { useAuth } from '../../Hooks/useAuth.js';
+import { useAuth } from '../../Hooks/UseAuth.ts';
 import { useModal } from '../../Components/ModalContext.jsx';
 
 export default function LandingPage() {
@@ -63,12 +63,12 @@ export default function LandingPage() {
               </div>
             </section>
             {!isAuthenticated ? (
-              <button className="cta-button" onClick={openSignIn}>
-                Get Started!
+              <button className="general-link" onClick={openSignIn}>
+                Learn More
               </button>
             ) : (
-              <Link to="/home" className="cta-button">
-                Get Started!
+              <Link to="/home" className="general-link">
+                Learn More
               </Link>
             )}
           </div>
@@ -87,12 +87,12 @@ export default function LandingPage() {
               </p>
 
               {!isAuthenticated ? (
-                <button className="cta-button" onClick={openSignIn}>
-                  Get Started!
+                <button className="general-link" onClick={openSignIn}>
+                  Join the Community
                 </button>
               ) : (
-                <Link to="/home" className="cta-button">
-                  Get Started!
+                <Link to="/home" className="general-link">
+                  Join the Community
                 </Link>
               )}
             </div>
@@ -108,23 +108,17 @@ export default function LandingPage() {
                 expand your horizons.
               </p>
               {!isAuthenticated ? (
-                <button className="cta-button" onClick={openSignIn}>
-                  Get Started!
+                <button className="general-link" onClick={openSignIn}>
+                  Discover Now
                 </button>
               ) : (
-                <Link to="/home" className="cta-button">
-                  Get Started!
+                <Link to="/home" className="general-link">
+                  Discover Now
                 </Link>
               )}
             </div>
             <div className="feature-image">
-              <video
-                src={LEBRON}
-                autoPlay
-                muted
-                loop
-                playsInline
-              />
+              <video src={LEBRON} autoPlay muted loop playsInline />
             </div>
           </div>
         </section>
@@ -148,7 +142,7 @@ export default function LandingPage() {
             <a href="/privacy">Privacy</a>
             <a href="/terms">Terms</a>
             <a href="/help">Help</a>
-            <a href="/business">"Business"</a>
+            <a href="/business">Business</a>
           </div>
         </div>
       </footer>

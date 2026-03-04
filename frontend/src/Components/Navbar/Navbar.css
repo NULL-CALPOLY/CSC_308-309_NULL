@@ -27,7 +27,6 @@ body {
   box-shadow: 0 1px 0 rgba(124, 58, 237, 0.2);
 }
 
-
 /* ── Logo ── */
 .navbar__logo h2 {
   margin: 0;
@@ -41,6 +40,13 @@ body {
 
 .navbar__logo h2 span {
   color: #7c3aed;
+}
+
+/* ── Explore link wrapper — always centered ── */
+.navbar__explore {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 /* ── Explore link ── */
@@ -70,6 +76,7 @@ body {
 
 .navbar__explore-link:hover {
   color: #fff;
+  text-decoration: none;
 }
 
 .navbar__explore-link:hover::after,
@@ -101,6 +108,7 @@ body {
 
 .navbar__link:hover {
   color: #fff;
+  text-decoration: none;
 }
 
 .navbar__link.active {

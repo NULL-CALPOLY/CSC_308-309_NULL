@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { useNavigate } from 'react-router-dom';
 
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -8,15 +9,15 @@ import locateIcon from '../../assets/location.svg';
 import circle from '../../assets/circle.png';
 import './MainMapComponent.css';
 
-const EventIcon = new L.Icon({
-  iconUrl: markerIcon,
-  iconRetinaUrl: markerIcon,
+const EventIcon = L.divIcon({
+  html: `<img src="${markerIcon}" class="event-marker-img" />`,
   iconSize: [45, 45],
-  iconAnchor: [17, 45],
-  popupAnchor: [0, -40],
+  iconAnchor: [22, 45],
+  popupAnchor: [0, -48],
+  className: 'event-marker-wrapper',
 });
 
-const currentLocationIcon = new L.Icon({
+const currentLocationIcon = L.icon({
   iconUrl: circle,
   iconRetinaUrl: circle,
   iconSize: [20, 20],
@@ -28,6 +29,7 @@ export default function MainMapComponent() {
   const [userPosition, setUserPosition] = useState(null);
   const [tracking, setTracking] = useState(false);
   const [events, setEvents] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_BASE_URL}/events/all`)
@@ -35,12 +37,28 @@ export default function MainMapComponent() {
       .then((data) => {
         if (!data.success) return;
 
-        // Map API data to match EventComponent props
         const mappedEvents = data.data.map((event) => {
           const [lng, lat] = event.location.coordinates;
+          const startDate = event.time?.start
+            ? new Date(event.time.start)
+            : null;
           return {
+            eventId: event._id,
             eventName: event.name,
             description: event.description,
+            eventDate: startDate
+              ? startDate.toLocaleDateString(undefined, {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+                })
+              : 'TBD',
+            eventTime: startDate
+              ? startDate.toLocaleTimeString([], {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })
+              : 'TBD',
             lat,
             lng,
           };
@@ -74,13 +92,31 @@ export default function MainMapComponent() {
           </Marker>
         )}
 
-        {events.map((event, idx) => (
-          <Marker key={idx} position={[event.lat, event.lng]} icon={EventIcon}>
-            <Popup>
-              <b>{event.eventName}</b>
-              <br />
-              {event.description}
-              <br />
+        {events.map((event) => (
+          <Marker
+            key={event.eventId}
+            position={[event.lat, event.lng]}
+            icon={EventIcon}>
+            <Popup className="event-map-popup">
+              <div className="map-popup-content">
+                <div className="map-popup-title">{event.eventName}</div>
+                {event.description && (
+                  <div className="map-popup-description">
+                    {event.description}
+                  </div>
+                )}
+                <div className="map-popup-datetime">
+                  {event.eventDate} &bull; {event.eventTime}
+                </div>
+                {event.eventId && (
+                  <button
+                    className="map-popup-btn"
+                    data-testid="view-event-button"
+                    onClick={() => navigate(`/events/${event.eventId}`)}>
+                    View Event
+                  </button>
+                )}
+              </div>
             </Popup>
           </Marker>
         ))}

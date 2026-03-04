@@ -25,7 +25,8 @@ export default function App() {
 }
 
 function AppContent() {
-  const { showSignIn, showRegister, openSignIn, openRegister, closeAll } = useModal();
+  const { showSignIn, showRegister, openSignIn, openRegister, closeAll } =
+    useModal();
   return (
     <div className="app">
       <main className="main">
@@ -43,11 +44,15 @@ function AppContent() {
           />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/search" element={<SearchPage />} />
-          <Route path="/events/:id" element={
-            <ProtectedRoute>
-              {' '}
-              <EventDetails />{' '}
-            </ProtectedRoute>} />
+          <Route
+            path="/events/:id"
+            element={
+              <ProtectedRoute>
+                {' '}
+                <EventDetails />{' '}
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<div style={{ padding: 24 }}>404</div>} />
         </Routes>
         <SignInModal

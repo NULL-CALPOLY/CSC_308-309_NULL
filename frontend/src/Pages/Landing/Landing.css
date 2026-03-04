@@ -58,6 +58,35 @@ main {
   opacity: 0.9;
 }
 
+.general-link {
+  /* reset <button> UA styles */
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+
+  /* shared link styles */
+  color: #1a73e8;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.1rem;
+  transition:
+    color 0.2s ease,
+    text-decoration 0.2s ease;
+}
+
+.general-link:hover {
+  color: #1558b0;
+  text-decoration: underline;
+}
+
+.general-link:focus-visible {
+  outline: 2px solid #1a73e8;
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
 .cta-button {
   display: inline-block;
   background: #fff;

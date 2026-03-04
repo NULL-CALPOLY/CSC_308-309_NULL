@@ -38,7 +38,7 @@ module.exports = {
         '<rootDir>/tests/unit/**/*.test.js',
         '<rootDir>/tests/unit/**/*.test.jsx',
       ],
-      moduleFileExtensions: ['js', 'jsx'],
+      moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
     },
 
     // Integration tests (backend with MongoDB)

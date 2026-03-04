@@ -10,7 +10,9 @@ export function useAllEvents() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/all`);
+        const response = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/events/all`
+        );
         const result = await response.json();
 
         if (result.success) {
@@ -39,7 +41,9 @@ export function useUpcomingEvents() {
   const fetchEvents = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/upcoming`);
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/events/upcoming`
+      );
       const result = await response.json();
       if (result.success) {
         setEvents(mapEvents(result.data));
@@ -68,7 +72,9 @@ export function useEventId(id) {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/${id}`);
+        const response = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/events/${id}`
+        );
         const result = await response.json();
 
         if (result.success) {
