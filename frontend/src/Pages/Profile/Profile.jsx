@@ -3,6 +3,7 @@ import './Profile.css';
 import { useAuth } from '../../Hooks/UseAuth.ts';
 import Navbar from '../../Components/Navbar/Navbar';
 import ProfileImageUploadModal from '../../Components/Modals/ProfileImageUploadModal/ProfileImageUploadModal';
+import EventComponent from '../../Components/EventComponent/EventComponent';
 
 export default function Profile() {
   const [name, setName] = useState('');
@@ -14,12 +15,13 @@ export default function Profile() {
   const [email, setEmail] = useState('');
   const [interestInput, setInterestInput] = useState('');
   const [profileImage, setProfileImage] = useState(null);
-  const [profileImagePublicId, setProfileImagePublicId] = useState(null); // Cloudinary publicId
+  const [profileImagePublicId, setProfileImagePublicId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [showImageUpload, setShowImageUpload] = useState(false);
+  const [attendingEvents, setAttendingEvents] = useState([]);
 
   const {
     user,
@@ -57,7 +59,7 @@ export default function Profile() {
         setCity(u.city || '');
         setEmail(u.email || '');
         setProfileImage(u.profileImage || null);
-        setProfileImagePublicId(u.profileImagePublicId || null); // load existing publicId
+        setProfileImagePublicId(u.profileImagePublicId || null);
         setInterests(Array.isArray(u.interests) ? u.interests : []);
       } catch (err) {
         setErrorMsg(err.message);
@@ -66,12 +68,25 @@ export default function Profile() {
       }
     };
 
+    const fetchAttendingEvents = async () => {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/events/search/attendee/${user.id}`,
+          { headers: { Authorization: `Bearer ${user.token}` } }
+        );
+        const json = await res.json();
+        if (res.ok && json.success) {
+          setAttendingEvents(json.data);
+        }
+      } catch (err) {
+      
+      }
+    };
+
     fetchUser();
+    fetchAttendingEvents();
   }, [user, isAuthenticated, authLoading]);
 
-  // ── After upload success: persist to DB and sync navbar ──
-  // The modal already handled Cloudinary (POST for new, PATCH+delete for existing).
-  // Here we just save the returned imageUrl + publicId to the user document.
   const handleImageUploadSuccess = async (result) => {
     try {
       const res = await fetch(
@@ -94,7 +109,7 @@ export default function Profile() {
 
       setProfileImage(result.imageUrl);
       setProfileImagePublicId(result.publicId);
-      updateProfileImage(result.imageUrl); // sync navbar avatar
+      updateProfileImage(result.imageUrl);
       setShowImageUpload(false);
     } catch (err) {
       setErrorMsg(err.message);
@@ -146,7 +161,7 @@ export default function Profile() {
       setEmail(u.email || '');
       setInterests(Array.isArray(u.interests) ? u.interests : []);
       setIsEditing(false);
-      updateProfileName(u.name); // sync navbar initial
+      updateProfileName(u.name);
     } catch (err) {
       setErrorMsg(err.message);
     } finally {
@@ -175,10 +190,9 @@ export default function Profile() {
       <Navbar page="/" />
 
       <div className="profile-layout">
-        {/* ── Sidebar ── */}
+        
         <aside className="profile-sidebar">
           <div className="profile-sidebar-card">
-            {/* Clickable avatar → opens image upload modal */}
             <button
               type="button"
               className="profile-avatar-btn"
@@ -227,9 +241,9 @@ export default function Profile() {
           </div>
         </aside>
 
-        {/* ── Main form ── */}
+       
         <form className="profile-main" onSubmit={handleSubmit} noValidate>
-          {/* Panel: Personal Information */}
+         
           <div className="profile-panel">
             <div className="profile-panel-header">
               <span className="panel-dot" />
@@ -246,8 +260,7 @@ export default function Profile() {
                     required
                   />
                 ) : (
-                  <span
-                    className={`profile-field-value ${!name ? 'empty' : ''}`}>
+                  <span className={`profile-field-value ${!name ? 'empty' : ''}`}>
                     {name || 'Not set'}
                   </span>
                 )}
@@ -264,8 +277,7 @@ export default function Profile() {
                     required
                   />
                 ) : (
-                  <span
-                    className={`profile-field-value ${!email ? 'empty' : ''}`}>
+                  <span className={`profile-field-value ${!email ? 'empty' : ''}`}>
                     {email || 'Not set'}
                   </span>
                 )}
@@ -285,8 +297,7 @@ export default function Profile() {
                     <option value="Prefer not to say">Prefer not to say</option>
                   </select>
                 ) : (
-                  <span
-                    className={`profile-field-value ${!gender ? 'empty' : ''}`}>
+                  <span className={`profile-field-value ${!gender ? 'empty' : ''}`}>
                     {gender || 'Not set'}
                   </span>
                 )}
@@ -301,8 +312,7 @@ export default function Profile() {
                     onChange={(e) => setDateOfBirth(e.target.value)}
                   />
                 ) : (
-                  <span
-                    className={`profile-field-value ${!dateOfBirth ? 'empty' : ''}`}>
+                  <span className={`profile-field-value ${!dateOfBirth ? 'empty' : ''}`}>
                     {dateOfBirth?.split('T')[0] || 'Not set'}
                   </span>
                 )}
@@ -310,7 +320,7 @@ export default function Profile() {
             </div>
           </div>
 
-          {/* Panel: Contact & Location */}
+       
           <div className="profile-panel">
             <div className="profile-panel-header">
               <span className="panel-dot" />
@@ -331,8 +341,7 @@ export default function Profile() {
                     placeholder="Phone number"
                   />
                 ) : (
-                  <span
-                    className={`profile-field-value ${!phoneNumber ? 'empty' : ''}`}>
+                  <span className={`profile-field-value ${!phoneNumber ? 'empty' : ''}`}>
                     {phoneNumber || 'Not set'}
                   </span>
                 )}
@@ -348,8 +357,7 @@ export default function Profile() {
                     placeholder="Your city"
                   />
                 ) : (
-                  <span
-                    className={`profile-field-value ${!city ? 'empty' : ''}`}>
+                  <span className={`profile-field-value ${!city ? 'empty' : ''}`}>
                     {city || 'Not set'}
                   </span>
                 )}
@@ -357,7 +365,7 @@ export default function Profile() {
             </div>
           </div>
 
-          {/* Panel: Interests */}
+          
           <div className="profile-panel">
             <div className="profile-panel-header">
               <span className="panel-dot" />
@@ -410,14 +418,46 @@ export default function Profile() {
 
             {errorMsg && <p className="profile-error">{errorMsg}</p>}
           </div>
+
+          
+          <div className="profile-panel">
+            <div className="profile-panel-header">
+              <span className="panel-dot" />
+              <h3>Events I'm Attending</h3>
+            </div>
+            <div className="profile-panel-body single">
+              {attendingEvents.length ? (
+                attendingEvents.map((event) => (
+                  <EventComponent
+                    key={event._id}
+                    eventId={event._id}
+                    eventName={event.name}
+                    eventDate={event.time?.start
+                      ? new Date(event.time.start).toLocaleDateString()
+                      : ''}
+                    eventTime={event.time?.start
+                      ? new Date(event.time.start).toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })
+                      : ''}
+                    eventAddress={event.address}
+                    description={event.description}
+                    interest={Array.isArray(event.interests) ? event.interests.join(', ') : ''}
+                    attendees={event.attendees}
+                    host={event.host}
+                  />
+                ))
+              ) : (
+                <span className="profile-field-value empty">
+                  Not attending any events yet
+                </span>
+              )}
+            </div>
+          </div>
         </form>
       </div>
 
-      {/*
-        existingPublicId is passed so the modal knows whether to:
-        - POST (no previous image) → fresh Cloudinary upload
-        - PATCH (has previous image) → delete old + upload new in one step
-      */}
       <ProfileImageUploadModal
         isOpen={showImageUpload}
         onClose={() => setShowImageUpload(false)}
