@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../Hooks/useAuth';
-import useInterests from '../../../Hooks/useInterests';
+import { useAuth } from '../../../Hooks/UseAuth.ts';
+import useInterests from '../../../Hooks/UseInterests';
 import './RegistrationModal.css';
 
 // ── Validators ──

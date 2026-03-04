@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './EventDetails.css';
 import Navbar from '../../Components/Navbar/Navbar';
-import { useAuth } from '../../Hooks/useAuth';
+import { useAuth } from '../../Hooks/UseAuth';
 import { useEventId } from '../../Hooks/UseEvents';
-import useInterests from '../../Hooks/useInterests';
+import useInterests from '../../Hooks/UseInterests';
 import Multiselect from '@cloudscape-design/components/multiselect';
 
 const MAX_TITLE_LENGTH = 75;

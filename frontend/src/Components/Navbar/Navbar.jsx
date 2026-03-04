@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { useAuth } from '../../Hooks/useAuth.ts';
+import { useAuth } from '../../Hooks/UseAuth.ts';
 import { useModal } from '../ModalContext.jsx';
 import './Navbar.css';
 

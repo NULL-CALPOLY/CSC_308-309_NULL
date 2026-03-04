@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Checkbox from '@cloudscape-design/components/checkbox';
-import useInterests from '../../Hooks/useInterests';
+import useInterests from '../../Hooks/UseInterests';
 import './SearchBar.css';
 
 export default function SearchBar({ onSelectionChange, onDateChange }) {

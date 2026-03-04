@@ -4,7 +4,7 @@
 import { render, screen } from '@testing-library/react';
 import CreateEventModal from '../../../frontend/src/Components/CreateEventModal/CreateEventModal.jsx';
 
-jest.mock('../../../frontend/src/Hooks/useAuth.ts', () => ({
+jest.mock('../../../frontend/src/Hooks/UseAuth.ts', () => ({
   useAuth: () => ({
     user: { id: 'test-user-id', token: 'test-token' },
     isAuthenticated: true,

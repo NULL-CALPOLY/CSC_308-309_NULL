@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './EventComponent.css';
 import TagComponent from '../InterestTag/InterestTag.jsx';
-import { useAuth } from '../../Hooks/useAuth.js';
+import { useAuth } from '../../Hooks/UseAuth.ts';
 import { useModal } from '../ModalContext.jsx';
 
 export default function EventComponent(props) {
@@ -19,6 +19,22 @@ export default function EventComponent(props) {
   // Check if logged-in user is the host
   const hostId = typeof props.host === 'object' ? props.host?._id : props.host;
   const isHost = user && hostId === user.id;
+
+  const [hostName, setHostName] = useState(
+    typeof props.host === 'object' ? props.host?.name : null
+  );
+
+  useEffect(() => {
+    if (hostName || !hostId) return;
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/users/${hostId}`)
+      .then((res) => res.json())
+      .then((result) => {
+        if (result.success && result.data?.name) {
+          setHostName(result.data.name);
+        }
+      })
+      .catch(() => {});
+  }, [hostId, hostName]);
 
   const isAttending = attendees?.some(
     (a) => (typeof a === 'object' ? a._id : a) === user?.id
@@ -133,7 +149,9 @@ export default function EventComponent(props) {
             <div className="Event-Attendees">Attendees: {attendees.length}</div>
           )}
 
-          {props.host && <div className="Event-Host">Host: {props.host}</div>}
+          {props.host && (
+            <div className="Event-Host">Host: {hostName || hostId}</div>
+          )}
 
           <div className="Event-Footer Expanded-Footer">
             <div className="Tag-List">

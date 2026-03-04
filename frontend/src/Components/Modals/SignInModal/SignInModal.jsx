@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../Hooks/useAuth';
+import { useAuth } from '../../../Hooks/UseAuth.ts';
 import './SignInModal.css';
 
 export default function SignInModal({ isOpen, onClose, onSwitchToRegister }) {

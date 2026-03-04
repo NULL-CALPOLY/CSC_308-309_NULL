@@ -175,15 +175,33 @@ router.post('/refresh-token', (req, res) => {
  * Endpoint to LOGOUT and clear refresh token
  */
 router.post('/logout', (req, res) => {
-  res.clearCookie('refreshToken', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-  });
+  // 1. Destroy the session in the Database (MongoStore)
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to destroy session',
+      });
+    }
 
-  res.status(200).json({
-    success: true,
-    message: 'Logout successful',
+    // 2. Clear all sensitive cookies inside the success callback
+    const cookieOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    };
+
+    // Clear the session ID cookie (use your custom name if you set one)
+    res.clearCookie('connect.sid', cookieOptions);
+
+    // Clear the refresh token cookie
+    res.clearCookie('refreshToken', cookieOptions);
+
+    // 3. Send the final response
+    res.status(200).json({
+      success: true,
+      message: 'Logout successful',
+    });
   });
 });
 

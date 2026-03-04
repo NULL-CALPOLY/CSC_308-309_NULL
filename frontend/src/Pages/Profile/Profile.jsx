@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Profile.css';
-import { useAuth } from '../../Hooks/useAuth';
+import { useAuth } from '../../Hooks/UseAuth.ts';
 import Navbar from '../../Components/Navbar/Navbar';
 import ProfileImageUploadModal from '../../Components/Modals/ProfileImageUploadModal/ProfileImageUploadModal';
 

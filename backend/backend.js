@@ -4,8 +4,22 @@ import { config } from 'dotenv';
 import cookieParser from 'cookie-parser';
 import MongoStore from 'connect-mongo';
 import fs from 'fs';
+import express from 'express';
+import cors from 'cors';
+import passport from 'passport';
+import session from 'express-session';
+import eventRouter from './EventFiles/EventRoutes.js';
+import userRouter from './UserFiles/UserRoutes.js';
+import organizationRouter from './OrganizationFiles/OrganizationRoutes.js';
+import commentRouter from './CommentFiles/CommentsRoutes.js';
+import interestRouter from './InterestFIles/InterestRoutes.js';
+import cloudinaryRouter from './Cloudinary.js';
+import googleAuthRouter from './OAuth/GoogleAuthRoutes.js';
 
 // Load .env.test for tests/CI, fallback to .env
+// NOTE: env vars used at module level (sessionConfig, etc.) are safe here
+// because all imports above are side-effect-only at parse time; their
+// process.env reads happen inside functions called after this config() call.
 const envPath = [
   path.resolve(process.cwd(), '.env.test'),
   path.resolve(process.cwd(), '.env'),
@@ -19,19 +33,7 @@ const envPath = [
 });
 config({ path: envPath });
 
-import express from 'express';
-import eventRouter from './EventFiles/EventRoutes.js';
-import userRouter from './UserFiles/UserRoutes.js';
-import organizationRouter from './OrganizationFiles/OrganizationRoutes.js';
-import commentRouter from './CommentFiles/CommentsRoutes.js';
-import interestRouter from './InterestFIles/InterestRoutes.js';
-import cloudinaryRouter from './Cloudinary.js';
-import cors from 'cors';
-import googleAuthRouter from './OAuth/GoogleAuthRoutes.js';
-import passport from 'passport';
-import session from 'express-session';
-
-// Intialize Express app
+// Initialize Express app
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -39,6 +41,13 @@ if (process.env.NODE_ENV === 'production' && !process.env.FRONTEND_URL) {
   console.error(
     '❌ FRONTEND_URL is not set. CORS will block all frontend requests.'
   );
+}
+
+if (!process.env.SESSION_SECRET) {
+  console.error(
+    '❌ SESSION_SECRET is not set. Sessions will not work correctly.'
+  );
+  if (process.env.NODE_ENV === 'production') process.exit(1);
 }
 
 app.use(
@@ -59,7 +68,9 @@ const sessionConfig = {
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
+  rolling: true, // Reset cookie expiration on every response
   cookie: {
+    httpOnly: true, // Prevent client-side JS from reading the session cookie
     secure: process.env.NODE_ENV === 'production', // true if HTTPS
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // Needed for cross-domain cookies
     maxAge: 1000 * 60 * 60 * 24, // 24 hours
@@ -70,7 +81,8 @@ const sessionConfig = {
 if (process.env.NODE_ENV !== 'test') {
   sessionConfig.store = MongoStore.create({
     mongoUrl: process.env.MONGODB_URI,
-    ttl: 14 * 24 * 60 * 60, // Sessions will expire in 14 days
+    ttl: 1 * 24 * 60 * 60, // Sessions will expire in 1 day
+    touchAfter: 24 * 60 * 60, // Update the session only once every 24 hours
     autoRemove: 'native', // Let MongoDB handle the cleanup
   });
 }
@@ -88,9 +100,24 @@ app.use('/interests', interestRouter);
 app.use('/image', cloudinaryRouter);
 app.use('/auth', googleAuthRouter);
 
-// Start the server
+// Root route
 app.get('/', (req, res) => {
   res.send('see github for instructions to use db');
+});
+
+// 404 handler — must be after all routes
+app.use((req, res) => {
+  res.status(404).json({ success: false, message: 'Route not found' });
+});
+
+// Global error handler — must be last middleware (4 args)
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  console.error('❌ Unhandled error:', err);
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message || 'Internal server error',
+  });
 });
 
 // pull up the MongoDB URI from environment variables

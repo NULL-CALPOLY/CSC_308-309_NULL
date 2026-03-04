@@ -4,8 +4,8 @@ import Multiselect from '@cloudscape-design/components/multiselect';
 import Input from '@cloudscape-design/components/input';
 import Textarea from '@cloudscape-design/components/textarea';
 import TempAddressComponent from '../TempAddressInputComponent/TempAddressComponent';
-import { useAuth } from '../../Hooks/useAuth.ts';
-import useInterests from '../../Hooks/useInterests.jsx';
+import { useAuth } from '../../Hooks/UseAuth.ts';
+import useInterests from '../../Hooks/UseInterests.jsx';
 
 const MAX_TITLE_LENGTH = 75;
 
