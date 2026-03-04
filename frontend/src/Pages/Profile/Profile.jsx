@@ -79,7 +79,7 @@ export default function Profile() {
           setAttendingEvents(json.data);
         }
       } catch (_err) {
-      
+        setAttendingEvents([]);
       }
     };
 
