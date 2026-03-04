@@ -78,7 +78,7 @@ export default function Profile() {
         if (res.ok && json.success) {
           setAttendingEvents(json.data);
         }
-      } catch (err) {
+      } catch (_err) {
       
       }
     };
