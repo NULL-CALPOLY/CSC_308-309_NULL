@@ -22,11 +22,12 @@ config({ path: envPath });
 import express from 'express';
 import eventRouter from './EventFiles/EventRoutes.js';
 import userRouter from './UserFiles/UserRoutes.js';
+import forgotPasswordRouter from './UserFiles/ForgotPasswordRoutes.js';
 import chatRouter from './ChatFiles/ChatRoutes.js';
 import organizationRouter from './OrganizationFiles/OrganizationRoutes.js';
 import interestRouter from './InterestFIles/InterestRoutes.js';
 import cors from 'cors';
-import googleAuthRouter from './OAuth/GoogleAuthRoutes.js';
+//import googleAuthRouter from './OAuth/GoogleAuthRoutes.js';
 import passport from 'passport';
 import session from 'express-session';
 
@@ -81,10 +82,11 @@ app.use(passport.session());
 
 app.use('/events', eventRouter);
 app.use('/users', userRouter);
+app.use('/users', forgotPasswordRouter);
 app.use('/organizations', organizationRouter);
 app.use('/chats', chatRouter);
 app.use('/interests', interestRouter);
-app.use('/auth', googleAuthRouter);
+//app.use('/auth', googleAuthRouter);
 
 // Start the server
 app.get('/', (req, res) => {

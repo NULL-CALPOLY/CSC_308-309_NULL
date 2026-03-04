@@ -9,6 +9,8 @@ import LandingPage from './Pages/Landing/Landing.jsx';
 import Profile from './Pages/Profile/Profile.jsx';
 import ProtectedRoute from './Components/ProtectedComponent.jsx';
 import EventDetails from './Pages/EventDetails/EventDetails.jsx';
+import ForgotPassword from './Pages/ForgotPassword/ForgotPassword';
+import ResetPassword from './Pages/ResetPassword/ResetPassword';
 
 const AboutPage = () => <div style={{ padding: 24 }}>About</div>;
 const SearchPage = () => <div style={{ padding: 24 }}>Search</div>;
@@ -44,6 +46,8 @@ export default function App() {
             <Route path="/register" element={<Registration />} />
             <Route path="/events/:id" element={<EventDetails />} />
             <Route path="*" element={<div style={{ padding: 24 }}>404</div>} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
           </Routes>
         </main>
       </div>
