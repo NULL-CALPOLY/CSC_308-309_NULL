@@ -2,12 +2,202 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './EventDetails.css';
 import Navbar from '../../Components/Navbar/Navbar';
-import { useAuth } from '../../Hooks/UseAuth';
+import { useAuth } from '../../Hooks/useAuth';
 import { useEventId } from '../../Hooks/UseEvents';
 import useInterests from '../../Hooks/UseInterests';
 import Multiselect from '@cloudscape-design/components/multiselect';
 
 const MAX_TITLE_LENGTH = 75;
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function getInitials(name) {
+  if (!name) return '?';
+  return name
+    .split(' ')
+    .map((n) => n[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+}
+
+// Deterministic fallback color when no profile image is available
+const AVATAR_COLORS = [
+  '#5B8DEF',
+  '#E0756B',
+  '#6BBFA0',
+  '#C97DD4',
+  '#E0A76B',
+  '#6B9ED4',
+  '#85C26B',
+  '#D46B8A',
+];
+function avatarColor(id) {
+  if (!id) return AVATAR_COLORS[0];
+  const hash = [...String(id)].reduce((acc, c) => acc + c.charCodeAt(0), 0);
+  return AVATAR_COLORS[hash % AVATAR_COLORS.length];
+}
+
+// Renders a single avatar: real photo if available, otherwise colored initials
+function Avatar({ id, name, profileImage, size = 'sm', style = {} }) {
+  const sizeClass = `attendee-avatar--${size}`;
+  const w = style.width || '100%';
+  const h = style.height || '100%';
+
+  if (profileImage) {
+    return (
+      <span
+        className={`attendee-avatar ${sizeClass}`}
+        style={{
+          background: 'transparent',
+          overflow: 'hidden',
+          padding: 0,
+          flexShrink: 0,
+          ...style,
+        }}
+        title={name || id}>
+        <img
+          src={profileImage}
+          alt={name || 'attendee'}
+          style={{
+            width: w,
+            height: h,
+            borderRadius: '50%',
+            objectFit: 'cover',
+            display: 'block',
+          }}
+        />
+      </span>
+    );
+  }
+  return (
+    <span
+      className={`attendee-avatar ${sizeClass}`}
+      style={{ background: avatarColor(id), ...style }}
+      title={name || id}>
+      {getInitials(name)}
+    </span>
+  );
+}
+
+// ─── Avatar Stack ─────────────────────────────────────────────────────────────
+
+function AttendeeAvatarStack({ attendees, resolvedUsers, total, onClick }) {
+  const preview = attendees.slice(0, 4);
+  const overflow = total - preview.length;
+
+  return (
+    <button
+      type="button"
+      className="attendee-stack"
+      onClick={onClick}
+      aria-label={`View all ${total} attendees`}>
+      <div className="attendee-stack__avatars">
+        {preview.map((a, i) => {
+          const id = typeof a === 'object' ? a._id : a;
+          const user = resolvedUsers[id] || {};
+          return (
+            <Avatar
+              key={id || i}
+              id={id}
+              name={user.name}
+              profileImage={user.profileImage}
+              size="sm"
+              style={{
+                zIndex: preview.length - i,
+                marginLeft: i === 0 ? 0 : '-8px',
+              }}
+            />
+          );
+        })}
+        {overflow > 0 && (
+          <span
+            className="attendee-avatar attendee-avatar--sm attendee-avatar--overflow"
+            style={{ marginLeft: '-8px' }}>
+            +{overflow}
+          </span>
+        )}
+      </div>
+      <span className="attendee-stack__label">
+        {total === 0
+          ? 'No attendees yet'
+          : `${total} ${total === 1 ? 'person' : 'people'} going →`}
+      </span>
+    </button>
+  );
+}
+
+// ─── Attendees Modal ──────────────────────────────────────────────────────────
+
+function AttendeesModal({ attendees, resolvedUsers, loading, onClose }) {
+  useEffect(() => {
+    const handler = (e) => e.key === 'Escape' && onClose();
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [onClose]);
+
+  return (
+    <div
+      className="attendees-backdrop"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Attendees list">
+      <div className="attendees-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="attendees-modal__header">
+          <h3>
+            Attendees
+            <span className="attendees-modal__count">{attendees.length}</span>
+          </h3>
+          <button
+            type="button"
+            className="attendees-modal__close"
+            onClick={onClose}
+            aria-label="Close">
+            ✕
+          </button>
+        </div>
+
+        <div className="attendees-modal__list">
+          {loading ? (
+            <div className="attendees-modal__loading">
+              <span className="attendees-spinner" />
+              Loading attendees…
+            </div>
+          ) : attendees.length === 0 ? (
+            <p className="attendees-modal__empty">
+              No one has joined yet. Be the first!
+            </p>
+          ) : (
+            attendees.map((a, i) => {
+              const id = typeof a === 'object' ? a._id : a;
+              const user = resolvedUsers[id];
+              return (
+                <div key={id || i} className="attendee-row">
+                  <Avatar
+                    id={id}
+                    name={user?.name}
+                    profileImage={user?.profileImage}
+                    size="md"
+                  />
+                  <span className="attendee-row__name">
+                    {user?.name || (
+                      <span className="attendee-row__loading-name">
+                        Loading…
+                      </span>
+                    )}
+                  </span>
+                </div>
+              );
+            })
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function EventDetails() {
   const { id } = useParams();
@@ -21,6 +211,11 @@ export default function EventDetails() {
   const [editErrors, setEditErrors] = useState({});
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [selectedInterests, setSelectedInterests] = useState([]);
+
+  // Attendees modal state
+  const [showAttendeesModal, setShowAttendeesModal] = useState(false);
+  const [resolvedUsers, setResolvedUsers] = useState({}); // { userId: { name, profileImage } }
+  const [attendeeNamesLoading, setAttendeeNamesLoading] = useState(false);
 
   // Comments state
   const [comments, setComments] = useState(null);
@@ -40,7 +235,44 @@ export default function EventDetails() {
     }
   }, [rawEvent]);
 
-  // Fetch comments
+  // ── Fetch all attendee profiles as soon as the event loads ─────────────
+  useEffect(() => {
+    if (!event?.attendees?.length) return;
+
+    const idsToFetch = event.attendees
+      .map((a) => (typeof a === 'object' ? a._id : a))
+      .filter(Boolean);
+
+    if (!idsToFetch.length) return;
+
+    setAttendeeNamesLoading(true);
+    Promise.all(
+      idsToFetch.map((uid) =>
+        fetch(`${import.meta.env.VITE_API_BASE_URL}/users/${uid}`)
+          .then((r) => r.json())
+          .then((json) => ({
+            id: uid,
+            name: json.success ? json.data?.name || 'Unknown' : 'Unknown',
+            profileImage: json.success ? json.data?.profileImage || null : null,
+          }))
+          .catch(() => ({ id: uid, name: 'Unknown', profileImage: null }))
+      )
+    )
+      .then((results) => {
+        setResolvedUsers((prev) => {
+          const next = { ...prev };
+          results.forEach(({ id, name, profileImage }) => {
+            next[id] = { name, profileImage };
+          });
+          return next;
+        });
+      })
+      .finally(() => setAttendeeNamesLoading(false));
+  }, [event?.attendees]);
+
+  const handleOpenAttendees = () => setShowAttendeesModal(true);
+
+  // ── Fetch comments ────────────────────────────────────────────────────────
   useEffect(() => {
     const fetchComments = async () => {
       setCommentsLoading(true);
@@ -51,7 +283,6 @@ export default function EventDetails() {
         const json = await res.json();
 
         if (!res.ok || !json.success) {
-          // Auto-create comments thread if none exists
           await fetch(
             `${import.meta.env.VITE_API_BASE_URL}/comments/event/${id}`,
             { method: 'POST' }
@@ -70,7 +301,7 @@ export default function EventDetails() {
     fetchComments();
   }, [id]);
 
-  // Fetch current user's name for comments
+  // ── Fetch current user's name ─────────────────────────────────────────────
   useEffect(() => {
     if (!isAuthenticated || !user?.id) return;
 
@@ -242,6 +473,7 @@ export default function EventDetails() {
 
   const toInputValue = (iso) => (iso ? iso.slice(0, 16) : '');
   const interests = event.interests || [];
+  const attendees = event.attendees || [];
 
   return (
     <div className="ed-page">
@@ -375,10 +607,15 @@ export default function EventDetails() {
               </div>
             )}
 
-            {/* Attendees */}
-            <div className="ed-field">
+            {/* ── Attendees — avatar stack + modal trigger ── */}
+            <div className="ed-field full">
               <label>Attendees</label>
-              <p className="ed-value">{event.attendees?.length ?? 0} going</p>
+              <AttendeeAvatarStack
+                attendees={attendees}
+                resolvedUsers={resolvedUsers}
+                total={attendees.length}
+                onClick={handleOpenAttendees}
+              />
             </div>
 
             {/* Interests */}
@@ -463,54 +700,130 @@ export default function EventDetails() {
           </div>
 
           {/* ── Comments ── */}
-          <div className="ed-comments">
-            <h3>Comments</h3>
-
-            {isAuthenticated && (isHost || isAttending) && (
-              <div className="ed-comment-input-row">
-                <input
-                  className="ed-comment-input"
-                  placeholder="Write a comment…"
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="ed-btn ed-btn--primary"
-                  onClick={handleAddComment}>
-                  Post
-                </button>
+          {isAuthenticated && (isHost || isAttending) ? (
+            <div className="ed-comments">
+              <div className="ed-comments__header">
+                <h3>Comments</h3>
+                {comments?.messages?.length > 0 && (
+                  <span className="ed-comments__count">
+                    {comments.messages.length}
+                  </span>
+                )}
               </div>
-            )}
 
-            {commentsLoading ? (
-              <p className="ed-muted">Loading comments…</p>
-            ) : !comments?.messages?.length ? (
-              <p className="ed-muted">No comments yet. Be the first!</p>
-            ) : (
-              comments.messages.map((msg, i) => (
-                <div key={i} className="ed-comment">
-                  <div className="ed-comment-avatar">
-                    {(msg.name?.charAt(0) || 'U').toUpperCase()}
-                  </div>
-                  <div className="ed-comment-body">
-                    <div className="ed-comment-header">
-                      <strong>{msg.name}</strong>
-                      <span className="ed-comment-time">
-                        {msg.createdAt &&
-                          new Date(msg.createdAt).toLocaleString()}
-                      </span>
-                    </div>
-                    <p>{msg.message}</p>
-                  </div>
+              {commentsLoading ? (
+                <p className="ed-muted">Loading comments…</p>
+              ) : !comments?.messages?.length ? (
+                <div className="ed-comments__empty">
+                  <span className="ed-comments__empty-icon">💬</span>
+                  <p>No comments yet. Be the first!</p>
                 </div>
-              ))
-            )}
-          </div>
+              ) : (
+                <div className="ed-comments__list">
+                  {comments.messages.map((msg, i) => {
+                    // Match commenter name against resolved attendees/host
+                    const commenterUser = Object.values(resolvedUsers).find(
+                      (u) => u.name === msg.name
+                    );
+                    return (
+                      <div key={i} className="ed-comment">
+                        <Avatar
+                          id={msg.name}
+                          name={msg.name}
+                          profileImage={commenterUser?.profileImage || null}
+                          size="sm"
+                          style={{
+                            width: 34,
+                            height: 34,
+                            fontSize: '0.75rem',
+                            marginTop: '1px',
+                            border: 'none',
+                          }}
+                        />
+                        <div className="ed-comment__body">
+                          <div className="ed-comment__meta">
+                            <strong className="ed-comment__name">
+                              {msg.name}
+                            </strong>
+                            <span className="ed-comment__time">
+                              {msg.createdAt &&
+                                new Date(msg.createdAt).toLocaleString(
+                                  undefined,
+                                  {
+                                    month: 'short',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                  }
+                                )}
+                            </span>
+                          </div>
+                          <p className="ed-comment__text">{msg.message}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              <div className="ed-comment-compose">
+                <Avatar
+                  id={user?.id}
+                  name={currentUserName || user?.name}
+                  profileImage={resolvedUsers[user?.id]?.profileImage || null}
+                  size="sm"
+                  style={{
+                    width: 34,
+                    height: 34,
+                    fontSize: '0.75rem',
+                    border: 'none',
+                    flexShrink: 0,
+                  }}
+                />
+                <div className="ed-comment-compose__input-wrap">
+                  <input
+                    className="ed-comment-compose__input"
+                    placeholder="Write a comment…"
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleAddComment();
+                      }
+                    }}
+                  />
+                  <button
+                    type="button"
+                    className="ed-comment-compose__btn"
+                    onClick={handleAddComment}
+                    disabled={!commentText.trim()}
+                    aria-label="Post comment">
+                    ↑
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : isAuthenticated ? (
+            <div className="ed-comments__locked">
+              <span className="ed-comments__locked-icon">🔒</span>
+              <p>Join the event to see and post comments.</p>
+            </div>
+          ) : null}
         </form>
       </div>
 
-      {/* Delete Confirmation pop-up */}
+      {/* ── Attendees Modal ── */}
+      {showAttendeesModal && (
+        <AttendeesModal
+          attendees={attendees}
+          resolvedUsers={resolvedUsers}
+          loading={attendeeNamesLoading}
+          onClose={() => setShowAttendeesModal(false)}
+        />
+      )}
+
+      {/* ── Delete Confirmation ── */}
       {showDeleteConfirm && (
         <div
           className="ed-confirm-backdrop"

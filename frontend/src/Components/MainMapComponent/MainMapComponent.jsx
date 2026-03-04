@@ -74,6 +74,13 @@ export default function MainMapComponent() {
       <MapContainer
         center={[35.3, -120.66]}
         zoom={13}
+        minZoom={3}
+        maxZoom={18}
+        maxBounds={[
+          [-90, -180],
+          [90, 180],
+        ]}
+        maxBoundsViscosity={1.0}
         scrollWheelZoom={true}
         zoomControl={true}
         className="main-map-component">
