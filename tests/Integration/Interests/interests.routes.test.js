@@ -107,7 +107,7 @@ describe('Interest Routes', () => {
   // Similar interests endpoints
   test('GET /interests/:id/similar returns similar interests', async () => {
     const music = await interestModel.create(testInterest);
-    const rock = await interestModel.create({
+    await interestModel.create({
       ...testInterest2,
       similarInterests: [music._id],
     });

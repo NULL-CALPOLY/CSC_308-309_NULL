@@ -169,7 +169,7 @@ describe('Interest Services', () => {
 
   test('should handle removing nonexistent similar interest', async () => {
     const music = await interestModel.create(testInterest);
-    const rock = await interestModel.create(testInterest2);
+    await interestModel.create(testInterest2);
     const notAdded = new mongoose.Types.ObjectId();
 
     const updated = await interestServices.removeInterestsFromSimilarInterests(

@@ -19,7 +19,7 @@ const validate = ({ email, password, name, phoneNumber, dateOfBirth, gender, cit
     errors.password = 'Must include at least one number.';
   } else if (!/[A-Z]/.test(password)) {
     errors.password = 'Must include at least one uppercase letter.';
-  } else if (!/[!@#$%^&*()_+\-=\\[\]{};':"\\|,.<>\\/?]/.test(password)) {
+  } else if (!/[!@#$%^&*()_+\-\\[\]{};':"|,.<>/?]/.test(password)) {
     errors.password = 'Must include at least one special character.';
   }
 
