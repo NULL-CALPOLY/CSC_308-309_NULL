@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Checkbox from '@cloudscape-design/components/checkbox';
-import useInterests from '../../Hooks/useInterests';
+import useInterests from '../../Hooks/UseInterests';
 import './SearchBar.css';
 
 export default function SearchBar({ onSelectionChange, onDateChange }) {
@@ -24,7 +24,7 @@ export default function SearchBar({ onSelectionChange, onDateChange }) {
     onDateChange({ startDate: newStart, endDate: newEnd });
   };
 
-  const interestOptions = interests.map(i => ({
+  const interestOptions = interests.map((i) => ({
     label: i.name,
     value: i.name,
   }));
@@ -41,12 +41,13 @@ export default function SearchBar({ onSelectionChange, onDateChange }) {
 
   const handleGridScroll = (e) => {
     const el = e.target;
-    setIsScrolledToBottom(el.scrollHeight - el.scrollTop <= el.clientHeight + 2);
+    setIsScrolledToBottom(
+      el.scrollHeight - el.scrollTop <= el.clientHeight + 2
+    );
   };
 
   return (
     <div className="searchbar-container">
-
       {/* ── Interest search ── */}
       <input
         type="text"
@@ -56,7 +57,8 @@ export default function SearchBar({ onSelectionChange, onDateChange }) {
         className="searchbar-input"
       />
 
-      <div className={`checkbox-grid-wrapper ${isScrolledToBottom ? 'scrolled-to-bottom' : ''}`}>
+      <div
+        className={`checkbox-grid-wrapper ${isScrolledToBottom ? 'scrolled-to-bottom' : ''}`}>
         <div className="checkbox-grid" onScroll={handleGridScroll}>
           {filteredOptions.map((interest) => (
             <div key={interest.value} className="checkbox-item">
@@ -108,7 +110,6 @@ export default function SearchBar({ onSelectionChange, onDateChange }) {
           </button>
         )}
       </div>
-
     </div>
   );
 }

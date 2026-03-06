@@ -4,8 +4,8 @@ import Multiselect from '@cloudscape-design/components/multiselect';
 import Input from '@cloudscape-design/components/input';
 import Textarea from '@cloudscape-design/components/textarea';
 import TempAddressComponent from '../TempAddressInputComponent/TempAddressComponent';
-import { useAuth } from '../../Hooks/useAuth.ts';
-import useInterests from '../../Hooks/useInterests.jsx';
+import { useAuth } from '../../Hooks/UseAuth.ts';
+import useInterests from '../../Hooks/UseInterests.jsx';
 
 const MAX_TITLE_LENGTH = 75;
 
@@ -30,12 +30,14 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
   // Lock scroll when open
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [isOpen]);
 
   if (!isOpen) return null;
 
-  const interestOptions = interests.map(i => ({
+  const interestOptions = interests.map((i) => ({
     label: i.name,
     value: i.name,
   }));
@@ -54,8 +56,7 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
     if (!formData.description.trim())
       newErrors.description = 'Description is required.';
 
-    if (!formData.address)
-      newErrors.address = 'Location is required.';
+    if (!formData.address) newErrors.address = 'Location is required.';
 
     if (!formData.startTime) {
       newErrors.startTime = 'Start time is required.';
@@ -110,8 +111,7 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
       );
 
       if (!response.ok) throw new Error(`Server error: ${response.statusText}`);
-      onSuccess(); 
-      
+      onSuccess();
     } catch (err) {
       console.error('Failed to create event:', err);
       alert('Failed to create event. Check console for details.');
@@ -121,16 +121,16 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
-
         <div className="modal-header">
           <div>
             <h2>Create Event</h2>
           </div>
-          <button className="close-btn" onClick={onClose}>✕</button>
+          <button className="close-btn" onClick={onClose}>
+            ✕
+          </button>
         </div>
 
         <form className="event-form" onSubmit={handleSubmit} noValidate>
-
           {/* ── Title ── */}
           <div className="form-group">
             <label>
@@ -149,12 +149,16 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
               }}
               placeholder="Enter event title"
             />
-            {errorMessage.name && <p className="error-text">{errorMessage.name}</p>}
+            {errorMessage.name && (
+              <p className="error-text">{errorMessage.name}</p>
+            )}
           </div>
 
           {/* ── Description ── */}
           <div className="form-group">
-            <label>Description <span className="required">*</span></label>
+            <label>
+              Description <span className="required">*</span>
+            </label>
             <Textarea
               value={formData.description}
               onChange={({ detail }) => {
@@ -163,12 +167,16 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
               }}
               placeholder="Describe your event"
             />
-            {errorMessage.description && <p className="error-text">{errorMessage.description}</p>}
+            {errorMessage.description && (
+              <p className="error-text">{errorMessage.description}</p>
+            )}
           </div>
 
           {/* ── Address ── */}
           <div className="form-group">
-            <label>Location <span className="required">*</span></label>
+            <label>
+              Location <span className="required">*</span>
+            </label>
             <TempAddressComponent
               onSelect={({ address, lat, lng }) => {
                 setFormData((prev) => ({
@@ -182,7 +190,9 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
                 setErrorMessage({ ...errorMessage, address: null });
               }}
             />
-            {errorMessage.address && <p className="error-text">{errorMessage.address}</p>}
+            {errorMessage.address && (
+              <p className="error-text">{errorMessage.address}</p>
+            )}
           </div>
 
           {/* ── Room / Location Detail ── */}
@@ -199,31 +209,41 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
 
           {/* ── Interests ── */}
           <div className="form-group">
-            <label>Interests <span className="required">*</span></label>
+            <label>
+              Interests <span className="required">*</span>
+            </label>
             <Multiselect
               placeholder="Select interests"
               options={interestOptions}
               selectedOptions={selectedOptions}
               onChange={({ detail }) => {
                 const unique = detail.selectedOptions.filter(
-                  (o, i, self) => i === self.findIndex((x) => x.value === o.value)
+                  (o, i, self) =>
+                    i === self.findIndex((x) => x.value === o.value)
                 );
                 setSelectedOptions(unique);
-                setFormData({ ...formData, interests: unique.map((o) => o.value) });
+                setFormData({
+                  ...formData,
+                  interests: unique.map((o) => o.value),
+                });
                 setErrorMessage({ ...errorMessage, interests: null });
               }}
               filteringType="auto"
-              keepOpen={false}
+              keepOpen={true}
               statusType={interestsLoading ? 'loading' : 'finished'}
               loadingText="Loading interests..."
             />
-            {errorMessage.interests && <p className="error-text">{errorMessage.interests}</p>}
+            {errorMessage.interests && (
+              <p className="error-text">{errorMessage.interests}</p>
+            )}
           </div>
 
           {/* ── Date & Time ── */}
           <div className="datetime-grid">
             <div className="form-group">
-              <label>Start Time <span className="required">*</span></label>
+              <label>
+                Start Time <span className="required">*</span>
+              </label>
               <Input
                 type="datetime-local"
                 value={formData.startTime}
@@ -232,11 +252,15 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
                   setErrorMessage({ ...errorMessage, startTime: null });
                 }}
               />
-              {errorMessage.startTime && <p className="error-text">{errorMessage.startTime}</p>}
+              {errorMessage.startTime && (
+                <p className="error-text">{errorMessage.startTime}</p>
+              )}
             </div>
 
             <div className="form-group">
-              <label>End Time <span className="required">*</span></label>
+              <label>
+                End Time <span className="required">*</span>
+              </label>
               <Input
                 type="datetime-local"
                 value={formData.endTime}
@@ -245,15 +269,20 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
                   setErrorMessage({ ...errorMessage, endTime: null });
                 }}
               />
-              {errorMessage.endTime && <p className="error-text">{errorMessage.endTime}</p>}
+              {errorMessage.endTime && (
+                <p className="error-text">{errorMessage.endTime}</p>
+              )}
             </div>
           </div>
 
           <div className="modal-actions">
-            <button type="button" className="secondary" onClick={onClose}>Cancel</button>
-            <button type="submit" className="primary">Create Event</button>
+            <button type="button" className="secondary" onClick={onClose}>
+              Cancel
+            </button>
+            <button type="submit" className="primary">
+              Create Event
+            </button>
           </div>
-
         </form>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { AuthContext, useProvideAuth } from '../Hooks/useAuth';
+import { AuthContext, useProvideAuth } from '../Hooks/UseAuth.ts';
 
 export const AuthProvider = ({ children }) => {
   const auth = useProvideAuth();

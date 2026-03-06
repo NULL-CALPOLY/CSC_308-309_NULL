@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../Hooks/useAuth';
+import { useAuth } from '../../../Hooks/UseAuth.ts';
 import './SignInModal.css';
 
 export default function SignInModal({ isOpen, onClose, onSwitchToRegister }) {
@@ -13,7 +13,9 @@ export default function SignInModal({ isOpen, onClose, onSwitchToRegister }) {
 
   // Close on Escape key
   useEffect(() => {
-    const handleKey = (e) => { if (e.key === 'Escape') onClose(); };
+    const handleKey = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
     if (isOpen) document.addEventListener('keydown', handleKey);
     return () => document.removeEventListener('keydown', handleKey);
   }, [isOpen, onClose]);
@@ -21,7 +23,9 @@ export default function SignInModal({ isOpen, onClose, onSwitchToRegister }) {
   // Prevent background scroll when modal is open
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [isOpen]);
 
   if (!isOpen) return null;
@@ -44,7 +48,6 @@ export default function SignInModal({ isOpen, onClose, onSwitchToRegister }) {
   return (
     <div className="modal__overlay" onClick={onClose}>
       <div className="modal__card" onClick={(e) => e.stopPropagation()}>
-
         <button className="modal__close" onClick={onClose} aria-label="Close">
           ✕
         </button>
@@ -86,13 +89,15 @@ export default function SignInModal({ isOpen, onClose, onSwitchToRegister }) {
           </button>
         </form>
 
-
         <p className="modal__footer">
-            Don't have an account?{' '}
-            <button type="button" className="modal__switch" onClick={onSwitchToRegister}>
-                Register
-            </button>
-        </p>  
+          Don't have an account?{' '}
+          <button
+            type="button"
+            className="modal__switch"
+            onClick={onSwitchToRegister}>
+            Register
+          </button>
+        </p>
       </div>
     </div>
   );

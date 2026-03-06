@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './EventDetails.css';
 import Navbar from '../../Components/Navbar/Navbar';
-import { useAuth } from '../../Hooks/useAuth';
+import { useAuth } from '../../Hooks/UseAuth';
 import { useEventId } from '../../Hooks/UseEvents';
-import useInterests from '../../Hooks/useInterests';
+import useInterests from '../../Hooks/UseInterests';
 import Multiselect from '@cloudscape-design/components/multiselect';
 
 const MAX_TITLE_LENGTH = 75;
@@ -93,7 +93,8 @@ export default function EventDetails() {
   }, [isAuthenticated, user]);
 
   if (loading) return <div className="ed-loading">Loading event…</div>;
-  if (fetchError) return <div className="ed-loading ed-error">{fetchError}</div>;
+  if (fetchError)
+    return <div className="ed-loading ed-error">{fetchError}</div>;
   if (!event) return null;
 
   const isHost = event?.host?._id === user?.id || event?.host === user?.id;
@@ -148,7 +149,9 @@ export default function EventDetails() {
     setEvent((prev) => ({
       ...prev,
       attendees: isAttending
-        ? prev.attendees.filter((a) => (typeof a === 'object' ? a._id : a) !== user.id)
+        ? prev.attendees.filter(
+            (a) => (typeof a === 'object' ? a._id : a) !== user.id
+          )
         : [...prev.attendees, user.id],
     }));
   };
@@ -166,17 +169,21 @@ export default function EventDetails() {
         time: { start: event.time.start, end: event.time.end },
       };
 
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${user.token}`,
-        },
-        body: JSON.stringify(payload),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/events/${id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${user.token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
       const json = await res.json();
-      if (!res.ok || !json.success) throw new Error(json.message || 'Failed to update');
+      if (!res.ok || !json.success)
+        throw new Error(json.message || 'Failed to update');
 
       setEvent((prev) => ({ ...prev, ...payload }));
       setIsEditing(false);
@@ -188,12 +195,16 @@ export default function EventDetails() {
 
   const handleDelete = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/${id}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${user.token}` },
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/events/${id}`,
+        {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${user.token}` },
+        }
+      );
       const json = await res.json();
-      if (!res.ok || !json.success) throw new Error(json.message || 'Failed to delete');
+      if (!res.ok || !json.success)
+        throw new Error(json.message || 'Failed to delete');
       navigate('/home');
     } catch (err) {
       alert(err.message);
@@ -218,7 +229,8 @@ export default function EventDetails() {
       );
 
       const json = await res.json();
-      if (!res.ok || !json.success) throw new Error(json.message || 'Failed to post comment');
+      if (!res.ok || !json.success)
+        throw new Error(json.message || 'Failed to post comment');
 
       setComments(json.data);
       setCommentText('');
@@ -241,7 +253,6 @@ export default function EventDetails() {
         </button>
 
         <form className="ed-card" onSubmit={handleUpdate} noValidate>
-
           {/* ── Header ── */}
           <div className="ed-header">
             <div className="ed-avatar">
@@ -254,7 +265,9 @@ export default function EventDetails() {
                     className={`ed-input ${editErrors.name ? 'ed-input--error' : ''}`}
                     value={event.name}
                     maxLength={MAX_TITLE_LENGTH}
-                    onChange={(e) => setEvent({ ...event, name: e.target.value })}
+                    onChange={(e) =>
+                      setEvent({ ...event, name: e.target.value })
+                    }
                   />
                   <div className="ed-char-count">
                     {event.name?.length || 0}/{MAX_TITLE_LENGTH}
@@ -275,7 +288,6 @@ export default function EventDetails() {
 
           {/* ── Grid ── */}
           <div className="ed-grid">
-
             {/* Description */}
             <div className="ed-field full">
               <label>Description</label>
@@ -289,7 +301,9 @@ export default function EventDetails() {
                     }
                   />
                   {editErrors.description && (
-                    <span className="ed-error-text">{editErrors.description}</span>
+                    <span className="ed-error-text">
+                      {editErrors.description}
+                    </span>
                   )}
                 </>
               ) : (
@@ -304,15 +318,16 @@ export default function EventDetails() {
                 <input
                   className="ed-input"
                   value={event.address}
-                  onChange={(e) => setEvent({ ...event, address: e.target.value })}
+                  onChange={(e) =>
+                    setEvent({ ...event, address: e.target.value })
+                  }
                 />
               ) : (
                 <a
                   className="ed-address-link"
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.address)}`}
                   target="_blank"
-                  rel="noopener noreferrer"
-                >
+                  rel="noopener noreferrer">
                   {event.address}
                 </a>
               )}
@@ -327,7 +342,10 @@ export default function EventDetails() {
                   className={`ed-input ${editErrors.startTime ? 'ed-input--error' : ''}`}
                   value={toInputValue(event.time.start)}
                   onChange={(e) =>
-                    setEvent({ ...event, time: { ...event.time, start: e.target.value } })
+                    setEvent({
+                      ...event,
+                      time: { ...event.time, start: e.target.value },
+                    })
                   }
                 />
                 {editErrors.startTime && (
@@ -345,7 +363,10 @@ export default function EventDetails() {
                   className={`ed-input ${editErrors.endTime ? 'ed-input--error' : ''}`}
                   value={toInputValue(event.time.end)}
                   onChange={(e) =>
-                    setEvent({ ...event, time: { ...event.time, end: e.target.value } })
+                    setEvent({
+                      ...event,
+                      time: { ...event.time, end: e.target.value },
+                    })
                   }
                 />
                 {editErrors.endTime && (
@@ -376,7 +397,9 @@ export default function EventDetails() {
                     placeholder="Select interests"
                   />
                   {editErrors.interests && (
-                    <span className="ed-error-text">{editErrors.interests}</span>
+                    <span className="ed-error-text">
+                      {editErrors.interests}
+                    </span>
                   )}
                 </>
               ) : (
@@ -397,8 +420,7 @@ export default function EventDetails() {
               <button
                 type="button"
                 className="ed-btn ed-btn--primary"
-                onClick={handleAttend}
-              >
+                onClick={handleAttend}>
                 {isAttending ? 'Leave Event' : 'Join Event'}
               </button>
             )}
@@ -413,8 +435,7 @@ export default function EventDetails() {
                       e.preventDefault();
                       setIsEditing(true);
                     }
-                  }}
-                >
+                  }}>
                   {isEditing ? 'Save Changes' : 'Edit Event'}
                 </button>
 
@@ -426,8 +447,7 @@ export default function EventDetails() {
                       setIsEditing(false);
                       setEditErrors({});
                       setEvent(rawEvent);
-                    }}
-                  >
+                    }}>
                     Cancel
                   </button>
                 )}
@@ -435,8 +455,7 @@ export default function EventDetails() {
                 <button
                   type="button"
                   className="ed-btn ed-btn--danger"
-                  onClick={() => setShowDeleteConfirm(true)}
-                >
+                  onClick={() => setShowDeleteConfirm(true)}>
                   Delete Event
                 </button>
               </>
@@ -458,8 +477,7 @@ export default function EventDetails() {
                 <button
                   type="button"
                   className="ed-btn ed-btn--primary"
-                  onClick={handleAddComment}
-                >
+                  onClick={handleAddComment}>
                   Post
                 </button>
               </div>
@@ -479,7 +497,8 @@ export default function EventDetails() {
                     <div className="ed-comment-header">
                       <strong>{msg.name}</strong>
                       <span className="ed-comment-time">
-                        {msg.createdAt && new Date(msg.createdAt).toLocaleString()}
+                        {msg.createdAt &&
+                          new Date(msg.createdAt).toLocaleString()}
                       </span>
                     </div>
                     <p>{msg.message}</p>
@@ -488,27 +507,27 @@ export default function EventDetails() {
               ))
             )}
           </div>
-
         </form>
       </div>
 
       {/* Delete Confirmation pop-up */}
       {showDeleteConfirm && (
-        <div className="ed-confirm-backdrop" onClick={() => setShowDeleteConfirm(false)}>
+        <div
+          className="ed-confirm-backdrop"
+          onClick={() => setShowDeleteConfirm(false)}>
           <div className="ed-confirm-card" onClick={(e) => e.stopPropagation()}>
             <h3>Delete Event</h3>
-            <p>Are you sure you want to delete <strong>{event.name}</strong>? This cannot be undone.</p>
+            <p>
+              Are you sure you want to delete <strong>{event.name}</strong>?
+              This cannot be undone.
+            </p>
             <div className="ed-confirm-actions">
               <button
                 className="ed-btn ed-btn--ghost"
-                onClick={() => setShowDeleteConfirm(false)}
-              >
+                onClick={() => setShowDeleteConfirm(false)}>
                 Cancel
               </button>
-              <button
-                className="ed-btn ed-btn--danger"
-                onClick={handleDelete}
-              >
+              <button className="ed-btn ed-btn--danger" onClick={handleDelete}>
                 Yes, Delete
               </button>
             </div>

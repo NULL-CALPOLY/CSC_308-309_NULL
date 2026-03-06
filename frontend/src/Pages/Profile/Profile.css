@@ -13,7 +13,10 @@
   content: '';
   position: fixed;
   inset: 0;
-  background-image: radial-gradient(rgba(124, 58, 237, 0.1) 1px, transparent 1px);
+  background-image: radial-gradient(
+    rgba(124, 58, 237, 0.1) 1px,
+    transparent 1px
+  );
   background-size: 32px 32px;
   pointer-events: none;
   z-index: 0;
@@ -21,8 +24,12 @@
 }
 
 @keyframes grid-drift {
-  0%   { background-position: 0 0; }
-  100% { background-position: 32px 32px; }
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 32px 32px;
+  }
 }
 
 .profile-page::after {
@@ -32,7 +39,11 @@
   left: -10%;
   width: 60vw;
   height: 60vw;
-  background: radial-gradient(ellipse, rgba(124, 58, 237, 0.06) 0%, transparent 65%);
+  background: radial-gradient(
+    ellipse,
+    rgba(124, 58, 237, 0.06) 0%,
+    transparent 65%
+  );
   pointer-events: none;
   z-index: 0;
 }
@@ -61,8 +72,14 @@
 }
 
 @keyframes slide-up {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .profile-sidebar-card {
@@ -91,6 +108,14 @@
   overflow: hidden; /* ← add this */
 }
 
+.profile-avatar-inner {
+  position: absolute;
+  inset: 7px; /* 4px btn padding + 3px ring stroke */
+  border-radius: 50%;
+  overflow: hidden;
+  z-index: 1;
+}
+
 .profile-avatar-ring {
   position: absolute;
   inset: 0;
@@ -100,16 +125,24 @@
   animation: ring-spin 4s linear infinite;
   opacity: 0.75;
   transition: opacity 0.3s;
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
 }
 
-.profile-avatar-btn:hover .profile-avatar-ring { opacity: 1; }
+.profile-avatar-btn:hover .profile-avatar-ring {
+  opacity: 1;
+}
 
 @keyframes ring-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .profile-avatar-initials {
@@ -141,7 +174,7 @@
 
 .profile-avatar-overlay {
   position: absolute;
-  inset: 4px;
+  inset: 0;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(4px);
@@ -156,7 +189,9 @@
   z-index: 2;
 }
 
-.overlay-icon { font-size: 1.1rem; }
+.overlay-icon {
+  font-size: 1.1rem;
+}
 .overlay-text {
   font-size: 0.58rem;
   font-family: 'DM Mono', monospace;
@@ -165,7 +200,9 @@
   opacity: 0.8;
 }
 
-.profile-avatar-btn:hover .profile-avatar-overlay { opacity: 1; }
+.profile-avatar-btn:hover .profile-avatar-overlay {
+  opacity: 1;
+}
 
 /* ── Sidebar text ── */
 .sidebar-name {
@@ -326,10 +363,15 @@
   outline: none;
   width: 100%;
   box-sizing: border-box;
-  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    background 0.2s;
 }
 
-.profile-field input::placeholder { color: rgba(255, 255, 255, 0.16); }
+.profile-field input::placeholder {
+  color: rgba(255, 255, 255, 0.16);
+}
 
 .profile-field input:focus,
 .profile-field select:focus {
@@ -360,7 +402,9 @@
   padding: 0.25rem 0.72rem;
   border-radius: 20px;
   letter-spacing: 0.03em;
-  transition: background 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 }
 
 .profile-tag:hover {
@@ -446,6 +490,10 @@
     grid-template-columns: 1fr;
     padding: 1.5rem 1rem 4rem;
   }
-  .profile-sidebar { position: static; }
-  .profile-panel-body { grid-template-columns: 1fr; }
+  .profile-sidebar {
+    position: static;
+  }
+  .profile-panel-body {
+    grid-template-columns: 1fr;
+  }
 }

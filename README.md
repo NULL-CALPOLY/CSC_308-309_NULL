@@ -225,6 +225,7 @@ VITE_API_BASE_URL=https://findr-ggfjetd2gqe2gday.westus3-01.azurewebsites.net
 ```
 
 > **Note:** `.env` files are gitignored. Never commit secrets.
+
 ---
 
 ## 🔌 API Documentation
