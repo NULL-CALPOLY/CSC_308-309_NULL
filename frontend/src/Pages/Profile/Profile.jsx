@@ -13,8 +13,8 @@ export default function Profile() {
   const [city, setCity] = useState('');
   const [email, setEmail] = useState('');
   const [interestInput, setInterestInput] = useState('');
-  const [profileImage, setProfileImage] = useState(null);
-  const [profileImagePublicId, setProfileImagePublicId] = useState(null); // Cloudinary publicId
+  const [avatar, setAvatar] = useState(null);
+  const [avatarPublicId, setAvatarPublicId] = useState(null); // Cloudinary publicId
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -56,8 +56,8 @@ export default function Profile() {
         setGender(u.gender || '');
         setCity(u.city || '');
         setEmail(u.email || '');
-        setProfileImage(u.profileImage || null);
-        setProfileImagePublicId(u.profileImagePublicId || null); // load existing publicId
+        setAvatar(u.avatar || null);
+        setAvatarPublicId(u.avatarPublicId || null); // load existing publicId
         setInterests(Array.isArray(u.interests) ? u.interests : []);
       } catch (err) {
         setErrorMsg(err.message);
@@ -83,8 +83,8 @@ export default function Profile() {
             Authorization: `Bearer ${user.token}`,
           },
           body: JSON.stringify({
-            profileImage: result.imageUrl,
-            profileImagePublicId: result.publicId,
+            avatar: result.imageUrl,
+            avatarPublicId: result.publicId,
           }),
         }
       );
@@ -92,8 +92,8 @@ export default function Profile() {
       if (!res.ok || !json.success)
         throw new Error(json.message || 'Failed to save image');
 
-      setProfileImage(result.imageUrl);
-      setProfileImagePublicId(result.publicId);
+      setAvatar(result.imageUrl);
+      setAvatarPublicId(result.publicId);
       updateProfileImage(result.imageUrl); // sync navbar avatar
       setShowImageUpload(false);
     } catch (err) {
@@ -186,9 +186,9 @@ export default function Profile() {
               title="Change photo">
               <div className="profile-avatar-ring" />
               <div className="profile-avatar-inner">
-                {profileImage ? (
+                {avatar ? (
                   <img
-                    src={profileImage}
+                    src={avatar}
                     alt="Profile"
                     className="profile-avatar-img"
                   />
@@ -422,7 +422,7 @@ export default function Profile() {
         isOpen={showImageUpload}
         onClose={() => setShowImageUpload(false)}
         onSuccess={handleImageUploadSuccess}
-        existingPublicId={profileImagePublicId}
+        existingPublicId={avatarPublicId}
       />
     </div>
   );

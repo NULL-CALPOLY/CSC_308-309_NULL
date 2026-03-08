@@ -52,7 +52,7 @@ router.post('/event/:eventId', async (req, res) => {
 
 // Add message to event comments
 router.post('/event/:eventId/message', async (req, res) => {
-  const { name, message } = req.body;
+  const { name, message, avatar, userId } = req.body;
 
   if (!name || !message) {
     return res.status(400).json({
@@ -62,7 +62,7 @@ router.post('/event/:eventId/message', async (req, res) => {
   }
 
   await commentsServices
-    .addMessage(req.params.eventId, name, message)
+    .addMessage(req.params.eventId, name, message, avatar, userId)
     .then((comments) => {
       if (!comments)
         res.status(404).json({

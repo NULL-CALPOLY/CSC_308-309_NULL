@@ -277,11 +277,11 @@ VITE_API_BASE_URL=https://findr-ggfjetd2gqe2gday.westus3-01.azurewebsites.net
 
 ### Comments
 
-| Method | Endpoint                              | Description                     |
-| ------ | ------------------------------------- | ------------------------------- |
-| `GET`  | `/comments/event/:eventId`            | Get comments for an event       |
-| `POST` | `/comments/event/:eventId`            | Create comments thread for event |
-| `POST` | `/comments/event/:eventId/message`    | Add message to event comments   |
+| Method | Endpoint                           | Description                      |
+| ------ | ---------------------------------- | -------------------------------- |
+| `GET`  | `/comments/event/:eventId`         | Get comments for an event        |
+| `POST` | `/comments/event/:eventId`         | Create comments thread for event |
+| `POST` | `/comments/event/:eventId/message` | Add message to event comments    |
 
 ### Interests
 

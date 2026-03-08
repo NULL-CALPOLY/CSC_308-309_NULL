@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../Hooks/UseAuth.ts';
 import useInterests from '../../../Hooks/UseInterests';
@@ -85,6 +85,8 @@ export default function RegistrationModal({
   const [selectedInterests, setSelectedInterests] = useState([]);
   const [interestSearch, setInterestSearch] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownStyle, setDropdownStyle] = useState({});
+  const multiselectRef = useRef(null);
   const [errors, setErrors] = useState({});
   const [submitError, setSubmitError] = useState('');
   const { register, loading } = useAuth();
@@ -92,11 +94,28 @@ export default function RegistrationModal({
 
   React.useEffect(() => {
     const handleKey = (e) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        if (dropdownOpen) setDropdownOpen(false);
+        else onClose();
+      }
     };
     if (isOpen) document.addEventListener('keydown', handleKey);
     return () => document.removeEventListener('keydown', handleKey);
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, dropdownOpen]);
+
+  React.useEffect(() => {
+    if (!dropdownOpen) return;
+    const handleClickOutside = (e) => {
+      if (
+        multiselectRef.current &&
+        !multiselectRef.current.contains(e.target)
+      ) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [dropdownOpen]);
 
   React.useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : '';
@@ -104,6 +123,20 @@ export default function RegistrationModal({
       document.body.style.overflow = '';
     };
   }, [isOpen]);
+
+  const toggleDropdown = useCallback(() => {
+    if (interestsLoading) return;
+    if (!dropdownOpen && multiselectRef.current) {
+      const rect = multiselectRef.current.getBoundingClientRect();
+      setDropdownStyle({
+        position: 'fixed',
+        top: rect.bottom + 4,
+        left: rect.left,
+        width: rect.width,
+      });
+    }
+    setDropdownOpen((o) => !o);
+  }, [interestsLoading, dropdownOpen]);
 
   if (!isOpen) return null;
 
@@ -344,10 +377,10 @@ export default function RegistrationModal({
           {/* ── Interests multiselect ── */}
           <div className="rmodal__field">
             <label>Interests</label>
-            <div className="rmodal__multiselect">
+            <div className="rmodal__multiselect" ref={multiselectRef}>
               <div
                 className="rmodal__multiselect-trigger"
-                onClick={() => !interestsLoading && setDropdownOpen((o) => !o)}
+                onClick={toggleDropdown}
                 style={{
                   opacity: interestsLoading ? 0.5 : 1,
                   cursor: interestsLoading ? 'not-allowed' : 'pointer',
@@ -381,7 +414,7 @@ export default function RegistrationModal({
               </div>
 
               {dropdownOpen && !interestsLoading && (
-                <div className="rmodal__dropdown">
+                <div className="rmodal__dropdown" style={dropdownStyle}>
                   <input
                     className="rmodal__dropdown-search"
                     type="text"
