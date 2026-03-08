@@ -469,10 +469,15 @@ export default function EventDetails() {
               comments.messages.map((msg, i) => (
                 <div key={i} className="ed-comment">
                   <div className="ed-comment-avatar">
-                    {(msg.userId?.avatar || msg.avatar)
-                      ? <img src={msg.userId?.avatar || msg.avatar} alt={msg.userId?.name || msg.name} className="ed-comment-avatar-img" />
-                      : (msg.name?.charAt(0) || 'U').toUpperCase()
-                    }
+                    {msg.userId?.avatar || msg.avatar ? (
+                      <img
+                        src={msg.userId?.avatar || msg.avatar}
+                        alt={msg.userId?.name || msg.name}
+                        className="ed-comment-avatar-img"
+                      />
+                    ) : (
+                      (msg.name?.charAt(0) || 'U').toUpperCase()
+                    )}
                   </div>
                   <div className="ed-comment-body">
                     <div className="ed-comment-header">

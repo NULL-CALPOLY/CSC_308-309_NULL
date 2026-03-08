@@ -72,7 +72,10 @@ export default function SearchBar({ onSelectionChange, onDateChange }) {
 
       <div
         className={`checkbox-grid-wrapper ${!isScrollable || isScrolledToBottom ? 'scrolled-to-bottom' : ''}`}>
-        <div className="checkbox-grid" onScroll={handleGridScroll} ref={gridRef}>
+        <div
+          className="checkbox-grid"
+          onScroll={handleGridScroll}
+          ref={gridRef}>
           {filteredOptions.map((interest) => (
             <div key={interest.value} className="checkbox-item">
               <Checkbox
