@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Checkbox from '@cloudscape-design/components/checkbox';
 import useInterests from '../../Hooks/UseInterests';
 import './SearchBar.css';
@@ -10,6 +10,25 @@ export default function SearchBar({ onSelectionChange, onDateChange }) {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);
+  const [isScrollable, setIsScrollable] = useState(false);
+  const gridRef = useRef(null);
+
+  const interestOptions = interests.map((i) => ({
+    label: i.name,
+    value: i.name,
+  }));
+
+  const filteredOptions = interestOptions.filter((option) =>
+    option.label.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  useEffect(() => {
+    const el = gridRef.current;
+    if (!el) return;
+    const scrollable = el.scrollHeight > el.clientHeight;
+    setIsScrollable(scrollable);
+    if (!scrollable) setIsScrolledToBottom(false);
+  }, [filteredOptions.length]);
 
   const handleCheckboxChange = (interestValue, isChecked) => {
     setCheckedInterests((prev) => {
@@ -23,15 +42,6 @@ export default function SearchBar({ onSelectionChange, onDateChange }) {
   const handleDateChange = (newStart, newEnd) => {
     onDateChange({ startDate: newStart, endDate: newEnd });
   };
-
-  const interestOptions = interests.map((i) => ({
-    label: i.name,
-    value: i.name,
-  }));
-
-  const filteredOptions = interestOptions.filter((option) =>
-    option.label.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const clearDates = () => {
     setStartDate('');
@@ -53,13 +63,19 @@ export default function SearchBar({ onSelectionChange, onDateChange }) {
         type="text"
         placeholder="Search interests..."
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={(e) => {
+          setSearchTerm(e.target.value);
+          setIsScrolledToBottom(false);
+        }}
         className="searchbar-input"
       />
 
       <div
-        className={`checkbox-grid-wrapper ${isScrolledToBottom ? 'scrolled-to-bottom' : ''}`}>
-        <div className="checkbox-grid" onScroll={handleGridScroll}>
+        className={`checkbox-grid-wrapper ${!isScrollable || isScrolledToBottom ? 'scrolled-to-bottom' : ''}`}>
+        <div
+          className="checkbox-grid"
+          onScroll={handleGridScroll}
+          ref={gridRef}>
           {filteredOptions.map((interest) => (
             <div key={interest.value} className="checkbox-item">
               <Checkbox

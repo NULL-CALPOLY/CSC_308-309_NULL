@@ -30,6 +30,13 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: false,
       trim: true,
+      default: null,
+    },
+    avatarPublicId: {
+      type: String,
+      required: false,
+      trim: true,
+      default: null,
     },
     phoneNumber: {
       type: String,
@@ -63,11 +70,6 @@ const UserSchema = new mongoose.Schema(
       coordinates: {
         type: [Number],
       },
-    },
-    profileImage: {
-      type: String,
-      default: null,
-      required: false,
     },
   },
   { collection: 'users_list' }

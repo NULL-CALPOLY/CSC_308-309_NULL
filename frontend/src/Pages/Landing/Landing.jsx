@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './Landing.css';
 import Navbar from '../../Components/Navbar/Navbar.jsx';
 import community from '../../assets/community.svg';

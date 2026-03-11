@@ -26,7 +26,6 @@ export default function EventDetails() {
   const [comments, setComments] = useState(null);
   const [commentText, setCommentText] = useState('');
   const [commentsLoading, setCommentsLoading] = useState(true);
-  const [currentUserName, setCurrentUserName] = useState(null);
 
   React.useEffect(() => {
     if (rawEvent) {
@@ -69,28 +68,6 @@ export default function EventDetails() {
 
     fetchComments();
   }, [id]);
-
-  // Fetch current user's name for comments
-  useEffect(() => {
-    if (!isAuthenticated || !user?.id) return;
-
-    const fetchUser = async () => {
-      try {
-        const res = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/users/${user.id}`,
-          { headers: { Authorization: `Bearer ${user.token}` } }
-        );
-        const json = await res.json();
-        if (res.ok && json.success) {
-          setCurrentUserName(json.data.name || '');
-        }
-      } catch (err) {
-        console.error('Failed to fetch user name:', err);
-      }
-    };
-
-    fetchUser();
-  }, [isAuthenticated, user]);
 
   if (loading) return <div className="ed-loading">Loading event…</div>;
   if (fetchError)
@@ -221,9 +198,10 @@ export default function EventDetails() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            name: currentUserName || 'Anonymous',
+            name: user.name || 'Anonymous',
+            avatar: user.avatar || null,
             message: commentText,
-            createdAt: new Date().toISOString(),
+            userId: user.id || null,
           }),
         }
       );
@@ -491,14 +469,28 @@ export default function EventDetails() {
               comments.messages.map((msg, i) => (
                 <div key={i} className="ed-comment">
                   <div className="ed-comment-avatar">
-                    {(msg.name?.charAt(0) || 'U').toUpperCase()}
+                    {msg.userId?.avatar || msg.avatar ? (
+                      <img
+                        src={msg.userId?.avatar || msg.avatar}
+                        alt={msg.userId?.name || msg.name}
+                        className="ed-comment-avatar-img"
+                      />
+                    ) : (
+                      (msg.name?.charAt(0) || 'U').toUpperCase()
+                    )}
                   </div>
                   <div className="ed-comment-body">
                     <div className="ed-comment-header">
                       <strong>{msg.name}</strong>
                       <span className="ed-comment-time">
                         {msg.createdAt &&
-                          new Date(msg.createdAt).toLocaleString()}
+                          new Date(msg.createdAt).toLocaleString([], {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
                       </span>
                     </div>
                     <p>{msg.message}</p>
