@@ -102,7 +102,6 @@ export default function EventComponent(props) {
       </div>
 
       <div className="Event-Footer">
-
         {!isAuthenticated ? (
           <button className="SignInPromptBtn" onClick={openSignIn}>
             Sign in to join

@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap');
 
-
 .profile-page {
   min-height: 100vh;
   background: #080808;
@@ -48,7 +47,6 @@
   z-index: 0;
 }
 
-
 .profile-layout {
   position: relative;
   z-index: 1;
@@ -93,7 +91,6 @@
   gap: 1rem;
   backdrop-filter: blur(12px);
 }
-
 
 .profile-avatar-btn {
   position: relative;
@@ -204,7 +201,6 @@
   opacity: 1;
 }
 
-
 .sidebar-name {
   font-family: 'DM Serif Display', serif;
   font-size: 1.3rem;
@@ -261,7 +257,6 @@
   box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
   transform: translateY(-1px);
 }
-
 
 .profile-main {
   display: flex;
@@ -321,7 +316,6 @@
   grid-template-columns: 1fr;
 }
 
-
 .profile-field {
   display: flex;
   flex-direction: column;
@@ -349,7 +343,6 @@
   color: rgba(255, 255, 255, 0.18);
   font-style: italic;
 }
-
 
 .profile-field input,
 .profile-field select {
@@ -385,7 +378,6 @@
   color: #fff;
 }
 
-
 .profile-tags {
   display: flex;
   flex-wrap: wrap;
@@ -411,7 +403,6 @@
   background: rgba(124, 58, 237, 0.18);
   border-color: rgba(124, 58, 237, 0.45);
 }
-
 
 .profile-actions {
   display: flex;
@@ -462,7 +453,6 @@
   color: #fff;
 }
 
-
 .profile-error {
   color: #f87171;
   font-family: 'DM Mono', monospace;
@@ -470,7 +460,6 @@
   padding: 0 1.5rem 1rem;
   text-align: right;
 }
-
 
 .profile-loading {
   min-height: 100vh;
@@ -483,7 +472,6 @@
   font-size: 0.85rem;
   letter-spacing: 0.1em;
 }
-
 
 @media (max-width: 720px) {
   .profile-layout {
@@ -503,11 +491,62 @@
     width: 100%;
     overflow-x: hidden;
   }
-  
+
   .profile-panel-body > * {
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
     flex-shrink: 1 !important;
   }
+}
+
+/* ── Add these two rules to Profile.css ── */
+
+.profile-back-wrapper {
+  position: relative;
+  z-index: 1;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem 0;
+}
+
+.profile-back {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 0;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.03em;
+  transition: color 0.2s;
+}
+
+.profile-back:hover {
+  color: #a78bfa;
+}
+
+/* Add to Profile.css — delete account button in sidebar */
+.profile-btn--delete-account {
+  width: 100%;
+  padding: 0.7rem;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: rgba(239, 68, 68, 0.55);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.profile-btn--delete-account:hover {
+  background: rgba(239, 68, 68, 0.07);
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #f87171;
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.15);
 }

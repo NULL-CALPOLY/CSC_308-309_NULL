@@ -3,9 +3,12 @@ import './Profile.css';
 import { useAuth } from '../../Hooks/UseAuth.ts';
 import Navbar from '../../Components/Navbar/Navbar';
 import ProfileImageUploadModal from '../../Components/Modals/ProfileImageUploadModal/ProfileImageUploadModal';
+import DeleteAccountModal from '../../Components/DeleteAccountModal/DeleteAccountModal';
+import { useNavigate } from 'react-router-dom';
 import EventComponent from '../../Components/EventComponent/EventComponent';
 
 export default function Profile() {
+  const navigate = useNavigate();
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
@@ -21,6 +24,8 @@ export default function Profile() {
   const [errorMsg, setErrorMsg] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [showImageUpload, setShowImageUpload] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [attendingEvents, setAttendingEvents] = useState([]);
 
   const {
@@ -169,6 +174,31 @@ export default function Profile() {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    setDeleting(true);
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/users/${user.id}`,
+        {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${user.token}` },
+        }
+      );
+      const json = await res.json();
+      if (!res.ok || !json.success)
+        throw new Error(json.message || 'Failed to delete account');
+
+      // Clear auth state and redirect to home / login
+      // (call your logout helper if you have one, e.g. logout())
+      navigate('/');
+    } catch (err) {
+      setErrorMsg(err.message);
+      setShowDeleteModal(false);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   const startEditing = () => {
     setInterestInput(interests.join(', '));
     setIsEditing(true);
@@ -189,8 +219,13 @@ export default function Profile() {
     <div className="profile-page">
       <Navbar page="/" />
 
+      <div className="profile-back-wrapper">
+        <button className="profile-back" onClick={() => navigate(-1)}>
+          ← Back
+        </button>
+      </div>
+
       <div className="profile-layout">
-        
         <aside className="profile-sidebar">
           <div className="profile-sidebar-card">
             <button
@@ -234,16 +269,21 @@ export default function Profile() {
             )}
 
             {!isEditing && (
-              <button className="profile-btn--sidebar" onClick={startEditing}>
-                Edit Profile
-              </button>
+              <div>
+                <button className="profile-btn--sidebar" onClick={startEditing}>
+                  Edit Profile
+                </button>
+                <button
+                  className="profile-btn--delete-account"
+                  onClick={() => setShowDeleteModal(true)}>
+                  Delete Account
+                </button>
+              </div>
             )}
           </div>
         </aside>
 
-       
         <form className="profile-main" onSubmit={handleSubmit} noValidate>
-         
           <div className="profile-panel">
             <div className="profile-panel-header">
               <span className="panel-dot" />
@@ -260,7 +300,8 @@ export default function Profile() {
                     required
                   />
                 ) : (
-                  <span className={`profile-field-value ${!name ? 'empty' : ''}`}>
+                  <span
+                    className={`profile-field-value ${!name ? 'empty' : ''}`}>
                     {name || 'Not set'}
                   </span>
                 )}
@@ -277,7 +318,8 @@ export default function Profile() {
                     required
                   />
                 ) : (
-                  <span className={`profile-field-value ${!email ? 'empty' : ''}`}>
+                  <span
+                    className={`profile-field-value ${!email ? 'empty' : ''}`}>
                     {email || 'Not set'}
                   </span>
                 )}
@@ -297,7 +339,8 @@ export default function Profile() {
                     <option value="Prefer not to say">Prefer not to say</option>
                   </select>
                 ) : (
-                  <span className={`profile-field-value ${!gender ? 'empty' : ''}`}>
+                  <span
+                    className={`profile-field-value ${!gender ? 'empty' : ''}`}>
                     {gender || 'Not set'}
                   </span>
                 )}
@@ -312,7 +355,8 @@ export default function Profile() {
                     onChange={(e) => setDateOfBirth(e.target.value)}
                   />
                 ) : (
-                  <span className={`profile-field-value ${!dateOfBirth ? 'empty' : ''}`}>
+                  <span
+                    className={`profile-field-value ${!dateOfBirth ? 'empty' : ''}`}>
                     {dateOfBirth?.split('T')[0] || 'Not set'}
                   </span>
                 )}
@@ -320,7 +364,6 @@ export default function Profile() {
             </div>
           </div>
 
-       
           <div className="profile-panel">
             <div className="profile-panel-header">
               <span className="panel-dot" />
@@ -341,7 +384,8 @@ export default function Profile() {
                     placeholder="Phone number"
                   />
                 ) : (
-                  <span className={`profile-field-value ${!phoneNumber ? 'empty' : ''}`}>
+                  <span
+                    className={`profile-field-value ${!phoneNumber ? 'empty' : ''}`}>
                     {phoneNumber || 'Not set'}
                   </span>
                 )}
@@ -357,7 +401,8 @@ export default function Profile() {
                     placeholder="Your city"
                   />
                 ) : (
-                  <span className={`profile-field-value ${!city ? 'empty' : ''}`}>
+                  <span
+                    className={`profile-field-value ${!city ? 'empty' : ''}`}>
                     {city || 'Not set'}
                   </span>
                 )}
@@ -365,7 +410,6 @@ export default function Profile() {
             </div>
           </div>
 
-          
           <div className="profile-panel">
             <div className="profile-panel-header">
               <span className="panel-dot" />
@@ -419,7 +463,6 @@ export default function Profile() {
             {errorMsg && <p className="profile-error">{errorMsg}</p>}
           </div>
 
-          
           <div className="profile-panel">
             <div className="profile-panel-header">
               <span className="panel-dot" />
@@ -432,18 +475,26 @@ export default function Profile() {
                     key={event._id}
                     eventId={event._id}
                     eventName={event.name}
-                    eventDate={event.time?.start
-                      ? new Date(event.time.start).toLocaleDateString()
-                      : ''}
-                    eventTime={event.time?.start
-                      ? new Date(event.time.start).toLocaleTimeString([], {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })
-                      : ''}
+                    eventDate={
+                      event.time?.start
+                        ? new Date(event.time.start).toLocaleDateString()
+                        : ''
+                    }
+                    eventTime={
+                      event.time?.start
+                        ? new Date(event.time.start).toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })
+                        : ''
+                    }
                     eventAddress={event.address}
                     description={event.description}
-                    interest={Array.isArray(event.interests) ? event.interests.join(', ') : ''}
+                    interest={
+                      Array.isArray(event.interests)
+                        ? event.interests.join(', ')
+                        : ''
+                    }
                     attendees={event.attendees}
                     host={event.host}
                   />
@@ -463,6 +514,12 @@ export default function Profile() {
         onClose={() => setShowImageUpload(false)}
         onSuccess={handleImageUploadSuccess}
         existingPublicId={avatarPublicId}
+      />
+      <DeleteAccountModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDeleteAccount}
+        isDeleting={deleting}
       />
     </div>
   );

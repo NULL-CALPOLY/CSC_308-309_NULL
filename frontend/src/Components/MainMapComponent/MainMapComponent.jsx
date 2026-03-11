@@ -77,6 +77,13 @@ export default function MainMapComponent() {
       <MapContainer
         center={[35.3, -120.66]}
         zoom={13}
+        minZoom={3}
+        maxZoom={18}
+        maxBounds={[
+          [-90, -180],
+          [90, 180],
+        ]}
+        maxBoundsViscosity={1.0}
         scrollWheelZoom={true}
         zoomControl={true}
         className="main-map-component">
@@ -152,7 +159,9 @@ function EventMarker({ event }) {
           {event.interests.length > 0 && (
             <div className="popup-tags">
               {event.interests.slice(0, 3).map((tag, i) => (
-                <span key={i} className="popup-tag">{tag}</span>
+                <span key={i} className="popup-tag">
+                  {tag}
+                </span>
               ))}
             </div>
           )}
