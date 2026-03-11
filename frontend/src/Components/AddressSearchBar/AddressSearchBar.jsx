@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './AddressSearchBar.css';
 
-
 export default function AddressSearchBar({
   onSelect,
   placeholder = 'Search for an address…',
@@ -22,7 +21,6 @@ export default function AddressSearchBar({
   const debounceRef = useRef(null);
   const controllerRef = useRef(null);
 
-  
   useEffect(() => {
     const handler = (e) => {
       if (containerRef.current && !containerRef.current.contains(e.target)) {
@@ -33,7 +31,6 @@ export default function AddressSearchBar({
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  
   useEffect(() => {
     if (query.length < 3) {
       setResults([]);
@@ -97,7 +94,6 @@ export default function AddressSearchBar({
     [onSelect]
   );
 
- 
   const handleKeyDown = (e) => {
     if (!open || results.length === 0) return;
 
@@ -150,12 +146,10 @@ export default function AddressSearchBar({
       className={`asb-root ${className}`}
       role="combobox"
       aria-expanded={open}
-      aria-haspopup="listbox"
-    >
+      aria-haspopup="listbox">
       {label && <label className="asb-label">{label}</label>}
 
       <div className={`asb-input-wrapper ${error ? 'asb-input--error' : ''}`}>
-        
         <svg
           className="asb-icon-pin"
           viewBox="0 0 24 24"
@@ -164,8 +158,7 @@ export default function AddressSearchBar({
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          aria-hidden="true"
-        >
+          aria-hidden="true">
           <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z" />
           <circle cx="12" cy="10" r="3" />
         </svg>
@@ -187,7 +180,6 @@ export default function AddressSearchBar({
           }
         />
 
-        
         <div className="asb-icon-right">
           {loading ? (
             <span className="asb-spinner" aria-label="Searching…" />
@@ -202,15 +194,13 @@ export default function AddressSearchBar({
                 setOpen(false);
                 inputRef.current?.focus();
               }}
-              aria-label="Clear address"
-            >
+              aria-label="Clear address">
               ✕
             </button>
           ) : null}
         </div>
       </div>
 
-      
       {selectedCoords && (
         <div className="asb-coords-badge">
           <svg
@@ -218,8 +208,7 @@ export default function AddressSearchBar({
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
-            aria-hidden="true"
-          >
+            aria-hidden="true">
             <circle cx="12" cy="12" r="10" />
             <line x1="2" y1="12" x2="22" y2="12" />
             <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
@@ -230,17 +219,14 @@ export default function AddressSearchBar({
         </div>
       )}
 
-      
       {error && <p className="asb-error">{error}</p>}
 
-      
       {open && results.length > 0 && (
         <ul
           id="asb-listbox"
           role="listbox"
           className="asb-dropdown"
-          aria-label="Address suggestions"
-        >
+          aria-label="Address suggestions">
           {results.map((item, idx) => (
             <li
               key={item.place_id}
@@ -252,22 +238,24 @@ export default function AddressSearchBar({
                 e.preventDefault();
                 handleSelect(item);
               }}
-              onMouseEnter={() => setActiveIndex(idx)}
-            >
+              onMouseEnter={() => setActiveIndex(idx)}>
               <svg
                 className="asb-option-icon"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
-                aria-hidden="true"
-              >
+                aria-hidden="true">
                 <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z" />
                 <circle cx="12" cy="10" r="3" />
               </svg>
               <div className="asb-option-text">
-                <span className="asb-option-primary">{formatPrimary(item)}</span>
-                <span className="asb-option-secondary">{formatSecondary(item)}</span>
+                <span className="asb-option-primary">
+                  {formatPrimary(item)}
+                </span>
+                <span className="asb-option-secondary">
+                  {formatSecondary(item)}
+                </span>
               </div>
             </li>
           ))}

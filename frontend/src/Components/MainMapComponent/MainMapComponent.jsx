@@ -159,7 +159,9 @@ function EventMarker({ event }) {
           {event.interests.length > 0 && (
             <div className="popup-tags">
               {event.interests.slice(0, 3).map((tag, i) => (
-                <span key={i} className="popup-tag">{tag}</span>
+                <span key={i} className="popup-tag">
+                  {tag}
+                </span>
               ))}
             </div>
           )}

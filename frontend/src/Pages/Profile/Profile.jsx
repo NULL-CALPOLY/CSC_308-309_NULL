@@ -226,7 +226,6 @@ export default function Profile() {
       </div>
 
       <div className="profile-layout">
-        
         <aside className="profile-sidebar">
           <div className="profile-sidebar-card">
             <button
@@ -284,9 +283,7 @@ export default function Profile() {
           </div>
         </aside>
 
-       
         <form className="profile-main" onSubmit={handleSubmit} noValidate>
-         
           <div className="profile-panel">
             <div className="profile-panel-header">
               <span className="panel-dot" />
@@ -303,7 +300,8 @@ export default function Profile() {
                     required
                   />
                 ) : (
-                  <span className={`profile-field-value ${!name ? 'empty' : ''}`}>
+                  <span
+                    className={`profile-field-value ${!name ? 'empty' : ''}`}>
                     {name || 'Not set'}
                   </span>
                 )}
@@ -320,7 +318,8 @@ export default function Profile() {
                     required
                   />
                 ) : (
-                  <span className={`profile-field-value ${!email ? 'empty' : ''}`}>
+                  <span
+                    className={`profile-field-value ${!email ? 'empty' : ''}`}>
                     {email || 'Not set'}
                   </span>
                 )}
@@ -340,7 +339,8 @@ export default function Profile() {
                     <option value="Prefer not to say">Prefer not to say</option>
                   </select>
                 ) : (
-                  <span className={`profile-field-value ${!gender ? 'empty' : ''}`}>
+                  <span
+                    className={`profile-field-value ${!gender ? 'empty' : ''}`}>
                     {gender || 'Not set'}
                   </span>
                 )}
@@ -355,7 +355,8 @@ export default function Profile() {
                     onChange={(e) => setDateOfBirth(e.target.value)}
                   />
                 ) : (
-                  <span className={`profile-field-value ${!dateOfBirth ? 'empty' : ''}`}>
+                  <span
+                    className={`profile-field-value ${!dateOfBirth ? 'empty' : ''}`}>
                     {dateOfBirth?.split('T')[0] || 'Not set'}
                   </span>
                 )}
@@ -363,7 +364,6 @@ export default function Profile() {
             </div>
           </div>
 
-       
           <div className="profile-panel">
             <div className="profile-panel-header">
               <span className="panel-dot" />
@@ -384,7 +384,8 @@ export default function Profile() {
                     placeholder="Phone number"
                   />
                 ) : (
-                  <span className={`profile-field-value ${!phoneNumber ? 'empty' : ''}`}>
+                  <span
+                    className={`profile-field-value ${!phoneNumber ? 'empty' : ''}`}>
                     {phoneNumber || 'Not set'}
                   </span>
                 )}
@@ -400,7 +401,8 @@ export default function Profile() {
                     placeholder="Your city"
                   />
                 ) : (
-                  <span className={`profile-field-value ${!city ? 'empty' : ''}`}>
+                  <span
+                    className={`profile-field-value ${!city ? 'empty' : ''}`}>
                     {city || 'Not set'}
                   </span>
                 )}
@@ -408,7 +410,6 @@ export default function Profile() {
             </div>
           </div>
 
-          
           <div className="profile-panel">
             <div className="profile-panel-header">
               <span className="panel-dot" />
@@ -462,7 +463,6 @@ export default function Profile() {
             {errorMsg && <p className="profile-error">{errorMsg}</p>}
           </div>
 
-          
           <div className="profile-panel">
             <div className="profile-panel-header">
               <span className="panel-dot" />
@@ -475,18 +475,26 @@ export default function Profile() {
                     key={event._id}
                     eventId={event._id}
                     eventName={event.name}
-                    eventDate={event.time?.start
-                      ? new Date(event.time.start).toLocaleDateString()
-                      : ''}
-                    eventTime={event.time?.start
-                      ? new Date(event.time.start).toLocaleTimeString([], {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })
-                      : ''}
+                    eventDate={
+                      event.time?.start
+                        ? new Date(event.time.start).toLocaleDateString()
+                        : ''
+                    }
+                    eventTime={
+                      event.time?.start
+                        ? new Date(event.time.start).toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })
+                        : ''
+                    }
                     eventAddress={event.address}
                     description={event.description}
-                    interest={Array.isArray(event.interests) ? event.interests.join(', ') : ''}
+                    interest={
+                      Array.isArray(event.interests)
+                        ? event.interests.join(', ')
+                        : ''
+                    }
                     attendees={event.attendees}
                     host={event.host}
                   />

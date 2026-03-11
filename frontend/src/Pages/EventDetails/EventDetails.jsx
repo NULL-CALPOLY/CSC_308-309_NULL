@@ -21,7 +21,6 @@ function getInitials(name) {
     .toUpperCase();
 }
 
-// Deterministic fallback color when no profile image is available
 const AVATAR_COLORS = [
   '#5B8DEF',
   '#E0756B',
@@ -38,7 +37,6 @@ function avatarColor(id) {
   return AVATAR_COLORS[hash % AVATAR_COLORS.length];
 }
 
-// Renders a single avatar: real photo if available, otherwise colored initials
 function Avatar({ id, name, profileImage, size = 'sm', style = {} }) {
   const sizeClass = `attendee-avatar--${size}`;
   const w = style.width || '100%';
@@ -211,13 +209,12 @@ export default function EventDetails() {
   const [editErrors, setEditErrors] = useState({});
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [selectedInterests, setSelectedInterests] = useState([]);
+  const [currentUserName, setCurrentUserName] = useState('');
 
-  // Attendees modal state
   const [showAttendeesModal, setShowAttendeesModal] = useState(false);
-  const [resolvedUsers, setResolvedUsers] = useState({}); // { userId: { name, profileImage } }
+  const [resolvedUsers, setResolvedUsers] = useState({});
   const [attendeeNamesLoading, setAttendeeNamesLoading] = useState(false);
 
-  // Comments state
   const [comments, setComments] = useState(null);
   const [commentText, setCommentText] = useState('');
   const [commentsLoading, setCommentsLoading] = useState(true);
@@ -234,7 +231,6 @@ export default function EventDetails() {
     }
   }, [rawEvent]);
 
-  // ── Fetch all attendee profiles as soon as the event loads ─────────────
   useEffect(() => {
     if (!event?.attendees?.length) return;
 
@@ -271,7 +267,6 @@ export default function EventDetails() {
 
   const handleOpenAttendees = () => setShowAttendeesModal(true);
 
-  // ── Fetch comments ────────────────────────────────────────────────────────
   useEffect(() => {
     const fetchComments = async () => {
       setCommentsLoading(true);
@@ -300,7 +295,6 @@ export default function EventDetails() {
     fetchComments();
   }, [id]);
 
-  // ── Fetch current user's name ─────────────────────────────────────────────
   useEffect(() => {
     if (!isAuthenticated || !user?.id) return;
 
@@ -607,7 +601,7 @@ export default function EventDetails() {
               </div>
             )}
 
-            {/* ── Attendees — avatar stack + modal trigger ── */}
+            {/* Attendees */}
             <div className="ed-field full">
               <label>Attendees</label>
               <AttendeeAvatarStack
@@ -711,45 +705,13 @@ export default function EventDetails() {
                 )}
               </div>
 
-            {commentsLoading ? (
-              <p className="ed-muted">Loading comments…</p>
-            ) : !comments?.messages?.length ? (
-              <p className="ed-muted">No comments yet. Be the first!</p>
-            ) : (
-              comments.messages.map((msg, i) => (
-                <div key={i} className="ed-comment">
-                  <div className="ed-comment-avatar">
-                    {msg.userId?.avatar || msg.avatar ? (
-                      <img
-                        src={msg.userId?.avatar || msg.avatar}
-                        alt={msg.userId?.name || msg.name}
-                        className="ed-comment-avatar-img"
-                      />
-                    ) : (
-                      (msg.name?.charAt(0) || 'U').toUpperCase()
-                    )}
-                  </div>
-                  <div className="ed-comment-body">
-                    <div className="ed-comment-header">
-                      <strong>{msg.name}</strong>
-                      <span className="ed-comment-time">
-                        {msg.createdAt &&
-                          new Date(msg.createdAt).toLocaleString([], {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })}
-                      </span>
-                    </div>
-                    <p>{msg.message}</p>
-                  </div>
-                </div>
+              {commentsLoading ? (
+                <p className="ed-muted">Loading comments…</p>
+              ) : !comments?.messages?.length ? (
+                <p className="ed-muted">No comments yet. Be the first!</p>
               ) : (
                 <div className="ed-comments__list">
                   {comments.messages.map((msg, i) => {
-                    // Match commenter name against resolved attendees/host
                     const commenterUser = Object.values(resolvedUsers).find(
                       (u) => u.name === msg.name
                     );
