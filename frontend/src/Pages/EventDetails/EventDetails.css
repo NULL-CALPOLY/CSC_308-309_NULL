@@ -311,6 +311,7 @@
 
 .ed-comment {
   display: flex;
+  align-items: center;
   gap: 0.75rem;
   padding: 0.9rem;
   background: rgba(255, 255, 255, 0.04);
@@ -320,9 +321,9 @@
 }
 
 .ed-comment-avatar {
-  width: 34px;
-  height: 34px;
-  min-width: 34px;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
   border-radius: 50%;
   background: linear-gradient(135deg, #7c3aed, #a78bfa);
   display: flex;
@@ -333,11 +334,36 @@
   color: #fff;
 }
 
+.ed-comment-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ed-comment-body {
+  flex: 1;
+  min-width: 0;
+}
+
 .ed-comment-body p {
   margin: 0;
   font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.75);
   line-height: 1.5;
+}
+
+.ed-comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+}
+
+.ed-comment-time {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  white-space: nowrap;
 }
 
 /* ── Cloudscape overrides ── */
@@ -424,10 +450,13 @@
   line-height: 1.6;
 }
 
-/* ─────────────────────────────────────────────────────────────────────────────
-   REPLACE the entire "/* ── Comments ── *\/" block in EventDetails.css
-   with everything below (down to the end of .ed-comment-body p)
-───────────────────────────────────────────────────────────────────────────── */
+.ed-confirm-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+/* ===================== COMMENTS SECTION ===================== */
 
 /* ── Comments ── */
 .ed-comments {

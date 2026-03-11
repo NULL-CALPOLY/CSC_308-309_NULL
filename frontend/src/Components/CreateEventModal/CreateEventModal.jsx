@@ -3,7 +3,7 @@ import './CreateEventModal.css';
 import Multiselect from '@cloudscape-design/components/multiselect';
 import Input from '@cloudscape-design/components/input';
 import Textarea from '@cloudscape-design/components/textarea';
-import TempAddressComponent from '../TempAddressInputComponent/TempAddressComponent';
+import AddressSearchBar from '../AddressSearchBar/AddressSearchBar';
 import { useAuth } from '../../Hooks/UseAuth.ts';
 import useInterests from '../../Hooks/UseInterests.jsx';
 
@@ -172,12 +172,13 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
             )}
           </div>
 
-          {/* ── Address ── */}
+          {/* ── Address with Geocoding Search Bar ── */}
           <div className="form-group">
             <label>
               Location <span className="required">*</span>
             </label>
-            <TempAddressComponent
+            <AddressSearchBar
+              placeholder="Search for an address…"
               onSelect={({ address, lat, lng }) => {
                 setFormData((prev) => ({
                   ...prev,
@@ -189,10 +190,8 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
                 }));
                 setErrorMessage({ ...errorMessage, address: null });
               }}
+              error={errorMessage.address}
             />
-            {errorMessage.address && (
-              <p className="error-text">{errorMessage.address}</p>
-            )}
           </div>
 
           {/* ── Room / Location Detail ── */}

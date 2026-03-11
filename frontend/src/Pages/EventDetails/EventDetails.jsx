@@ -221,7 +221,6 @@ export default function EventDetails() {
   const [comments, setComments] = useState(null);
   const [commentText, setCommentText] = useState('');
   const [commentsLoading, setCommentsLoading] = useState(true);
-  const [currentUserName, setCurrentUserName] = useState(null);
 
   React.useEffect(() => {
     if (rawEvent) {
@@ -452,9 +451,10 @@ export default function EventDetails() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            name: currentUserName || 'Anonymous',
+            name: user.name || 'Anonymous',
+            avatar: user.avatar || null,
             message: commentText,
-            createdAt: new Date().toISOString(),
+            userId: user.id || null,
           }),
         }
       );
@@ -711,12 +711,40 @@ export default function EventDetails() {
                 )}
               </div>
 
-              {commentsLoading ? (
-                <p className="ed-muted">Loading comments…</p>
-              ) : !comments?.messages?.length ? (
-                <div className="ed-comments__empty">
-                  <span className="ed-comments__empty-icon">💬</span>
-                  <p>No comments yet. Be the first!</p>
+            {commentsLoading ? (
+              <p className="ed-muted">Loading comments…</p>
+            ) : !comments?.messages?.length ? (
+              <p className="ed-muted">No comments yet. Be the first!</p>
+            ) : (
+              comments.messages.map((msg, i) => (
+                <div key={i} className="ed-comment">
+                  <div className="ed-comment-avatar">
+                    {msg.userId?.avatar || msg.avatar ? (
+                      <img
+                        src={msg.userId?.avatar || msg.avatar}
+                        alt={msg.userId?.name || msg.name}
+                        className="ed-comment-avatar-img"
+                      />
+                    ) : (
+                      (msg.name?.charAt(0) || 'U').toUpperCase()
+                    )}
+                  </div>
+                  <div className="ed-comment-body">
+                    <div className="ed-comment-header">
+                      <strong>{msg.name}</strong>
+                      <span className="ed-comment-time">
+                        {msg.createdAt &&
+                          new Date(msg.createdAt).toLocaleString([], {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                      </span>
+                    </div>
+                    <p>{msg.message}</p>
+                  </div>
                 </div>
               ) : (
                 <div className="ed-comments__list">

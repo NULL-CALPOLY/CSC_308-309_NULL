@@ -7,6 +7,8 @@ import CreateEventModal from '../../Components/CreateEventModal/CreateEventModal
 import Navbar from '../../Components/Navbar/Navbar.jsx';
 import HamburgerIcon from '../../assets/Hamburger.svg';
 import ArrowIcon from '../../assets/Arrow.svg';
+import { useAuth } from '../../Hooks/UseAuth.ts';
+import { useModal } from '../../Components/ModalContext.jsx';
 
 const MOBILE_BP = 768;
 
@@ -14,6 +16,8 @@ export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
   const [colOpen, setColOpen] = useState(() => window.innerWidth > MOBILE_BP);
   const refetchEvents = useRef(null);
+  const { user } = useAuth();
+  const { openSignIn } = useModal();
 
   useEffect(() => {
     const onResize = () => {
@@ -53,7 +57,10 @@ export default function HomePage() {
       </button>
 
       <div className="Create-Event-Button">
-        <CreateEventButton onClick={() => setShowModal(true)} />
+        <CreateEventButton
+          onClick={user ? () => setShowModal(true) : openSignIn}
+          label={user ? 'Create Event' : 'Sign In to create event'}
+        />
       </div>
       <CreateEventModal
         isOpen={showModal}

@@ -20,7 +20,7 @@ interface UserState {
   id: string;
   token: string;
   name?: string;
-  profileImage?: string | null;
+  avatar?: string | null;
 }
 
 export const AuthContext = createContext(null);
@@ -37,7 +37,7 @@ export const useProvideAuth = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // ── Helper: fetch full user profile (name + profileImage) ──
+  // ── Helper: fetch full user profile (name + avatar) ──
   const fetchUserProfile = async (
     id: string,
     token: string
@@ -53,7 +53,7 @@ export const useProvideAuth = () => {
       const json = await res.json();
       return {
         name: json.data?.name || '',
-        profileImage: json.data?.profileImage || null,
+        avatar: json.data?.avatar || null,
       };
     } catch {
       return {};
@@ -160,7 +160,7 @@ export const useProvideAuth = () => {
 
   // ── Call this after a successful profile image upload ──
   const updateProfileImage = (imageUrl: string | null) => {
-    setUser((prev) => (prev ? { ...prev, profileImage: imageUrl } : prev));
+    setUser((prev) => (prev ? { ...prev, avatar: imageUrl } : prev));
   };
 
   // ── Call this after a successful profile name update ──

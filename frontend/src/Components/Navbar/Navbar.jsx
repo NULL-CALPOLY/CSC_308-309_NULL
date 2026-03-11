@@ -51,9 +51,9 @@ export default function Navbar({ page = '/' }) {
                   : 'navbar__profile-link'
               }
               end>
-              {user?.profileImage ? (
+              {user?.avatar ? (
                 <img
-                  src={user.profileImage}
+                  src={user.avatar}
                   alt="Profile"
                   className="navbar__profile-icon"
                 />

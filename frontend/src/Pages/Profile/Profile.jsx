@@ -5,6 +5,7 @@ import Navbar from '../../Components/Navbar/Navbar';
 import ProfileImageUploadModal from '../../Components/Modals/ProfileImageUploadModal/ProfileImageUploadModal';
 import DeleteAccountModal from '../../Components/DeleteAccountModal/DeleteAccountModal';
 import { useNavigate } from 'react-router-dom';
+import EventComponent from '../../Components/EventComponent/EventComponent';
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -16,8 +17,8 @@ export default function Profile() {
   const [city, setCity] = useState('');
   const [email, setEmail] = useState('');
   const [interestInput, setInterestInput] = useState('');
-  const [profileImage, setProfileImage] = useState(null);
-  const [profileImagePublicId, setProfileImagePublicId] = useState(null);
+  const [avatar, setAvatar] = useState(null);
+  const [avatarPublicId, setAvatarPublicId] = useState(null); // Cloudinary publicId
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -25,6 +26,7 @@ export default function Profile() {
   const [showImageUpload, setShowImageUpload] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [attendingEvents, setAttendingEvents] = useState([]);
 
   const {
     user,
@@ -61,8 +63,8 @@ export default function Profile() {
         setGender(u.gender || '');
         setCity(u.city || '');
         setEmail(u.email || '');
-        setProfileImage(u.profileImage || null);
-        setProfileImagePublicId(u.profileImagePublicId || null);
+        setAvatar(u.avatar || null);
+        setAvatarPublicId(u.avatarPublicId || null); // load existing publicId
         setInterests(Array.isArray(u.interests) ? u.interests : []);
       } catch (err) {
         setErrorMsg(err.message);
@@ -71,7 +73,23 @@ export default function Profile() {
       }
     };
 
+    const fetchAttendingEvents = async () => {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/events/search/attendee/${user.id}`,
+          { headers: { Authorization: `Bearer ${user.token}` } }
+        );
+        const json = await res.json();
+        if (res.ok && json.success) {
+          setAttendingEvents(json.data);
+        }
+      } catch (_err) {
+        setAttendingEvents([]);
+      }
+    };
+
     fetchUser();
+    fetchAttendingEvents();
   }, [user, isAuthenticated, authLoading]);
 
   const handleImageUploadSuccess = async (result) => {
@@ -85,8 +103,8 @@ export default function Profile() {
             Authorization: `Bearer ${user.token}`,
           },
           body: JSON.stringify({
-            profileImage: result.imageUrl,
-            profileImagePublicId: result.publicId,
+            avatar: result.imageUrl,
+            avatarPublicId: result.publicId,
           }),
         }
       );
@@ -94,9 +112,9 @@ export default function Profile() {
       if (!res.ok || !json.success)
         throw new Error(json.message || 'Failed to save image');
 
-      setProfileImage(result.imageUrl);
-      setProfileImagePublicId(result.publicId);
-      updateProfileImage(result.imageUrl);
+      setAvatar(result.imageUrl);
+      setAvatarPublicId(result.publicId);
+      updateProfileImage(result.imageUrl); // sync navbar avatar
       setShowImageUpload(false);
     } catch (err) {
       setErrorMsg(err.message);
@@ -208,7 +226,7 @@ export default function Profile() {
       </div>
 
       <div className="profile-layout">
-        {/* ── Sidebar ── */}
+        
         <aside className="profile-sidebar">
           <div className="profile-sidebar-card">
             <button
@@ -218,9 +236,9 @@ export default function Profile() {
               title="Change photo">
               <div className="profile-avatar-ring" />
               <div className="profile-avatar-inner">
-                {profileImage ? (
+                {avatar ? (
                   <img
-                    src={profileImage}
+                    src={avatar}
                     alt="Profile"
                     className="profile-avatar-img"
                   />
@@ -266,9 +284,9 @@ export default function Profile() {
           </div>
         </aside>
 
-        {/* ── Main form ── */}
+       
         <form className="profile-main" onSubmit={handleSubmit} noValidate>
-          {/* Panel: Personal Information */}
+         
           <div className="profile-panel">
             <div className="profile-panel-header">
               <span className="panel-dot" />
@@ -285,8 +303,7 @@ export default function Profile() {
                     required
                   />
                 ) : (
-                  <span
-                    className={`profile-field-value ${!name ? 'empty' : ''}`}>
+                  <span className={`profile-field-value ${!name ? 'empty' : ''}`}>
                     {name || 'Not set'}
                   </span>
                 )}
@@ -303,8 +320,7 @@ export default function Profile() {
                     required
                   />
                 ) : (
-                  <span
-                    className={`profile-field-value ${!email ? 'empty' : ''}`}>
+                  <span className={`profile-field-value ${!email ? 'empty' : ''}`}>
                     {email || 'Not set'}
                   </span>
                 )}
@@ -324,8 +340,7 @@ export default function Profile() {
                     <option value="Prefer not to say">Prefer not to say</option>
                   </select>
                 ) : (
-                  <span
-                    className={`profile-field-value ${!gender ? 'empty' : ''}`}>
+                  <span className={`profile-field-value ${!gender ? 'empty' : ''}`}>
                     {gender || 'Not set'}
                   </span>
                 )}
@@ -340,8 +355,7 @@ export default function Profile() {
                     onChange={(e) => setDateOfBirth(e.target.value)}
                   />
                 ) : (
-                  <span
-                    className={`profile-field-value ${!dateOfBirth ? 'empty' : ''}`}>
+                  <span className={`profile-field-value ${!dateOfBirth ? 'empty' : ''}`}>
                     {dateOfBirth?.split('T')[0] || 'Not set'}
                   </span>
                 )}
@@ -349,7 +363,7 @@ export default function Profile() {
             </div>
           </div>
 
-          {/* Panel: Contact & Location */}
+       
           <div className="profile-panel">
             <div className="profile-panel-header">
               <span className="panel-dot" />
@@ -370,8 +384,7 @@ export default function Profile() {
                     placeholder="Phone number"
                   />
                 ) : (
-                  <span
-                    className={`profile-field-value ${!phoneNumber ? 'empty' : ''}`}>
+                  <span className={`profile-field-value ${!phoneNumber ? 'empty' : ''}`}>
                     {phoneNumber || 'Not set'}
                   </span>
                 )}
@@ -387,8 +400,7 @@ export default function Profile() {
                     placeholder="Your city"
                   />
                 ) : (
-                  <span
-                    className={`profile-field-value ${!city ? 'empty' : ''}`}>
+                  <span className={`profile-field-value ${!city ? 'empty' : ''}`}>
                     {city || 'Not set'}
                   </span>
                 )}
@@ -396,7 +408,7 @@ export default function Profile() {
             </div>
           </div>
 
-          {/* Panel: Interests */}
+          
           <div className="profile-panel">
             <div className="profile-panel-header">
               <span className="panel-dot" />
@@ -449,6 +461,43 @@ export default function Profile() {
 
             {errorMsg && <p className="profile-error">{errorMsg}</p>}
           </div>
+
+          
+          <div className="profile-panel">
+            <div className="profile-panel-header">
+              <span className="panel-dot" />
+              <h3>Events I'm Attending</h3>
+            </div>
+            <div className="profile-panel-body single">
+              {attendingEvents.length ? (
+                attendingEvents.map((event) => (
+                  <EventComponent
+                    key={event._id}
+                    eventId={event._id}
+                    eventName={event.name}
+                    eventDate={event.time?.start
+                      ? new Date(event.time.start).toLocaleDateString()
+                      : ''}
+                    eventTime={event.time?.start
+                      ? new Date(event.time.start).toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })
+                      : ''}
+                    eventAddress={event.address}
+                    description={event.description}
+                    interest={Array.isArray(event.interests) ? event.interests.join(', ') : ''}
+                    attendees={event.attendees}
+                    host={event.host}
+                  />
+                ))
+              ) : (
+                <span className="profile-field-value empty">
+                  Not attending any events yet
+                </span>
+              )}
+            </div>
+          </div>
         </form>
       </div>
 
@@ -456,7 +505,7 @@ export default function Profile() {
         isOpen={showImageUpload}
         onClose={() => setShowImageUpload(false)}
         onSuccess={handleImageUploadSuccess}
-        existingPublicId={profileImagePublicId}
+        existingPublicId={avatarPublicId}
       />
       <DeleteAccountModal
         isOpen={showDeleteModal}
