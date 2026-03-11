@@ -113,7 +113,7 @@ Findr is a location-based social discovery platform that helps users find events
 │   │   │   ├── Profile/
 │   │   │   └── EventDetails/
 │   │   ├── Hooks/
-│   │   │   ├── useAuth.ts          # Auth context + JWT logic
+│   │   │   ├── UseAuth.ts          # Auth context + JWT logic
 │   │   │   └── UseEvents.jsx
 │   │   └── App.jsx
 │   ├── .env                        # Dev env vars
