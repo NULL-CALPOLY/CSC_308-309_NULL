@@ -1,13 +1,12 @@
 // ProtectedRoute.jsx
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../Hooks/useAuth.ts';
+import { useAuth } from '../Hooks/UseAuth.ts';
 
 export default function ProtectedRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
   console.log('Auth:', isAuthenticated, 'Loading:', loading);
 
   if (loading) {
-    // You can render a spinner or just null
     return <div>Loading...</div>;
   }
 

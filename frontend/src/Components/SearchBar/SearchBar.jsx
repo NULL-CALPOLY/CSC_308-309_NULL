@@ -1,66 +1,130 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Checkbox from '@cloudscape-design/components/checkbox';
+import useInterests from '../../Hooks/UseInterests';
 import './SearchBar.css';
 
-export default function SearchBar({ onSelectionChange }) {
-  const [interestOptions, setInterestOptions] = useState([]);
+export default function SearchBar({ onSelectionChange, onDateChange }) {
+  const { interests } = useInterests();
   const [checkedInterests, setCheckedInterests] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);
+  const [isScrollable, setIsScrollable] = useState(false);
+  const gridRef = useRef(null);
 
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/interests/all`)
-      .then((res) => res.json())
-      .then((data) => {
-        const mappedOptions = data.map((interest) => ({
-          label: interest.name,
-          value: interest.name,
-        }));
-        setInterestOptions(mappedOptions);
-
-        const initialChecked = {};
-        mappedOptions.forEach((opt) => {
-          initialChecked[opt.value] = false;
-        });
-        setCheckedInterests(initialChecked);
-      })
-      .catch((err) => console.error('Failed to load interests:', err));
-  }, []);
-
-  const handleCheckboxChange = (interestValue, isChecked) => {
-    setCheckedInterests((prev) => {
-      const updated = { ...prev, [interestValue]: isChecked };
-      const selected = Object.keys(updated).filter((key) => updated[key]);
-      onSelectionChange(selected); // notify parent
-      return updated;
-    });
-  };
+  const interestOptions = interests.map((i) => ({
+    label: i.name,
+    value: i.name,
+  }));
 
   const filteredOptions = interestOptions.filter((option) =>
     option.label.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  useEffect(() => {
+    const el = gridRef.current;
+    if (!el) return;
+    const scrollable = el.scrollHeight > el.clientHeight;
+    setIsScrollable(scrollable);
+    if (!scrollable) setIsScrolledToBottom(false);
+  }, [filteredOptions.length]);
+
+  const handleCheckboxChange = (interestValue, isChecked) => {
+    setCheckedInterests((prev) => {
+      const updated = { ...prev, [interestValue]: isChecked };
+      const selected = Object.keys(updated).filter((key) => updated[key]);
+      onSelectionChange(selected);
+      return updated;
+    });
+  };
+
+  const handleDateChange = (newStart, newEnd) => {
+    onDateChange({ startDate: newStart, endDate: newEnd });
+  };
+
+  const clearDates = () => {
+    setStartDate('');
+    setEndDate('');
+    onDateChange({ startDate: '', endDate: '' });
+  };
+
+  const handleGridScroll = (e) => {
+    const el = e.target;
+    setIsScrolledToBottom(
+      el.scrollHeight - el.scrollTop <= el.clientHeight + 2
+    );
+  };
+
   return (
     <div className="searchbar-container">
+      {/* ── Interest search ── */}
       <input
         type="text"
         placeholder="Search interests..."
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={(e) => {
+          setSearchTerm(e.target.value);
+          setIsScrolledToBottom(false);
+        }}
         className="searchbar-input"
       />
 
-      <div className="checkbox-grid">
-        {filteredOptions.map((interest) => (
-          <div key={interest.value} className="checkbox-item">
-            <Checkbox
-              checked={checkedInterests[interest.value] || false}
-              onChange={({ detail }) =>
-                handleCheckboxChange(interest.value, detail.checked)
-              }>
-              {interest.label}
-            </Checkbox>
+      <div
+        className={`checkbox-grid-wrapper ${!isScrollable || isScrolledToBottom ? 'scrolled-to-bottom' : ''}`}>
+        <div
+          className="checkbox-grid"
+          onScroll={handleGridScroll}
+          ref={gridRef}>
+          {filteredOptions.map((interest) => (
+            <div key={interest.value} className="checkbox-item">
+              <Checkbox
+                checked={checkedInterests[interest.value] || false}
+                onChange={({ detail }) =>
+                  handleCheckboxChange(interest.value, detail.checked)
+                }>
+                {interest.label}
+              </Checkbox>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Date filter ── */}
+      <div className="date-filter">
+        <p className="date-filter__label">Filter by date</p>
+        <div className="date-filter__inputs">
+          <div className="date-filter__field">
+            <label>From</label>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => {
+                setStartDate(e.target.value);
+                handleDateChange(e.target.value, endDate);
+              }}
+              className="searchbar-input date-input"
+            />
           </div>
-        ))}
+          <div className="date-filter__field">
+            <label>To</label>
+            <input
+              type="date"
+              value={endDate}
+              min={startDate}
+              onChange={(e) => {
+                setEndDate(e.target.value);
+                handleDateChange(startDate, e.target.value);
+              }}
+              className="searchbar-input date-input"
+            />
+          </div>
+        </div>
+        {(startDate || endDate) && (
+          <button className="date-filter__clear" onClick={clearDates}>
+            Clear dates
+          </button>
+        )}
       </div>
     </div>
   );

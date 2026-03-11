@@ -1,78 +1,77 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './CreateEventModal.css';
 import Multiselect from '@cloudscape-design/components/multiselect';
 import Input from '@cloudscape-design/components/input';
 import Textarea from '@cloudscape-design/components/textarea';
 import TempAddressComponent from '../TempAddressInputComponent/TempAddressComponent';
-import { useAuth } from '../../Hooks/useAuth.ts';
+import { useAuth } from '../../Hooks/UseAuth.ts';
+import useInterests from '../../Hooks/UseInterests.jsx';
 
-export default function CreateEventModal({ isOpen, onClose }) {
+const MAX_TITLE_LENGTH = 75;
+
+export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
   const { user } = useAuth();
+  const { interests, loading: interestsLoading } = useInterests();
+
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     address: '',
+    roomDetail: '',
     interests: [],
     location: '',
     startTime: '',
     endTime: '',
   });
 
-  const [interestOptions, setInterestOptions] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [errorMessage, setErrorMessage] = useState({});
-  const [isLoadingInterests, setIsLoadingInterests] = useState(false);
-  /* 🔹 Fetch interests from API */
+
+  // Lock scroll when open
   useEffect(() => {
-    setIsLoadingInterests(true);
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/interests/all`)
-      .then((res) => res.json())
-      .then((data) => {
-        // Ensure unique options by filtering duplicates
-        const uniqueInterests = data.filter(
-          (interest, index, self) =>
-            index === self.findIndex((i) => i.name === interest.name)
-        );
-        const mappedOptions = uniqueInterests.map((interest) => ({
-          label: interest.name,
-          value: interest.name,
-        }));
-        setInterestOptions(mappedOptions);
-      })
-      .catch((err) =>
-        console.error(
-          import.meta.env.VITE_TEST_VAR,
-          'Failed to load interests:',
-          err,
-          import.meta.env.VITE_API_BASE_URL
-        )
-      )
-      .finally(() => setIsLoadingInterests(false));
-  }, []);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
+  const interestOptions = interests.map((i) => ({
+    label: i.name,
+    value: i.name,
+  }));
+
+  const now = new Date();
+
   const validateForm = () => {
     const newErrors = {};
-    const now = new Date();
 
-    if (!formData.name.trim()) newErrors.name = 'Event title is required';
+    if (!formData.name.trim()) {
+      newErrors.name = 'Event title is required.';
+    } else if (formData.name.length > MAX_TITLE_LENGTH) {
+      newErrors.name = `Title cannot exceed ${MAX_TITLE_LENGTH} characters.`;
+    }
 
     if (!formData.description.trim())
-      newErrors.description = 'Description is required';
+      newErrors.description = 'Description is required.';
 
-    if (!formData.address) newErrors.address = 'Location is required';
+    if (!formData.address) newErrors.address = 'Location is required.';
 
-    if (!formData.startTime) newErrors.startTime = 'Start time is required';
-    else if (new Date(formData.startTime) < now)
-      newErrors.startTime = 'Start time cannot be in the past';
+    if (!formData.startTime) {
+      newErrors.startTime = 'Start time is required.';
+    } else if (new Date(formData.startTime) <= now) {
+      newErrors.startTime = 'Start time must be in the future.';
+    }
 
-    if (!formData.endTime) newErrors.endTime = 'End time is required';
-    else if (new Date(formData.endTime) <= new Date(formData.startTime))
-      newErrors.endTime = 'End time must be after start time';
+    if (!formData.endTime) {
+      newErrors.endTime = 'End time is required.';
+    } else if (new Date(formData.endTime) <= new Date(formData.startTime)) {
+      newErrors.endTime = 'End time must be after start time.';
+    }
 
     if (selectedOptions.length === 0)
-      newErrors.interests = 'Select at least one interest';
+      newErrors.interests = 'Select at least one interest.';
 
     setErrorMessage(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -80,16 +79,16 @@ export default function CreateEventModal({ isOpen, onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) return;
 
     try {
-      // Format payload according to your EventSchema
       const payload = {
         name: formData.name,
         description: formData.description,
         mapComponent: formData.address,
-        address: formData.address,
+        address: formData.roomDetail
+          ? `${formData.address}, ${formData.roomDetail}`
+          : formData.address,
         host: user.id,
         attendees: [],
         blockedUsers: [],
@@ -106,21 +105,13 @@ export default function CreateEventModal({ isOpen, onClose }) {
         `${import.meta.env.VITE_API_BASE_URL}/events/`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         }
       );
 
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.statusText}`);
-      }
-
-      const result = await response.json();
-      console.log('Event created successfully:', result);
-
-      onClose();
+      if (!response.ok) throw new Error(`Server error: ${response.statusText}`);
+      onSuccess();
     } catch (err) {
       console.error('Failed to create event:', err);
       alert('Failed to create event. Check console for details.');
@@ -128,24 +119,33 @@ export default function CreateEventModal({ isOpen, onClose }) {
   };
 
   return (
-    <div className="modal-backdrop">
-      <div className="modal">
-        <header className="modal-header">
-          <h2>Create Event</h2>
+    <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <div>
+            <h2>Create Event</h2>
+          </div>
           <button className="close-btn" onClick={onClose}>
-            ×
+            ✕
           </button>
-        </header>
+        </div>
 
-        <form className="event-form" onSubmit={handleSubmit}>
-          {/* Event Title */}
+        <form className="event-form" onSubmit={handleSubmit} noValidate>
+          {/* ── Title ── */}
           <div className="form-group">
-            <label>Event Title</label>
+            <label>
+              Event Title <span className="required">*</span>
+              <span className="char-count">
+                {formData.name.length}/{MAX_TITLE_LENGTH}
+              </span>
+            </label>
             <Input
               value={formData.name}
               onChange={({ detail }) => {
-                setFormData({ ...formData, name: detail.value });
-                setErrorMessage({ ...errorMessage, name: null });
+                if (detail.value.length <= MAX_TITLE_LENGTH) {
+                  setFormData({ ...formData, name: detail.value });
+                  setErrorMessage({ ...errorMessage, name: null });
+                }
               }}
               placeholder="Enter event title"
             />
@@ -154,9 +154,11 @@ export default function CreateEventModal({ isOpen, onClose }) {
             )}
           </div>
 
-          {/* Description */}
+          {/* ── Description ── */}
           <div className="form-group">
-            <label>Description</label>
+            <label>
+              Description <span className="required">*</span>
+            </label>
             <Textarea
               value={formData.description}
               onChange={({ detail }) => {
@@ -170,93 +172,103 @@ export default function CreateEventModal({ isOpen, onClose }) {
             )}
           </div>
 
-          {/* Address */}
+          {/* ── Address ── */}
           <div className="form-group">
-            <label>Location</label>
+            <label>
+              Location <span className="required">*</span>
+            </label>
             <TempAddressComponent
               onSelect={({ address, lat, lng }) => {
-                {
-                  setFormData((prev) => ({
-                    ...prev,
-                    address, // formatted address string
-                    location: {
-                      type: 'Point',
-                      coordinates: [lng, lat], // GeoJSON [longitude, latitude]
-                    },
-                  }));
-                  setErrorMessage({ ...errorMessage, address: null });
-                }
+                setFormData((prev) => ({
+                  ...prev,
+                  address,
+                  location: {
+                    type: 'Point',
+                    coordinates: [lng, lat],
+                  },
+                }));
+                setErrorMessage({ ...errorMessage, address: null });
               }}
             />
-
             {errorMessage.address && (
               <p className="error-text">{errorMessage.address}</p>
             )}
           </div>
 
-          {/* Interests */}
+          {/* ── Room / Location Detail ── */}
           <div className="form-group">
-            <label>Interests</label>
+            <label>Room / Location Detail</label>
+            <Input
+              value={formData.roomDetail}
+              onChange={({ detail }) =>
+                setFormData({ ...formData, roomDetail: detail.value })
+              }
+              placeholder="e.g. Room 204, Floor 3, Gate B"
+            />
+          </div>
+
+          {/* ── Interests ── */}
+          <div className="form-group">
+            <label>
+              Interests <span className="required">*</span>
+            </label>
             <Multiselect
               placeholder="Select interests"
               options={interestOptions}
               selectedOptions={selectedOptions}
               onChange={({ detail }) => {
-                const uniqueSelected = detail.selectedOptions.filter(
-                  (option, index, self) =>
-                    index === self.findIndex((o) => o.value === option.value)
+                const unique = detail.selectedOptions.filter(
+                  (o, i, self) =>
+                    i === self.findIndex((x) => x.value === o.value)
                 );
-                setSelectedOptions(uniqueSelected);
+                setSelectedOptions(unique);
                 setFormData({
                   ...formData,
-                  interests: uniqueSelected.map((o) => o.value),
+                  interests: unique.map((o) => o.value),
                 });
                 setErrorMessage({ ...errorMessage, interests: null });
               }}
               filteringType="auto"
-              keepOpen={false}
-              loading={isLoadingInterests}
-              disabled={isLoadingInterests}
+              keepOpen={true}
+              statusType={interestsLoading ? 'loading' : 'finished'}
+              loadingText="Loading interests..."
             />
             {errorMessage.interests && (
               <p className="error-text">{errorMessage.interests}</p>
             )}
           </div>
 
-          {/* Date & Time */}
+          {/* ── Date & Time ── */}
           <div className="datetime-grid">
             <div className="form-group">
-              <label htmlFor="startTime">Start Time</label>
-              <div className="awsui_input-container">
-                <Input
-                  ariaLabel="Start Time"
-                  type="datetime-local"
-                  value={formData.startTime}
-                  onChange={({ detail }) => {
-                    setFormData({ ...formData, startTime: detail.value });
-                    setErrorMessage({ ...errorMessage, startTime: null });
-                  }}
-                />
-              </div>
+              <label>
+                Start Time <span className="required">*</span>
+              </label>
+              <Input
+                type="datetime-local"
+                value={formData.startTime}
+                onChange={({ detail }) => {
+                  setFormData({ ...formData, startTime: detail.value });
+                  setErrorMessage({ ...errorMessage, startTime: null });
+                }}
+              />
               {errorMessage.startTime && (
                 <p className="error-text">{errorMessage.startTime}</p>
               )}
             </div>
 
             <div className="form-group">
-              <label htmlFor="endTime">End Time</label>
-              <div className="awsui_input-container">
-                <Input
-                  ariaLabel="End Time"
-                  type="datetime-local"
-                  min={formData.startTime}
-                  value={formData.endTime}
-                  onChange={({ detail }) => {
-                    setFormData({ ...formData, endTime: detail.value });
-                    setErrorMessage({ ...errorMessage, endTime: null });
-                  }}
-                />
-              </div>
+              <label>
+                End Time <span className="required">*</span>
+              </label>
+              <Input
+                type="datetime-local"
+                value={formData.endTime}
+                onChange={({ detail }) => {
+                  setFormData({ ...formData, endTime: detail.value });
+                  setErrorMessage({ ...errorMessage, endTime: null });
+                }}
+              />
               {errorMessage.endTime && (
                 <p className="error-text">{errorMessage.endTime}</p>
               )}

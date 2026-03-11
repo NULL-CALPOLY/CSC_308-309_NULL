@@ -1,18 +1,14 @@
-// src/Components/Navbar.jsx
-import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { useAuth } from '../../Hooks/useAuth.ts';
+import { useAuth } from '../../Hooks/UseAuth.ts';
+import { useModal } from '../ModalContext.jsx';
 import './Navbar.css';
-import LEBRON from '../../assets/LEBRON.mp4';
 
 export default function Navbar({ page = '/' }) {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, user } = useAuth();
+  const { openSignIn, openRegister } = useModal();
 
   const linkClass = ({ isActive }) =>
     isActive ? 'navbar__link active' : 'navbar__link';
-
-  const profileClass = ({ isActive }) =>
-    isActive ? 'navbar__profile-link active' : 'navbar__profile-link';
 
   return (
     <nav className="navbar">
@@ -22,33 +18,50 @@ export default function Navbar({ page = '/' }) {
         </NavLink>
       </div>
 
+      <div className="navbar__explore">
+        <NavLink
+          to="/home"
+          className={({ isActive }) =>
+            isActive ? 'navbar__explore-link active' : 'navbar__explore-link'
+          }>
+          Explore
+        </NavLink>
+      </div>
+
       <div className="navbar__links">
         {!isAuthenticated ? (
           <>
-            <NavLink
-              to="/signin"
-              className={({ isActive }) => `${linkClass({ isActive })} signin`}>
+            <button className="navbar__link signin" onClick={openSignIn}>
               Sign In
-            </NavLink>
-            <NavLink
-              to="/register"
-              className={({ isActive }) => `${linkClass({ isActive })} signup`}
-              end>
+            </button>
+            <button className="navbar__link signup" onClick={openRegister}>
               Registration
-            </NavLink>
+            </button>
           </>
         ) : (
           <div className="navbar__profile">
             <button onClick={logout} className="navbar__logout-btn">
               Logout
             </button>
-
-            <NavLink to="/profile" className={profileClass} end>
-              <img
-                src={LEBRON}
-                alt="Profile"
-                className="navbar__profile-icon"
-              />
+            <NavLink
+              to="/profile"
+              className={({ isActive }) =>
+                isActive
+                  ? 'navbar__profile-link active'
+                  : 'navbar__profile-link'
+              }
+              end>
+              {user?.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt="Profile"
+                  className="navbar__profile-icon"
+                />
+              ) : (
+                <div className="navbar__profile-initial">
+                  {(user?.name?.charAt(0) || '?').toUpperCase()}
+                </div>
+              )}
             </NavLink>
           </div>
         )}

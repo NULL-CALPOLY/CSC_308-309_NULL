@@ -45,6 +45,23 @@
   display: block;
 }
 
+/* === Event pin hover lift === */
+.event-marker-wrapper {
+  background: none !important;
+  border: none !important;
+}
+
+.event-marker-img {
+  width: 45px;
+  height: 45px;
+  display: block;
+  transition: transform 0.15s ease;
+}
+
+.event-marker-wrapper:hover .event-marker-img {
+  transform: translateY(-5px);
+}
+
 /* Rounded zoom controls */
 .leaflet-control-zoom {
   border-radius: 8px;

@@ -22,7 +22,7 @@ export default function TempAddressComponent({
   }, []);
 
   useEffect(() => {
-    if (query.length < 10) {
+    if (query.length < 3) {
       setResults([]);
       return;
     }
@@ -37,7 +37,7 @@ export default function TempAddressComponent({
               q: query,
               format: 'json',
               addressdetails: '1',
-              limit: '5',
+              limit: '4',
             }),
           {
             headers: { 'User-Agent': 'EventApp/1.0' },

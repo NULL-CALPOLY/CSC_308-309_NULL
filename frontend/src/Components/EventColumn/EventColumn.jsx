@@ -2,61 +2,49 @@
 import EventComponent from '../EventComponent/EventComponent.jsx';
 import './EventColumn.css';
 import { useEffect, useState } from 'react';
-import { format } from 'date-fns';
+import { useUpcomingEvents } from '../../Hooks/UseEvents.jsx';
 import SearchBar from '../SearchBar/SearchBar.jsx';
 
-export default function EventColumn() {
-  const [eventList, setEventList] = useState([]);
+export default function EventColumn({ onRefetchReady }) {
+  const { events: eventList, refetch } = useUpcomingEvents();
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedInterests, setSelectedInterests] = useState([]);
+  const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' });
 
-  // Fetch events once
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/events/all`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data.success) return;
+    if (onRefetchReady) onRefetchReady(refetch);
+  }, [refetch, onRefetchReady]);
 
-        const mappedEvents = data.data.map((event) => {
-          const start = new Date(event.time.start);
-          const end = new Date(event.time.end);
-          const eventTime = `${format(start, 'MMM do h:mm a')} - ${format(end, 'h:mm a')}`;
-          const eventAddress = event.address ?? 'No address';
-
-          return {
-            id: event._id,
-            eventName: event.name,
-            description: event.description,
-            eventTime,
-            eventAddress,
-            attendees: event.attendees,
-            host: event.host,
-            interests: event.interests, // <-- keep as array for filtering
-          };
-        });
-
-        setEventList(mappedEvents);
-        setFilteredEvents(mappedEvents); // show all initially
-      })
-      .catch((err) => console.error('Failed to load events:', err));
-  }, []);
-
-  // Update filtered events whenever selectedInterests changes
   useEffect(() => {
-    if (selectedInterests.length === 0) {
-      setFilteredEvents(eventList); // no filter
-    } else {
-      const filtered = eventList.filter((event) =>
+    let filtered = eventList;
+    if (selectedInterests.length > 0) {
+      filtered = filtered.filter((event) =>
         event.interests.some((interest) => selectedInterests.includes(interest))
       );
-      setFilteredEvents(filtered);
     }
-  }, [selectedInterests, eventList]);
+    // Date filter
+    if (dateRange.startDate) {
+      const start = new Date(dateRange.startDate);
+      filtered = filtered.filter(
+        (event) => new Date(event.eventStart) >= start
+      );
+    }
+    if (dateRange.endDate) {
+      const end = new Date(dateRange.endDate);
+      end.setHours(23, 59, 59); // include the full end day
+      filtered = filtered.filter((event) => new Date(event.eventStart) <= end);
+    }
+
+    setFilteredEvents(filtered);
+  }, [selectedInterests, dateRange, eventList]);
 
   return (
     <div className="Event_Container">
       <div className="Search_Bar">
-        <SearchBar onSelectionChange={setSelectedInterests} />
+        <SearchBar
+          onSelectionChange={setSelectedInterests}
+          onDateChange={setDateRange}
+        />
       </div>
       <div className="Event_List">
         {filteredEvents.map((event) => (
@@ -64,6 +52,7 @@ export default function EventColumn() {
             eventId={event.id}
             key={event.id}
             eventName={event.eventName}
+            eventDate={event.eventDate}
             eventTime={event.eventTime}
             eventAddress={event.eventAddress}
             description={event.description}

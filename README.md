@@ -4,7 +4,7 @@ A full-stack web application for finding and connecting with people based on sha
 
 **Developed by:** Vishnu, Ryan, Aaron, and Brian
 
-**Live App:** [https://delightful-dune-0c8056b0f.6.azurestaticapps.net](https://delightful-dune-0c8056b0f.6.azurestaticapps.net)
+**Live App:** [https://findr.page](https://findr.page)
 
 **API:** [https://findr-ggfjetd2gqe2gday.westus3-01.azurewebsites.net](https://findr-ggfjetd2gqe2gday.westus3-01.azurewebsites.net)
 
@@ -36,7 +36,8 @@ Findr is a location-based social discovery platform that helps users find events
 - Event discovery, creation, and RSVP management
 - Interest-based tagging and filtering
 - Interactive map powered by React-Leaflet
-- Group chat functionality
+- Event comment threads
+- Image uploads via Cloudinary
 - Organization management
 - Profile management
 
@@ -55,7 +56,7 @@ Findr is a location-based social discovery platform that helps users find events
 - **Database:** MongoDB with Mongoose
 - **Auth:** JWT (access + refresh tokens), bcrypt, Passport.js + Google OAuth 2.0
 - **Session:** express-session + connect-mongo
-- **Other:** cookie-parser, cors, dotenv
+- **Other:** cookie-parser, cors, dotenv, multer, Cloudinary
 
 ### Frontend
 
@@ -64,6 +65,7 @@ Findr is a location-based social discovery platform that helps users find events
 - **Maps:** React-Leaflet + Leaflet
 - **UI Components:** AWS Cloudscape Design
 - **Styling:** CSS
+- **Utilities:** date-fns
 - **Language:** JSX + TypeScript (hooks)
 
 ### Testing
@@ -88,9 +90,10 @@ Findr is a location-based social discovery platform that helps users find events
 .
 ├── backend/
 │   ├── backend.js                  # Server entry point
+│   ├── Cloudinary.js               # Cloudinary upload config
 │   ├── UserFiles/                  # User routes, schema, services
 │   ├── EventFiles/                 # Event management
-│   ├── ChatFiles/                  # Group chat functionality
+│   ├── CommentFiles/               # Event comment threads
 │   ├── InterestFIles/              # Interest management
 │   ├── OrganizationFiles/          # Organization management
 │   └── OAuth/                      # Google OAuth routes (Passport.js)
@@ -98,23 +101,27 @@ Findr is a location-based social discovery platform that helps users find events
 │   ├── src/
 │   │   ├── Components/             # Reusable React components
 │   │   │   ├── AuthProvider.jsx
+│   │   │   ├── ModalContext.jsx
+│   │   │   ├── ProtectedComponent.jsx
 │   │   │   ├── Navbar/
+│   │   │   ├── CreateEventButton/
 │   │   │   ├── CreateEventModal/
 │   │   │   ├── EventComponent/
 │   │   │   ├── EventColumn/
 │   │   │   ├── MainMapComponent/
+│   │   │   ├── Modals/
 │   │   │   ├── SearchBar/
-│   │   │   └── InterestTag/
+│   │   │   ├── InterestTag/
+│   │   │   └── TempAddressInputComponent/
 │   │   ├── Pages/                  # Page-level components
 │   │   │   ├── Landing/
 │   │   │   ├── Home/
-│   │   │   ├── SignIn/
-│   │   │   ├── Registration/
 │   │   │   ├── Profile/
 │   │   │   └── EventDetails/
 │   │   ├── Hooks/
-│   │   │   ├── useAuth.ts          # Auth context + JWT logic
-│   │   │   └── UseEvents.jsx
+│   │   │   ├── UseAuth.ts          # Auth context + JWT logic
+│   │   │   ├── UseEvents.jsx
+│   │   │   └── UseInterests.jsx
 │   │   └── App.jsx
 │   ├── .env                        # Dev env vars
 │   ├── .env.production             # Production env vars
@@ -197,6 +204,9 @@ JWT_TOKEN_SECRET=your_jwt_secret
 REFRESH_TOKEN_SECRET=your_refresh_secret
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
+CLOUDINARY_CLOUD_NAME=cloud_name
+CLOUDINARY_KEY=cloudinary_key
+CLOUDINARY_SECRET=cloudinary_secret
 ```
 
 ### Backend — `.env.test` (root)
@@ -265,15 +275,13 @@ VITE_API_BASE_URL=https://findr-ggfjetd2gqe2gday.westus3-01.azurewebsites.net
 | `PUT`    | `/events/:id/attendees/add/:userId`    | RSVP to event      |
 | `PUT`    | `/events/:id/attendees/remove/:userId` | Un-RSVP from event |
 
-### Chats
+### Comments
 
-| Method | Endpoint                          | Description    |
-| ------ | --------------------------------- | -------------- |
-| `GET`  | `/chats/all`                      | Get all chats  |
-| `GET`  | `/chats/:id`                      | Get chat by ID |
-| `POST` | `/chats`                          | Create chat    |
-| `PUT`  | `/chats/:id/users/add/:userId`    | Add member     |
-| `PUT`  | `/chats/:id/users/remove/:userId` | Remove member  |
+| Method | Endpoint                           | Description                      |
+| ------ | ---------------------------------- | -------------------------------- |
+| `GET`  | `/comments/event/:eventId`         | Get comments for an event        |
+| `POST` | `/comments/event/:eventId`         | Create comments thread for event |
+| `POST` | `/comments/event/:eventId/message` | Add message to event comments    |
 
 ### Interests
 
@@ -315,10 +323,13 @@ tests/
 ├── Integration/        # Supertest tests against mongodb-memory-server
 │   ├── Users/
 │   ├── Events/
-│   ├── Chats/
 │   ├── Interests/
 │   └── Organizations/
 ├── Mockingoose/        # Route/service tests using mockingoose
+│   ├── Users/
+│   ├── Events/
+│   ├── Interests/
+│   └── Organizations/
 └── unit/frontend/      # React component tests (jsdom)
 ```
 
@@ -340,7 +351,7 @@ The app is deployed on Azure:
 | `SESSION_SECRET`       | Random secret for express-session                             |
 | `JWT_TOKEN_SECRET`     | Secret for signing access tokens                              |
 | `REFRESH_TOKEN_SECRET` | Secret for signing refresh tokens                             |
-| `FRONTEND_URL`         | `https://delightful-dune-0c8056b0f.6.azurestaticapps.net`     |
+| `FRONTEND_URL`         | `https://findr.page`                                          |
 | `BACKEND_URL`          | `https://findr-ggfjetd2gqe2gday.westus3-01.azurewebsites.net` |
 | `GOOGLE_CLIENT_ID`     | Google OAuth client ID                                        |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth client secret                                    |
