@@ -4,7 +4,6 @@ import { useAuth } from '../Hooks/UseAuth.ts';
 
 export default function ProtectedRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
-  console.log('Auth:', isAuthenticated, 'Loading:', loading);
 
   if (loading) {
     return <div>Loading...</div>;

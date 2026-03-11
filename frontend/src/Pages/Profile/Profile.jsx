@@ -83,7 +83,7 @@ export default function Profile() {
         if (res.ok && json.success) {
           setAttendingEvents(json.data);
         }
-      } catch (_err) {
+      } catch {
         setAttendingEvents([]);
       }
     };

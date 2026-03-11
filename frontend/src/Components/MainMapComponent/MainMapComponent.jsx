@@ -29,7 +29,6 @@ export default function MainMapComponent() {
   const [userPosition, setUserPosition] = useState(null);
   const [tracking, setTracking] = useState(false);
   const [events, setEvents] = useState([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_BASE_URL}/events/all`)
