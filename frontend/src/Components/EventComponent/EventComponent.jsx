@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './EventComponent.css';
 import TagComponent from '../InterestTag/InterestTag.jsx';
-import { useAuth } from '../../Hooks/useAuth.js';
+import { useAuth } from '../../Hooks/UseAuth.ts';
 import { useModal } from '../ModalContext.jsx';
 
 export default function EventComponent(props) {

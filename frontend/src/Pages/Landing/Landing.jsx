@@ -3,7 +3,7 @@ import './Landing.css';
 import Navbar from '../../Components/Navbar/Navbar.jsx';
 import community from '../../assets/community.svg';
 import LEBRON from '../../assets/LEBRON.mp4';
-import { useAuth } from '../../Hooks/UseAuth.ts';
+import { useAuth } from '../../Hooks/UseAuth';
 import { useModal } from '../../Components/ModalContext.jsx';
 
 export default function LandingPage() {
