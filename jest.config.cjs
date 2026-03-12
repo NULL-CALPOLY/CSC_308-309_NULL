@@ -1,12 +1,25 @@
 const path = require('path');
 
 module.exports = {
+  // Use V8 coverage provider to avoid minimatch compatibility issues
+  coverageProvider: 'v8',
+
+  // Collect coverage from all backend and frontend source files
+  collectCoverageFrom: [
+    'backend/**/*.js',
+    'frontend/src/**/*.{js,jsx,ts,tsx}',
+    '!frontend/src/Main.jsx',
+    '!frontend/src/vite-env.d.ts',
+    '!**/node_modules/**',
+  ],
+
   // Ignore integration-level manual mocks to avoid duplicate mock filenames
   modulePathIgnorePatterns: ['<rootDir>/tests/Integration/__mocks__'],
   projects: [
     // Frontend unit tests
     {
       displayName: 'unit-frontend',
+      coverageProvider: 'v8',
       testEnvironment: 'jest-environment-jsdom',
       transform: {
         '^.+\\.[jt]sx?$': [
@@ -44,6 +57,7 @@ module.exports = {
     // Integration tests (backend with MongoDB)
     {
       displayName: 'integration',
+      coverageProvider: 'v8',
       testEnvironment: 'node',
       transform: {
         '^.+\\.[jt]sx?$': [

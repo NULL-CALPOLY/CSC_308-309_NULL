@@ -108,4 +108,77 @@ describe('Event Services', () => {
     const results = await eventServices.findEventsBlockingUser(userId);
     expect(results.length).toBeGreaterThan(0);
   });
+
+  it('should get all events', async () => {
+    await eventModel.create(testEvent);
+    const results = await eventServices.getEvents();
+    expect(results.length).toBeGreaterThan(0);
+  });
+
+  it('should find upcoming events', async () => {
+    const futureEvent = {
+      ...testEvent,
+      time: {
+        start: new Date(Date.now() + 86400000),
+        end: new Date(Date.now() + 172800000),
+      },
+    };
+    await eventModel.create(futureEvent);
+    const results = await eventServices.findUpcomingEvent();
+    expect(results.length).toBeGreaterThan(0);
+  });
+
+  it('should find events by description keyword', async () => {
+    await eventModel.create(testEvent);
+    const results = await eventServices.findEventByDescription('test event');
+    expect(results.length).toBeGreaterThan(0);
+  });
+
+  it('should add and remove users from attendees', async () => {
+    const event = await eventModel.create(testEvent);
+    const userId = new mongoose.Types.ObjectId();
+
+    const added = await eventServices.addUserToAttendees(event._id, userId);
+    expect(added.attendees.map((a) => a.toString())).toContain(
+      userId.toString()
+    );
+
+    const removed = await eventServices.removeUserFromAttendees(
+      event._id,
+      userId
+    );
+    expect(removed.attendees.map((a) => a.toString())).not.toContain(
+      userId.toString()
+    );
+  });
+
+  it('should add and remove users from blocked list', async () => {
+    const event = await eventModel.create(testEvent);
+    const userId = new mongoose.Types.ObjectId();
+
+    const added = await eventServices.addUserToBlocked(event._id, userId);
+    expect(added.blockedUsers.map((b) => b.toString())).toContain(
+      userId.toString()
+    );
+
+    const removed = await eventServices.removeUserFromBlocked(
+      event._id,
+      userId
+    );
+    expect(removed.blockedUsers.map((b) => b.toString())).not.toContain(
+      userId.toString()
+    );
+  });
+
+  it('should find events by exact start time', async () => {
+    const event = await eventModel.create(testEvent);
+    const results = await eventServices.findEventByStart(event.time.start);
+    expect(results.length).toBeGreaterThan(0);
+  });
+
+  it('should find events by exact end time', async () => {
+    const event = await eventModel.create(testEvent);
+    const results = await eventServices.findEventByEnd(event.time.end);
+    expect(results.length).toBeGreaterThan(0);
+  });
 });

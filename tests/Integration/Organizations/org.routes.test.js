@@ -159,4 +159,84 @@ describe('Organization Routes', () => {
     expect(res.status).toBe(404);
     expect(res.body.success).toBe(false);
   });
+
+  test('GET /organizations/all returns all organizations when they exist', async () => {
+    await organizationModel.create(testOrganization);
+    const res = await request(app).get('/organizations/all');
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.length).toBeGreaterThan(0);
+  });
+
+  test('GET /organizations/search/member/:userId finds organizations for member', async () => {
+    const memberId = new mongoose.Types.ObjectId();
+    await organizationModel.create({
+      ...testOrganization,
+      members: [memberId],
+    });
+    const res = await request(app).get(
+      `/organizations/search/member/${memberId}`
+    );
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.length).toBeGreaterThan(0);
+  });
+
+  test('GET /organizations/search/member/:userId returns 404 when not found', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const res = await request(app).get(
+      `/organizations/search/member/${fakeId}`
+    );
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
+  });
+
+  test('PUT /organizations/:id/members/add/:userId adds user to members', async () => {
+    const created = await organizationModel.create(testOrganization);
+    const newMemberId = new mongoose.Types.ObjectId();
+
+    const res = await request(app).put(
+      `/organizations/${created._id}/members/add/${newMemberId}`
+    );
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.members.map(String)).toContain(newMemberId.toString());
+  });
+
+  test('PUT /organizations/:id/members/add/:userId returns 404 when org not found', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const userId = new mongoose.Types.ObjectId();
+    const res = await request(app).put(
+      `/organizations/${fakeId}/members/add/${userId}`
+    );
+    expect(res.status).toBe(404);
+  });
+
+  test('PUT /organizations/:id/members/remove/:userId removes user from members', async () => {
+    const memberId = new mongoose.Types.ObjectId();
+    const created = await organizationModel.create({
+      ...testOrganization,
+      members: [memberId],
+    });
+
+    const res = await request(app).put(
+      `/organizations/${created._id}/members/remove/${memberId}`
+    );
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.members.map(String)).not.toContain(
+      memberId.toString()
+    );
+  });
+
+  test('PUT /organizations/:id/members/remove/:userId returns 404 when org not found', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const userId = new mongoose.Types.ObjectId();
+    const res = await request(app).put(
+      `/organizations/${fakeId}/members/remove/${userId}`
+    );
+    expect(res.status).toBe(404);
+  });
 });

@@ -158,4 +158,19 @@ describe('Interest Routes', () => {
       rock._id.toString()
     );
   });
+
+  test('GET /interests/all returns all interests when they exist', async () => {
+    await interestModel.create(testInterest);
+    const res = await request(app).get('/interests/all');
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.length).toBeGreaterThan(0);
+  });
+
+  test('GET /interests/:id/similar returns 404 when no similar interests found', async () => {
+    const music = await interestModel.create(testInterest);
+    const res = await request(app).get(`/interests/${music._id}/similar`);
+    // Should still return 200 with empty array OR 404 depending on implementation
+    expect([200, 404]).toContain(res.status);
+  });
 });

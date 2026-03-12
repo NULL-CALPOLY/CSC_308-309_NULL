@@ -368,5 +368,17 @@ describe('User Routes', () => {
       expect(res.status).toBe(404);
       expect(res.body.success).toBe(false);
     });
+
+    test('GET /users/search/dob/:dob returns 404 when age not found', async () => {
+      const res = await request(app).get('/users/search/dob/150');
+      expect(res.status).toBe(404);
+      expect(res.body.success).toBe(false);
+    });
+
+    test('GET /users/search/radius/:radius returns 404 when no users found', async () => {
+      const res = await request(app).get('/users/search/radius/100');
+      expect(res.status).toBe(404);
+      expect(res.body.success).toBe(false);
+    });
   });
 });

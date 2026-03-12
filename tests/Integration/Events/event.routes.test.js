@@ -295,4 +295,94 @@ describe('Event Routes', () => {
     expect(res.body.success).toBe(true);
     expect(res.body.data.blockedUsers).not.toContain(blockedUserId.toString());
   });
+
+  test('GET /events/upcoming returns future events', async () => {
+    const futureEvent = {
+      ...testEvent,
+      time: {
+        start: new Date(Date.now() + 86400000), // tomorrow
+        end: new Date(Date.now() + 172800000), // day after tomorrow
+      },
+    };
+    await eventModel.create(futureEvent);
+    const res = await request(app).get('/events/upcoming');
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.length).toBeGreaterThan(0);
+  });
+
+  test('GET /events/upcoming returns 404 when no future events', async () => {
+    const res = await request(app).get('/events/upcoming');
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
+  });
+
+  test('GET /events/search/start/:start returns 404 when not found', async () => {
+    const res = await request(app).get('/events/search/start/2099-01-01');
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
+  });
+
+  test('GET /events/search/end/:end returns 404 when not found', async () => {
+    const res = await request(app).get('/events/search/end/2099-01-01');
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
+  });
+
+  test('GET /events/search/time-range/:start/:end returns 404 when not found', async () => {
+    const res = await request(app).get(
+      '/events/search/time-range/2099-01-01/2099-01-02'
+    );
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
+  });
+
+  test('GET /events/search/blocked/:userId returns 404 when no events block user', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const res = await request(app).get(`/events/search/blocked/${fakeId}`);
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
+  });
+
+  test('PUT /events/:id/attendees/add/:userId returns 404 when event not found', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const userId = new mongoose.Types.ObjectId();
+    const res = await request(app).put(
+      `/events/${fakeId}/attendees/add/${userId}`
+    );
+    expect(res.status).toBe(404);
+  });
+
+  test('PUT /events/:id/attendees/remove/:userId returns 404 when event not found', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const userId = new mongoose.Types.ObjectId();
+    const res = await request(app).put(
+      `/events/${fakeId}/attendees/remove/${userId}`
+    );
+    expect(res.status).toBe(404);
+  });
+
+  test('PUT /events/:id/blocked/add/:userId returns 404 when event not found', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const userId = new mongoose.Types.ObjectId();
+    const res = await request(app).put(
+      `/events/${fakeId}/blocked/add/${userId}`
+    );
+    expect(res.status).toBe(404);
+  });
+
+  test('PUT /events/:id/blocked/remove/:userId returns 404 when event not found', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const userId = new mongoose.Types.ObjectId();
+    const res = await request(app).put(
+      `/events/${fakeId}/blocked/remove/${userId}`
+    );
+    expect(res.status).toBe(404);
+  });
+
+  test('GET /events/search/location/:location returns 404 when no events found', async () => {
+    const res = await request(app).get('/events/search/location/0,0,1');
+    expect(res.status).toBe(404);
+    expect(res.body.success).toBe(false);
+  });
 });
