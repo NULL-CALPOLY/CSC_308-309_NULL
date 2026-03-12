@@ -6,7 +6,9 @@ A full-stack web application for finding and connecting with people based on sha
 
 **Live App:** [https://findr.page](https://findr.page)
 
-**API:** [https://findr-ggfjetd2gqe2gday.westus3-01.azurewebsites.net](https://findr-ggfjetd2gqe2gday.westus3-01.azurewebsites.net)
+**API:** [https://findr-ggfjetd2gqe2gday.westus3-01.azurewebsites.net](https://findr-ggfjetd2gqe2gday.westus3-01.azurewebsites.net)\
+
+**Tech Spec:** [https://docs.google.com/document/d/1xPatnOUdmf4j4XLYecwjvVe7y-TObKSaQwlB1beosF8/edit?usp=sharing](https://docs.google.com/document/d/1xPatnOUdmf4j4XLYecwjvVe7y-TObKSaQwlB1beosF8/edit?usp=sharing)
 
 ---
 
