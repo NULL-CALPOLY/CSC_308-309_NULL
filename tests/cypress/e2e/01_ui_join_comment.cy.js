@@ -48,7 +48,7 @@ function fetchFirstEventId() {
     });
 }
 
-// Helper: inject auth token into the app's localStorage so the React AuthContext sees the user as logged in 
+// Helper: inject auth token into the app's localStorage so the React AuthContext sees the user as logged in
 function injectAuthViaLocalStorage(token, userId) {
   cy.window().then((win) => {
     win.localStorage.setItem('userToken', token);

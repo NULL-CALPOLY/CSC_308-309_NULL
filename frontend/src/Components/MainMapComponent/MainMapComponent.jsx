@@ -30,7 +30,7 @@ export default function MainMapComponent() {
   const [userPosition, setUserPosition] = useState(null);
   const [tracking, setTracking] = useState(false);
   const { events: rawEvents } = useUpcomingEvents();
- 
+
   const events = rawEvents.filter(
     (e) => e.lat !== 0 && e.lng !== 0 && e.lat != null && e.lng != null
   );
