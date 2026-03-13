@@ -468,41 +468,45 @@ export default function Profile() {
               <span className="panel-dot" />
               <h3>Events I'm Attending</h3>
             </div>
-            <div className="profile-panel-body single">
+            <div className="profile-panel-body single profile-attending-body">
               {attendingEvents.length ? (
-                attendingEvents.map((event) => (
-                  <EventComponent
-                    key={event._id}
-                    eventId={event._id}
-                    eventName={event.name}
-                    eventDate={
-                      event.time?.start
-                        ? new Date(event.time.start).toLocaleDateString()
-                        : ''
-                    }
-                    eventTime={
-                      event.time?.start
-                        ? new Date(event.time.start).toLocaleTimeString([], {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })
-                        : ''
-                    }
-                    eventAddress={event.address}
-                    description={event.description}
-                    interest={
-                      Array.isArray(event.interests)
-                        ? event.interests.join(', ')
-                        : ''
-                    }
-                    attendees={event.attendees}
-                    host={event.host}
-                  />
-                ))
+                <div className="profile-attending-list">
+                  {attendingEvents.map((event) => (
+                    <EventComponent
+                      key={event._id}
+                      eventId={event._id}
+                      eventName={event.name}
+                      eventDate={
+                        event.time?.start
+                          ? new Date(event.time.start).toLocaleDateString()
+                          : ''
+                      }
+                      eventTime={
+                        event.time?.start
+                          ? new Date(event.time.start).toLocaleTimeString([], {
+                              hour: 'numeric',
+                              minute: '2-digit',
+                            })
+                          : ''
+                      }
+                      eventAddress={event.address}
+                      description={event.description}
+                      interest={
+                        Array.isArray(event.interests)
+                          ? event.interests.join(', ')
+                          : ''
+                      }
+                      attendees={event.attendees}
+                      host={event.host}
+                    />
+                  ))}
+                </div>
               ) : (
-                <span className="profile-field-value empty">
-                  Not attending any events yet
-                </span>
+                <div className="profile-attending-empty">
+                  <span className="profile-field-value empty">
+                    Not attending any events yet
+                  </span>
+                </div>
               )}
             </div>
           </div>

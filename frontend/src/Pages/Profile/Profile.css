@@ -461,6 +461,150 @@
   text-align: right;
 }
 
+.profile-attending-body {
+  padding: 1.25rem;
+}
+
+.profile-attending-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.profile-attending-list .Event-Container {
+  background:
+    linear-gradient(180deg, rgba(24, 17, 39, 0.96), rgba(15, 11, 27, 0.98)),
+    radial-gradient(
+      circle at top right,
+      rgba(167, 139, 250, 0.12),
+      transparent 40%
+    );
+  color: #f5f3ff;
+  border: 1px solid rgba(167, 139, 250, 0.14);
+  border-radius: 18px;
+  padding: 18px 18px 16px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 16px 32px rgba(0, 0, 0, 0.28),
+    0 0 0 1px rgba(124, 58, 237, 0.06);
+}
+
+.profile-attending-list .Event-Container:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 22px 36px rgba(0, 0, 0, 0.34),
+    0 0 0 1px rgba(167, 139, 250, 0.22);
+}
+
+.profile-attending-list .Event-Title {
+  color: #f8f7ff;
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.08rem;
+  letter-spacing: 0.02em;
+  margin-bottom: 10px;
+}
+
+.profile-attending-list .Event-Divider {
+  border-top-color: rgba(167, 139, 250, 0.16);
+  margin: 8px 0 12px;
+}
+
+.profile-attending-list .Event-DateTime {
+  color: #c4b5fd;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 400;
+  gap: 0.35rem;
+  margin-bottom: 0.6rem;
+}
+
+.profile-attending-list .Event-DateTime span {
+  font-weight: 400;
+}
+
+.profile-attending-list .Event-Address,
+.profile-attending-list .Event-Description,
+.profile-attending-list .Event-Attendees,
+.profile-attending-list .Event-Host {
+  color: rgba(255, 255, 255, 0.68);
+  font-family: 'DM Mono', monospace;
+}
+
+.profile-attending-list .Event-Address a {
+  color: rgba(255, 255, 255, 0.72);
+  border-bottom-color: rgba(167, 139, 250, 0.28);
+}
+
+.profile-attending-list .Event-Address a:hover {
+  color: #c4b5fd;
+  border-bottom-color: #a78bfa;
+}
+
+.profile-attending-list .Event-Footer {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.profile-attending-list .ActionButton {
+  background: rgba(255, 255, 255, 0.04);
+  color: #ddd6fe;
+  border: 1px solid rgba(167, 139, 250, 0.18);
+}
+
+.profile-attending-list .ActionButton:hover {
+  background: rgba(124, 58, 237, 0.88);
+  color: #fff;
+  border-color: rgba(167, 139, 250, 0.4);
+}
+
+.profile-attending-list .JoinButton {
+  background: linear-gradient(135deg, #0f8a5f, #0d6b57);
+  border-color: rgba(52, 211, 153, 0.24);
+  color: #ecfdf5;
+}
+
+.profile-attending-list .JoinButton:hover {
+  background: linear-gradient(135deg, #10b981, #0f766e);
+  box-shadow: 0 10px 20px rgba(16, 185, 129, 0.22);
+}
+
+.profile-attending-list .LeaveButton {
+  background: linear-gradient(135deg, #a11d43, #7f1d1d);
+  border-color: rgba(251, 113, 133, 0.24);
+  color: #fff1f2;
+}
+
+.profile-attending-list .LeaveButton:hover {
+  background: linear-gradient(135deg, #be123c, #991b1b);
+  box-shadow: 0 10px 20px rgba(244, 63, 94, 0.2);
+}
+
+.profile-attending-list .EditButton,
+.profile-attending-list .ViewEventBtn {
+  background: linear-gradient(135deg, #7c3aed, #5b21b6);
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(91, 33, 182, 0.22);
+}
+
+.profile-attending-list .EditButton:hover,
+.profile-attending-list .ViewEventBtn:hover {
+  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+}
+
+.profile-attending-empty {
+  border: 1px dashed rgba(167, 139, 250, 0.18);
+  border-radius: 14px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.02),
+    rgba(124, 58, 237, 0.04)
+  );
+  padding: 1.25rem 1rem;
+  text-align: center;
+}
+
 .profile-loading {
   min-height: 100vh;
   background: #080808;
@@ -497,6 +641,10 @@
     max-width: 100% !important;
     min-width: 0 !important;
     flex-shrink: 1 !important;
+  }
+
+  .profile-attending-list {
+    grid-template-columns: 1fr;
   }
 }
 

@@ -78,6 +78,10 @@ function Avatar({ id, name, profileImage, size = 'sm', style = {} }) {
   );
 }
 
+function getUserAvatar(userLike) {
+  return userLike?.avatar || userLike?.profileImage || null;
+}
+
 // ─── Avatar Stack ─────────────────────────────────────────────────────────────
 
 function AttendeeAvatarStack({ attendees, resolvedUsers, total, onClick }) {
@@ -87,7 +91,7 @@ function AttendeeAvatarStack({ attendees, resolvedUsers, total, onClick }) {
   return (
     <button
       type="button"
-      className="attendee-stack"
+      className={`attendee-stack${total === 0 ? ' attendee-stack--empty' : ''}`}
       onClick={onClick}
       aria-label={`View all ${total} attendees`}>
       <div className="attendee-stack__avatars">
@@ -99,7 +103,7 @@ function AttendeeAvatarStack({ attendees, resolvedUsers, total, onClick }) {
               key={id || i}
               id={id}
               name={user.name}
-              profileImage={user.profileImage}
+              profileImage={getUserAvatar(user)}
               size="sm"
               style={{
                 zIndex: preview.length - i,
@@ -175,7 +179,7 @@ function AttendeesModal({ attendees, resolvedUsers, loading, onClose }) {
                   <Avatar
                     id={id}
                     name={user?.name}
-                    profileImage={user?.profileImage}
+                    profileImage={getUserAvatar(user)}
                     size="md"
                   />
                   <span className="attendee-row__name">
@@ -232,11 +236,15 @@ export default function EventDetails() {
   }, [rawEvent]);
 
   useEffect(() => {
-    if (!event?.attendees?.length) return;
-
-    const idsToFetch = event.attendees
+    const attendeeIds = (event?.attendees || [])
       .map((a) => (typeof a === 'object' ? a._id : a))
       .filter(Boolean);
+    const commenterIds = (comments?.messages || [])
+      .map((m) =>
+        typeof m.userId === 'object' ? m.userId?._id || null : m.userId
+      )
+      .filter(Boolean);
+    const idsToFetch = [...new Set([...attendeeIds, ...commenterIds])];
 
     if (!idsToFetch.length) return;
 
@@ -248,22 +256,22 @@ export default function EventDetails() {
           .then((json) => ({
             id: uid,
             name: json.success ? json.data?.name || 'Unknown' : 'Unknown',
-            profileImage: json.success ? json.data?.profileImage || null : null,
+            avatar: json.success ? getUserAvatar(json.data) : null,
           }))
-          .catch(() => ({ id: uid, name: 'Unknown', profileImage: null }))
+          .catch(() => ({ id: uid, name: 'Unknown', avatar: null }))
       )
     )
       .then((results) => {
         setResolvedUsers((prev) => {
           const next = { ...prev };
-          results.forEach(({ id, name, profileImage }) => {
-            next[id] = { name, profileImage };
+          results.forEach(({ id, name, avatar }) => {
+            next[id] = { name, avatar };
           });
           return next;
         });
       })
       .finally(() => setAttendeeNamesLoading(false));
-  }, [event?.attendees]);
+  }, [event?.attendees, comments?.messages]);
 
   const handleOpenAttendees = () => setShowAttendeesModal(true);
 
@@ -712,15 +720,22 @@ export default function EventDetails() {
               ) : (
                 <div className="ed-comments__list">
                   {comments.messages.map((msg, i) => {
-                    const commenterUser = Object.values(resolvedUsers).find(
-                      (u) => u.name === msg.name
-                    );
+                    const commentUserId =
+                      typeof msg.userId === 'object'
+                        ? msg.userId?._id || null
+                        : msg.userId;
+                    const commenterUser =
+                      (typeof msg.userId === 'object' ? msg.userId : null) ||
+                      (commentUserId && resolvedUsers[commentUserId]) ||
+                      Object.values(resolvedUsers).find(
+                        (u) => u.name === msg.name
+                      );
                     return (
                       <div key={i} className="ed-comment">
                         <Avatar
                           id={msg.name}
                           name={msg.name}
-                          profileImage={commenterUser?.profileImage || null}
+                          profileImage={getUserAvatar(commenterUser)}
                           size="sm"
                           style={{
                             width: 34,
@@ -760,7 +775,11 @@ export default function EventDetails() {
                 <Avatar
                   id={user?.id}
                   name={currentUserName || user?.name}
-                  profileImage={resolvedUsers[user?.id]?.profileImage || null}
+                  profileImage={
+                    getUserAvatar(resolvedUsers[user?.id]) ||
+                    user?.avatar ||
+                    null
+                  }
                   size="sm"
                   style={{
                     width: 34,
