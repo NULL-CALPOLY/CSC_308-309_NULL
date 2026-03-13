@@ -76,6 +76,7 @@ Findr is a location-based social discovery platform that helps users find events
 - **In-memory DB:** mongodb-memory-server
 - **Mocking:** mockingoose
 - **Frontend:** @testing-library/react
+- **Acceptance Testing** Cypress
 
 ### DevOps
 
@@ -132,6 +133,7 @@ Findr is a location-based social discovery platform that helps users find events
 │   ├── Integration/                # Supertest integration tests
 │   ├── Mockingoose/                # Mockingoose unit tests
 │   ├── unit/frontend/              # React component tests
+│   ├── cypress/                    # Automated Acceptance tests
 │   └── __mocks__/                  # Leaflet, style mocks
 ├── .env                            # Backend env vars (local)
 ├── .env.test                       # Backend env vars (test)
@@ -267,15 +269,16 @@ VITE_API_BASE_URL=https://findr-ggfjetd2gqe2gday.westus3-01.azurewebsites.net
 
 ### Events
 
-| Method   | Endpoint                               | Description        |
-| -------- | -------------------------------------- | ------------------ |
-| `GET`    | `/events/all`                          | Get all events     |
-| `GET`    | `/events/:id`                          | Get event by ID    |
-| `POST`   | `/events`                              | Create event       |
-| `PUT`    | `/events/:id`                          | Update event       |
-| `DELETE` | `/events/:id`                          | Delete event       |
-| `PUT`    | `/events/:id/attendees/add/:userId`    | RSVP to event      |
-| `PUT`    | `/events/:id/attendees/remove/:userId` | Un-RSVP from event |
+| Method   | Endpoint                               | Description           |
+| -------- | -------------------------------------- | --------------------- |
+| `GET`    | `/events/all`                          | Get all events        |
+| `GET`    | `/events/:id`                          | Get event by ID       |
+| `GET`    | `/events/upcoming`                     | Get all future events |
+| `POST`   | `/events`                              | Create event          |
+| `PUT`    | `/events/:id`                          | Update event          |
+| `DELETE` | `/events/:id`                          | Delete event          |
+| `PUT`    | `/events/:id/attendees/add/:userId`    | RSVP to event         |
+| `PUT`    | `/events/:id/attendees/remove/:userId` | Un-RSVP from event    |
 
 ### Comments
 
@@ -310,13 +313,16 @@ VITE_API_BASE_URL=https://findr-ggfjetd2gqe2gday.westus3-01.azurewebsites.net
 
 ### Run Tests
 
-| Command                    | Description                        |
-| -------------------------- | ---------------------------------- |
-| `npm run test`             | Run all tests                      |
-| `npm run test:unit`        | Run frontend unit tests only       |
-| `npm run test:integration` | Run backend integration tests only |
-| `npm run test:coverage`    | Run tests with coverage report     |
-| `npm run test:watch`       | Run tests in watch mode            |
+| Command                                                           | Description                        |
+| ----------------------------------------------------------------- | ---------------------------------- |
+| `npm run test`                                                    | Run all tests                      |
+| `npm run test:unit`                                               | Run frontend unit tests only       |
+| `npm run test:integration`                                        | Run backend integration tests only |
+| `npm run test:coverage`                                           | Run tests with coverage report     |
+| `npm run test:watch`                                              | Run tests in watch mode            |
+| `npm run cypress:open`                                            | Opens cypress window to run        |
+| ----------------------                                            | Automated Acceptance Testing       |
+| ----------------------------------------------------------------- |
 
 ### Test Structure
 
@@ -332,6 +338,9 @@ tests/
 │   ├── Events/
 │   ├── Interests/
 │   └── Organizations/
+├── Cypress/            # Automated Accpetance Testing using Cypress
+│   ├── e2e/
+│   └── support/
 └── unit/frontend/      # React component tests (jsdom)
 ```
 
@@ -346,17 +355,20 @@ The app is deployed on Azure:
 
 ### Required Azure App Service Environment Variables (Backend)
 
-| Variable               | Description                                                   |
-| ---------------------- | ------------------------------------------------------------- |
-| `NODE_ENV`             | `production`                                                  |
-| `MONGODB_URI`          | MongoDB Atlas connection string                               |
-| `SESSION_SECRET`       | Random secret for express-session                             |
-| `JWT_TOKEN_SECRET`     | Secret for signing access tokens                              |
-| `REFRESH_TOKEN_SECRET` | Secret for signing refresh tokens                             |
-| `FRONTEND_URL`         | `https://findr.page`                                          |
-| `BACKEND_URL`          | `https://findr-ggfjetd2gqe2gday.westus3-01.azurewebsites.net` |
-| `GOOGLE_CLIENT_ID`     | Google OAuth client ID                                        |
-| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret                                    |
+| Variable                | Description                                                   |
+| ----------------------- | ------------------------------------------------------------- |
+| `NODE_ENV`              | `production`                                                  |
+| `MONGODB_URI`           | MongoDB Atlas connection string                               |
+| `SESSION_SECRET`        | Random secret for express-session                             |
+| `JWT_TOKEN_SECRET`      | Secret for signing access tokens                              |
+| `REFRESH_TOKEN_SECRET`  | Secret for signing refresh tokens                             |
+| `FRONTEND_URL`          | `https://findr.page`                                          |
+| `BACKEND_URL`           | `https://findr-ggfjetd2gqe2gday.westus3-01.azurewebsites.net` |
+| `GOOGLE_CLIENT_ID`      | Google OAuth client ID                                        |
+| `GOOGLE_CLIENT_SECRET`  | Google OAuth client secret                                    |
+| `CLOUDINARY_CLOUD_NAME` | Cloudinary Cloud Name                                         |
+| `CLOUDINARY_KEY`        | Cloudinary Key                                                |
+| `CLOUDINARY_SECRET`     | Cloudinary Secret                                             |
 
 > **Note:** Do not configure CORS in the Azure portal — Express handles CORS. Having both configured causes conflicts.
 
