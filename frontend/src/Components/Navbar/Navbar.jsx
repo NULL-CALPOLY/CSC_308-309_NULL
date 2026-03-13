@@ -24,7 +24,7 @@ export default function Navbar({ page = '/' }) {
           className={({ isActive }) =>
             isActive ? 'navbar__explore-link active' : 'navbar__explore-link'
           }>
-          Explore
+          Explore Events
         </NavLink>
       </div>
 

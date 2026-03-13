@@ -6,69 +6,87 @@ import LEBRON from '../../assets/LEBRON.mp4';
 import { useAuth } from '../../Hooks/UseAuth';
 import { useModal } from '../../Components/ModalContext.jsx';
 
-export default function LandingPage() {
+export default function LandingPageMapForward() {
   const { isAuthenticated } = useAuth();
   const { openSignIn } = useModal();
 
   return (
-    <div className="landing-page">
+    <div className="landing-page lp-map">
       <header>
         <Navbar page="/" />
       </header>
 
       <main>
+        {/* ── Hero: headline left, map mockup right ── */}
         <section className="hero-section">
-          <div className="hero-content">
-            <h1 className="hero-title">Findr</h1>
+          <div className="hero-left">
+            <h1 className="hero-title">Find what's<br />happening<br />near you.</h1>
             <p className="hero-subtitle">
-              Your go-to platform for connecting with others and discovering new
-              interests
+              Join pickup games, hikes, chess matches, and more —
+              all within walking distance.
             </p>
             {!isAuthenticated ? (
-              <button className="cta-button" onClick={openSignIn}>
-                Get Started!
-              </button>
+              <button className="cta-button" onClick={openSignIn}>Get Started</button>
             ) : (
-              <Link to="/home" className="cta-button">
-                Get Started!
-              </Link>
+              <Link to="/home" className="cta-button">Open the Map</Link>
             )}
+          </div>
+
+          <div className="hero-right map-mockup">
+            <div className="map-frame">
+              {/* Simulated map pins */}
+              <div className="map-bg" />
+              <div className="map-pin pin1">
+                <div className="pin-dot" />
+                <div className="pin-label">3v3 Basketball · Today</div>
+              </div>
+              <div className="map-pin pin2">
+                <div className="pin-dot" />
+                <div className="pin-label">Sunrise Hike · Sun</div>
+              </div>
+              <div className="map-pin pin3">
+                <div className="pin-dot" />
+                <div className="pin-label">Chess @ Café · Sat</div>
+              </div>
+              <div className="map-pin pin4">
+                <div className="pin-dot" />
+                <div className="pin-label">Volleyball · Tomorrow</div>
+              </div>
+              <div className="map-you">
+                <div className="you-dot" />
+                <span>You</span>
+              </div>
+            </div>
           </div>
         </section>
 
         <section className="feature-section connect-section">
           <div className="feature-content">
+            <h2 className="connect-heading">Everything you need to get out there</h2>
             <section className="features">
               <div className="feature">
-                <h2>Smart Matchmaking</h2>
-                <p>
-                  Get matched with people based on shared interests,
-                  availability, and location.
-                </p>
+                <div className="feature-accent-bar" />
+                <div className="feature-icon-wrap">📍</div>
+                <h2>Browse Local Events</h2>
+                <p>See what's happening in your area — pickup sports, study sessions, game nights, and more.</p>
               </div>
               <div className="feature">
-                <h2>Event Creation & RSVP</h2>
-                <p>
-                  Create hangouts, study sessions, or group events and see who’s
-                  coming.
-                </p>
+                <div className="feature-accent-bar" />
+                <div className="feature-icon-wrap">⚡</div>
+                <h2>Join in One Tap</h2>
+                <p>RSVP instantly and get all the details — location, time, and who's coming.</p>
               </div>
               <div className="feature">
-                <h2>Safety & Verification</h2>
-                <p>
-                  You can definitely, totally trust us with your safety and
-                  data.
-                </p>
+                <div className="feature-accent-bar" />
+                <div className="feature-icon-wrap">🎯</div>
+                <h2>Host Your Own</h2>
+                <p>Create an event in seconds and let people nearby find and join you.</p>
               </div>
             </section>
             {!isAuthenticated ? (
-              <button className="general-link" onClick={openSignIn}>
-                Learn More
-              </button>
+              <button className="general-link" onClick={openSignIn}>See what's happening near you →</button>
             ) : (
-              <Link to="/home" className="general-link">
-                Learn More
-              </Link>
+              <Link to="/home" className="general-link">See what's happening near you →</Link>
             )}
           </div>
         </section>
@@ -80,19 +98,11 @@ export default function LandingPage() {
             </div>
             <div className="feature-text">
               <h2>Be part of a community</h2>
-              <p>
-                Join groups and activities that interest you, and build lasting
-                connections.
-              </p>
-
+              <p>Join groups and activities that interest you, and build lasting connections with people who live right around the corner.</p>
               {!isAuthenticated ? (
-                <button className="general-link" onClick={openSignIn}>
-                  Join the Community
-                </button>
+                <button className="general-link" onClick={openSignIn}>Join the Community</button>
               ) : (
-                <Link to="/home" className="general-link">
-                  Join the Community
-                </Link>
+                <Link to="/home" className="general-link">Join the Community</Link>
               )}
             </div>
           </div>
@@ -102,18 +112,11 @@ export default function LandingPage() {
           <div className="feature-content image-layout">
             <div className="feature-text">
               <h2>Discover new interests</h2>
-              <p>
-                Explore activities and hobbies you've never tried before, and
-                expand your horizons.
-              </p>
+              <p>You don't need to know anyone. You don't need to be good at it. Just show up.</p>
               {!isAuthenticated ? (
-                <button className="general-link" onClick={openSignIn}>
-                  Discover Now
-                </button>
+                <button className="general-link" onClick={openSignIn}>Discover Now</button>
               ) : (
-                <Link to="/home" className="general-link">
-                  Discover Now
-                </Link>
+                <Link to="/home" className="general-link">Discover Now</Link>
               )}
             </div>
             <div className="feature-image">
