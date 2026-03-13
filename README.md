@@ -1,5 +1,9 @@
 # Findr - CSC 308/309 Project
 
+[![CI Testing](https://github.com/NULL-CALPOLY/CSC_308-309_NULL/actions/workflows/ci-testing.yml/badge.svg)](https://github.com/NULL-CALPOLY/CSC_308-309_NULL/actions/workflows/ci-testing.yml)
+[![Backend Deploy](https://github.com/NULL-CALPOLY/CSC_308-309_NULL/actions/workflows/web-app.yml/badge.svg)](https://github.com/NULL-CALPOLY/CSC_308-309_NULL/actions/workflows/web-app.yml)
+[![Frontend Deploy](https://github.com/NULL-CALPOLY/CSC_308-309_NULL/actions/workflows/static-web-app.yml/badge.svg)](https://github.com/NULL-CALPOLY/CSC_308-309_NULL/actions/workflows/static-web-app.yml)
+
 A full-stack web application for finding and connecting with people based on shared interests, events, and locations.
 
 **Developed by:** Vishnu, Ryan, Aaron, and Brian
