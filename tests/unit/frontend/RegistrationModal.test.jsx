@@ -55,7 +55,6 @@ const fillValidForm = () => {
   fireEvent.change(screen.getByPlaceholderText('+1 2345678900'), {
     target: { value: '+12345678900' },
   });
-  // eslint-disable-next-line testing-library/no-node-access
   fireEvent.change(
     document.getElementById('reg-dob') ||
       screen.getByLabelText(/date of birth/i),

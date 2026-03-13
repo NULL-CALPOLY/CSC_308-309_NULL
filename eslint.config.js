@@ -66,6 +66,15 @@ export default [
       ],
     },
   },
+  // Frontend unit test files (jsdom environment — need browser globals)
+  {
+    files: ['tests/unit/frontend/**/*.js', 'tests/unit/frontend/**/*.jsx'],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+      },
+    },
+  },
   // Frontend React files
   {
     files: ['frontend/src/**/*.jsx', 'frontend/src/**/*.js'],
