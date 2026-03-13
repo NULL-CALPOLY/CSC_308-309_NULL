@@ -11,7 +11,6 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  /* height: 72px; */
   height: var(--nav-h);
   z-index: 1000;
   box-sizing: border-box;
@@ -53,25 +52,46 @@ body {
 .navbar__explore-link {
   position: relative;
   text-decoration: none;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.95);
   font-family: 'Consolas', 'Courier New', monospace;
   font-size: 0.9rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  padding: 0.3rem 0;
+  padding: 0.3rem 0 0.3rem 0;
   transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
+/* Pulsing live dot */
+.navbar__explore-link::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #7c3aed;
+  flex-shrink: 0;
+  animation: livePulse 2s ease-in-out infinite;
+}
+
+/* Underline — always visible at low opacity, full on hover/active */
 .navbar__explore-link::after {
   content: '';
   position: absolute;
   bottom: -2px;
   left: 0;
-  width: 0%;
+  width: 100%;
   height: 2px;
   background-color: #7c3aed;
-  transition: width 0.25s ease;
+  opacity: 0.35;
+  transition: opacity 0.25s ease;
+}
+
+.navbar__explore-link:hover::after,
+.navbar__explore-link.active::after {
+  opacity: 1;
 }
 
 .navbar__explore-link:hover {
@@ -79,13 +99,13 @@ body {
   text-decoration: none;
 }
 
-.navbar__explore-link:hover::after,
-.navbar__explore-link.active::after {
-  width: 100%;
-}
-
 .navbar__explore-link.active {
   color: #fff;
+}
+
+@keyframes livePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
 }
 
 /* ── Right side links container ── */
