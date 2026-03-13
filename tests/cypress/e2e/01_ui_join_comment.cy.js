@@ -1,5 +1,3 @@
-/// <reference types="cypress" />
-
 // Covers:
 //   Feature #2 — Join Event
 //     Scenario: User successfully joins an event

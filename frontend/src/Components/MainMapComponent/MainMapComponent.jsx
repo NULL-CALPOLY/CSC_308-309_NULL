@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { useNavigate } from 'react-router-dom';
+import { useUpcomingEvents } from '../../Hooks/UseEvents';
 
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -28,48 +29,11 @@ const currentLocationIcon = L.icon({
 export default function MainMapComponent() {
   const [userPosition, setUserPosition] = useState(null);
   const [tracking, setTracking] = useState(false);
-  const [events, setEvents] = useState([]);
-
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/events/all`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data.success) return;
-
-        const mappedEvents = data.data
-          .filter((event) => {
-            // Only include events that have valid coordinates
-            const coords = event.location?.coordinates;
-            return (
-              Array.isArray(coords) &&
-              coords.length === 2 &&
-              coords[0] !== 0 &&
-              coords[1] !== 0
-            );
-          })
-          .map((event) => {
-            // GeoJSON stores [longitude, latitude] — we destructure correctly
-            const [lng, lat] = event.location.coordinates;
-            return {
-              id: event._id,
-              eventName: event.name,
-              description: event.description,
-              address: event.address ?? 'No address',
-              lat,
-              lng,
-              interests: event.interests ?? [],
-              attendees: event.attendees ?? [],
-              startTime: event.time?.start ?? null,
-              endTime: event.time?.end ?? null,
-              host: event.host,
-            };
-          });
-
-        setEvents(mappedEvents);
-        console.log(`📍 Loaded ${mappedEvents.length} events onto map`);
-      })
-      .catch((err) => console.error('Failed to load events:', err));
-  }, []);
+  const { events: rawEvents } = useUpcomingEvents();
+ 
+  const events = rawEvents.filter(
+    (e) => e.lat !== 0 && e.lng !== 0 && e.lat != null && e.lng != null
+  );
 
   return (
     <div className="main-map-wrapper">

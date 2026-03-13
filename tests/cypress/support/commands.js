@@ -1,8 +1,5 @@
-// cypress/support/commands.js
-// ─────────────────────────────────────────────────────────────
 // Custom command: programmatically log in via the API and store
 // the access token + userId so tests can reuse them.
-// ─────────────────────────────────────────────────────────────
 Cypress.Commands.add('loginViaApi', (email, password) => {
   cy.request({
     method: 'POST',

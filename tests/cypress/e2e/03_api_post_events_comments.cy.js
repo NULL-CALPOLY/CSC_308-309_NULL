@@ -1,5 +1,3 @@
-/// <reference types="cypress" />
-
 // Covers:
 //   Feature #1 — Create Event
 //     Scenario: User successfully creates an event with valid details
@@ -8,7 +6,6 @@
 //   Feature #3 — Event Chat
 //     Scenario: A joined user posts a comment and it is visible
 //     Scenario: Missing required fields returns an error
-// ─────────────────────────────────────────────────────────────
 
 const API = 'http://localhost:3000';
 const TEST_EMAIL = 'testuser@findr.com';

@@ -1,5 +1,3 @@
-/// <reference types="cypress" />
-
 // Covers:
 //   Feature #1 — Create Event
 //     Scenario: Event is visible to all other logged-in users
@@ -8,7 +6,6 @@
 //   Feature #2 — Join Event
 //     Scenario: Other users can see the user listed as attending
 //        (GET /events/:id returns updated attendees list)
-// ─────────────────────────────────────────────────────────────
 
 const API = 'http://localhost:3000';
 const TEST_EMAIL = 'testuser@findr.com';

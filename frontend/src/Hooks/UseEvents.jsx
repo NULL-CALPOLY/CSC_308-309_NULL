@@ -61,7 +61,7 @@ export function useUpcomingEvents() {
     fetchEvents();
   }, []);
 
-  return { events, loading, error, refetch: fetchEvents }; // ← expose refetch
+  return { events, loading, error, refetch: fetchEvents };
 }
 
 export function useEventId(id) {
@@ -110,6 +110,8 @@ function mapEvents(data) {
       typeof i === 'object' ? i.name : i
     );
 
+    const [lng, lat] = event.location?.coordinates ?? [0, 0];
+
     return {
       id: event._id,
       eventName: event.name,
@@ -121,6 +123,8 @@ function mapEvents(data) {
       host: event.host,
       interests,
       eventStart: event.time.start,
+      lat,
+      lng,
     };
   });
 }
