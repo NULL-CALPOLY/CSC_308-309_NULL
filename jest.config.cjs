@@ -39,6 +39,8 @@ module.exports = {
         '^leaflet/dist/leaflet.css$': '<rootDir>/tests/__mocks__/styleMock.js',
         '\\.(svg|png|jpg|jpeg|gif)$': '<rootDir>/tests/__mocks__/fileMock.js',
         '^react-leaflet$': '<rootDir>/tests/__mocks__/react-leaflet.js',
+        '^react-leaflet-cluster$':
+          '<rootDir>/tests/__mocks__/react-leaflet-cluster.js',
         '^leaflet$': '<rootDir>/tests/__mocks__/leaflet.js',
         // Removed custom react and react-dom mappers to fix CI resolution errors
       },

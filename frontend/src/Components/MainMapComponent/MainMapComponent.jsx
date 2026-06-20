@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import MarkerClusterGroup from 'react-leaflet-cluster';
 import { useNavigate } from 'react-router-dom';
 import { useUpcomingEvents } from '../../Hooks/UseEvents';
 
 import 'leaflet/dist/leaflet.css';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import L from 'leaflet';
-import markerIcon from '../../assets/pin.png';
+import markerIcon from '../../assets/event-pin.svg';
 import locateIcon from '../../assets/location.svg';
 import circle from '../../assets/circle.png';
 import './MainMapComponent.css';
 
 const EventIcon = L.divIcon({
-  html: `<img src="${markerIcon}" class="event-marker-img" />`,
-  iconSize: [45, 45],
-  iconAnchor: [22, 45],
-  popupAnchor: [0, -48],
+  html: `<img src="${markerIcon}" class="event-marker-img" alt="" />`,
+  iconSize: [40, 52],
+  iconAnchor: [20, 50],
+  popupAnchor: [0, -50],
   className: 'event-marker-wrapper',
 });
 
@@ -67,10 +70,16 @@ export default function MainMapComponent() {
           </Marker>
         )}
 
-        {/* Event markers */}
-        {events.map((event) => (
-          <EventMarker key={event.id} event={event} />
-        ))}
+        {/* Event markers — clustered; spiderfy spreads out same-venue pins */}
+        <MarkerClusterGroup
+          chunkedLoading
+          spiderfyOnMaxZoom
+          showCoverageOnHover={false}
+          maxClusterRadius={50}>
+          {events.map((event) => (
+            <EventMarker key={event.id} event={event} />
+          ))}
+        </MarkerClusterGroup>
 
         <LocateButton
           icon={locateIcon}
