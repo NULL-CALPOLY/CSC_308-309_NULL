@@ -6,6 +6,7 @@ import RegistrationModal from './Components/Modals/RegistrationModal/Registratio
 import { AuthProvider } from './Components/AuthProvider.jsx';
 import { ModalProvider, useModal } from './Components/ModalContext.jsx';
 import LandingPage from './Pages/Landing/Landing.jsx';
+import ExplorePage from './Pages/Explore/Explore.jsx';
 import Profile from './Pages/Profile/Profile.jsx';
 import ProtectedRoute from './Components/ProtectedComponent.jsx';
 import EventDetails from './Pages/EventDetails/EventDetails.jsx';
@@ -32,6 +33,7 @@ function AppContent() {
       <main className="main">
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/explore" element={<ExplorePage />} />
           <Route path="/home" element={<HomePage />} />
           <Route
             path="/profile"
