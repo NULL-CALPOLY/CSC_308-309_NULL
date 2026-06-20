@@ -15,7 +15,14 @@ const MOBILE_BP = 768;
 export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
   const [colOpen, setColOpen] = useState(() => window.innerWidth > MOBILE_BP);
+  const [selectedEventId, setSelectedEventId] = useState(null);
   const refetchEvents = useRef(null);
+
+  // Selecting from the map opens the list panel so the highlight is visible.
+  const handleSelectEvent = (id) => {
+    setSelectedEventId(id);
+    if (id && window.innerWidth <= MOBILE_BP) setColOpen(true);
+  };
   const { user } = useAuth();
   const { openSignIn } = useModal();
 
@@ -34,7 +41,10 @@ export default function HomePage() {
         <Navbar page="/" />
       </header>
       <div className="Map">
-        <MainMapComponent />
+        <MainMapComponent
+          selectedId={selectedEventId}
+          onSelect={handleSelectEvent}
+        />
       </div>
       <div className="Event-Column">
         <button
@@ -44,7 +54,11 @@ export default function HomePage() {
           aria-label="Close event panel">
           <img src={ArrowIcon} alt="" />
         </button>
-        <EventColumn onRefetchReady={(fn) => (refetchEvents.current = fn)} />
+        <EventColumn
+          onRefetchReady={(fn) => (refetchEvents.current = fn)}
+          selectedId={selectedEventId}
+          onSelect={handleSelectEvent}
+        />
       </div>
 
       {/* Hamburger – slides in when column is closed */}

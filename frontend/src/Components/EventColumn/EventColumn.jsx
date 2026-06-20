@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useUpcomingEvents } from '../../Hooks/UseEvents.jsx';
 import SearchBar from '../SearchBar/SearchBar.jsx';
 
-export default function EventColumn({ onRefetchReady }) {
+export default function EventColumn({ onRefetchReady, selectedId, onSelect }) {
   const { events: eventList, refetch } = useUpcomingEvents();
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedInterests, setSelectedInterests] = useState([]);
@@ -59,6 +59,8 @@ export default function EventColumn({ onRefetchReady }) {
             attendees={event.attendees}
             host={event.host}
             interest={event.interests.join(', ')}
+            selected={event.id === selectedId}
+            onSelect={onSelect}
           />
         ))}
       </div>
