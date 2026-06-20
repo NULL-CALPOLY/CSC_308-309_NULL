@@ -219,15 +219,20 @@ describe('User Routes', () => {
       expect(res.status).toBeGreaterThanOrEqual(400);
     });
 
-    test('GET /users/:id returns a user', async () => {
+    test('GET /users/:id returns a public-safe profile', async () => {
       const registerRes = await request(app).post('/users').send(testUser);
       const userId = registerRes.body.user._id;
 
       const res = await request(app).get(`/users/${userId}`);
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
-      expect(res.body.data.email).toBe('test@example.com');
-      expect(res.body.data.password).toBeUndefined(); // password should not be returned
+      expect(res.body.data.name).toBe(testUser.name);
+      // Public endpoint must NOT leak PII or credentials.
+      expect(res.body.data.password).toBeUndefined();
+      expect(res.body.data.email).toBeUndefined();
+      expect(res.body.data.phoneNumber).toBeUndefined();
+      expect(res.body.data.dateOfBirth).toBeUndefined();
+      expect(res.body.data.gender).toBeUndefined();
     });
 
     test('GET /users/:id returns 404 for missing user', async () => {
