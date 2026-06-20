@@ -91,6 +91,7 @@ function updateUser(id, userData) {
     isAdmin,
     googleId,
     password,
+    blockedUsers,
     _id,
     ...safeData
   } = userData || {};
@@ -222,11 +223,58 @@ function findUserByAge(age) {
   });
 }
 
+// ── Blocking ──
+
+// Add targetId to blockerId's block list.
+function blockUser(blockerId, targetId) {
+  return userModel.findByIdAndUpdate(
+    blockerId,
+    { $addToSet: { blockedUsers: targetId } },
+    { new: true }
+  );
+}
+
+function unblockUser(blockerId, targetId) {
+  return userModel.findByIdAndUpdate(
+    blockerId,
+    { $pull: { blockedUsers: targetId } },
+    { new: true }
+  );
+}
+
+// Returns the blocker's block list (array of user ids).
+async function getBlockedUsers(blockerId) {
+  const user = await userModel.findById(blockerId).select('blockedUsers');
+  return user?.blockedUsers || [];
+}
+
+// True if `ownerId` has blocked `viewerId`.
+async function hasBlocked(ownerId, viewerId) {
+  if (!ownerId || !viewerId) return false;
+  const owner = await userModel.findById(ownerId).select('blockedUsers');
+  return (owner?.blockedUsers || []).some((b) => String(b) === String(viewerId));
+}
+
+// Returns the ids of all users who have blocked `viewerId` (so their content
+// can be filtered out of list/feed responses).
+async function findUserIdsWhoBlocked(viewerId) {
+  if (!viewerId) return [];
+  const users = await userModel
+    .find({ blockedUsers: viewerId })
+    .select('_id');
+  return users.map((u) => u._id);
+}
+
 export default {
   authenticateUser,
   getUsers,
   findUserById,
   findPublicProfileById,
+  blockUser,
+  unblockUser,
+  getBlockedUsers,
+  hasBlocked,
+  findUserIdsWhoBlocked,
   findUserByName,
   findUserByEmail,
   findUserByPhoneNumber,

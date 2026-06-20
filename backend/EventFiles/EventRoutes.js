@@ -1,5 +1,6 @@
 import express from 'express';
 import eventServices from './EventServices.js';
+import userServices from '../UserFiles/UserServices.js';
 import { requireAuth, optionalAuth, requireSelf } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -99,7 +100,15 @@ router.get('/nearby', optionalAuth, async (req, res) => {
   const maxDistance = Number.isNaN(radius) ? 16093 : radius; // ~10 miles default
 
   try {
-    const events = await eventServices.findNearbyEvents(lng, lat, maxDistance);
+    let events = await eventServices.findNearbyEvents(lng, lat, maxDistance);
+    // Hide events hosted by anyone who has blocked the viewer.
+    if (req.userId) {
+      const blockers = (
+        await userServices.findUserIdsWhoBlocked(req.userId)
+      ).map(String);
+      if (blockers.length)
+        events = events.filter((e) => !blockers.includes(String(e.host)));
+    }
     res.status(200).json({ success: true, data: events });
   } catch (error) {
     res.status(500).json({
@@ -110,27 +119,33 @@ router.get('/nearby', optionalAuth, async (req, res) => {
 });
 
 // Get event by ID
-router.get('/:id', async (req, res) => {
-  await eventServices
-    .findEventById(req.params.id)
-    .then((event) => {
-      if (!event)
-        res.status(404).json({
-          success: false,
-          message: 'Event not found',
-        });
-      else
-        res.status(200).json({
-          success: true,
-          data: event,
-        });
-    })
-    .catch((error) => {
-      res.status(500).json({
-        success: false,
-        message: `Error in the server: ${error}`,
-      });
-    });
+router.get('/:id', optionalAuth, async (req, res) => {
+  try {
+    const event = await eventServices.findEventById(req.params.id);
+    if (!event)
+      return res
+        .status(404)
+        .json({ success: false, message: 'Event not found' });
+
+    // A viewer blocked by the host can't see the event.
+    const hostId =
+      event.host && typeof event.host === 'object' ? event.host._id : event.host;
+    if (
+      req.userId &&
+      String(hostId) !== String(req.userId) &&
+      (await userServices.hasBlocked(hostId, req.userId))
+    ) {
+      return res
+        .status(404)
+        .json({ success: false, message: 'Event not found' });
+    }
+
+    res.status(200).json({ success: true, data: event });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: `Error in the server: ${error}` });
+  }
 });
 
 // Create new event (auth required). Host is taken from the token, never the

@@ -196,3 +196,31 @@
   justify-content: center;
   margin: 0.1rem 0 0.4rem;
 }
+
+.pub-block-btn {
+  margin-top: 1.25rem;
+  width: 100%;
+  background: transparent;
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  color: #f87171;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: background 0.2s ease;
+}
+
+.pub-block-btn:hover {
+  background: rgba(248, 113, 113, 0.1);
+}
+
+.pub-block-btn.is-blocked {
+  border-color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.pub-block-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
