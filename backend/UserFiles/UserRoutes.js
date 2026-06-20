@@ -249,10 +249,13 @@ router.get('/me', requireAuth, async (req, res) => {
     });
 });
 
-// Get a user by ID
+// Get a user's PUBLIC profile by ID. Unauthenticated and intentionally
+// projection-limited (no email/phone/dob/gender/location) — used by the public
+// profile page and event cards that show a host's name. For the logged-in
+// user's own full record, use GET /me (requireAuth).
 router.get('/:id', async (req, res) => {
   await userServices
-    .findUserById(req.params.id)
+    .findPublicProfileById(req.params.id)
     .then((user) => {
       if (!user)
         res.status(404).json({

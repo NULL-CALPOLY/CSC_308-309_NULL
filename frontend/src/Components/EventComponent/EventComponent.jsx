@@ -106,6 +106,21 @@ export default function EventComponent(props) {
         )}
       </div>
 
+      {hostName && (
+        <div className="Event-Host">
+          Hosted by{' '}
+          <button
+            type="button"
+            className="Event-Host-Link"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (hostId) navigate(`/users/${hostId}`);
+            }}>
+            {hostName}
+          </button>
+        </div>
+      )}
+
       <div className="Tag-List">
         {tags.slice(0, 3).map((tag, idx) => (
           <TagComponent key={idx} Interest={tag} />

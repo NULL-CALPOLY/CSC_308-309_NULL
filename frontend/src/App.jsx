@@ -8,6 +8,7 @@ import { ModalProvider, useModal } from './Components/ModalContext.jsx';
 import LandingPage from './Pages/Landing/Landing.jsx';
 import ExplorePage from './Pages/Explore/Explore.jsx';
 import Profile from './Pages/Profile/Profile.jsx';
+import PublicProfile from './Pages/PublicProfile/PublicProfile.jsx';
 import ProtectedRoute from './Components/ProtectedComponent.jsx';
 import EventDetails from './Pages/EventDetails/EventDetails.jsx';
 import './App.css';
@@ -44,6 +45,7 @@ function AppContent() {
               </ProtectedRoute>
             }
           />
+          <Route path="/users/:id" element={<PublicProfile />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route
