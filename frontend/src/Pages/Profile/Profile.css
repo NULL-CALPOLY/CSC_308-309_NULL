@@ -721,3 +721,9 @@
   white-space: pre-wrap;
   line-height: 1.5;
 }
+
+.sidebar-verified {
+  display: flex;
+  justify-content: center;
+  margin: 0.1rem 0 0.4rem;
+}

@@ -63,6 +63,13 @@ const UserSchema = new mongoose.Schema(
       trim: true,
       maxlength: 500,
     },
+    // True when the account's email is on the recognized student domain
+    // (e.g. @calpoly.edu). Drives the "Verified Student" badge and unlocks
+    // student-/club-only events. Derived from email, never set by the client.
+    isVerifiedStudent: {
+      type: Boolean,
+      default: false,
+    },
     interests: {
       type: [{ type: String }],
       required: false,

@@ -6,6 +6,7 @@ import ProfileImageUploadModal from '../../Components/Modals/ProfileImageUploadM
 import DeleteAccountModal from '../../Components/DeleteAccountModal/DeleteAccountModal';
 import { useNavigate } from 'react-router-dom';
 import EventComponent from '../../Components/EventComponent/EventComponent';
+import VerifiedBadge from '../../Components/VerifiedBadge/VerifiedBadge';
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ export default function Profile() {
   const [attendingEvents, setAttendingEvents] = useState([]);
   const [hostedEvents, setHostedEvents] = useState([]);
   const [bio, setBio] = useState('');
+  const [isVerifiedStudent, setIsVerifiedStudent] = useState(false);
 
   const {
     user,
@@ -68,6 +70,7 @@ export default function Profile() {
         setAvatar(u.avatar || null);
         setAvatarPublicId(u.avatarPublicId || null); // load existing publicId
         setBio(u.bio || '');
+        setIsVerifiedStudent(!!u.isVerifiedStudent);
         setInterests(Array.isArray(u.interests) ? u.interests : []);
       } catch (err) {
         setErrorMsg(err.message);
@@ -305,6 +308,11 @@ export default function Profile() {
             </button>
 
             <p className="sidebar-name">{name || '—'}</p>
+            {isVerifiedStudent && (
+              <div className="sidebar-verified">
+                <VerifiedBadge size="sm" />
+              </div>
+            )}
             <p className="sidebar-email">{email}</p>
 
             {(interests.length > 0 || city) && (

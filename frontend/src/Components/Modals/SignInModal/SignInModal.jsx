@@ -121,6 +121,11 @@ export default function SignInModal({ isOpen, onClose, onSwitchToRegister }) {
           Continue with Google
         </button>
 
+        <p className="modal__student-hint">
+          🎓 Use your <strong>@calpoly.edu</strong> email to get a Verified
+          Student badge and access club &amp; campus events.
+        </p>
+
         <p className="modal__footer">
           Don't have an account?{' '}
           <button
