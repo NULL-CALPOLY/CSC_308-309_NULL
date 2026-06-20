@@ -8,6 +8,7 @@ const testOrganization = {
   phoneNumber: '1234567890',
   inviteOnly: false,
   members: [],
+  owner: new mongoose.Types.ObjectId(), // owner is required by the schema
 };
 
 beforeEach(async () => {

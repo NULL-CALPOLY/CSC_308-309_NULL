@@ -2,6 +2,7 @@ import userModel from './UserSchema.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { isStudentEmail } from '../utils/studentEmail.js';
+import { isAdminEmail } from '../utils/adminEmail.js';
 
 /*
  * Helper functions for authentication
@@ -29,8 +30,10 @@ async function authenticateUser(email, password) {
   // Keep the verified-student badge in sync for accounts created before the
   // field existed (or if the domain list changed).
   const verifiedStudent = isStudentEmail(user.email);
-  if (user.isVerifiedStudent !== verifiedStudent) {
+  const admin = isAdminEmail(user.email);
+  if (user.isVerifiedStudent !== verifiedStudent || user.isAdmin !== admin) {
     user.isVerifiedStudent = verifiedStudent;
+    user.isAdmin = admin;
     await user.save();
   }
 
@@ -70,6 +73,7 @@ async function addUser(user) {
   // Derive verified-student status from the email domain — never trust a
   // client-supplied flag.
   formatteduser.isVerifiedStudent = isStudentEmail(user.email);
+  formatteduser.isAdmin = isAdminEmail(user.email);
   const newUser = new userModel(formatteduser);
   return await newUser.save();
 }
@@ -84,6 +88,7 @@ function updateUser(id, userData) {
   // Strip server-controlled fields so a client can't self-grant them via PUT.
   const {
     isVerifiedStudent,
+    isAdmin,
     googleId,
     password,
     _id,
