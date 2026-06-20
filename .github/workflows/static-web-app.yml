@@ -9,9 +9,15 @@ on:
     branches:
       - main
 
+# Separate push (production) and pull_request (preview) into different
+# concurrency groups, and never cancel production deploys — only collapse
+# redundant PR-preview builds. Previously a single shared group with
+# cancel-in-progress:true was killing every production deploy on main
+# ("Canceling since a higher priority waiting request ... exists"), leaving
+# findr.page stale.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build_and_deploy_job:
