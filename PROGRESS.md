@@ -1,8 +1,9 @@
-PHASE_2_COMPLETE
+PHASES 0,1,2 COMPLETE — Phase 3 IN PROGRESS
 
 # Findr Overhaul — PROGRESS (autonomous build memory)
 
 Read this first on any restart. Update + `git commit` after every task.
+NOTE: this orchestration branch holds stale app code; ALWAYS branch feature work from `origin/main`.
 
 ## Shipped (DONE — do not rebuild)
 - **Phase 0** — security foundation: helmet, rate limiting, body sanitization, 2dsphere geo
@@ -10,6 +11,29 @@ Read this first on any restart. Update + `git commit` after every task.
   cap (#119); prod-503 hotfix — backend deps must live in `backend/package.json` (#120).
 - **Phase 1** — public `LandingEventPreview` + public `/explore` page (search/interest/date
   filters, sort incl. "For you" via `/users/me` interests) (#121).
+- **Phase 2** — dynamic interests backend (#123), onboarding typeahead + user-suggested tags
+  (#124), city geocode at signup + `useNearbyEvents` + Explore "Near me" (#125), Google OAuth→JWT
+  (#122). All merged, main green, prod verified.
+
+## Phase 3 — Map overhaul (IN PROGRESS)
+Locked UX (from roadmap): Airbnb/Zillow split-view — map + linked side-list, two-way highlight,
+clustering on desktop, mobile bottom-sheet. Explore page handles pure list/filter browsing.
+- **3A. Markers + clustering + same-venue overlap** — NOT STARTED — independent of 3B's start but
+  3B depends on it. Files: `MainMapComponent.jsx`/`.css`, new marker SVG asset(s), frontend deps
+  (`react-leaflet-cluster` + `leaflet.markercluster`), test mock for react-leaflet-cluster +
+  jest moduleNameMapper. leaflet.markercluster `spiderfyOnMaxZoom` handles same-venue overlap.
+- **3B. Linked split-view + mobile bottom-sheet** — NOT STARTED — depends on 3A. Lift
+  `selectedEventId` to `HomePage.jsx`; pass to `MainMapComponent` (highlight + flyTo on select)
+  and `EventColumn` (highlight card + scroll-into-view; click card → select). Mobile bottom-sheet
+  layout for the event column. Files: `HomePage.jsx`/`.css`, `MainMapComponent.jsx`,
+  `EventColumn.jsx`/`.css`, `EventComponent.jsx` (selected styling).
+
+Versions: react 18, react-leaflet 4.2.1, leaflet 1.9.4 → use react-leaflet-cluster ^2.
+react-leaflet test mock at tests/__mocks__/react-leaflet.js (exports MapContainer/TileLayer/
+Marker/Popup/useMap). MainMapComponent.test uses getByRole('button') expecting ONE button (locate)
+— don't add map buttons in 3A.
+
+Order: 3A → 3B (sequential; both funnel through MainMapComponent so not parallelizable).
 
 ## Phase 2 — onboarding + dynamic interests (✅ COMPLETE — all merged, main green)
 - **A. Dynamic interest system (backend)** — ✅ DONE (PR #123, merge 207bee4). normalizedName +
