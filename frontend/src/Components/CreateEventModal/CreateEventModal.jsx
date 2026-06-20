@@ -144,7 +144,10 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
         `${import.meta.env.VITE_API_BASE_URL}/events/`,
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${user.token}`,
+          },
           body: JSON.stringify(payload),
         }
       );

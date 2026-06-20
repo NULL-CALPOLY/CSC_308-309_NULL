@@ -1,11 +1,38 @@
 import express from 'express';
 import eventServices from './EventServices.js';
+import { requireAuth, optionalAuth, requireSelf } from '../middleware/auth.js';
 
 const router = express.Router();
+
+// Per-user daily event creation cap (anti-spam). Disabled under tests.
+const DAILY_EVENT_LIMIT = 2;
 
 router.get('/', (req, res) => {
   res.send('Yes, events info is working');
 });
+
+// Authorization middleware: only the event's host may modify it. Runs after
+// requireAuth (needs req.userId).
+async function requireEventOwner(req, res, next) {
+  try {
+    const owner = await eventServices.getEventOwner(req.params.id);
+    if (!owner)
+      return res
+        .status(404)
+        .json({ success: false, message: 'Event not found' });
+    if (String(owner.host) !== req.userId)
+      return res.status(403).json({
+        success: false,
+        message: 'You are not allowed to modify this event',
+      });
+    next();
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: `Error in the server: ${error}`,
+    });
+  }
+}
 
 // Get all events
 router.get('/all', async (req, res) => {
@@ -55,6 +82,33 @@ router.get('/upcoming', async (req, res) => {
     });
 });
 
+// Get upcoming events near a point (indexed geo query), nearest first.
+// Query params: lng, lat (required), radius in meters (optional, default ~10mi).
+router.get('/nearby', optionalAuth, async (req, res) => {
+  const lng = parseFloat(req.query.lng);
+  const lat = parseFloat(req.query.lat);
+  const radius = parseFloat(req.query.radius);
+
+  if (Number.isNaN(lng) || Number.isNaN(lat)) {
+    return res.status(400).json({
+      success: false,
+      message: 'lng and lat query params are required',
+    });
+  }
+
+  const maxDistance = Number.isNaN(radius) ? 16093 : radius; // ~10 miles default
+
+  try {
+    const events = await eventServices.findNearbyEvents(lng, lat, maxDistance);
+    res.status(200).json({ success: true, data: events });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: `Error in the server: ${error}`,
+    });
+  }
+});
+
 // Get event by ID
 router.get('/:id', async (req, res) => {
   await eventServices
@@ -79,26 +133,40 @@ router.get('/:id', async (req, res) => {
     });
 });
 
-// Create new event
-router.post('/', async (req, res) => {
-  await eventServices
-    .addEvent(req.body)
-    .then((event) => {
-      res.status(201).json({
-        success: true,
-        data: event,
-      });
-    })
-    .catch((error) => {
-      res.status(500).json({
-        success: false,
-        message: `Error in the server: ${error}`,
-      });
+// Create new event (auth required). Host is taken from the token, never the
+// body, and a per-user daily creation cap guards against spam.
+router.post('/', requireAuth, async (req, res) => {
+  try {
+    if (process.env.NODE_ENV !== 'test') {
+      const startOfDay = new Date();
+      startOfDay.setHours(0, 0, 0, 0);
+      const todayCount = await eventServices.countEventsByHostSince(
+        req.userId,
+        startOfDay
+      );
+      if (todayCount >= DAILY_EVENT_LIMIT) {
+        return res.status(429).json({
+          success: false,
+          message: `Daily event creation limit reached (${DAILY_EVENT_LIMIT} per day).`,
+        });
+      }
+    }
+
+    const event = await eventServices.addEvent({
+      ...req.body,
+      host: req.userId,
     });
+    res.status(201).json({ success: true, data: event });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: `Error in the server: ${error}`,
+    });
+  }
 });
 
-// Delete event
-router.delete('/:id', async (req, res) => {
+// Delete event (host only)
+router.delete('/:id', requireAuth, requireEventOwner, async (req, res) => {
   await eventServices
     .deleteEvent(req.params.id)
     .then((deletedEvent) => {
@@ -121,8 +189,8 @@ router.delete('/:id', async (req, res) => {
     });
 });
 
-// Update event
-router.put('/:id', async (req, res) => {
+// Update event (host only)
+router.put('/:id', requireAuth, requireEventOwner, async (req, res) => {
   await eventServices
     .updateEvent(req.params.id, req.body)
     .then((event) => {
@@ -421,100 +489,120 @@ router.get('/search/blocked/:userId', async (req, res) => {
     });
 });
 
-// Add user to attendees
-router.put('/:id/attendees/add/:userId', async (req, res) => {
-  await eventServices
-    .addUserToAttendees(req.params.id, req.params.userId)
-    .then((event) => {
-      if (!event)
-        res.status(404).json({
+// Add user to attendees (you can only RSVP yourself)
+router.put(
+  '/:id/attendees/add/:userId',
+  requireAuth,
+  requireSelf('userId'),
+  async (req, res) => {
+    await eventServices
+      .addUserToAttendees(req.params.id, req.params.userId)
+      .then((event) => {
+        if (!event)
+          res.status(404).json({
+            success: false,
+            message: 'Event not found',
+          });
+        else
+          res.status(200).json({
+            success: true,
+            data: event,
+          });
+      })
+      .catch((error) => {
+        res.status(500).json({
           success: false,
-          message: 'Event not found',
+          message: `Error in the server: ${error}`,
         });
-      else
-        res.status(200).json({
-          success: true,
-          data: event,
-        });
-    })
-    .catch((error) => {
-      res.status(500).json({
-        success: false,
-        message: `Error in the server: ${error}`,
       });
-    });
-});
+  }
+);
 
-// Remove user from attendees
-router.put('/:id/attendees/remove/:userId', async (req, res) => {
-  await eventServices
-    .removeUserFromAttendees(req.params.id, req.params.userId)
-    .then((event) => {
-      if (!event)
-        res.status(404).json({
+// Remove user from attendees (you can only un-RSVP yourself)
+router.put(
+  '/:id/attendees/remove/:userId',
+  requireAuth,
+  requireSelf('userId'),
+  async (req, res) => {
+    await eventServices
+      .removeUserFromAttendees(req.params.id, req.params.userId)
+      .then((event) => {
+        if (!event)
+          res.status(404).json({
+            success: false,
+            message: 'Event not found',
+          });
+        else
+          res.status(200).json({
+            success: true,
+            data: event,
+          });
+      })
+      .catch((error) => {
+        res.status(500).json({
           success: false,
-          message: 'Event not found',
+          message: `Error in the server: ${error}`,
         });
-      else
-        res.status(200).json({
-          success: true,
-          data: event,
-        });
-    })
-    .catch((error) => {
-      res.status(500).json({
-        success: false,
-        message: `Error in the server: ${error}`,
       });
-    });
-});
+  }
+);
 
-// Add user to blocked users
-router.put('/:id/blocked/add/:userId', async (req, res) => {
-  await eventServices
-    .addUserToBlocked(req.params.id, req.params.userId)
-    .then((event) => {
-      if (!event)
-        res.status(404).json({
+// Add user to blocked users (host only)
+router.put(
+  '/:id/blocked/add/:userId',
+  requireAuth,
+  requireEventOwner,
+  async (req, res) => {
+    await eventServices
+      .addUserToBlocked(req.params.id, req.params.userId)
+      .then((event) => {
+        if (!event)
+          res.status(404).json({
+            success: false,
+            message: 'Event not found',
+          });
+        else
+          res.status(200).json({
+            success: true,
+            data: event,
+          });
+      })
+      .catch((error) => {
+        res.status(500).json({
           success: false,
-          message: 'Event not found',
+          message: `Error in the server: ${error}`,
         });
-      else
-        res.status(200).json({
-          success: true,
-          data: event,
-        });
-    })
-    .catch((error) => {
-      res.status(500).json({
-        success: false,
-        message: `Error in the server: ${error}`,
       });
-    });
-});
+  }
+);
 
-// Remove user from blocked users
-router.put('/:id/blocked/remove/:userId', async (req, res) => {
-  await eventServices
-    .removeUserFromBlocked(req.params.id, req.params.userId)
-    .then((event) => {
-      if (!event)
-        res.status(404).json({
+// Remove user from blocked users (host only)
+router.put(
+  '/:id/blocked/remove/:userId',
+  requireAuth,
+  requireEventOwner,
+  async (req, res) => {
+    await eventServices
+      .removeUserFromBlocked(req.params.id, req.params.userId)
+      .then((event) => {
+        if (!event)
+          res.status(404).json({
+            success: false,
+            message: 'Event not found',
+          });
+        else
+          res.status(200).json({
+            success: true,
+            data: event,
+          });
+      })
+      .catch((error) => {
+        res.status(500).json({
           success: false,
-          message: 'Event not found',
+          message: `Error in the server: ${error}`,
         });
-      else
-        res.status(200).json({
-          success: true,
-          data: event,
-        });
-    })
-    .catch((error) => {
-      res.status(500).json({
-        success: false,
-        message: `Error in the server: ${error}`,
       });
-    });
-});
+  }
+);
 
 export default router;

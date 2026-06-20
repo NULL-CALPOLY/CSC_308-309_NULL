@@ -141,7 +141,10 @@ export default function Profile() {
         `${import.meta.env.VITE_API_BASE_URL}/users/${user.id}`,
         {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${user.token}`,
+          },
           body: JSON.stringify({
             name,
             phoneNumber,
