@@ -13,6 +13,8 @@ jest.mock('../../../frontend/src/Hooks/UseInterests.jsx', () => ({
     interests: [{ name: 'Music' }, { name: 'Tech' }],
     loading: false,
     error: null,
+    searchInterests: jest.fn().mockResolvedValue([]),
+    createInterest: jest.fn().mockResolvedValue({ name: 'New Interest' }),
   })),
 }));
 

@@ -1,5 +1,5 @@
 // Hooks/useInterests.js
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 export default function useInterests() {
   const [interests, setInterests] = useState([]);
@@ -29,5 +29,36 @@ export default function useInterests() {
     fetchInterests();
   }, []);
 
-  return { interests, loading, error };
+  // Server-side typeahead — scales past the initially loaded list.
+  const searchInterests = useCallback(async (q) => {
+    if (!q || !q.trim()) return [];
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/interests/search?q=${encodeURIComponent(
+          q.trim()
+        )}`
+      );
+      if (!res.ok) return [];
+      const json = await res.json();
+      return json.success ? json.data : [];
+    } catch {
+      return [];
+    }
+  }, []);
+
+  // Create a user-suggested interest. The backend normalizes + dedupes, so this
+  // returns the existing interest if one already matches.
+  const createInterest = useCallback(async (name) => {
+    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/interests`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name.trim() }),
+    });
+    const json = await res.json();
+    if (!json.success)
+      throw new Error(json.message || 'Could not add interest');
+    return json.data;
+  }, []);
+
+  return { interests, loading, error, searchInterests, createInterest };
 }
