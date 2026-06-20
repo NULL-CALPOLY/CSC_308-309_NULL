@@ -65,8 +65,15 @@ const EventSchema = new mongoose.Schema(
       },
     },
   },
-  { collection: 'events_list' }
+  { collection: 'events_list', timestamps: true }
 );
+
+// Geospatial index for efficient "events near me" queries ($near / $geoWithin).
+// Without this, location queries do a full collection scan and won't scale.
+EventSchema.index({ location: '2dsphere' });
+
+// Supports the per-host daily creation cap and "my events" lookups.
+EventSchema.index({ host: 1, createdAt: -1 });
 
 const Event = mongoose.model('Event', EventSchema);
 

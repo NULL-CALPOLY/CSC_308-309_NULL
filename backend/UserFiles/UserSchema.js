@@ -72,8 +72,11 @@ const UserSchema = new mongoose.Schema(
       },
     },
   },
-  { collection: 'users_list' }
+  { collection: 'users_list', timestamps: true }
 );
+
+// Geospatial index for "users / events near me" radius queries.
+UserSchema.index({ location: '2dsphere' });
 
 UserSchema.pre('save', async function (next) {
   if (!this.isModified('password') || !this.password) return next();

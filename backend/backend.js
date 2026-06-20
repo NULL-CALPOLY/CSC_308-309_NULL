@@ -6,8 +6,10 @@ import MongoStore from 'connect-mongo';
 import fs from 'fs';
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 import passport from 'passport';
 import session from 'express-session';
+import { globalLimiter, sanitizeBody } from './middleware/security.js';
 import eventRouter from './EventFiles/EventRoutes.js';
 import userRouter from './UserFiles/UserRoutes.js';
 import organizationRouter from './OrganizationFiles/OrganizationRoutes.js';
@@ -50,6 +52,16 @@ if (!process.env.SESSION_SECRET) {
   if (process.env.NODE_ENV === 'production') process.exit(1);
 }
 
+// Security headers. This is a JSON API consumed cross-origin by the frontend,
+// so relax cross-origin resource policy (CORS already governs fetch access)
+// and skip CSP (not meaningful for non-HTML responses).
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+  })
+);
+
 app.use(
   cors({
     origin:
@@ -60,9 +72,15 @@ app.use(
   })
 );
 
+// Broad rate-limit backstop across the whole API (no-op under tests).
+app.use(globalLimiter);
+
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
+
+// Strip Mongo operator keys ($..., a.b) from request bodies (NoSQL injection).
+app.use(sanitizeBody);
 
 const sessionConfig = {
   secret: process.env.SESSION_SECRET,
