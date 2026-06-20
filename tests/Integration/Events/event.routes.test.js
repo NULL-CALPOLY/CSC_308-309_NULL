@@ -2,13 +2,17 @@ import request from 'supertest';
 import app from '../../../backend/backend.js';
 import eventModel from '../../../backend/EventFiles/EventSchema.js';
 import mongoose from 'mongoose';
+import { authHeader } from '../../helpers/auth.js';
+
+// Fixed host id so token-based ownership checks line up with created events.
+const TEST_HOST = new mongoose.Types.ObjectId();
 
 const testEvent = {
   name: 'Tech Meetup 2025',
   description: 'Testing',
   mapComponent: 'TechHall-1',
   attendees: [new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId()],
-  host: new mongoose.Types.ObjectId(),
+  host: TEST_HOST,
   blockedUsers: [new mongoose.Types.ObjectId()],
   comment: ['Looking forward to this!', 'Excited!'],
   address: '123 Blah, Pyongyang, North Korea',
@@ -53,13 +57,19 @@ describe('Event Routes', () => {
   });
 
   test('POST /events creates an event', async () => {
-    const res = await request(app).post('/events').send(testEvent);
+    const res = await request(app)
+      .post('/events')
+      .set(authHeader(TEST_HOST))
+      .send(testEvent);
     expect(res.status).toBe(201);
     expect(res.body.data.name).toBe('Tech Meetup 2025');
   });
 
   test('POST /events with invalid data fails', async () => {
-    const res = await request(app).post('/events').send({});
+    const res = await request(app)
+      .post('/events')
+      .set(authHeader(TEST_HOST))
+      .send({});
     expect(res.status).toBeGreaterThanOrEqual(400);
   });
 
@@ -80,6 +90,7 @@ describe('Event Routes', () => {
     const created = await eventModel.create(testEvent);
     const res = await request(app)
       .put(`/events/${created._id}`)
+      .set(authHeader(TEST_HOST))
       .send({ description: 'Updated description' });
     expect(res.status).toBe(200);
     expect(res.body.data.description).toBe('Updated description');
@@ -89,13 +100,16 @@ describe('Event Routes', () => {
     const fakeId = new mongoose.Types.ObjectId();
     const res = await request(app)
       .put(`/events/${fakeId}`)
+      .set(authHeader(TEST_HOST))
       .send({ description: 'Update' });
     expect(res.status).toBe(404);
   });
 
   test('DELETE /events/:id deletes the event', async () => {
     const created = await eventModel.create(testEvent);
-    const res = await request(app).delete(`/events/${created._id}`);
+    const res = await request(app)
+      .delete(`/events/${created._id}`)
+      .set(authHeader(TEST_HOST));
     expect(res.status).toBe(200);
     const deleted = await eventModel.findById(created._id);
     expect(deleted).toBeNull();
@@ -103,7 +117,9 @@ describe('Event Routes', () => {
 
   test('DELETE /events/:id returns 404 for non-existent event', async () => {
     const fakeId = new mongoose.Types.ObjectId();
-    const res = await request(app).delete(`/events/${fakeId}`);
+    const res = await request(app)
+      .delete(`/events/${fakeId}`)
+      .set(authHeader(TEST_HOST));
     expect(res.status).toBe(404);
   });
 
@@ -242,9 +258,9 @@ describe('Event Routes', () => {
     const created = await eventModel.create(testEvent);
     const newUserId = new mongoose.Types.ObjectId();
 
-    const res = await request(app).put(
-      `/events/${created._id}/attendees/add/${newUserId}`
-    );
+    const res = await request(app)
+      .put(`/events/${created._id}/attendees/add/${newUserId}`)
+      .set(authHeader(newUserId));
 
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
@@ -258,9 +274,9 @@ describe('Event Routes', () => {
       attendees: [attendeeId],
     });
 
-    const res = await request(app).put(
-      `/events/${created._id}/attendees/remove/${attendeeId}`
-    );
+    const res = await request(app)
+      .put(`/events/${created._id}/attendees/remove/${attendeeId}`)
+      .set(authHeader(attendeeId));
 
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
@@ -271,9 +287,9 @@ describe('Event Routes', () => {
     const created = await eventModel.create(testEvent);
     const newBlockedId = new mongoose.Types.ObjectId();
 
-    const res = await request(app).put(
-      `/events/${created._id}/blocked/add/${newBlockedId}`
-    );
+    const res = await request(app)
+      .put(`/events/${created._id}/blocked/add/${newBlockedId}`)
+      .set(authHeader(TEST_HOST));
 
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
@@ -287,9 +303,9 @@ describe('Event Routes', () => {
       blockedUsers: [blockedUserId],
     });
 
-    const res = await request(app).put(
-      `/events/${created._id}/blocked/remove/${blockedUserId}`
-    );
+    const res = await request(app)
+      .put(`/events/${created._id}/blocked/remove/${blockedUserId}`)
+      .set(authHeader(TEST_HOST));
 
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
@@ -347,36 +363,36 @@ describe('Event Routes', () => {
   test('PUT /events/:id/attendees/add/:userId returns 404 when event not found', async () => {
     const fakeId = new mongoose.Types.ObjectId();
     const userId = new mongoose.Types.ObjectId();
-    const res = await request(app).put(
-      `/events/${fakeId}/attendees/add/${userId}`
-    );
+    const res = await request(app)
+      .put(`/events/${fakeId}/attendees/add/${userId}`)
+      .set(authHeader(userId));
     expect(res.status).toBe(404);
   });
 
   test('PUT /events/:id/attendees/remove/:userId returns 404 when event not found', async () => {
     const fakeId = new mongoose.Types.ObjectId();
     const userId = new mongoose.Types.ObjectId();
-    const res = await request(app).put(
-      `/events/${fakeId}/attendees/remove/${userId}`
-    );
+    const res = await request(app)
+      .put(`/events/${fakeId}/attendees/remove/${userId}`)
+      .set(authHeader(userId));
     expect(res.status).toBe(404);
   });
 
   test('PUT /events/:id/blocked/add/:userId returns 404 when event not found', async () => {
     const fakeId = new mongoose.Types.ObjectId();
     const userId = new mongoose.Types.ObjectId();
-    const res = await request(app).put(
-      `/events/${fakeId}/blocked/add/${userId}`
-    );
+    const res = await request(app)
+      .put(`/events/${fakeId}/blocked/add/${userId}`)
+      .set(authHeader(TEST_HOST));
     expect(res.status).toBe(404);
   });
 
   test('PUT /events/:id/blocked/remove/:userId returns 404 when event not found', async () => {
     const fakeId = new mongoose.Types.ObjectId();
     const userId = new mongoose.Types.ObjectId();
-    const res = await request(app).put(
-      `/events/${fakeId}/blocked/remove/${userId}`
-    );
+    const res = await request(app)
+      .put(`/events/${fakeId}/blocked/remove/${userId}`)
+      .set(authHeader(TEST_HOST));
     expect(res.status).toBe(404);
   });
 

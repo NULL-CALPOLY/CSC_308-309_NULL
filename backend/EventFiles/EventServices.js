@@ -73,6 +73,34 @@ function findEventByInterests(interests) {
     .populate('attendees host blockedUsers');
 }
 
+// Find upcoming events near a point, nearest-first, using the 2dsphere index.
+// coordinates are [lng, lat]; maxDistanceMeters bounds the search radius.
+function findNearbyEvents(lng, lat, maxDistanceMeters, futureOnly = true) {
+  const query = {
+    location: {
+      $near: {
+        $geometry: { type: 'Point', coordinates: [lng, lat] },
+        $maxDistance: maxDistanceMeters,
+      },
+    },
+  };
+  if (futureOnly) query['time.start'] = { $gte: new Date() };
+  return eventModel.find(query).populate('attendees host blockedUsers');
+}
+
+// Lightweight owner lookup for authorization checks (no populate).
+function getEventOwner(id) {
+  return eventModel.findById(id).select('host').lean();
+}
+
+// Count events created by a host since a given time (per-user daily cap).
+function countEventsByHostSince(hostId, since) {
+  return eventModel.countDocuments({
+    host: hostId,
+    createdAt: { $gte: since },
+  });
+}
+
 // Find event(s) near a location (latitude, longitude, radius in miles)
 function findEventByLocation(latitude, longitude, radiusInMiles) {
   return eventModel
@@ -168,6 +196,9 @@ export default {
   addEvent,
   deleteEvent,
   updateEvent,
+  findNearbyEvents,
+  getEventOwner,
+  countEventsByHostSince,
   findEventById,
   findEventByName,
   findEventByDescription,

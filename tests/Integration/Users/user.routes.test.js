@@ -2,6 +2,7 @@ import request from 'supertest';
 import app from '../../../backend/backend.js';
 import userModel from '../../../backend/UserFiles/UserSchema.js';
 import mongoose from 'mongoose';
+import { authHeader } from '../../helpers/auth.js';
 
 const testUser = {
   name: 'Test User',
@@ -46,16 +47,25 @@ describe('User Routes', () => {
   });
 
   test('GET /users/all returns 404 when no users exist', async () => {
-    const res = await request(app).get('/users/all');
+    const res = await request(app)
+      .get('/users/all')
+      .set(authHeader(new mongoose.Types.ObjectId()));
     expect(res.statusCode).toBe(404);
     expect(res.body.success).toBe(false);
   });
 
   test('GET /users/all returns all users successfully', async () => {
     await request(app).post('/users').send(testUser);
-    const res = await request(app).get('/users/all');
+    const res = await request(app)
+      .get('/users/all')
+      .set(authHeader(new mongoose.Types.ObjectId()));
     expect(res.statusCode).toBe(200);
     expect(res.body.length).toBeGreaterThan(0);
+  });
+
+  test('GET /users/all requires authentication', async () => {
+    const res = await request(app).get('/users/all');
+    expect(res.status).toBe(401);
   });
 
   describe('Authentication Tests', () => {
@@ -230,16 +240,29 @@ describe('User Routes', () => {
       const registerRes = await request(app).post('/users').send(testUser);
       const userId = registerRes.body.user._id;
 
-      const res = await request(app).delete(`/users/${userId}`);
+      const res = await request(app)
+        .delete(`/users/${userId}`)
+        .set(authHeader(userId));
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
     });
 
-    test('DELETE /users/:id returns 404 when user does not exist', async () => {
+    test('DELETE /users/:id forbids deleting another account', async () => {
+      const registerRes = await request(app).post('/users').send(testUser);
+      const userId = registerRes.body.user._id;
+      const otherId = new mongoose.Types.ObjectId();
+
+      const res = await request(app)
+        .delete(`/users/${otherId}`)
+        .set(authHeader(userId));
+      expect(res.status).toBe(403);
+    });
+
+    test('DELETE /users/:id requires authentication', async () => {
       const res = await request(app).delete(
         `/users/${new mongoose.Types.ObjectId()}`
       );
-      expect(res.status).toBe(404);
+      expect(res.status).toBe(401);
     });
 
     test('PUT /users/:id updates a user', async () => {
@@ -248,18 +271,24 @@ describe('User Routes', () => {
 
       const res = await request(app)
         .put(`/users/${userId}`)
+        .set(authHeader(userId))
         .send({ name: 'Updated Name' });
 
       expect(res.status).toBe(200);
       expect(res.body.data.name).toBe('Updated Name');
     });
 
-    test('PUT /users/:id returns 404 when updating nonexistent user', async () => {
+    test('PUT /users/:id forbids updating another account', async () => {
+      const registerRes = await request(app).post('/users').send(testUser);
+      const userId = registerRes.body.user._id;
+      const otherId = new mongoose.Types.ObjectId();
+
       const res = await request(app)
-        .put(`/users/${new mongoose.Types.ObjectId()}`)
+        .put(`/users/${otherId}`)
+        .set(authHeader(userId))
         .send({ name: 'Nope' });
 
-      expect(res.status).toBe(404);
+      expect(res.status).toBe(403);
     });
   });
 

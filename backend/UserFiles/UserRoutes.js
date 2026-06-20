@@ -1,6 +1,8 @@
 import express from 'express';
 import userServices from './UserServices.js';
 import jwt from 'jsonwebtoken';
+import { requireAuth, requireSelf } from '../middleware/auth.js';
+import { authLimiter } from '../middleware/security.js';
 
 const router = express.Router();
 
@@ -8,8 +10,8 @@ router.get('/', (req, res) => {
   res.send('Yes, user info is working');
 });
 
-// Get all users
-router.get('/all', async (req, res) => {
+// Get all users (auth required — avoid dumping every user's PII anonymously)
+router.get('/all', requireAuth, async (req, res) => {
   await userServices
     .getUsers()
     .then((users) => {
@@ -31,7 +33,7 @@ router.get('/all', async (req, res) => {
 /*
  * Endpoint for USER LOGIN
  */
-router.post('/login', async (req, res) => {
+router.post('/login', authLimiter, async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password)
@@ -72,7 +74,7 @@ router.post('/login', async (req, res) => {
  * Takes user data and password, creates new user in database
  */
 
-router.post('/', async (req, res) => {
+router.post('/', authLimiter, async (req, res) => {
   try {
     const newUser = await userServices.addUser(req.body);
 
@@ -114,7 +116,7 @@ router.post('/', async (req, res) => {
  * Endpoint for DELETE USER
  */
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', requireAuth, requireSelf('id'), async (req, res) => {
   await userServices
     .deleteUser(req.params.id)
     .then((deletedUser) => {
@@ -205,8 +207,8 @@ router.post('/logout', (req, res) => {
   });
 });
 
-// Update a user
-router.put('/:id', async (req, res) => {
+// Update a user (self only)
+router.put('/:id', requireAuth, requireSelf('id'), async (req, res) => {
   await userServices
     .updateUser(req.params.id, req.body)
     .then((user) => {
@@ -225,6 +227,24 @@ router.put('/:id', async (req, res) => {
       res.status(500).json({
         success: false,
         message: `Error in the server: ${error}`,
+      });
+    });
+});
+
+// Get the currently authenticated user. Must be declared before '/:id' so
+// '/me' isn't captured as an id param.
+router.get('/me', requireAuth, async (req, res) => {
+  await userServices
+    .findUserById(req.userId)
+    .then((user) => {
+      if (!user)
+        res.status(404).json({ success: false, message: 'User not found' });
+      else res.status(200).json({ success: true, data: user });
+    })
+    .catch((error) => {
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error.message}`,
       });
     });
 });
@@ -446,30 +466,6 @@ router.get('/search/location/:location', async (req, res) => {
       res.status(500).json({
         success: false,
         message: `Error in the server: ${error}`,
-      });
-    });
-});
-
-// Get a user by ID
-router.get('/:id', async (req, res) => {
-  await userServices
-    .findUserById(req.params.id)
-    .then((user) => {
-      if (!user)
-        res.status(404).json({
-          success: false,
-          message: 'User not found',
-        });
-      else
-        res.status(200).json({
-          success: true,
-          data: user,
-        });
-    })
-    .catch((error) => {
-      res.status(500).json({
-        success: false,
-        message: `Error in the server: ${error.message}`,
       });
     });
 });
