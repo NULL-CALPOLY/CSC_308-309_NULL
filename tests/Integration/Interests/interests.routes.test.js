@@ -39,7 +39,31 @@ describe('Interest Routes', () => {
     const res = await request(app).post('/interests').send(testInterest);
     expect(res.status).toBe(201);
     expect(res.body.data.name).toBe('Music');
+    expect(res.body.data.normalizedName).toBe('music');
     expect(res.body.success).toBe(true);
+  });
+
+  test('POST /interests derives normalizedName (lowercase + collapsed whitespace)', async () => {
+    const res = await request(app)
+      .post('/interests')
+      .send({ name: '  Rock   Climbing  ', similarInterests: [] });
+    expect(res.status).toBe(201);
+    expect(res.body.data.normalizedName).toBe('rock climbing');
+  });
+
+  test('POST /interests dedupes by normalizedName (200 + existing doc)', async () => {
+    const first = await request(app).post('/interests').send(testInterest);
+    expect(first.status).toBe(201);
+
+    // Same interest with different casing/spacing should not duplicate.
+    const dup = await request(app)
+      .post('/interests')
+      .send({ name: ' music ', similarInterests: [] });
+    expect(dup.status).toBe(200);
+    expect(dup.body.data._id).toBe(first.body.data._id);
+
+    const all = await interestModel.find({ normalizedName: 'music' });
+    expect(all.length).toBe(1);
   });
 
   test('GET /interests/:id returns the created interest', async () => {
@@ -102,6 +126,49 @@ describe('Interest Routes', () => {
     const res = await request(app).get('/interests/search/name/NonExistent');
     expect(res.status).toBe(404);
     expect(res.body.success).toBe(false);
+  });
+
+  // Typeahead search: GET /interests/search?q=
+  test('GET /interests/search?q= returns case-insensitive matches sorted by name', async () => {
+    await interestModel.create({ name: 'Music', similarInterests: [] });
+    await interestModel.create({
+      name: 'Musical Theater',
+      similarInterests: [],
+    });
+    await interestModel.create({ name: 'Rock', similarInterests: [] });
+
+    const res = await request(app).get('/interests/search?q=mus');
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.map((i) => i.name)).toEqual([
+      'Music',
+      'Musical Theater',
+    ]);
+  });
+
+  test('GET /interests/search respects the limit query param', async () => {
+    await interestModel.create({ name: 'Music', similarInterests: [] });
+    await interestModel.create({
+      name: 'Musical Theater',
+      similarInterests: [],
+    });
+
+    const res = await request(app).get('/interests/search?q=mus&limit=1');
+    expect(res.status).toBe(200);
+    expect(res.body.data.length).toBe(1);
+  });
+
+  test('GET /interests/search returns empty array for missing/empty q', async () => {
+    await interestModel.create({ name: 'Music', similarInterests: [] });
+
+    const res = await request(app).get('/interests/search');
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data).toEqual([]);
+
+    const resEmpty = await request(app).get('/interests/search?q=');
+    expect(resEmpty.status).toBe(200);
+    expect(resEmpty.body.data).toEqual([]);
   });
 
   // Similar interests endpoints

@@ -31,6 +31,29 @@ router.get('/all', async (req, res) => {
     });
 });
 
+// Typeahead search by name: GET /interests/search?q=...&limit=...
+// Registered before /:id so the literal "search" segment isn't captured as an id.
+router.get('/search', async (req, res) => {
+  const q = typeof req.query.q === 'string' ? req.query.q : '';
+  const parsedLimit = parseInt(req.query.limit, 10);
+  const limit = Number.isNaN(parsedLimit) ? 20 : parsedLimit;
+
+  await interestServices
+    .searchInterests(q, limit)
+    .then((interests) => {
+      res.status(200).json({
+        success: true,
+        data: interests,
+      });
+    })
+    .catch((error) => {
+      res.status(500).json({
+        success: false,
+        message: `Error in the server: ${error}`,
+      });
+    });
+});
+
 // Get an interest by ID
 router.get('/:id', async (req, res) => {
   await interestServices
@@ -55,23 +78,29 @@ router.get('/:id', async (req, res) => {
     });
 });
 
-// Post a new interest
+// Post a new interest. Dedupes by normalizedName: returns 201 when a new
+// interest is created, or 200 with the existing doc when a duplicate is
+// suggested (so user-submitted tags never create duplicates).
 router.post('/', async (req, res) => {
-  await interestServices
-    .addInterest(req.body)
-    .then((interest) => {
-      res.status(201).json({
-        success: true,
-        message: 'Interest registered successfully.',
-        data: interest,
-      });
-    })
-    .catch((error) => {
-      res.status(error.status || 400).json({
-        success: false,
-        message: error.message || 'An unexpected error occurred.',
-      });
+  try {
+    const existing = await interestServices.findInterestByNormalizedName(
+      req.body?.name
+    );
+    const interest = await interestServices.addInterest(req.body);
+
+    res.status(existing ? 200 : 201).json({
+      success: true,
+      message: existing
+        ? 'Interest already exists.'
+        : 'Interest registered successfully.',
+      data: interest,
     });
+  } catch (error) {
+    res.status(error.status || 400).json({
+      success: false,
+      message: error.message || 'An unexpected error occurred.',
+    });
+  }
 });
 
 // Delete an interest
