@@ -1,5 +1,7 @@
 import organizationServices from '../../../backend/OrganizationFiles/OrganizationServices.js';
 import organizationModel from '../../../backend/OrganizationFiles/OrganizationSchema.js';
+// Register the User model so .populate('members') (ref: User) resolves.
+import '../../../backend/UserFiles/UserSchema.js';
 import mongoose from 'mongoose';
 
 const testOrganization = {
@@ -8,6 +10,7 @@ const testOrganization = {
   phoneNumber: '1234567890',
   inviteOnly: false,
   members: [],
+  owner: new mongoose.Types.ObjectId(), // owner is required by the schema
 };
 
 beforeEach(async () => {

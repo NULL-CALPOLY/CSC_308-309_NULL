@@ -70,6 +70,12 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    // Master/site administrator — can approve or reject club registrations.
+    // Server-controlled (derived from ADMIN_EMAILS), never set by the client.
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
     interests: {
       type: [{ type: String }],
       required: false,

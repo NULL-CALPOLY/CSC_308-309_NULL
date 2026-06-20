@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import User from '../UserFiles/UserSchema.js';
 
 /**
  * Extract a Bearer access token from the Authorization header.
@@ -65,4 +66,25 @@ export function requireSelf(paramName = 'id') {
     }
     return next();
   };
+}
+
+/**
+ * Require the authenticated user to be a site administrator (isAdmin).
+ * Must run after `requireAuth`. Loads the user and sets `req.user`.
+ */
+export async function requireAdmin(req, res, next) {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user || !user.isAdmin) {
+      return res
+        .status(403)
+        .json({ success: false, message: 'Administrator access required' });
+    }
+    req.user = user;
+    return next();
+  } catch {
+    return res
+      .status(500)
+      .json({ success: false, message: 'Failed to verify admin access' });
+  }
 }
