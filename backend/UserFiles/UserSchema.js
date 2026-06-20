@@ -57,6 +57,12 @@ const UserSchema = new mongoose.Schema(
       required: false,
       trim: true,
     },
+    bio: {
+      type: String,
+      required: false,
+      trim: true,
+      maxlength: 500,
+    },
     interests: {
       type: [{ type: String }],
       required: false,

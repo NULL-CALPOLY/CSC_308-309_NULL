@@ -27,6 +27,8 @@ export default function Profile() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [attendingEvents, setAttendingEvents] = useState([]);
+  const [hostedEvents, setHostedEvents] = useState([]);
+  const [bio, setBio] = useState('');
 
   const {
     user,
@@ -65,6 +67,7 @@ export default function Profile() {
         setEmail(u.email || '');
         setAvatar(u.avatar || null);
         setAvatarPublicId(u.avatarPublicId || null); // load existing publicId
+        setBio(u.bio || '');
         setInterests(Array.isArray(u.interests) ? u.interests : []);
       } catch (err) {
         setErrorMsg(err.message);
@@ -88,8 +91,24 @@ export default function Profile() {
       }
     };
 
+    const fetchHostedEvents = async () => {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/events/search/host/${user.id}`,
+          { headers: { Authorization: `Bearer ${user.token}` } }
+        );
+        const json = await res.json();
+        if (res.ok && json.success) {
+          setHostedEvents(json.data);
+        }
+      } catch {
+        setHostedEvents([]);
+      }
+    };
+
     fetchUser();
     fetchAttendingEvents();
+    fetchHostedEvents();
   }, [user, isAuthenticated, authLoading]);
 
   const handleImageUploadSuccess = async (result) => {
@@ -152,6 +171,7 @@ export default function Profile() {
             gender,
             city,
             email,
+            bio,
             interests,
           }),
         }
@@ -167,6 +187,7 @@ export default function Profile() {
       setGender(u.gender || '');
       setCity(u.city || '');
       setEmail(u.email || '');
+      setBio(u.bio || '');
       setInterests(Array.isArray(u.interests) ? u.interests : []);
       setIsEditing(false);
       updateProfileName(u.name);
@@ -212,6 +233,33 @@ export default function Profile() {
     setIsEditing(false);
     setErrorMsg('');
   };
+
+  // Shared renderer for the attending / hosting event lists.
+  const renderEventCard = (event) => (
+    <EventComponent
+      key={event._id}
+      eventId={event._id}
+      eventName={event.name}
+      eventDate={
+        event.time?.start ? new Date(event.time.start).toLocaleDateString() : ''
+      }
+      eventTime={
+        event.time?.start
+          ? new Date(event.time.start).toLocaleTimeString([], {
+              hour: 'numeric',
+              minute: '2-digit',
+            })
+          : ''
+      }
+      eventAddress={event.address}
+      description={event.description}
+      interest={
+        Array.isArray(event.interests) ? event.interests.join(', ') : ''
+      }
+      attendees={event.attendees}
+      host={event.host}
+    />
+  );
 
   if (authLoading || loading)
     return <div className="profile-loading">Loading…</div>;
@@ -370,6 +418,35 @@ export default function Profile() {
           <div className="profile-panel">
             <div className="profile-panel-header">
               <span className="panel-dot" />
+              <h3>About</h3>
+            </div>
+            <div className="profile-panel-body single">
+              <div className="profile-field">
+                {isEditing ? (
+                  <>
+                    <label>Bio</label>
+                    <textarea
+                      className="profile-bio-input"
+                      value={bio}
+                      onChange={(e) => setBio(e.target.value.slice(0, 500))}
+                      placeholder="Tell people a bit about yourself…"
+                      rows={4}
+                      maxLength={500}
+                    />
+                    <span className="profile-bio-count">{bio.length}/500</span>
+                  </>
+                ) : bio ? (
+                  <p className="profile-bio-text">{bio}</p>
+                ) : (
+                  <span className="profile-field-value empty">No bio yet</span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="profile-panel">
+            <div className="profile-panel-header">
+              <span className="panel-dot" />
               <h3>Contact & Location</h3>
             </div>
             <div className="profile-panel-body">
@@ -474,40 +551,32 @@ export default function Profile() {
             <div className="profile-panel-body single profile-attending-body">
               {attendingEvents.length ? (
                 <div className="profile-attending-list">
-                  {attendingEvents.map((event) => (
-                    <EventComponent
-                      key={event._id}
-                      eventId={event._id}
-                      eventName={event.name}
-                      eventDate={
-                        event.time?.start
-                          ? new Date(event.time.start).toLocaleDateString()
-                          : ''
-                      }
-                      eventTime={
-                        event.time?.start
-                          ? new Date(event.time.start).toLocaleTimeString([], {
-                              hour: 'numeric',
-                              minute: '2-digit',
-                            })
-                          : ''
-                      }
-                      eventAddress={event.address}
-                      description={event.description}
-                      interest={
-                        Array.isArray(event.interests)
-                          ? event.interests.join(', ')
-                          : ''
-                      }
-                      attendees={event.attendees}
-                      host={event.host}
-                    />
-                  ))}
+                  {attendingEvents.map(renderEventCard)}
                 </div>
               ) : (
                 <div className="profile-attending-empty">
                   <span className="profile-field-value empty">
                     Not attending any events yet
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="profile-panel">
+            <div className="profile-panel-header">
+              <span className="panel-dot" />
+              <h3>Events I'm Hosting</h3>
+            </div>
+            <div className="profile-panel-body single profile-attending-body">
+              {hostedEvents.length ? (
+                <div className="profile-attending-list">
+                  {hostedEvents.map(renderEventCard)}
+                </div>
+              ) : (
+                <div className="profile-attending-empty">
+                  <span className="profile-field-value empty">
+                    You haven't hosted any events yet
                   </span>
                 </div>
               )}
