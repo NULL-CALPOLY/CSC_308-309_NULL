@@ -36,7 +36,6 @@ export function ModalProvider({ children }) {
         window.location.pathname + (qs ? `?${qs}` : '') + window.location.hash;
       window.history.replaceState({}, '', newUrl);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
