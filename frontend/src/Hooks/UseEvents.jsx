@@ -64,6 +64,51 @@ export function useUpcomingEvents() {
   return { events, loading, error, refetch: fetchEvents };
 }
 
+// Bounded, location-aware feed: upcoming events within `radiusMeters` of a
+// point, using the indexed /events/nearby endpoint. Pass coords = null to stay
+// idle (e.g. until the user's location is known).
+export function useNearbyEvents(coords, radiusMeters = 16093) {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const lat = coords?.lat;
+  const lng = coords?.lng;
+
+  useEffect(() => {
+    if (lat == null || lng == null) {
+      setEvents([]);
+      setLoading(false);
+      return;
+    }
+    let active = true;
+    setLoading(true);
+    setError(null);
+    const params = new URLSearchParams({
+      lng: String(lng),
+      lat: String(lat),
+      radius: String(radiusMeters),
+    });
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/events/nearby?${params}`)
+      .then((res) => res.json())
+      .then((result) => {
+        if (!active) return;
+        if (result.success) setEvents(mapEvents(result.data));
+        else {
+          setEvents([]);
+          setError(result.message);
+        }
+      })
+      .catch((err) => active && setError(err.message))
+      .finally(() => active && setLoading(false));
+    return () => {
+      active = false;
+    };
+  }, [lat, lng, radiusMeters]);
+
+  return { events, loading, error };
+}
+
 export function useEventId(id) {
   const [event, setEvent] = useState();
   const [loading, setLoading] = useState(true);

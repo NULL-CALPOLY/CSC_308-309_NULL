@@ -69,6 +69,33 @@ const validate = ({
   return errors;
 };
 
+// Best-effort city -> coordinates lookup (OpenStreetMap Nominatim). Returns
+// { latitude, longitude } or null; never throws so it can't block signup.
+async function geocodeCity(city) {
+  try {
+    const params = new URLSearchParams({
+      q: city,
+      format: 'json',
+      limit: '1',
+    });
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?${params}`,
+      { headers: { 'Accept-Language': 'en' } }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (Array.isArray(data) && data[0]?.lat && data[0]?.lon) {
+      return {
+        latitude: parseFloat(data[0].lat),
+        longitude: parseFloat(data[0].lon),
+      };
+    }
+  } catch {
+    // ignore — signup proceeds without a location
+  }
+  return null;
+}
+
 export default function RegistrationModal({
   isOpen,
   onClose,
@@ -233,6 +260,9 @@ export default function RegistrationModal({
 
     setErrors({});
     try {
+      // Geocode the city so the new user gets a location point for the
+      // location-bounded feed. Non-blocking: sign up proceeds even if it fails.
+      const location = await geocodeCity(city);
       await register({
         name,
         phoneNumber,
@@ -242,6 +272,7 @@ export default function RegistrationModal({
         email,
         password,
         interests: selectedInterests,
+        ...(location ? { location } : {}),
       });
       onClose();
       navigate('/home');
