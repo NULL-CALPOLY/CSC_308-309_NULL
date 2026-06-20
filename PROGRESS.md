@@ -11,10 +11,16 @@ Read this first on any restart. Update + `git commit` after every task.
 
 ## Phase 2 — onboarding + dynamic interests (IN PROGRESS)
 Feature status (see PLAN.md for file lists + parallel/sequential split):
-- **A. Dynamic interest system (backend)** — NOT STARTED — independent
-- **B. Onboarding interest picker (frontend)** — NOT STARTED — depends on A
+- **A. Dynamic interest system (backend)** — ✅ DONE (PR #123, merge 207bee4). normalizedName +
+  category, dedupe on POST, `GET /interests/search?q=`, seedInterests.js. CI green on main.
+- **B. Onboarding interest picker (frontend)** — IN PROGRESS — depends on A (now available)
 - **C. City + bounded location loading** — NOT STARTED — depends on B
-- **D. Google OAuth → JWT unification** — NOT STARTED — independent
+- **D. Google OAuth → JWT unification** — ✅ DONE (PR #122, merge 4485706). Callback issues JWT +
+  refresh cookie, redirects with `#token=`; UseAuth consumes hash token; SignInModal Google button.
+  CI green on main.
+
+Main verified GREEN after A+D (CI Testing success on both merge commits). Azure Static Web Apps
+preview check was red on A's PR but that was a staging-env QUOTA error, not code.
 
 Already-present (don't redo): registration modal already collects `city` and `interests`;
 UserSchema already has `city`, `interests[]`, `location` (2dsphere partial). `/events/nearby`
