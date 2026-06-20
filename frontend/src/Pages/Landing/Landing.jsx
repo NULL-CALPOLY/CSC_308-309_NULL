@@ -5,10 +5,11 @@ import community from '../../assets/community.svg';
 import LEBRON from '../../assets/LEBRON.mp4';
 import { useAuth } from '../../Hooks/UseAuth';
 import { useModal } from '../../Components/ModalContext.jsx';
+import LandingEventPreview from '../../Components/LandingEventPreview/LandingEventPreview.jsx';
 
 export default function LandingPage() {
   const { isAuthenticated } = useAuth();
-  const { openSignIn } = useModal();
+  const { openSignIn, openRegister } = useModal();
 
   return (
     <div className="landing-page">
@@ -36,6 +37,9 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* Live, public taste of the product — real upcoming events. */}
+        <LandingEventPreview />
+
         <section className="feature-section connect-section">
           <div className="feature-content">
             <section className="features">
@@ -56,8 +60,8 @@ export default function LandingPage() {
               <div className="feature">
                 <h2>Safety & Verification</h2>
                 <p>
-                  You can definitely, totally trust us with your safety and
-                  data.
+                  Cal Poly students can verify with their school email, and you
+                  control who sees your profile and events.
                 </p>
               </div>
             </section>
@@ -124,12 +128,20 @@ export default function LandingPage() {
 
         <section className="newsletter-section">
           <div className="newsletter-content">
-            <h2>Get the latest updates</h2>
-            <p>Sign up to receive top stories and tips from Findr.</p>
-            <form className="newsletter-form">
-              <input type="email" placeholder="Enter your email" />
-              <button type="submit">Subscribe</button>
-            </form>
+            <h2>Ready to find your people?</h2>
+            <p>
+              Join Findr to RSVP, host your own events, and connect with your
+              community.
+            </p>
+            {!isAuthenticated ? (
+              <button className="cta-button" onClick={openRegister}>
+                Create your account
+              </button>
+            ) : (
+              <Link to="/explore" className="cta-button">
+                Explore events
+              </Link>
+            )}
           </div>
         </section>
       </main>
@@ -138,10 +150,9 @@ export default function LandingPage() {
         <div className="footer-content">
           <p>&copy; 2026 Findr. All rights reserved.</p>
           <div className="footer-links">
-            <a href="/privacy">Privacy</a>
-            <a href="/terms">Terms</a>
-            <a href="/help">Help</a>
-            <a href="/business">Business</a>
+            <Link to="/explore">Explore</Link>
+            <Link to="/about">About</Link>
+            <a href="mailto:hello@findr.page">Contact</a>
           </div>
         </div>
       </footer>

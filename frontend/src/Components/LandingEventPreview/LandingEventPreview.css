@@ -1,0 +1,84 @@
+.lep-section {
+  width: min(1200px, 92%);
+  margin: 0 auto;
+  padding: 4rem 0 2rem;
+}
+
+.lep-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.lep-header h2 {
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  margin: 0 0 0.5rem;
+}
+
+.lep-header p {
+  color: #5f6b7a;
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+.lep-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.lep-skeleton {
+  height: 230px;
+  border-radius: 14px;
+  background: linear-gradient(100deg, #eef1f5 30%, #f7f9fb 50%, #eef1f5 70%);
+  background-size: 200% 100%;
+  animation: lep-shimmer 1.3s ease-in-out infinite;
+}
+
+@keyframes lep-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.lep-empty {
+  text-align: center;
+  color: #5f6b7a;
+  padding: 2rem 0;
+}
+
+.lep-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 2.5rem;
+}
+
+.lep-explore-btn {
+  display: inline-block;
+  padding: 0.85rem 1.75rem;
+  border-radius: 999px;
+  background: #1f6feb;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease;
+}
+
+.lep-explore-btn:hover {
+  background: #1a5fd0;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .lep-section {
+    padding: 2.5rem 0 1rem;
+  }
+  .lep-grid {
+    grid-template-columns: 1fr;
+  }
+}
