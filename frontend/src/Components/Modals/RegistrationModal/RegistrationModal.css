@@ -368,3 +368,14 @@
   color: #1f6feb;
   font-weight: 600;
 }
+
+/* ── Mobile ── */
+@media (max-width: 560px) {
+  .rmodal__card {
+    padding: 1.75rem 1.25rem 1.5rem;
+  }
+
+  .rmodal__grid {
+    grid-template-columns: 1fr;
+  }
+}

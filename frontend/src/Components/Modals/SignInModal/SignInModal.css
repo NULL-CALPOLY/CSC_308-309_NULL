@@ -7,6 +7,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 1rem;
+  overflow-y: auto;
   animation: overlay-in 0.2s ease;
 }
 
@@ -27,8 +29,16 @@
   padding: 2.5rem 2.25rem 2rem;
   width: 100%;
   max-width: 400px;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
   animation: card-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (max-width: 480px) {
+  .modal__card {
+    padding: 1.75rem 1.25rem 1.5rem;
+  }
 }
 
 @keyframes card-in {

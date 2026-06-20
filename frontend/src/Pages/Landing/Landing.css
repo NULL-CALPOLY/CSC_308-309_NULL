@@ -288,3 +288,61 @@ main {
 .footer-links a:hover {
   text-decoration: underline;
 }
+
+/* ── Responsive / mobile ── */
+@media (max-width: 900px) {
+  .feature-content.image-layout {
+    flex-direction: column;
+  }
+
+  .feature-text {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.05rem;
+  }
+
+  .hero-content {
+    padding: 1rem;
+  }
+
+  .feature-text h2,
+  .feature-content h2 {
+    font-size: 1.9rem;
+  }
+
+  .feature-text p,
+  .feature-content p {
+    font-size: 1.05rem;
+  }
+
+  .features {
+    gap: 1.5rem;
+    padding: 2rem 1rem;
+  }
+
+  /* Fixed 500px-wide, 100px-padded cards overflow small screens. */
+  .feature {
+    width: 100%;
+    max-width: 420px;
+    padding: 2rem;
+    box-sizing: border-box;
+  }
+
+  .newsletter-form {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+}
