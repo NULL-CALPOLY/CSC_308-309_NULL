@@ -29,6 +29,61 @@ describe('Interest Services', () => {
     expect(found.name).toBe('Music');
   });
 
+  test('should derive normalizedName from name (lowercase, collapsed whitespace)', async () => {
+    const interest = await interestServices.addInterest({
+      name: '  Rock   Climbing  ',
+      similarInterests: [],
+    });
+    expect(interest.normalizedName).toBe('rock climbing');
+    // name itself is only trimmed by the schema, not lowercased.
+    expect(interest.name).toBe('Rock   Climbing');
+  });
+
+  test('addInterest dedupes by normalizedName instead of creating duplicates', async () => {
+    const first = await interestServices.addInterest({
+      name: 'Music',
+      similarInterests: [],
+    });
+    const second = await interestServices.addInterest({
+      name: '  MUSIC ',
+      similarInterests: [],
+    });
+
+    expect(second._id.toString()).toBe(first._id.toString());
+    const all = await interestModel.find({ normalizedName: 'music' });
+    expect(all.length).toBe(1);
+  });
+
+  test('searchInterests returns case-insensitive substring matches sorted by name', async () => {
+    await interestModel.create({ name: 'Music', similarInterests: [] });
+    await interestModel.create({
+      name: 'Musical Theater',
+      similarInterests: [],
+    });
+    await interestModel.create({ name: 'Rock', similarInterests: [] });
+
+    const results = await interestServices.searchInterests('mus');
+    expect(results.map((i) => i.name)).toEqual(['Music', 'Musical Theater']);
+  });
+
+  test('searchInterests respects the limit argument', async () => {
+    await interestModel.create({ name: 'Music', similarInterests: [] });
+    await interestModel.create({
+      name: 'Musical Theater',
+      similarInterests: [],
+    });
+
+    const results = await interestServices.searchInterests('mus', 1);
+    expect(results.length).toBe(1);
+  });
+
+  test('searchInterests returns [] for empty or whitespace queries', async () => {
+    await interestModel.create({ name: 'Music', similarInterests: [] });
+
+    expect(await interestServices.searchInterests('')).toEqual([]);
+    expect(await interestServices.searchInterests('   ')).toEqual([]);
+  });
+
   test('should return all interests', async () => {
     await interestModel.create(testInterest);
     await interestModel.create(testInterest2);
