@@ -75,6 +75,12 @@ const fillValidForm = () => {
 describe('RegistrationModal', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    // Hermetic geocode lookup (city -> coords): return no match so signup
+    // proceeds without a location and tests never hit the network.
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => [],
+    });
   });
 
   it('renders nothing when isOpen is false', () => {
