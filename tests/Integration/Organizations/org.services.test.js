@@ -1,5 +1,7 @@
 import organizationServices from '../../../backend/OrganizationFiles/OrganizationServices.js';
 import organizationModel from '../../../backend/OrganizationFiles/OrganizationSchema.js';
+// Register the User model so .populate('members') (ref: User) resolves.
+import '../../../backend/UserFiles/UserSchema.js';
 import mongoose from 'mongoose';
 
 const testOrganization = {
