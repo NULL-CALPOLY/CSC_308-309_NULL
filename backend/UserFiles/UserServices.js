@@ -1,6 +1,7 @@
 import userModel from './UserSchema.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import { isStudentEmail } from '../utils/studentEmail.js';
 
 /*
  * Helper functions for authentication
@@ -24,6 +25,14 @@ async function authenticateUser(email, password) {
 
   const isValid = await comparePassword(user, password);
   if (!isValid) return null;
+
+  // Keep the verified-student badge in sync for accounts created before the
+  // field existed (or if the domain list changed).
+  const verifiedStudent = isStudentEmail(user.email);
+  if (user.isVerifiedStudent !== verifiedStudent) {
+    user.isVerifiedStudent = verifiedStudent;
+    await user.save();
+  }
 
   // Generate access token (short-lived)
   const accessToken = jwt.sign({ id: user._id }, process.env.JWT_TOKEN_SECRET, {
@@ -58,6 +67,9 @@ async function addUser(user) {
     throw error;
   }
   const formatteduser = formatUser(user);
+  // Derive verified-student status from the email domain — never trust a
+  // client-supplied flag.
+  formatteduser.isVerifiedStudent = isStudentEmail(user.email);
   const newUser = new userModel(formatteduser);
   return await newUser.save();
 }
@@ -69,7 +81,15 @@ function deleteUser(id) {
 
 // Update a user
 function updateUser(id, userData) {
-  return userModel.findByIdAndUpdate(id, userData, {
+  // Strip server-controlled fields so a client can't self-grant them via PUT.
+  const {
+    isVerifiedStudent,
+    googleId,
+    password,
+    _id,
+    ...safeData
+  } = userData || {};
+  return userModel.findByIdAndUpdate(id, safeData, {
     new: true,
     runValidators: true,
   });
@@ -85,7 +105,7 @@ function findUserById(id) {
 function findPublicProfileById(id) {
   return userModel
     .findById(id)
-    .select('name avatar bio interests city createdAt');
+    .select('name avatar bio interests city createdAt isVerifiedStudent');
 }
 
 // Search users by name

@@ -4,6 +4,7 @@ import './PublicProfile.css';
 import Navbar from '../../Components/Navbar/Navbar';
 import EventComponent from '../../Components/EventComponent/EventComponent';
 import { useAuth } from '../../Hooks/UseAuth.ts';
+import VerifiedBadge from '../../Components/VerifiedBadge/VerifiedBadge';
 
 export default function PublicProfile() {
   const { id } = useParams();
@@ -123,6 +124,11 @@ export default function PublicProfile() {
             </div>
 
             <p className="pub-name">{profile?.name || '—'}</p>
+            {profile?.isVerifiedStudent && (
+              <div className="pub-verified">
+                <VerifiedBadge size="sm" />
+              </div>
+            )}
             {profile?.city && <p className="pub-city">{profile.city}</p>}
 
             {interests.length > 0 && (

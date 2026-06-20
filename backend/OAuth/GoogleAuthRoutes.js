@@ -19,6 +19,7 @@ const envPath = [
 });
 config({ path: envPath });
 import User from '../UserFiles/UserSchema.js';
+import { isStudentEmail } from '../utils/studentEmail.js';
 
 const router = express.Router();
 
@@ -36,15 +37,23 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       console.log('Google profile:', profile);
       try {
+        const email = profile.emails?.[0]?.value;
+        const verifiedStudent = isStudentEmail(email);
+
         let user = await User.findOne({ googleId: profile.id });
 
         if (!user) {
           user = await User.create({
             googleId: profile.id,
-            email: profile.emails?.[0]?.value,
+            email,
             name: profile.displayName,
             avatar: profile.photos?.[0]?.value,
+            isVerifiedStudent: verifiedStudent,
           });
+        } else if (user.isVerifiedStudent !== verifiedStudent) {
+          // Keep the badge in sync if the account's student status changed.
+          user.isVerifiedStudent = verifiedStudent;
+          await user.save();
         }
 
         return done(null, user);

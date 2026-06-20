@@ -246,3 +246,15 @@
 .modal__switch:hover {
   text-decoration: underline;
 }
+
+.modal__student-hint {
+  margin: 0.85rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.modal__student-hint strong {
+  color: #34d399;
+}
