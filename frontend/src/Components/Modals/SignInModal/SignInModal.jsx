@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../Hooks/UseAuth.ts';
+import { useModal } from '../../ModalContext.jsx';
 import './SignInModal.css';
 
 export default function SignInModal({ isOpen, onClose, onSwitchToRegister }) {
@@ -9,7 +10,13 @@ export default function SignInModal({ isOpen, onClose, onSwitchToRegister }) {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const { login, loginWithGoogle } = useAuth();
+  const signInError = useModal()?.signInError || '';
   const navigate = useNavigate();
+
+  // Seed the error from an OAuth redirect (e.g. ?authError=) when opening.
+  useEffect(() => {
+    if (isOpen && signInError) setErrorMsg(signInError);
+  }, [isOpen, signInError]);
 
   // Close on Escape key
   useEffect(() => {

@@ -38,30 +38,39 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       console.log('Google profile:', profile);
       try {
-        const email = profile.emails?.[0]?.value;
+        const email = profile.emails?.[0]?.value?.toLowerCase();
+        // Google has authenticated this email, so a student domain here is a
+        // genuine "verified student" signal (Cal Poly accounts are Google
+        // Workspace accounts) — unlike a self-typed email at password signup.
         const verifiedStudent = isStudentEmail(email);
         const admin = isAdminEmail(email);
 
         let user = await User.findOne({ googleId: profile.id });
 
+        // Not found by googleId — link to an existing email/password account
+        // with the same email instead of creating a duplicate (which would hit
+        // the unique-email index and throw E11000).
+        if (!user && email) {
+          user = await User.findOne({ email });
+        }
+
         if (!user) {
-          user = await User.create({
+          user = new User({
             googleId: profile.id,
             email,
             name: profile.displayName,
             avatar: profile.photos?.[0]?.value,
-            isVerifiedStudent: verifiedStudent,
-            isAdmin: admin,
           });
-        } else if (
-          user.isVerifiedStudent !== verifiedStudent ||
-          user.isAdmin !== admin
-        ) {
-          // Keep badge / admin status in sync with the configured lists.
-          user.isVerifiedStudent = verifiedStudent;
-          user.isAdmin = admin;
-          await user.save();
+        } else if (!user.googleId) {
+          // Link Google to the existing account.
+          user.googleId = profile.id;
+          if (!user.avatar) user.avatar = profile.photos?.[0]?.value;
         }
+
+        // Sync server-controlled flags every login.
+        user.isVerifiedStudent = verifiedStudent;
+        user.isAdmin = admin;
+        await user.save();
 
         return done(null, user);
       } catch (err) {
@@ -91,15 +100,26 @@ router.get(
   passport.authenticate('google', { scope: ['profile', 'email'] })
 );
 
-// OAuth callback
-router.get(
-  '/google/callback',
-  passport.authenticate('google', { failureRedirect: '/' }),
-  (req, res) => {
+// OAuth callback — custom handler so any failure redirects back to the SPA
+// with a friendly ?authError= message instead of dumping raw JSON.
+router.get('/google/callback', (req, res, next) => {
+  const frontendBase =
+    process.env.NODE_ENV === 'production'
+      ? process.env.FRONTEND_URL
+      : 'http://localhost:5173';
+
+  passport.authenticate('google', (err, user) => {
+    if (err || !user) {
+      const msg = encodeURIComponent(
+        'Google sign-in failed. Please try again.'
+      );
+      return res.redirect(`${frontendBase}/?authError=${msg}`);
+    }
+
     // Issue the SAME tokens as standard email/password auth so the whole
     // app runs on one JWT model (no longer relying on the passport session
     // for app auth).
-    const userId = req.user._id;
+    const userId = user._id;
 
     const accessToken = jwt.sign({ id: userId }, process.env.JWT_TOKEN_SECRET, {
       expiresIn: '15m',
@@ -121,14 +141,9 @@ router.get(
 
     // Redirect to the SPA carrying the access token in the URL hash so the
     // frontend can store it and populate auth state.
-    const frontendBase =
-      process.env.NODE_ENV === 'production'
-        ? process.env.FRONTEND_URL
-        : 'http://localhost:5173';
-
     res.redirect(`${frontendBase}/#token=${accessToken}&userId=${userId}`);
-  }
-);
+  })(req, res, next);
+});
 
 // Who am I (frontend uses this)
 router.get('/me', (req, res) => {

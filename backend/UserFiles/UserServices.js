@@ -1,7 +1,6 @@
 import userModel from './UserSchema.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { isStudentEmail } from '../utils/studentEmail.js';
 import { isAdminEmail } from '../utils/adminEmail.js';
 
 /*
@@ -27,12 +26,11 @@ async function authenticateUser(email, password) {
   const isValid = await comparePassword(user, password);
   if (!isValid) return null;
 
-  // Keep the verified-student badge in sync for accounts created before the
-  // field existed (or if the domain list changed).
-  const verifiedStudent = isStudentEmail(user.email);
+  // Keep admin status in sync (config-driven). Verified-student is intentionally
+  // NOT changed here — it's only granted via Google-authenticated student
+  // accounts, and a password login shouldn't revoke a previously verified badge.
   const admin = isAdminEmail(user.email);
-  if (user.isVerifiedStudent !== verifiedStudent || user.isAdmin !== admin) {
-    user.isVerifiedStudent = verifiedStudent;
+  if (user.isAdmin !== admin) {
     user.isAdmin = admin;
     await user.save();
   }
@@ -70,9 +68,10 @@ async function addUser(user) {
     throw error;
   }
   const formatteduser = formatUser(user);
-  // Derive verified-student status from the email domain — never trust a
-  // client-supplied flag.
-  formatteduser.isVerifiedStudent = isStudentEmail(user.email);
+  // Verified-student status is NOT granted from a self-typed email at password
+  // signup (anyone could type @calpoly.edu). It's only granted when Google has
+  // actually authenticated a student-domain account (see GoogleAuthRoutes).
+  formatteduser.isVerifiedStudent = false;
   formatteduser.isAdmin = isAdminEmail(user.email);
   const newUser = new userModel(formatteduser);
   return await newUser.save();
