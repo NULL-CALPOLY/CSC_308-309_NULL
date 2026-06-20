@@ -21,6 +21,8 @@ interface UserState {
   token: string;
   name?: string;
   avatar?: string | null;
+  isAdmin?: boolean;
+  isVerifiedStudent?: boolean;
 }
 
 export const AuthContext = createContext(null);
@@ -44,7 +46,7 @@ export const useProvideAuth = () => {
   ): Promise<Partial<UserState>> => {
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/users/${id}`,
+        `${import.meta.env.VITE_API_BASE_URL}/users/me`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -54,6 +56,8 @@ export const useProvideAuth = () => {
       return {
         name: json.data?.name || '',
         avatar: json.data?.avatar || null,
+        isAdmin: !!json.data?.isAdmin,
+        isVerifiedStudent: !!json.data?.isVerifiedStudent,
       };
     } catch {
       return {};

@@ -47,6 +47,8 @@ body {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  display: flex;
+  gap: 1.75rem;
 }
 
 /* ── Explore link ── */
@@ -229,6 +231,26 @@ body {
   background: rgba(124, 58, 237, 0.1);
 }
 
+.navbar__admin {
+  border: 1px solid rgba(124, 58, 237, 0.5);
+  color: #a78bfa;
+  padding: 0.35rem 0.8rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+
+.navbar__admin:hover {
+  background: rgba(124, 58, 237, 0.12);
+  color: #fff;
+}
+
+.navbar__admin.active {
+  background: rgba(124, 58, 237, 0.2);
+  color: #fff;
+  border-bottom: 1px solid rgba(124, 58, 237, 0.5);
+}
+
 .navbar__hamburger {
   display: none;
 }
@@ -254,7 +276,8 @@ body {
     left: auto;
     transform: none;
     flex: 1;
-    text-align: center;
+    justify-content: center;
+    gap: 0.9rem;
   }
 
   .navbar__logo h2 {
