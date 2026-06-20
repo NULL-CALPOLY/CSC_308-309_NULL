@@ -362,3 +362,9 @@
   border-color: #f87171;
   box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.15);
 }
+
+/* "Add new interest" option in the interests dropdown */
+.rmodal__dropdown li.rmodal__create-option {
+  color: #1f6feb;
+  font-weight: 600;
+}

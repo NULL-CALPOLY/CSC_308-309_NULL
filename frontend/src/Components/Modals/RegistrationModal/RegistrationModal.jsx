@@ -74,7 +74,14 @@ export default function RegistrationModal({
   onClose,
   onSwitchToSignIn,
 }) {
-  const { interests, loading: interestsLoading } = useInterests();
+  const {
+    interests,
+    loading: interestsLoading,
+    searchInterests,
+    createInterest,
+  } = useInterests();
+  const [searchResults, setSearchResults] = useState([]);
+  const [creatingInterest, setCreatingInterest] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -138,6 +145,23 @@ export default function RegistrationModal({
     setDropdownOpen((o) => !o);
   }, [interestsLoading, dropdownOpen]);
 
+  // Debounced server-side typeahead so users can find interests beyond the
+  // initially loaded list. (Hook must stay above the early return below.)
+  React.useEffect(() => {
+    const q = interestSearch.trim();
+    if (!q) {
+      // Keep the same array reference when already empty so this effect can't
+      // trigger a re-render loop (searchInterests identity may change).
+      setSearchResults((prev) => (prev.length ? [] : prev));
+      return;
+    }
+    const t = setTimeout(async () => {
+      const results = await searchInterests(q);
+      setSearchResults(results);
+    }, 250);
+    return () => clearTimeout(t);
+  }, [interestSearch, searchInterests]);
+
   if (!isOpen) return null;
 
   const toggleInterest = (interest) => {
@@ -152,9 +176,32 @@ export default function RegistrationModal({
     setSelectedInterests((prev) => prev.filter((i) => i !== interest));
   };
 
-  const filteredInterests = interests.filter((i) =>
-    i.name.toLowerCase().includes(interestSearch.toLowerCase())
+  // Show search results when searching, else the loaded base list.
+  const displayedInterests = interestSearch.trim() ? searchResults : interests;
+  const trimmedSearch = interestSearch.trim();
+  const hasExactMatch = displayedInterests.some(
+    (i) => i.name.toLowerCase() === trimmedSearch.toLowerCase()
   );
+
+  // Create (or dedupe to) a user-suggested interest and select it.
+  const handleCreateInterest = async () => {
+    const name = trimmedSearch;
+    if (!name || creatingInterest) return;
+    setCreatingInterest(true);
+    try {
+      const created = await createInterest(name);
+      const interestName = created?.name || name;
+      setSelectedInterests((prev) =>
+        prev.includes(interestName) ? prev : [...prev, interestName]
+      );
+      setInterestSearch('');
+      setSearchResults([]);
+    } catch {
+      // Silently ignore — the user can retry; not a blocker for signup.
+    } finally {
+      setCreatingInterest(false);
+    }
+  };
 
   // Clear individual field error on change
   const clearError = (field) => {
@@ -424,9 +471,9 @@ export default function RegistrationModal({
                     onClick={(e) => e.stopPropagation()}
                   />
                   <ul>
-                    {filteredInterests.map((interest) => (
+                    {displayedInterests.map((interest) => (
                       <li
-                        key={interest._id}
+                        key={interest._id || interest.name}
                         className={
                           selectedInterests.includes(interest.name)
                             ? 'selected'
@@ -439,6 +486,16 @@ export default function RegistrationModal({
                         {interest.name}
                       </li>
                     ))}
+                    {trimmedSearch && !hasExactMatch && (
+                      <li
+                        className="rmodal__create-option"
+                        onClick={handleCreateInterest}>
+                        <span className="rmodal__check">＋</span>
+                        {creatingInterest
+                          ? `Adding “${trimmedSearch}”…`
+                          : `Add “${trimmedSearch}”`}
+                      </li>
+                    )}
                   </ul>
                 </div>
               )}
