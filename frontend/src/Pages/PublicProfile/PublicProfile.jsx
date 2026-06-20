@@ -15,6 +15,10 @@ export default function PublicProfile() {
   const [hostedEvents, setHostedEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
+  const [isBlocked, setIsBlocked] = useState(false);
+  const [blockBusy, setBlockBusy] = useState(false);
+
+  const isOwnProfile = user?.id === id;
 
   // If the viewer lands on their own public profile, send them to the editable one.
   useEffect(() => {
@@ -29,7 +33,10 @@ export default function PublicProfile() {
       setErrorMsg('');
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/users/${id}`
+          `${import.meta.env.VITE_API_BASE_URL}/users/${id}`,
+          user?.token
+            ? { headers: { Authorization: `Bearer ${user.token}` } }
+            : undefined
         );
         const json = await res.json();
         if (!res.ok || !json.success)
@@ -39,6 +46,21 @@ export default function PublicProfile() {
         if (!cancelled) setErrorMsg(err.message);
       } finally {
         if (!cancelled) setLoading(false);
+      }
+    };
+
+    const fetchBlockStatus = async () => {
+      if (!user?.id || user.id === id) return;
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/users/${user.id}/blocked`,
+          { headers: { Authorization: `Bearer ${user.token}` } }
+        );
+        const json = await res.json();
+        if (!cancelled && res.ok && json.success)
+          setIsBlocked(json.data.map(String).includes(String(id)));
+      } catch {
+        /* ignore */
       }
     };
 
@@ -56,10 +78,33 @@ export default function PublicProfile() {
 
     fetchProfile();
     fetchHosted();
+    fetchBlockStatus();
     return () => {
       cancelled = true;
     };
-  }, [id]);
+  }, [id, user?.id, user?.token]);
+
+  const toggleBlock = async () => {
+    if (!user?.id || isOwnProfile) return;
+    const action = isBlocked ? 'unblock' : 'block';
+    setBlockBusy(true);
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/users/${user.id}/${action}/${id}`,
+        { method: 'PUT', headers: { Authorization: `Bearer ${user.token}` } }
+      );
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        alert(json.message || 'Could not update block status');
+        return;
+      }
+      setIsBlocked(!isBlocked);
+    } catch {
+      alert('Network error');
+    } finally {
+      setBlockBusy(false);
+    }
+  };
 
   const renderEventCard = (event) => (
     <EventComponent
@@ -138,6 +183,19 @@ export default function PublicProfile() {
                   {interests.length !== 1 ? 's' : ''}
                 </span>
               </div>
+            )}
+
+            {user?.id && !isOwnProfile && (
+              <button
+                className={`pub-block-btn ${isBlocked ? 'is-blocked' : ''}`}
+                onClick={toggleBlock}
+                disabled={blockBusy}>
+                {blockBusy
+                  ? '…'
+                  : isBlocked
+                    ? 'Unblock'
+                    : 'Block user'}
+              </button>
             )}
           </div>
         </aside>

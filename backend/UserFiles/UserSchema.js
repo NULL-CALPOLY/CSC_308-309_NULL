@@ -80,6 +80,12 @@ const UserSchema = new mongoose.Schema(
       type: [{ type: String }],
       required: false,
     },
+    // Users this account has blocked. A blocked user cannot see this account's
+    // profile or events.
+    blockedUsers: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+      default: [],
+    },
     location: {
       type: {
         type: String,

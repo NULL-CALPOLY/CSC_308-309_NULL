@@ -1,7 +1,7 @@
 import express from 'express';
 import userServices from './UserServices.js';
 import jwt from 'jsonwebtoken';
-import { requireAuth, requireSelf } from '../middleware/auth.js';
+import { requireAuth, requireSelf, optionalAuth } from '../middleware/auth.js';
 import { authLimiter } from '../middleware/security.js';
 
 const router = express.Router();
@@ -253,28 +253,98 @@ router.get('/me', requireAuth, async (req, res) => {
 // projection-limited (no email/phone/dob/gender/location) — used by the public
 // profile page and event cards that show a host's name. For the logged-in
 // user's own full record, use GET /me (requireAuth).
-router.get('/:id', async (req, res) => {
-  await userServices
-    .findPublicProfileById(req.params.id)
-    .then((user) => {
-      if (!user)
-        res.status(404).json({
-          success: false,
-          message: 'User not found',
-        });
-      else
-        res.status(200).json({
-          success: true,
-          data: user,
-        });
-    })
-    .catch((error) => {
-      res.status(500).json({
-        success: false,
-        message: `Error in the server: ${error.message}`,
-      });
+router.get('/:id', optionalAuth, async (req, res) => {
+  try {
+    // A blocked viewer can't see the profile of someone who blocked them.
+    if (
+      req.userId &&
+      req.userId !== req.params.id &&
+      (await userServices.hasBlocked(req.params.id, req.userId))
+    ) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const user = await userServices.findPublicProfileById(req.params.id);
+    if (!user)
+      return res
+        .status(404)
+        .json({ success: false, message: 'User not found' });
+    res.status(200).json({ success: true, data: user });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: `Error in the server: ${error.message}`,
     });
+  }
 });
+
+// ── Block / unblock another user (self only) ──
+router.put(
+  '/:id/block/:targetId',
+  requireAuth,
+  requireSelf('id'),
+  async (req, res) => {
+    if (req.params.id === req.params.targetId)
+      return res
+        .status(400)
+        .json({ success: false, message: 'You cannot block yourself' });
+    try {
+      const updated = await userServices.blockUser(
+        req.params.id,
+        req.params.targetId
+      );
+      res.status(200).json({
+        success: true,
+        message: 'User blocked',
+        data: { blockedUsers: updated?.blockedUsers || [] },
+      });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ success: false, message: `Error in the server: ${error}` });
+    }
+  }
+);
+
+router.put(
+  '/:id/unblock/:targetId',
+  requireAuth,
+  requireSelf('id'),
+  async (req, res) => {
+    try {
+      const updated = await userServices.unblockUser(
+        req.params.id,
+        req.params.targetId
+      );
+      res.status(200).json({
+        success: true,
+        message: 'User unblocked',
+        data: { blockedUsers: updated?.blockedUsers || [] },
+      });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ success: false, message: `Error in the server: ${error}` });
+    }
+  }
+);
+
+// List the ids the current user has blocked.
+router.get(
+  '/:id/blocked',
+  requireAuth,
+  requireSelf('id'),
+  async (req, res) => {
+    try {
+      const blocked = await userServices.getBlockedUsers(req.params.id);
+      res.status(200).json({ success: true, data: blocked });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ success: false, message: `Error in the server: ${error}` });
+    }
+  }
+);
 
 // Search users by name
 router.get('/search/name/:name', async (req, res) => {
