@@ -1,3 +1,5 @@
+PHASE_2_COMPLETE
+
 # Findr Overhaul — PROGRESS (autonomous build memory)
 
 Read this first on any restart. Update + `git commit` after every task.
@@ -9,18 +11,28 @@ Read this first on any restart. Update + `git commit` after every task.
 - **Phase 1** — public `LandingEventPreview` + public `/explore` page (search/interest/date
   filters, sort incl. "For you" via `/users/me` interests) (#121).
 
-## Phase 2 — onboarding + dynamic interests (IN PROGRESS)
-Feature status (see PLAN.md for file lists + parallel/sequential split):
+## Phase 2 — onboarding + dynamic interests (✅ COMPLETE — all merged, main green)
 - **A. Dynamic interest system (backend)** — ✅ DONE (PR #123, merge 207bee4). normalizedName +
-  category, dedupe on POST, `GET /interests/search?q=`, seedInterests.js. CI green on main.
-- **B. Onboarding interest picker (frontend)** — IN PROGRESS — depends on A (now available)
-- **C. City + bounded location loading** — NOT STARTED — depends on B
+  category, dedupe on POST, `GET /interests/search?q=`, seedInterests.js.
+- **B. Onboarding interest picker (frontend)** — ✅ DONE (PR #124, merge 7fe8fcf). UseInterests
+  `searchInterests`/`createInterest`; RegistrationModal typeahead + "Add '<query>'" user-suggested tags.
+- **C. City + bounded location loading** — ✅ DONE (PR #125, merge 30a4301). Geocode city at signup
+  → location point; `useNearbyEvents` hook; Explore "📍 Near me" toggle + radius using saved
+  location or browser geolocation.
 - **D. Google OAuth → JWT unification** — ✅ DONE (PR #122, merge 4485706). Callback issues JWT +
   refresh cookie, redirects with `#token=`; UseAuth consumes hash token; SignInModal Google button.
-  CI green on main.
 
-Main verified GREEN after A+D (CI Testing success on both merge commits). Azure Static Web Apps
-preview check was red on A's PR but that was a staging-env QUOTA error, not code.
+Main verified GREEN via CI Testing on every merge commit (A, D, B, C). Known non-blocker: the Azure
+"Build and Deploy Job" (Static Web Apps PR-preview) intermittently fails on a staging-env QUOTA limit
+("maximum number of staging environments") — the Vite build compiles fine; not a code issue. Merge
+gate = `build` (full Jest) + `ai-review` green.
+
+Execution: A + D ran in parallel via isolated-worktree subagents; B then C ran sequentially (shared
+RegistrationModal). The deferred Phase-0 OAuth unification was completed here as D.
+
+### Phase 1 follow-up still open (for a later phase)
+Make `/events/:id` publicly viewable (auth-gate only RSVP/comments) so landing/Explore cards open
+without an account.
 
 Already-present (don't redo): registration modal already collects `city` and `interests`;
 UserSchema already has `city`, `interests[]`, `location` (2dsphere partial). `/events/nearby`
