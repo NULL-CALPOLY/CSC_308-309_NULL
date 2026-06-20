@@ -222,6 +222,7 @@ export default function EventDetails() {
   const [comments, setComments] = useState(null);
   const [commentText, setCommentText] = useState('');
   const [commentsLoading, setCommentsLoading] = useState(true);
+  const [hostName, setHostName] = useState('');
 
   React.useEffect(() => {
     if (rawEvent) {
@@ -323,6 +324,24 @@ export default function EventDetails() {
 
     fetchUser();
   }, [isAuthenticated, user]);
+
+  // Resolve the host's display name for the "Hosted by" click-through link.
+  useEffect(() => {
+    const host = event?.host;
+    if (!host) return;
+    if (typeof host === 'object' && host.name) {
+      setHostName(host.name);
+      return;
+    }
+    const hostId = typeof host === 'object' ? host._id : host;
+    if (!hostId) return;
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/users/${hostId}`)
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data?.name) setHostName(json.data.name);
+      })
+      .catch(() => {});
+  }, [event?.host]);
 
   if (loading) return <div className="ed-loading">Loading event…</div>;
   if (fetchError)
@@ -517,6 +536,24 @@ export default function EventDetails() {
                 {new Date(event.time.start).toLocaleString()} –{' '}
                 {new Date(event.time.end).toLocaleString()}
               </p>
+              {hostName &&
+                (() => {
+                  const hostId =
+                    typeof event.host === 'object'
+                      ? event.host?._id
+                      : event.host;
+                  return (
+                    <p className="ed-host">
+                      Hosted by{' '}
+                      <button
+                        type="button"
+                        className="ed-host-link"
+                        onClick={() => hostId && navigate(`/users/${hostId}`)}>
+                        {hostName}
+                      </button>
+                    </p>
+                  );
+                })()}
             </div>
           </div>
 

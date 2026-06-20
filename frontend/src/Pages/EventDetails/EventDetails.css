@@ -970,3 +970,23 @@
   font-family: 'Consolas', monospace;
   font-size: 0.8rem;
 }
+
+.ed-host {
+  margin: 0.35rem 0 0;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.ed-host-link {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: #a78bfa;
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.ed-host-link:hover {
+  text-decoration: underline;
+}

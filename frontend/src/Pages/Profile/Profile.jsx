@@ -51,7 +51,7 @@ export default function Profile() {
       setErrorMsg('');
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/users/${user.id}`,
+          `${import.meta.env.VITE_API_BASE_URL}/users/me`,
           { headers: { Authorization: `Bearer ${user.token}` } }
         );
         const json = await res.json();

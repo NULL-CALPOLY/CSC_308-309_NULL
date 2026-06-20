@@ -80,6 +80,14 @@ function findUserById(id) {
   return userModel.findById(id);
 }
 
+// Public-safe projection of a user — only fields safe to expose on a public
+// profile page. Excludes email, phone, dateOfBirth, gender, location, googleId.
+function findPublicProfileById(id) {
+  return userModel
+    .findById(id)
+    .select('name avatar bio interests city createdAt');
+}
+
 // Search users by name
 function findUserByName(name) {
   return userModel.find({ name: { $regex: name, $options: 'i' } });
@@ -193,6 +201,7 @@ export default {
   authenticateUser,
   getUsers,
   findUserById,
+  findPublicProfileById,
   findUserByName,
   findUserByEmail,
   findUserByPhoneNumber,
