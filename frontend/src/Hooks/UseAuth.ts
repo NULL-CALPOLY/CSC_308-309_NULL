@@ -60,10 +60,51 @@ export const useProvideAuth = () => {
     }
   };
 
-  // Check session using refresh token (HttpOnly cookie)
+  // ── Helper: consume an access token handed back via the URL hash ──
+  // Google OAuth redirects to `/#token=<jwt>&userId=<id>`. When present we
+  // adopt that token (same JWT model as email/password login), fetch the
+  // user profile, clean the hash, and land on /home.
+  const consumeHashToken = async (): Promise<boolean> => {
+    const hash = window.location.hash;
+    if (!hash || !hash.includes('token=')) return false;
+
+    const params = new URLSearchParams(hash.replace(/^#/, ''));
+    const token = params.get('token');
+    const userId = params.get('userId');
+    if (!token || !userId) return false;
+
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/users/me`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      const profile: Partial<UserState> = res.ok
+        ? await res
+            .json()
+            .then((json) => ({
+              name: json.data?.name || '',
+              avatar: json.data?.avatar || null,
+            }))
+            .catch(() => ({}))
+        : {};
+      setUser({ id: userId, token, ...profile });
+    } catch {
+      setUser({ id: userId, token });
+    }
+
+    // Strip the token from the URL so it isn't left in history/bookmarks.
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+    navigate('/home');
+    return true;
+  };
+
+  // Check session: first try a Google OAuth hash token, then fall back to the
+  // refresh token (HttpOnly cookie).
   useEffect(() => {
     const checkSession = async () => {
       try {
+        if (await consumeHashToken()) return;
+
         const res = await fetch(
           `${import.meta.env.VITE_API_BASE_URL}/users/refresh-token`,
           { method: 'POST', credentials: 'include' }
@@ -84,7 +125,13 @@ export const useProvideAuth = () => {
     };
 
     checkSession();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // ── Redirect the browser to start the Google OAuth flow ──
+  const loginWithGoogle = () => {
+    window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/google`;
+  };
 
   const login = async (email: string, password: string) => {
     const res = await fetch(
@@ -171,6 +218,7 @@ export const useProvideAuth = () => {
   return {
     user,
     login,
+    loginWithGoogle,
     register,
     logout,
     updateProfileImage,

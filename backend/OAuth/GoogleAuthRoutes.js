@@ -1,5 +1,6 @@
 import express from 'express';
 import passport from 'passport';
+import jwt from 'jsonwebtoken';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { config } from 'dotenv';
 import path from 'path';
@@ -79,11 +80,37 @@ router.get(
   '/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
-    const redirectUrl =
+    // Issue the SAME tokens as standard email/password auth so the whole
+    // app runs on one JWT model (no longer relying on the passport session
+    // for app auth).
+    const userId = req.user._id;
+
+    const accessToken = jwt.sign({ id: userId }, process.env.JWT_TOKEN_SECRET, {
+      expiresIn: '15m',
+    });
+
+    const refreshToken = jwt.sign(
+      { id: userId },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    // Set refresh token as HttpOnly cookie (identical options to /users/login)
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    // Redirect to the SPA carrying the access token in the URL hash so the
+    // frontend can store it and populate auth state.
+    const frontendBase =
       process.env.NODE_ENV === 'production'
         ? process.env.FRONTEND_URL
         : 'http://localhost:5173';
-    res.redirect(redirectUrl);
+
+    res.redirect(`${frontendBase}/#token=${accessToken}&userId=${userId}`);
   }
 );
 
