@@ -1,4 +1,4 @@
-PHASES 0,1,2 COMPLETE — Phase 3 IN PROGRESS
+PHASE_3_COMPLETE — Phases 0,1,2,3 done (main green, prod verified). Phase 4 NEXT.
 
 # Findr Overhaul — PROGRESS (autonomous build memory)
 
@@ -15,25 +15,19 @@ NOTE: this orchestration branch holds stale app code; ALWAYS branch feature work
   (#124), city geocode at signup + `useNearbyEvents` + Explore "Near me" (#125), Google OAuth→JWT
   (#122). All merged, main green, prod verified.
 
-## Phase 3 — Map overhaul (IN PROGRESS)
-Locked UX (from roadmap): Airbnb/Zillow split-view — map + linked side-list, two-way highlight,
-clustering on desktop, mobile bottom-sheet. Explore page handles pure list/filter browsing.
-- **3A. Markers + clustering + same-venue overlap** — NOT STARTED — independent of 3B's start but
-  3B depends on it. Files: `MainMapComponent.jsx`/`.css`, new marker SVG asset(s), frontend deps
-  (`react-leaflet-cluster` + `leaflet.markercluster`), test mock for react-leaflet-cluster +
-  jest moduleNameMapper. leaflet.markercluster `spiderfyOnMaxZoom` handles same-venue overlap.
-- **3B. Linked split-view + mobile bottom-sheet** — NOT STARTED — depends on 3A. Lift
-  `selectedEventId` to `HomePage.jsx`; pass to `MainMapComponent` (highlight + flyTo on select)
-  and `EventColumn` (highlight card + scroll-into-view; click card → select). Mobile bottom-sheet
-  layout for the event column. Files: `HomePage.jsx`/`.css`, `MainMapComponent.jsx`,
-  `EventColumn.jsx`/`.css`, `EventComponent.jsx` (selected styling).
+## Phase 3 — Map overhaul (✅ COMPLETE — merged, main green, prod verified)
+- **3A. Markers + clustering + same-venue overlap** — ✅ DONE (PR #126, merge ea815a8). New
+  `event-pin.svg`, react-leaflet-cluster + leaflet.markercluster, `spiderfyOnMaxZoom` spreads
+  same-venue pins, blue cluster theme, passthrough test mock + jest mapping.
+- **3B. Linked split-view + mobile bottom-sheet** — ✅ DONE (PR #127, merge 42938f6). HomePage
+  lifts `selectedEventId`; map marker click ↔ list card highlight + scroll-into-view; list click →
+  pin highlight + flyTo; mobile bottom-sheet for the event column.
+Did these sequentially myself (both funnel through MainMapComponent — no parallelism). Known CI
+non-blocker persists: Azure "Build and Deploy Job" red on staging-env quota; gate on build+ai-review.
 
-Versions: react 18, react-leaflet 4.2.1, leaflet 1.9.4 → use react-leaflet-cluster ^2.
-react-leaflet test mock at tests/__mocks__/react-leaflet.js (exports MapContainer/TileLayer/
-Marker/Popup/useMap). MainMapComponent.test uses getByRole('button') expecting ONE button (locate)
-— don't add map buttons in 3A.
-
-Order: 3A → 3B (sequential; both funnel through MainMapComponent so not parallelizable).
+### Phase 1 follow-up still open (do in a later phase)
+Make `/events/:id` publicly viewable (auth-gate only RSVP/comments) so landing/Explore/map cards
+open without an account.
 
 ## Phase 2 — onboarding + dynamic interests (✅ COMPLETE — all merged, main green)
 - **A. Dynamic interest system (backend)** — ✅ DONE (PR #123, merge 207bee4). normalizedName +
