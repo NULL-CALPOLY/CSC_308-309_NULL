@@ -26,6 +26,13 @@ export default function Navbar({ page = '/' }) {
           }>
           Explore
         </NavLink>
+        <NavLink
+          to="/clubs"
+          className={({ isActive }) =>
+            isActive ? 'navbar__explore-link active' : 'navbar__explore-link'
+          }>
+          Clubs
+        </NavLink>
       </div>
 
       <div className="navbar__links">
@@ -40,6 +47,17 @@ export default function Navbar({ page = '/' }) {
           </>
         ) : (
           <div className="navbar__profile">
+            {user?.isAdmin && (
+              <NavLink
+                to="/admin"
+                className={({ isActive }) =>
+                  isActive
+                    ? 'navbar__link navbar__admin active'
+                    : 'navbar__link navbar__admin'
+                }>
+                Admin
+              </NavLink>
+            )}
             <button onClick={logout} className="navbar__logout-btn">
               Logout
             </button>
