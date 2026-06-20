@@ -72,7 +72,17 @@ const UserSchema = new mongoose.Schema(
       },
     },
   },
-  { collection: 'users_list' }
+  { collection: 'users_list', timestamps: true }
+);
+
+// Geospatial index for "users near me" radius queries. Partial so users without
+// coordinates (e.g. OAuth signups, or anyone who hasn't set a location) aren't
+// indexed. The schema defaults `location.type` to 'Point', so a location-less
+// user still persists `location: { type: 'Point' }` with no coordinates — a
+// non-partial 2dsphere index errors on that with "Can't extract geo keys".
+UserSchema.index(
+  { location: '2dsphere' },
+  { partialFilterExpression: { 'location.coordinates': { $exists: true } } }
 );
 
 UserSchema.pre('save', async function (next) {
