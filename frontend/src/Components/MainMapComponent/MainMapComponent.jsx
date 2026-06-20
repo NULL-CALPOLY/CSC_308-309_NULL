@@ -13,13 +13,16 @@ import locateIcon from '../../assets/location.svg';
 import circle from '../../assets/circle.png';
 import './MainMapComponent.css';
 
-const EventIcon = L.divIcon({
-  html: `<img src="${markerIcon}" class="event-marker-img" alt="" />`,
-  iconSize: [40, 52],
-  iconAnchor: [20, 50],
-  popupAnchor: [0, -50],
-  className: 'event-marker-wrapper',
-});
+const makeEventIcon = (selected) =>
+  L.divIcon({
+    html: `<img src="${markerIcon}" class="event-marker-img" alt="" />`,
+    iconSize: [40, 52],
+    iconAnchor: [20, 50],
+    popupAnchor: [0, -50],
+    className: selected
+      ? 'event-marker-wrapper is-selected'
+      : 'event-marker-wrapper',
+  });
 
 const currentLocationIcon = L.icon({
   iconUrl: circle,
@@ -29,7 +32,7 @@ const currentLocationIcon = L.icon({
   popupAnchor: [0, -10],
 });
 
-export default function MainMapComponent() {
+export default function MainMapComponent({ selectedId = null, onSelect }) {
   const [userPosition, setUserPosition] = useState(null);
   const [tracking, setTracking] = useState(false);
   const { events: rawEvents } = useUpcomingEvents();
@@ -37,6 +40,8 @@ export default function MainMapComponent() {
   const events = rawEvents.filter(
     (e) => e.lat !== 0 && e.lng !== 0 && e.lat != null && e.lng != null
   );
+
+  const selectedEvent = events.find((e) => e.id === selectedId) || null;
 
   return (
     <div className="main-map-wrapper">
@@ -77,9 +82,17 @@ export default function MainMapComponent() {
           showCoverageOnHover={false}
           maxClusterRadius={50}>
           {events.map((event) => (
-            <EventMarker key={event.id} event={event} />
+            <EventMarker
+              key={event.id}
+              event={event}
+              isSelected={event.id === selectedId}
+              onSelect={onSelect}
+            />
           ))}
         </MarkerClusterGroup>
+
+        {/* Pan/zoom to the event selected from the side list */}
+        {selectedEvent && <FlyToSelected event={selectedEvent} />}
 
         <LocateButton
           icon={locateIcon}
@@ -94,8 +107,20 @@ export default function MainMapComponent() {
   );
 }
 
+// Pans/zooms the map to the event selected from the side list.
+function FlyToSelected({ event }) {
+  const map = useMap();
+  useEffect(() => {
+    if (event?.lat == null || event?.lng == null) return;
+    const targetZoom =
+      typeof map.getZoom === 'function' ? Math.max(map.getZoom(), 15) : 15;
+    map.flyTo([event.lat, event.lng], targetZoom, { duration: 0.6 });
+  }, [event?.id, map]);
+  return null;
+}
+
 // Individual event marker with popup
-function EventMarker({ event }) {
+function EventMarker({ event, isSelected = false, onSelect }) {
   const navigate = useNavigate();
 
   const formatTime = (isoString) => {
@@ -109,7 +134,10 @@ function EventMarker({ event }) {
   };
 
   return (
-    <Marker position={[event.lat, event.lng]} icon={EventIcon}>
+    <Marker
+      position={[event.lat, event.lng]}
+      icon={makeEventIcon(isSelected)}
+      eventHandlers={{ click: () => onSelect?.(event.id) }}>
       <Popup className="event-popup">
         <div className="popup-content">
           <div className="popup-title">{event.eventName}</div>

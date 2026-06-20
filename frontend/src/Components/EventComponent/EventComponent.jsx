@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './EventComponent.css';
 import TagComponent from '../InterestTag/InterestTag.jsx';
@@ -10,6 +10,14 @@ export default function EventComponent(props) {
   const [attendees, setAttendees] = useState(props.attendees || []);
   const { openSignIn } = useModal();
   const navigate = useNavigate();
+  const cardRef = useRef(null);
+
+  // Scroll into view when this card becomes the selected one (map -> list sync).
+  useEffect(() => {
+    if (props.selected && cardRef.current) {
+      cardRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [props.selected]);
 
   const tags = props.interest
     ? props.interest.split(',').map((t) => t.trim())
@@ -70,7 +78,10 @@ export default function EventComponent(props) {
   };
 
   return (
-    <div className="Event-Container">
+    <div
+      ref={cardRef}
+      className={`Event-Container${props.selected ? ' Event-Container--selected' : ''}`}
+      onClick={() => props.onSelect?.(props.eventId)}>
       <div className="Event-Title">{props.eventName}</div>
       <hr className="Event-Divider" />
 

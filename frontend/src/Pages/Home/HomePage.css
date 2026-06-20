@@ -139,3 +139,62 @@ body:has(.HomePage) {
 .col-closed .Create-Event-Button {
   left: 20px;
 }
+
+/* ── Mobile: event column becomes a bottom sheet ── */
+@media (max-width: 768px) {
+  .HomePage {
+    --event-col-w: 100vw;
+  }
+
+  .Event-Column {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 62vh;
+    max-height: 62vh;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    box-shadow: 0 -6px 28px rgba(0, 0, 0, 0.22);
+    overflow: hidden;
+  }
+
+  /* Slide the sheet down off-screen when closed */
+  .col-closed .Event-Column {
+    transform: translateY(100%);
+  }
+
+  /* Close affordance becomes a top-center grab handle (arrow points down) */
+  .col-close-btn {
+    top: 8px;
+    right: 50%;
+    transform: translate(50%, 0) rotate(-90deg);
+  }
+
+  /* "Show events" pill floats at the bottom when the sheet is closed */
+  .col-open-btn {
+    top: auto;
+    bottom: 16px;
+    left: 50%;
+    width: auto;
+    height: 38px;
+    padding: 0 14px;
+    border-radius: 19px;
+    transform: translateX(-50%) translateY(8px);
+  }
+
+  .col-closed .col-open-btn {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .Create-Event-Button {
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: calc(62vh + 12px);
+  }
+
+  .col-closed .Create-Event-Button {
+    left: 50%;
+    bottom: 64px;
+  }
+}
