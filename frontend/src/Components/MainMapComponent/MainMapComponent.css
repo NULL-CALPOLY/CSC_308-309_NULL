@@ -66,19 +66,19 @@
 /* Highlighted (selected) event pin — used by the linked split-view */
 .event-marker-wrapper.is-selected .event-marker-img {
   transform: translateY(-4px) scale(1.18);
-  filter: drop-shadow(0 4px 8px rgba(29, 78, 216, 0.55));
+  filter: drop-shadow(0 4px 12px rgba(124, 58, 237, 0.65));
 }
 
-/* Blue cluster bubbles to match the pin theme (overrides default green/yellow) */
+/* Purple cluster bubbles to match the pin theme */
 .marker-cluster-small,
 .marker-cluster-medium,
 .marker-cluster-large {
-  background-color: rgba(59, 130, 246, 0.25);
+  background-color: rgba(124, 58, 237, 0.2);
 }
 .marker-cluster-small div,
 .marker-cluster-medium div,
 .marker-cluster-large div {
-  background-color: rgba(29, 78, 216, 0.9);
+  background-color: rgba(91, 33, 182, 0.9);
   color: #fff;
   font-weight: 700;
 }

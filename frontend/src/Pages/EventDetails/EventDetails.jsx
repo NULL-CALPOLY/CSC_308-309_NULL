@@ -533,8 +533,18 @@ export default function EventDetails() {
                 <h2 className="ed-title">{event.name}</h2>
               )}
               <p className="ed-sub">
-                {new Date(event.time.start).toLocaleString()} –{' '}
-                {new Date(event.time.end).toLocaleString()}
+                {new Date(event.time.start).toLocaleString(undefined, {
+                  weekday: 'short',
+                  month: 'short',
+                  day: 'numeric',
+                  hour: 'numeric',
+                  minute: '2-digit',
+                })}{' '}
+                –{' '}
+                {new Date(event.time.end).toLocaleString(undefined, {
+                  hour: 'numeric',
+                  minute: '2-digit',
+                })}
               </p>
               {hostName &&
                 (() => {
@@ -557,136 +567,143 @@ export default function EventDetails() {
             </div>
           </div>
 
-          {/* ── Grid ── */}
-          <div className="ed-grid">
-            {/* Description */}
-            <div className="ed-field full">
-              <label>Description</label>
-              {isEditing ? (
-                <>
-                  <textarea
-                    className={`ed-textarea ${editErrors.description ? 'ed-input--error' : ''}`}
-                    value={event.description}
+          {/* ── Body ── */}
+          <div className="ed-body">
+            <div className="ed-grid">
+              {/* Description */}
+              <div className="ed-field full">
+                <label>Description</label>
+                {isEditing ? (
+                  <>
+                    <textarea
+                      className={`ed-textarea ${editErrors.description ? 'ed-input--error' : ''}`}
+                      value={event.description}
+                      onChange={(e) =>
+                        setEvent({ ...event, description: e.target.value })
+                      }
+                    />
+                    {editErrors.description && (
+                      <span className="ed-error-text">
+                        {editErrors.description}
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  <p className="ed-value">{event.description}</p>
+                )}
+              </div>
+
+              {/* Address */}
+              <div className="ed-field full">
+                <label>Location</label>
+                {isEditing ? (
+                  <input
+                    className="ed-input"
+                    value={event.address}
                     onChange={(e) =>
-                      setEvent({ ...event, description: e.target.value })
+                      setEvent({ ...event, address: e.target.value })
                     }
                   />
-                  {editErrors.description && (
-                    <span className="ed-error-text">
-                      {editErrors.description}
-                    </span>
-                  )}
-                </>
-              ) : (
-                <p className="ed-value">{event.description}</p>
-              )}
-            </div>
-
-            {/* Address */}
-            <div className="ed-field full">
-              <label>Address</label>
-              {isEditing ? (
-                <input
-                  className="ed-input"
-                  value={event.address}
-                  onChange={(e) =>
-                    setEvent({ ...event, address: e.target.value })
-                  }
-                />
-              ) : (
-                <a
-                  className="ed-address-link"
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.address)}`}
-                  target="_blank"
-                  rel="noopener noreferrer">
-                  {event.address}
-                </a>
-              )}
-            </div>
-
-            {/* Start Time */}
-            {isEditing && (
-              <div className="ed-field">
-                <label>Start Time</label>
-                <input
-                  type="datetime-local"
-                  className={`ed-input ${editErrors.startTime ? 'ed-input--error' : ''}`}
-                  value={toInputValue(event.time.start)}
-                  onChange={(e) =>
-                    setEvent({
-                      ...event,
-                      time: { ...event.time, start: e.target.value },
-                    })
-                  }
-                />
-                {editErrors.startTime && (
-                  <span className="ed-error-text">{editErrors.startTime}</span>
+                ) : (
+                  <a
+                    className="ed-address-link"
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.address)}`}
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    {event.address}
+                  </a>
                 )}
               </div>
-            )}
 
-            {/* End Time */}
-            {isEditing && (
-              <div className="ed-field">
-                <label>End Time</label>
-                <input
-                  type="datetime-local"
-                  className={`ed-input ${editErrors.endTime ? 'ed-input--error' : ''}`}
-                  value={toInputValue(event.time.end)}
-                  onChange={(e) =>
-                    setEvent({
-                      ...event,
-                      time: { ...event.time, end: e.target.value },
-                    })
-                  }
-                />
-                {editErrors.endTime && (
-                  <span className="ed-error-text">{editErrors.endTime}</span>
-                )}
-              </div>
-            )}
-
-            {/* Attendees */}
-            <div className="ed-field full">
-              <label>Attendees</label>
-              <AttendeeAvatarStack
-                attendees={attendees}
-                resolvedUsers={resolvedUsers}
-                total={attendees.length}
-                onClick={handleOpenAttendees}
-              />
-            </div>
-
-            {/* Interests */}
-            <div className="ed-field full">
-              <label>Interests</label>
-              {isEditing ? (
-                <>
-                  <Multiselect
-                    selectedOptions={selectedInterests}
-                    onChange={({ detail }) => {
-                      setSelectedInterests(detail.selectedOptions);
-                      setEditErrors((prev) => ({ ...prev, interests: null }));
-                    }}
-                    options={interestOptions}
-                    filteringType="auto"
-                    placeholder="Select interests"
+              {/* Start Time */}
+              {isEditing && (
+                <div className="ed-field">
+                  <label>Start Time</label>
+                  <input
+                    type="datetime-local"
+                    className={`ed-input ${editErrors.startTime ? 'ed-input--error' : ''}`}
+                    value={toInputValue(event.time.start)}
+                    onChange={(e) =>
+                      setEvent({
+                        ...event,
+                        time: { ...event.time, start: e.target.value },
+                      })
+                    }
                   />
-                  {editErrors.interests && (
+                  {editErrors.startTime && (
                     <span className="ed-error-text">
-                      {editErrors.interests}
+                      {editErrors.startTime}
                     </span>
                   )}
-                </>
-              ) : (
-                <div className="ed-tags">
-                  {interests.map((i, idx) => (
-                    <span key={idx} className="ed-tag">
-                      {typeof i === 'object' ? i.name : i}
-                    </span>
-                  ))}
                 </div>
               )}
+
+              {/* End Time */}
+              {isEditing && (
+                <div className="ed-field">
+                  <label>End Time</label>
+                  <input
+                    type="datetime-local"
+                    className={`ed-input ${editErrors.endTime ? 'ed-input--error' : ''}`}
+                    value={toInputValue(event.time.end)}
+                    onChange={(e) =>
+                      setEvent({
+                        ...event,
+                        time: { ...event.time, end: e.target.value },
+                      })
+                    }
+                  />
+                  {editErrors.endTime && (
+                    <span className="ed-error-text">{editErrors.endTime}</span>
+                  )}
+                </div>
+              )}
+
+              {/* Attendees */}
+              <div className="ed-field full">
+                <label>Attendees</label>
+                <AttendeeAvatarStack
+                  attendees={attendees}
+                  resolvedUsers={resolvedUsers}
+                  total={attendees.length}
+                  onClick={handleOpenAttendees}
+                />
+              </div>
+
+              {/* Interests */}
+              <div className="ed-field full">
+                <label>Interests</label>
+                {isEditing ? (
+                  <>
+                    <Multiselect
+                      selectedOptions={selectedInterests}
+                      onChange={({ detail }) => {
+                        setSelectedInterests(detail.selectedOptions);
+                        setEditErrors((prev) => ({
+                          ...prev,
+                          interests: null,
+                        }));
+                      }}
+                      options={interestOptions}
+                      filteringType="auto"
+                      placeholder="Select interests"
+                    />
+                    {editErrors.interests && (
+                      <span className="ed-error-text">
+                        {editErrors.interests}
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  <div className="ed-tags">
+                    {interests.map((i, idx) => (
+                      <span key={idx} className="ed-tag">
+                        {typeof i === 'object' ? i.name : i}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 

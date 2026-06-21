@@ -1,8 +1,8 @@
 .Event_Container {
   position: absolute;
-  top: 0;
+  top: var(--nav-h);
   left: 0;
-  height: 100vh;
+  height: calc(100vh - var(--nav-h));
   width: 380px;
 
   display: flex;
@@ -15,9 +15,7 @@
   border-right: 1px solid rgba(255, 255, 255, 0.6);
   box-shadow: 4px 0 32px rgba(0, 0, 0, 0.12);
 
-  padding-left: 14px;
-  padding-right: 14px;
-  padding: calc(var(--nav-h) + 24px) 1.5rem 0rem;
+  padding: 20px 1.5rem 0rem;
   overflow: hidden;
   box-sizing: border-box;
   z-index: 10;
@@ -59,4 +57,11 @@
   background: transparent;
 }
 
-/* === Mobile: handled by auto-close in HomePage === */
+/* === Mobile: bottom sheet — panel fills its wrapper, no nav offset needed === */
+@media (max-width: 768px) {
+  .Event_Container {
+    top: 0;
+    height: 100%;
+    padding-top: 16px;
+  }
+}
