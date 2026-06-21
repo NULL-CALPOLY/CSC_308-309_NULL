@@ -184,8 +184,32 @@
   cursor: default;
 }
 
-@media (max-width: 560px) {
+@media (max-width: 640px) {
+  .clubs-wrapper {
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  .clubs-header {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .clubs-header h1 {
+    font-size: 1.55rem;
+  }
+
   .clubs-register-btn {
     width: 100%;
+    padding: 0.7rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  .clubs-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .club-card {
+    padding: 1rem;
   }
 }

@@ -68,6 +68,7 @@ export default function HomePage() {
         title="Open event panel"
         aria-label="Open event panel">
         <img src={HamburgerIcon} alt="" />
+        <span className="col-open-label">Events</span>
       </button>
 
       <div className="Create-Event-Button">

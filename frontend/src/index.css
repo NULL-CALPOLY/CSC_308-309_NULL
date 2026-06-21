@@ -51,3 +51,22 @@ h5,
 h6 {
   font-weight: 600;
 }
+
+/* ── Mobile UX globals ── */
+button,
+a {
+  touch-action: manipulation;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 768px) {
+  /* Prevent iOS auto-zoom on form inputs (font-size < 16px triggers it) */
+  input,
+  textarea,
+  select {
+    font-size: max(16px, 1em);
+  }
+}
