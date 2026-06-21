@@ -463,6 +463,58 @@ button.secondary:hover {
   color: #c4b5fd;
 }
 
+/* --- Mobile: bottom-sheet modal --- */
+@media (max-width: 520px) {
+  .modal-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .modal {
+    width: 100%;
+    max-width: 100%;
+    max-height: 92dvh;
+    border-radius: 20px 20px 0 0;
+    animation: modal-slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes modal-slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .modal-header {
+    padding: 1rem 1.25rem 0.9rem;
+  }
+
+  .modal-body {
+    padding: 1.1rem 1.25rem;
+  }
+
+  .modal-actions {
+    padding: 0.9rem 1.25rem 1.25rem;
+    flex-direction: column-reverse;
+    gap: 0.6rem;
+  }
+
+  .modal-actions button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  .datetime-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+
 /* --- Custom interests multi-select --- */
 .cem-ms {
   position: relative;

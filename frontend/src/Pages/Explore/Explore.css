@@ -1,5 +1,6 @@
 .explore-page {
   min-height: 100vh;
+  padding-top: var(--nav-h, 80px);
 }
 
 .explore-hero {
@@ -140,5 +141,43 @@
   }
   .explore-filters {
     position: static;
+  }
+}
+
+@media (max-width: 600px) {
+  .explore-hero {
+    padding: 1.25rem 0 0.75rem;
+  }
+
+  .explore-hero h1 {
+    font-size: 1.6rem;
+  }
+
+  .explore-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.6rem;
+  }
+
+  .explore-search {
+    flex: none;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+
+  .explore-sort,
+  .explore-nearme {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.65rem 1rem;
+    font-size: 0.95rem;
+    justify-content: center;
+  }
+
+  .explore-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 }

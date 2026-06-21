@@ -1,4 +1,5 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../Hooks/UseAuth.ts';
 import { useModal } from '../ModalContext.jsx';
 import './Navbar.css';
@@ -6,15 +7,39 @@ import './Navbar.css';
 export default function Navbar({ page = '/' }) {
   const { isAuthenticated, logout, user } = useAuth();
   const { openSignIn, openRegister } = useModal();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const navRef = useRef(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const handler = (e) => {
+      if (navRef.current && !navRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    document.addEventListener('touchstart', handler, { passive: true });
+    return () => {
+      document.removeEventListener('mousedown', handler);
+      document.removeEventListener('touchstart', handler);
+    };
+  }, [menuOpen]);
 
   const linkClass = ({ isActive }) =>
     isActive ? 'navbar__link active' : 'navbar__link';
 
+  const closeMenu = () => setMenuOpen(false);
+
   return (
-    <nav className="navbar">
+    <nav className="navbar" ref={navRef}>
       <div className="navbar__logo">
         <NavLink to={page} className={linkClass} end>
-          <h2>Findr</h2>
+          <h2>Findr<span>.</span></h2>
         </NavLink>
       </div>
 
@@ -84,6 +109,72 @@ export default function Navbar({ page = '/' }) {
           </div>
         )}
       </div>
+
+      {/* Hamburger — mobile only */}
+      <button
+        className={`navbar__hamburger${menuOpen ? ' is-open' : ''}`}
+        onClick={() => setMenuOpen((o) => !o)}
+        aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+        aria-expanded={menuOpen}>
+        <span />
+        <span />
+        <span />
+      </button>
+
+      {/* Mobile slide-down menu */}
+      {menuOpen && (
+        <div className="navbar__mobile-menu">
+          <NavLink
+            to="/home"
+            className={({ isActive }) => (isActive ? 'nmm-link active' : 'nmm-link')}
+            onClick={closeMenu}>
+            Explore
+          </NavLink>
+          <NavLink
+            to="/clubs"
+            className={({ isActive }) => (isActive ? 'nmm-link active' : 'nmm-link')}
+            onClick={closeMenu}>
+            Clubs
+          </NavLink>
+          <div className="nmm-divider" />
+          {!isAuthenticated ? (
+            <>
+              <button
+                className="nmm-btn nmm-btn--ghost"
+                onClick={() => { closeMenu(); openSignIn(); }}>
+                Sign In
+              </button>
+              <button
+                className="nmm-btn nmm-btn--primary"
+                onClick={() => { closeMenu(); openRegister(); }}>
+                Register
+              </button>
+            </>
+          ) : (
+            <>
+              {user?.isAdmin && (
+                <NavLink
+                  to="/admin"
+                  className={({ isActive }) => (isActive ? 'nmm-link active' : 'nmm-link')}
+                  onClick={closeMenu}>
+                  Admin
+                </NavLink>
+              )}
+              <NavLink
+                to="/profile"
+                className={({ isActive }) => (isActive ? 'nmm-link active' : 'nmm-link')}
+                onClick={closeMenu}>
+                Profile
+              </NavLink>
+              <button
+                className="nmm-btn nmm-btn--ghost"
+                onClick={() => { closeMenu(); logout(); }}>
+                Logout
+              </button>
+            </>
+          )}
+        </div>
+      )}
     </nav>
   );
 }

@@ -674,6 +674,21 @@
   color: #a78bfa;
 }
 
+@media (max-width: 480px) {
+  .profile-layout {
+    padding: 1rem 0.75rem 3rem;
+    gap: 1.25rem;
+  }
+
+  .profile-sidebar-card {
+    padding: 1.5rem 1rem;
+  }
+
+  .profile-back-wrapper {
+    padding: 1rem 0.75rem 0;
+  }
+}
+
 /* Add to Profile.css — delete account button in sidebar */
 .profile-btn--delete-account {
   width: 100%;
