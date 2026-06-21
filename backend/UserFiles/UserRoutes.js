@@ -3,6 +3,7 @@ import userServices from './UserServices.js';
 import jwt from 'jsonwebtoken';
 import { requireAuth, requireSelf, optionalAuth } from '../middleware/auth.js';
 import { authLimiter } from '../middleware/security.js';
+import { isAdminEmail } from '../utils/adminEmail.js';
 
 const router = express.Router();
 
@@ -234,19 +235,26 @@ router.put('/:id', requireAuth, requireSelf('id'), async (req, res) => {
 // Get the currently authenticated user. Must be declared before '/:id' so
 // '/me' isn't captured as an id param.
 router.get('/me', requireAuth, async (req, res) => {
-  await userServices
-    .findUserById(req.userId)
-    .then((user) => {
-      if (!user)
-        res.status(404).json({ success: false, message: 'User not found' });
-      else res.status(200).json({ success: true, data: user });
-    })
-    .catch((error) => {
-      res.status(500).json({
-        success: false,
-        message: `Error in the server: ${error.message}`,
-      });
+  try {
+    const user = await userServices.findUserById(req.userId);
+    if (!user)
+      return res.status(404).json({ success: false, message: 'User not found' });
+
+    // Keep isAdmin in sync with the ADMIN_EMAILS config on every profile fetch,
+    // so admins don't need to log out and back in after their email is added.
+    const shouldBeAdmin = isAdminEmail(user.email);
+    if (user.isAdmin !== shouldBeAdmin) {
+      user.isAdmin = shouldBeAdmin;
+      await user.save();
+    }
+
+    res.status(200).json({ success: true, data: user });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: `Error in the server: ${error.message}`,
     });
+  }
 });
 
 // Get a user's PUBLIC profile by ID. Unauthenticated and intentionally
