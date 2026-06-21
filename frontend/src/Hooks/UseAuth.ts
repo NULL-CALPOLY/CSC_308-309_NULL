@@ -33,6 +33,43 @@ export const useAuth = () => {
   return context;
 };
 
+// ── localStorage session persistence ──
+// Access tokens expire in 15 min on the server; we store them for 14 min so
+// we always have a chance to refresh before an API call fails.
+const SESSION_KEY = 'findr_session';
+const TOKEN_EXPIRY_MS = 14 * 60 * 1000;
+
+function saveSession(id: string, token: string) {
+  try {
+    localStorage.setItem(
+      SESSION_KEY,
+      JSON.stringify({ id, token, expiresAt: Date.now() + TOKEN_EXPIRY_MS })
+    );
+  } catch {}
+}
+
+function clearSession() {
+  try {
+    localStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem('userToken');
+    localStorage.removeItem('userId');
+    sessionStorage.clear();
+  } catch {}
+}
+
+function loadSession(): { id: string; token: string } | null {
+  try {
+    const raw = localStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed?.token || !parsed?.id) return null;
+    if (parsed.expiresAt && parsed.expiresAt <= Date.now()) return null;
+    return { id: parsed.id, token: parsed.token };
+  } catch {
+    return null;
+  }
+}
+
 export const useProvideAuth = () => {
   const [user, setUser] = useState<UserState | null>(null);
   const [error, setError] = useState<string>('');
@@ -65,9 +102,6 @@ export const useProvideAuth = () => {
   };
 
   // ── Helper: consume an access token handed back via the URL hash ──
-  // Google OAuth redirects to `/#token=<jwt>&userId=<id>`. When present we
-  // adopt that token (same JWT model as email/password login), fetch the
-  // user profile, clean the hash, and land on /home.
   const consumeHashToken = async (): Promise<boolean> => {
     const hash = window.location.hash;
     if (!hash || !hash.includes('token=')) return false;
@@ -91,24 +125,52 @@ export const useProvideAuth = () => {
             }))
             .catch(() => ({}))
         : {};
+      saveSession(userId, token);
       setUser({ id: userId, token, ...profile });
     } catch {
       setUser({ id: userId, token });
     }
 
-    // Strip the token from the URL so it isn't left in history/bookmarks.
     history.replaceState(null, '', window.location.pathname + window.location.search);
     navigate('/home');
     return true;
   };
 
-  // Check session: first try a Google OAuth hash token, then fall back to the
-  // refresh token (HttpOnly cookie).
+  // ── Silently try cookie-based refresh; update localStorage if it succeeds ──
+  const tryRefreshInBackground = () => {
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/users/refresh-token`, {
+      method: 'POST',
+      credentials: 'include',
+    })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.accessToken && data?.userId) {
+          saveSession(data.userId, data.accessToken);
+          setUser((prev) =>
+            prev ? { ...prev, id: data.userId, token: data.accessToken } : prev
+          );
+        }
+      })
+      .catch(() => {});
+  };
+
   useEffect(() => {
     const checkSession = async () => {
       try {
         if (await consumeHashToken()) return;
 
+        // 1. Try localStorage first — instant restoration, no network needed.
+        const stored = loadSession();
+        if (stored) {
+          const profile = await fetchUserProfile(stored.id, stored.token);
+          setUser({ id: stored.id, token: stored.token, ...profile });
+          setLoading(false);
+          // Kick off a background refresh to extend the cookie session.
+          tryRefreshInBackground();
+          return;
+        }
+
+        // 2. No valid localStorage entry — fall back to cookie-based refresh.
         const res = await fetch(
           `${import.meta.env.VITE_API_BASE_URL}/users/refresh-token`,
           { method: 'POST', credentials: 'include' }
@@ -119,6 +181,7 @@ export const useProvideAuth = () => {
         } else {
           const data = await res.json();
           const profile = await fetchUserProfile(data.userId, data.accessToken);
+          saveSession(data.userId, data.accessToken);
           setUser({ id: data.userId, token: data.accessToken, ...profile });
         }
       } catch {
@@ -156,6 +219,7 @@ export const useProvideAuth = () => {
     const data = await res.json();
     const profile = await fetchUserProfile(data.userId, data.accessToken);
     const newUser = { id: data.userId, token: data.accessToken, ...profile };
+    saveSession(data.userId, data.accessToken);
     setUser(newUser);
     return newUser;
   };
@@ -183,6 +247,7 @@ export const useProvideAuth = () => {
       const id = data.userId || data.user?._id;
       const token = data.token || data.accessToken;
       const profile = await fetchUserProfile(id, token);
+      saveSession(id, token);
       setUser({ id, token, ...profile });
       return data;
     } catch (err: any) {
@@ -202,10 +267,8 @@ export const useProvideAuth = () => {
     } catch (err) {
       console.error('Logout failed', err);
     }
+    clearSession();
     setUser(null);
-    localStorage.removeItem('userToken');
-    localStorage.removeItem('userId');
-    sessionStorage.clear();
     navigate('/');
   };
 

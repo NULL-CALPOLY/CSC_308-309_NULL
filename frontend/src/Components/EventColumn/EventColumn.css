@@ -62,18 +62,7 @@
   .Event_Container {
     top: 0;
     height: 100%;
-    padding-top: 28px;
-  }
-
-  /* Visual drag handle pill above content */
-  .Event_Container::before {
-    content: '';
-    display: block;
-    width: 40px;
-    height: 4px;
-    background: rgba(0, 0, 0, 0.18);
-    border-radius: 2px;
-    margin: 0 auto 12px;
+    padding-top: 32px;
   }
 
   .Search_Bar {

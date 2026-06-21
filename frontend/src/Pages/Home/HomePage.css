@@ -127,6 +127,11 @@ body:has(.HomePage) {
   transform: translateX(0);
 }
 
+/* "Events" label — hidden on desktop (button is icon-only), shown on mobile */
+.col-open-label {
+  display: none;
+}
+
 /* ── Create Event button shifts left when column closes ── */
 .Create-Event-Button {
   position: absolute;
@@ -168,24 +173,38 @@ body:has(.HomePage) {
 
   /* Close affordance: pill drag handle at top-center */
   .col-close-btn {
-    top: 10px;
+    top: 0;
     right: 50%;
     transform: translate(50%, 0);
-    width: 44px;
-    height: 5px;
-    border-radius: 3px;
-    background: rgba(0, 0, 0, 0.2);
+    width: 64px;
+    height: 28px;
+    border-radius: 0 0 8px 8px;
+    background: transparent;
     border: none;
     box-shadow: none;
     backdrop-filter: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* The visible pill is a ::before pseudo so the tap area stays large */
+  .col-close-btn::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 5px;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.22);
+    transition: background 0.2s;
+  }
+
+  .col-close-btn:hover::before {
+    background: rgba(124, 58, 237, 0.45);
   }
 
   .col-close-btn img {
     display: none;
-  }
-
-  .col-close-btn:hover {
-    background: rgba(124, 58, 237, 0.35);
   }
 
   /* "Show events" pill floats at the bottom when the sheet is closed */
@@ -202,6 +221,10 @@ body:has(.HomePage) {
     font-weight: 600;
     color: #7c3aed;
     gap: 8px;
+  }
+
+  .col-open-label {
+    display: inline;
   }
 
   .col-closed .col-open-btn {
