@@ -23,6 +23,10 @@
 .clubs-header h1 {
   margin: 0;
   font-size: 1.9rem;
+  font-weight: 700;
+  color: #fff;
+  font-family: 'Consolas', monospace;
+  letter-spacing: 0.02em;
 }
 
 .clubs-sub {

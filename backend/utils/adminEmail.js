@@ -1,7 +1,6 @@
 // Master/site administrators are configured via the ADMIN_EMAILS env var
-// (comma-separated). Their accounts get isAdmin set automatically on signup and
-// login, so they can approve/reject club registrations.
-const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || '')
+// (comma-separated). Falls back to the default admin if the env var is unset.
+const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || 'vishnualachi@gmail.com')
   .split(',')
   .map((e) => e.trim().toLowerCase())
   .filter(Boolean);

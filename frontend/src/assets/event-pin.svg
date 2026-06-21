@@ -1,16 +1,26 @@
 <svg width="40" height="52" viewBox="0 0 40 52" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="findrPin" x1="20" y1="1" x2="20" y2="50" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#3b82f6" />
-      <stop offset="1" stop-color="#1d4ed8" />
+    <linearGradient id="pinGrad" x1="20" y1="1" x2="20" y2="50" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#a78bfa" />
+      <stop offset="1" stop-color="#5b21b6" />
     </linearGradient>
-    <filter id="findrPinShadow" x="-30%" y="-10%" width="160%" height="130%">
-      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#0f172a" flood-opacity="0.35" />
+    <filter id="pinShadow" x="-30%" y="-10%" width="160%" height="130%">
+      <feDropShadow dx="0" dy="3" stdDeviation="2.5" flood-color="#1e0050" flood-opacity="0.45" />
     </filter>
+    <radialGradient id="innerGlow" cx="50%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#ede9fe" />
+      <stop offset="100%" stop-color="#c4b5fd" />
+    </radialGradient>
   </defs>
+  <!-- Pin body -->
   <path
     d="M20 1.5C10.9 1.5 3.5 8.9 3.5 18c0 11.2 14 29.7 14.6 30.5a2.4 2.4 0 0 0 3.8 0C22.5 47.7 36.5 29.2 36.5 18 36.5 8.9 29.1 1.5 20 1.5z"
-    fill="url(#findrPin)" stroke="#ffffff" stroke-width="2.5" filter="url(#findrPinShadow)" />
-  <circle cx="20" cy="18" r="6.5" fill="#ffffff" />
-  <circle cx="20" cy="18" r="3" fill="#1d4ed8" />
+    fill="url(#pinGrad)"
+    stroke="#ffffff"
+    stroke-width="1.5"
+    filter="url(#pinShadow)" />
+  <!-- Inner circle glow -->
+  <circle cx="20" cy="18" r="8" fill="url(#innerGlow)" opacity="0.9" />
+  <!-- Center dot -->
+  <circle cx="20" cy="18" r="3.5" fill="#5b21b6" />
 </svg>
