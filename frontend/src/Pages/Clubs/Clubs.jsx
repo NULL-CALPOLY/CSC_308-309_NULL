@@ -95,7 +95,7 @@ export default function Clubs() {
 
       <div className="clubs-wrapper">
         <header className="clubs-header">
-          <div>
+          <div className="clubs-header-text">
             <h1>Clubs &amp; Organizations</h1>
             <p className="clubs-sub">
               Join a club to get its events surfaced first.

@@ -1,5 +1,7 @@
 .explore-page {
   min-height: 100vh;
+  background: #0d0d14;
+  color: #f8fafc;
   padding-top: var(--nav-h, 80px);
 }
 
@@ -7,36 +9,45 @@
   width: min(1200px, 92%);
   margin: 0 auto;
   padding: 2rem 0 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  margin-bottom: 0;
 }
 
 .explore-hero h1 {
   font-size: clamp(1.8rem, 3.2vw, 2.6rem);
   margin: 0 0 0.4rem;
+  color: #f8fafc;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .explore-hero p {
-  color: #5f6b7a;
+  color: rgba(248, 250, 252, 0.55);
   margin: 0;
 }
 
 .explore-body {
   width: min(1200px, 92%);
   margin: 0 auto;
-  padding: 1rem 0 4rem;
+  padding: 1.5rem 0 4rem;
   display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 1.75rem;
+  grid-template-columns: 280px 1fr;
+  gap: 2rem;
   align-items: start;
 }
 
 .explore-filters {
   position: sticky;
-  top: 1rem;
+  top: calc(var(--nav-h, 80px) + 1rem);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 1.25rem;
 }
 
 .explore-toolbar {
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   align-items: center;
   flex-wrap: wrap;
   margin-bottom: 1.25rem;
@@ -44,79 +55,103 @@
 
 .explore-search {
   flex: 1 1 260px;
-  padding: 0.7rem 1rem;
-  border: 1px solid #d4dae2;
+  padding: 0.65rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 10px;
-  font-size: 0.95rem;
+  font-size: max(16px, 0.95rem);
+  background: rgba(255, 255, 255, 0.05);
+  color: #f8fafc;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.explore-search::placeholder {
+  color: rgba(248, 250, 252, 0.35);
 }
 
 .explore-search:focus {
   outline: none;
-  border-color: #1f6feb;
-  box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.15);
+  border-color: rgba(124, 58, 237, 0.55);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
 }
 
 .explore-sort {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: #5f6b7a;
-  font-size: 0.9rem;
+  color: rgba(248, 250, 252, 0.55);
+  font-size: 0.88rem;
 }
 
 .explore-sort select {
-  padding: 0.55rem 0.6rem;
-  border: 1px solid #d4dae2;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.06);
+  color: #f8fafc;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.explore-sort select:focus {
+  outline: none;
+  border-color: rgba(124, 58, 237, 0.5);
 }
 
 .explore-nearme {
-  padding: 0.55rem 0.9rem;
-  border: 1px solid #d4dae2;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  background: #fff;
-  color: #2a3441;
-  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(248, 250, 252, 0.75);
+  font-size: 0.88rem;
   cursor: pointer;
+  white-space: nowrap;
   transition:
     background 0.15s ease,
-    border-color 0.15s ease;
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .explore-nearme:hover {
-  border-color: #1f6feb;
+  border-color: rgba(124, 58, 237, 0.4);
+  color: #f8fafc;
 }
 
 .explore-nearme.is-active {
-  background: #1f6feb;
-  border-color: #1f6feb;
-  color: #fff;
+  background: rgba(124, 58, 237, 0.2);
+  border-color: rgba(124, 58, 237, 0.5);
+  color: #a78bfa;
+  font-weight: 600;
 }
 
 .explore-geo-error {
-  color: #c0392b;
+  color: #f87171;
   font-size: 0.85rem;
   margin: -0.5rem 0 1rem;
 }
 
 .explore-count {
-  color: #5f6b7a;
-  font-size: 0.9rem;
+  color: rgba(248, 250, 252, 0.4);
+  font-size: 0.88rem;
   margin: 0 0 1rem;
 }
 
 .explore-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+  gap: 1.25rem;
   align-items: start;
 }
 
 .explore-skeleton {
   height: 230px;
   border-radius: 14px;
-  background: linear-gradient(100deg, #eef1f5 30%, #f7f9fb 50%, #eef1f5 70%);
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0.03) 30%,
+    rgba(255, 255, 255, 0.07) 50%,
+    rgba(255, 255, 255, 0.03) 70%
+  );
   background-size: 200% 100%;
   animation: explore-shimmer 1.3s ease-in-out infinite;
 }
@@ -131,8 +166,63 @@
 }
 
 .explore-empty {
-  color: #5f6b7a;
-  padding: 2rem 0;
+  color: rgba(248, 250, 252, 0.4);
+  padding: 3rem 0;
+  text-align: center;
+}
+
+/* ── Dark-mode SearchBar overrides for the Explore sidebar ── */
+.explore-filters .searchbar-input {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #f8fafc;
+}
+
+.explore-filters .searchbar-input::placeholder {
+  color: rgba(248, 250, 252, 0.35);
+}
+
+.explore-filters .searchbar-input:focus {
+  border-color: rgba(124, 58, 237, 0.55);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
+}
+
+.explore-filters .checkbox-grid-wrapper::after {
+  background: linear-gradient(
+    to bottom,
+    rgba(18, 14, 28, 0) 0%,
+    rgba(18, 14, 28, 0.95) 100%
+  );
+}
+
+.explore-filters .checkbox-item [class*='awsui_label'] {
+  color: #f8fafc !important;
+}
+
+.explore-filters .date-filter {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.explore-filters .date-filter__label {
+  color: rgba(248, 250, 252, 0.45);
+}
+
+.explore-filters .date-filter__field label {
+  color: rgba(248, 250, 252, 0.4);
+}
+
+.explore-filters .date-input {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #f8fafc;
+}
+
+.explore-filters .date-filter__clear {
+  color: #a78bfa;
+}
+
+.explore-filters .checkbox-item {
+  color: #f8fafc;
 }
 
 @media (max-width: 860px) {

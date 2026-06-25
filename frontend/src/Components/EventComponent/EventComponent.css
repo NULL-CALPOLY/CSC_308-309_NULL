@@ -258,7 +258,7 @@
 .Event-Host {
   margin: 0.4rem 0 0.2rem;
   font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: #5f6b7a;
 }
 
 .Event-Host-Link {
@@ -266,11 +266,13 @@
   border: none;
   padding: 0;
   cursor: pointer;
-  color: #a78bfa;
+  color: #7c3aed;
   font-size: 0.82rem;
   font-weight: 600;
+  text-decoration: none;
 }
 
 .Event-Host-Link:hover {
   text-decoration: underline;
+  color: #6d28d9;
 }

@@ -49,7 +49,14 @@ export default function Navbar({ page = '/' }) {
           className={({ isActive }) =>
             isActive ? 'navbar__explore-link active' : 'navbar__explore-link'
           }>
-          Explore
+          Map
+        </NavLink>
+        <NavLink
+          to="/events"
+          className={({ isActive }) =>
+            isActive ? 'navbar__explore-link active' : 'navbar__explore-link'
+          }>
+          Events
         </NavLink>
         <NavLink
           to="/clubs"
@@ -67,7 +74,7 @@ export default function Navbar({ page = '/' }) {
               Sign In
             </button>
             <button className="navbar__link signup" onClick={openRegister}>
-              Registration
+              Sign Up
             </button>
           </>
         ) : (
@@ -128,7 +135,13 @@ export default function Navbar({ page = '/' }) {
             to="/home"
             className={({ isActive }) => (isActive ? 'nmm-link active' : 'nmm-link')}
             onClick={closeMenu}>
-            Explore
+            Map
+          </NavLink>
+          <NavLink
+            to="/events"
+            className={({ isActive }) => (isActive ? 'nmm-link active' : 'nmm-link')}
+            onClick={closeMenu}>
+            Events
           </NavLink>
           <NavLink
             to="/clubs"
@@ -147,7 +160,7 @@ export default function Navbar({ page = '/' }) {
               <button
                 className="nmm-btn nmm-btn--primary"
                 onClick={() => { closeMenu(); openRegister(); }}>
-                Register
+                Sign Up
               </button>
             </>
           ) : (
