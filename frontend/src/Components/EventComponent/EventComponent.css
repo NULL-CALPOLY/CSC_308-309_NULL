@@ -255,6 +255,13 @@
   border-color: #7c3aed;
 }
 
+.Event-Error {
+  font-size: 0.78rem;
+  color: #f87171;
+  margin: 6px 0 2px;
+  line-height: 1.4;
+}
+
 .Event-Host {
   margin: 0.4rem 0 0.2rem;
   font-size: 0.82rem;

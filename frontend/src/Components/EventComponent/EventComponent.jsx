@@ -44,6 +44,7 @@ export default function EventComponent(props) {
   }, [hostId, hostName]);
 
   const [attendBusy, setAttendBusy] = useState(false);
+  const [attendError, setAttendError] = useState('');
 
   const isAttending = attendees?.some(
     (a) => (typeof a === 'object' ? a._id : a) === user?.id
@@ -76,7 +77,7 @@ export default function EventComponent(props) {
       setAttendees((prev) =>
         wasAttending ? [...prev, user.id] : prev.filter((a) => (typeof a === 'object' ? a._id : a) !== user.id)
       );
-      alert(err.message);
+      setAttendError(err.message || 'Could not update attendance.');
     } finally {
       setAttendBusy(false);
     }
@@ -93,8 +94,16 @@ export default function EventComponent(props) {
   return (
     <div
       ref={cardRef}
+      role="article"
+      tabIndex={props.onSelect ? 0 : undefined}
       className={`Event-Container${props.selected ? ' Event-Container--selected' : ''}`}
-      onClick={() => props.onSelect?.(props.eventId)}>
+      onClick={() => props.onSelect?.(props.eventId)}
+      onKeyDown={(e) => {
+        if (props.onSelect && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault();
+          props.onSelect(props.eventId);
+        }
+      }}>
       <div className="Event-Title">{props.eventName}</div>
       <hr className="Event-Divider" />
 
@@ -139,6 +148,10 @@ export default function EventComponent(props) {
           <TagComponent key={idx} Interest={tag} />
         ))}
       </div>
+
+      {attendError && (
+        <p className="Event-Error" role="alert">{attendError}</p>
+      )}
 
       <div className="Event-Footer">
         {!isAuthenticated ? (
