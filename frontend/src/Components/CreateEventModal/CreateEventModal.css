@@ -241,6 +241,12 @@
   background: rgba(0, 0, 0, 0.18);
 }
 
+.cem-submit-error {
+  margin: 0;
+  margin-right: auto;
+  font-size: 0.82rem;
+}
+
 button.primary {
   background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
   color: #fff;

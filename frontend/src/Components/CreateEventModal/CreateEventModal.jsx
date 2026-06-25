@@ -30,6 +30,8 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
   const dropdownRef = useRef(null);
   const [dropPos, setDropPos] = useState({ top: 0, left: 0, width: 0 });
   const [errorMessage, setErrorMessage] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   // Close interest dropdown on outside click (portal-aware)
   useEffect(() => {
@@ -116,10 +118,20 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
     return Object.keys(newErrors).length === 0;
   };
 
+  const resetForm = () => {
+    setFormData({ name: '', description: '', address: '', roomDetail: '', interests: [], location: '', startTime: '', endTime: '' });
+    setSelectedOptions([]);
+    setInterestSearch('');
+    setErrorMessage({});
+    setSubmitError('');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
 
+    setSubmitting(true);
+    setSubmitError('');
     try {
       const payload = {
         name: formData.name,
@@ -152,11 +164,14 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
         }
       );
 
-      if (!response.ok) throw new Error(`Server error: ${response.statusText}`);
+      const json = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(json.message || 'Failed to create event');
+      resetForm();
       onSuccess();
     } catch (err) {
-      console.error('Failed to create event:', err);
-      alert('Failed to create event. Check console for details.');
+      setSubmitError(err.message);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -457,11 +472,12 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
           </form>
         </div>
         <div className="modal-actions">
-          <button type="button" className="secondary" onClick={onClose}>
+          {submitError && <p className="error-text cem-submit-error">{submitError}</p>}
+          <button type="button" className="secondary" onClick={onClose} disabled={submitting}>
             Cancel
           </button>
-          <button type="submit" form="cem-form" className="primary">
-            Create Event
+          <button type="submit" form="cem-form" className="primary" disabled={submitting}>
+            {submitting ? 'Creating…' : 'Create Event'}
           </button>
         </div>
       </div>
