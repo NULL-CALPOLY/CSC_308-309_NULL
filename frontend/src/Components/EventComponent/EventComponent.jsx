@@ -43,30 +43,43 @@ export default function EventComponent(props) {
       .catch(() => {});
   }, [hostId, hostName]);
 
+  const [attendBusy, setAttendBusy] = useState(false);
+
   const isAttending = attendees?.some(
     (a) => (typeof a === 'object' ? a._id : a) === user?.id
   );
 
   const handleAttend = async () => {
-    if (!isAuthenticated || !user?.id) return;
+    if (!isAuthenticated || !user?.id || attendBusy) return;
 
-    const route = isAttending ? 'remove' : 'add';
+    const wasAttending = isAttending;
+    const route = wasAttending ? 'remove' : 'add';
 
-    await fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/events/${props.eventId}/attendees/${route}/${user.id}`,
-      {
-        method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      }
-    );
-
+    setAttendBusy(true);
     setAttendees((prev) =>
-      isAttending
+      wasAttending
         ? prev.filter((a) => (typeof a === 'object' ? a._id : a) !== user.id)
         : [...prev, user.id]
     );
+
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/events/${props.eventId}/attendees/${route}/${user.id}`,
+        { method: 'PUT', headers: { Authorization: `Bearer ${user.token}` } }
+      );
+      if (!res.ok) {
+        const json = await res.json().catch(() => ({}));
+        throw new Error(json.message || 'Failed to update attendance');
+      }
+    } catch (err) {
+      // Roll back optimistic update
+      setAttendees((prev) =>
+        wasAttending ? [...prev, user.id] : prev.filter((a) => (typeof a === 'object' ? a._id : a) !== user.id)
+      );
+      alert(err.message);
+    } finally {
+      setAttendBusy(false);
+    }
   };
 
   const handleEdit = () => {
@@ -139,8 +152,9 @@ export default function EventComponent(props) {
         ) : (
           <button
             className={`ActionButton ${isAttending ? 'LeaveButton' : 'JoinButton'}`}
-            onClick={handleAttend}>
-            {isAttending ? 'Leave Event' : 'Join Event'}
+            onClick={handleAttend}
+            disabled={attendBusy}>
+            {attendBusy ? '…' : isAttending ? 'Leave Event' : 'Join Event'}
           </button>
         )}
 

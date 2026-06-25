@@ -215,6 +215,7 @@ export default function EventDetails() {
   const [selectedInterests, setSelectedInterests] = useState([]);
   const [currentUserName, setCurrentUserName] = useState('');
 
+  const [attendBusy, setAttendBusy] = useState(false);
   const [showAttendeesModal, setShowAttendeesModal] = useState(false);
   const [resolvedUsers, setResolvedUsers] = useState({});
   const [attendeeNamesLoading, setAttendeeNamesLoading] = useState(false);
@@ -391,20 +392,42 @@ export default function EventDetails() {
   };
 
   const handleAttend = async () => {
-    if (!isAuthenticated || !user?.id) return;
-    const route = isAttending ? 'remove' : 'add';
-    await fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/events/${id}/attendees/${route}/${user.id}`,
-      { method: 'PUT', headers: { Authorization: `Bearer ${user.token}` } }
-    );
+    if (!isAuthenticated || !user?.id || attendBusy) return;
+    const wasAttending = isAttending;
+    const route = wasAttending ? 'remove' : 'add';
+
+    setAttendBusy(true);
     setEvent((prev) => ({
       ...prev,
-      attendees: isAttending
-        ? prev.attendees.filter(
+      attendees: wasAttending
+        ? (prev.attendees || []).filter(
             (a) => (typeof a === 'object' ? a._id : a) !== user.id
           )
-        : [...prev.attendees, user.id],
+        : [...(prev.attendees || []), user.id],
     }));
+
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/events/${id}/attendees/${route}/${user.id}`,
+        { method: 'PUT', headers: { Authorization: `Bearer ${user.token}` } }
+      );
+      if (!res.ok) {
+        const json = await res.json().catch(() => ({}));
+        throw new Error(json.message || 'Failed to update attendance');
+      }
+    } catch (err) {
+      setEvent((prev) => ({
+        ...prev,
+        attendees: wasAttending
+          ? [...(prev.attendees || []), user.id]
+          : (prev.attendees || []).filter(
+              (a) => (typeof a === 'object' ? a._id : a) !== user.id
+            ),
+      }));
+      alert(err.message);
+    } finally {
+      setAttendBusy(false);
+    }
   };
 
   const handleUpdate = async (e) => {
@@ -470,9 +493,12 @@ export default function EventDetails() {
         `${import.meta.env.VITE_API_BASE_URL}/comments/event/${id}/message`,
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${user.token}`,
+          },
           body: JSON.stringify({
-            name: user.name || 'Anonymous',
+            name: user.name || currentUserName || 'Anonymous',
             avatar: user.avatar || null,
             message: commentText,
             userId: user.id || null,
@@ -487,7 +513,6 @@ export default function EventDetails() {
       setComments(json.data);
       setCommentText('');
     } catch (err) {
-      console.error(err);
       alert(err.message);
     }
   };
@@ -713,8 +738,9 @@ export default function EventDetails() {
               <button
                 type="button"
                 className="ed-btn ed-btn--primary"
-                onClick={handleAttend}>
-                {isAttending ? 'Leave Event' : 'Join Event'}
+                onClick={handleAttend}
+                disabled={attendBusy}>
+                {attendBusy ? '…' : isAttending ? 'Leave Event' : 'Join Event'}
               </button>
             )}
 

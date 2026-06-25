@@ -36,6 +36,7 @@ export default function Profile() {
     user,
     isAuthenticated,
     loading: authLoading,
+    logout,
     updateProfileImage,
     updateProfileName,
   } = useAuth();
@@ -215,9 +216,7 @@ export default function Profile() {
       if (!res.ok || !json.success)
         throw new Error(json.message || 'Failed to delete account');
 
-      // Clear auth state and redirect to home / login
-      // (call your logout helper if you have one, e.g. logout())
-      navigate('/');
+      await logout();
     } catch (err) {
       setErrorMsg(err.message);
       setShowDeleteModal(false);
