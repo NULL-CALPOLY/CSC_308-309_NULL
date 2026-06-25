@@ -183,7 +183,6 @@ export default function ProfileImageUploadModal({
       handleUpload(croppedBlobRef.current);
     } catch (err) {
       setError('Failed to process image. Please try again.');
-      console.error(err);
     }
   };
 

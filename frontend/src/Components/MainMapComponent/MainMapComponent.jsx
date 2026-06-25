@@ -193,7 +193,6 @@ function LocateButton({ icon, setUserPosition, setTracking }) {
         const latlng = [pos.coords.latitude, pos.coords.longitude];
         setUserPosition(latlng);
         map.flyTo(latlng, 15);
-        console.log('📍 Current location:', latlng);
         setTracking((prev) => !prev);
       },
       () => alert('Unable to retrieve your location.')
@@ -221,9 +220,8 @@ function LiveLocation({ setUserPosition }) {
         const latlng = [pos.coords.latitude, pos.coords.longitude];
         setUserPosition(latlng);
         map.setView(latlng);
-        console.log('📍 Updated live location:', latlng);
       },
-      (err) => console.error('Unable to retrieve location:', err),
+      () => {},
       {
         enableHighAccuracy: true,
         maximumAge: 10000,

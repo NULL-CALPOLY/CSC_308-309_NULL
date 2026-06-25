@@ -1,5 +1,6 @@
 import express from 'express';
 import commentsServices from './CommentsServices.js';
+import { requireAuth } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -51,7 +52,7 @@ router.post('/event/:eventId', async (req, res) => {
 });
 
 // Add message to event comments
-router.post('/event/:eventId/message', async (req, res) => {
+router.post('/event/:eventId/message', requireAuth, async (req, res) => {
   const { name, message, avatar, userId } = req.body;
 
   if (!name || !message) {
