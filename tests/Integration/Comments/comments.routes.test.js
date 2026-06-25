@@ -2,6 +2,7 @@ import request from 'supertest';
 import app from '../../../backend/backend.js';
 import commentsModel from '../../../backend/CommentFiles/CommentsSchema.js';
 import mongoose from 'mongoose';
+import { authHeader } from '../../helpers/auth.js';
 
 const testEventId = new mongoose.Types.ObjectId();
 const testUserId = new mongoose.Types.ObjectId();
@@ -49,6 +50,7 @@ describe('Comments Routes', () => {
 
     const res = await request(app)
       .post(`/comments/event/${testEventId}/message`)
+      .set(authHeader(testUserId))
       .send({
         name: 'Test User',
         message: 'Hello, world!',
@@ -68,6 +70,7 @@ describe('Comments Routes', () => {
 
     const res = await request(app)
       .post(`/comments/event/${testEventId}/message`)
+      .set(authHeader(testUserId))
       .send({ name: 'Test User' }); // missing message
 
     expect(res.status).toBe(400);
@@ -80,6 +83,7 @@ describe('Comments Routes', () => {
 
     const res = await request(app)
       .post(`/comments/event/${testEventId}/message`)
+      .set(authHeader(testUserId))
       .send({ message: 'Hello!' }); // missing name
 
     expect(res.status).toBe(400);
@@ -90,6 +94,7 @@ describe('Comments Routes', () => {
     const fakeEventId = new mongoose.Types.ObjectId();
     const res = await request(app)
       .post(`/comments/event/${fakeEventId}/message`)
+      .set(authHeader(testUserId))
       .send({ name: 'Test User', message: 'Hello!' });
 
     expect(res.status).toBe(404);
@@ -119,6 +124,7 @@ describe('Comments Routes', () => {
 
     const res = await request(app)
       .post(`/comments/event/${testEventId}/message`)
+      .set(authHeader(testUserId))
       .send({ name: 'Anonymous', message: 'Anonymous message' });
 
     expect(res.status).toBe(200);
@@ -131,10 +137,12 @@ describe('Comments Routes', () => {
 
     await request(app)
       .post(`/comments/event/${testEventId}/message`)
+      .set(authHeader(testUserId))
       .send({ name: 'User1', message: 'First message' });
 
     const res = await request(app)
       .post(`/comments/event/${testEventId}/message`)
+      .set(authHeader(testUserId))
       .send({ name: 'User2', message: 'Second message' });
 
     expect(res.status).toBe(200);
