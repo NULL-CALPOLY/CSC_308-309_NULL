@@ -22,7 +22,7 @@
 }
 
 .explore-hero p {
-  color: rgba(248, 250, 252, 0.55);
+  color: rgba(248, 250, 252, 0.8);
   margin: 0;
 }
 
@@ -131,7 +131,7 @@
 }
 
 .explore-count {
-  color: rgba(248, 250, 252, 0.4);
+  color: rgba(248, 250, 252, 0.72);
   font-size: 0.88rem;
   margin: 0 0 1rem;
 }
@@ -166,9 +166,33 @@
 }
 
 .explore-empty {
-  color: rgba(248, 250, 252, 0.4);
+  color: rgba(248, 250, 252, 0.72);
   padding: 3rem 0;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.explore-empty p {
+  margin: 0;
+}
+
+.explore-clear-btn {
+  background: #7c3aed;
+  border: none;
+  color: #fff;
+  border-radius: 8px;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.explore-clear-btn:hover {
+  background: #6d28d9;
 }
 
 /* ── Dark-mode SearchBar overrides for the Explore sidebar ── */

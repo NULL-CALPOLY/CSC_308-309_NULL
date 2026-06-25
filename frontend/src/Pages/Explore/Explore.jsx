@@ -164,7 +164,8 @@ export default function ExplorePage() {
               type="button"
               className={`explore-nearme ${nearMe ? 'is-active' : ''}`}
               onClick={toggleNearMe}
-              aria-pressed={nearMe}>
+              aria-pressed={nearMe}
+              aria-label={nearMe ? 'Turn off near me filter' : 'Filter by events near me'}>
               📍 Near me
             </button>
             {usingNearby && (
@@ -204,9 +205,20 @@ export default function ExplorePage() {
               Couldn’t load events right now — please try again later.
             </p>
           ) : filtered.length === 0 ? (
-            <p className="explore-empty">
-              No events match your filters. Try clearing some filters.
-            </p>
+            <div className="explore-empty">
+              <p>No events match your filters.</p>
+              {(query || selectedInterests.length || dateRange.startDate || dateRange.endDate) && (
+                <button
+                  className="explore-clear-btn"
+                  onClick={() => {
+                    setQuery('');
+                    setSelectedInterests([]);
+                    setDateRange({ startDate: '', endDate: '' });
+                  }}>
+                  Clear all filters
+                </button>
+              )}
+            </div>
           ) : (
             <>
               <p className="explore-count">

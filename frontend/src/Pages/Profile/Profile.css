@@ -617,6 +617,36 @@
   letter-spacing: 0.1em;
 }
 
+.profile-unauthenticated {
+  min-height: 100vh;
+  background: #080808;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 1rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.profile-signin-btn {
+  background: #7c3aed;
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  padding: 0.7rem 1.75rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.profile-signin-btn:hover {
+  background: #6d28d9;
+}
+
 @media (max-width: 720px) {
   .profile-layout {
     grid-template-columns: 1fr;

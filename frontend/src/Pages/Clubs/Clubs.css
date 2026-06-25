@@ -37,7 +37,7 @@
 
 .clubs-sub {
   margin: 0.35rem 0 0;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.75);
   font-size: 0.95rem;
 }
 
@@ -172,7 +172,7 @@
 }
 
 .club-members {
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.72);
   font-size: 0.82rem;
 }
 

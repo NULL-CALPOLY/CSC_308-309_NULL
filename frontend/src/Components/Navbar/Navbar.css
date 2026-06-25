@@ -1,7 +1,6 @@
 /* ── Reset & base ── */
 body {
   margin: 0;
-  padding-top: 72px;
   background-color: #0a0a0a;
 }
 
@@ -55,7 +54,7 @@ body {
 .navbar__explore-link {
   position: relative;
   text-decoration: none;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.78);
   font-size: 0.9rem;
   font-weight: 600;
   letter-spacing: 0.01em;
@@ -99,7 +98,7 @@ body {
 /* ── Generic nav link ── */
 .navbar__link {
   text-decoration: none;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.78);
   font-weight: 500;
   font-size: 0.9rem;
   padding-bottom: 2px;

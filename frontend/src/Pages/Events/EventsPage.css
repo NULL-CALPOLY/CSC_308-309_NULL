@@ -28,7 +28,7 @@
 
 .ep-hero p {
   margin: 0 0 1.75rem;
-  color: rgba(248, 250, 252, 0.6);
+  color: rgba(248, 250, 252, 0.8);
   font-size: 1.05rem;
   line-height: 1.6;
   max-width: 560px;
@@ -157,7 +157,7 @@
   margin: 0 0 0.85rem;
   font-size: 0.8rem;
   font-weight: 700;
-  color: rgba(248, 250, 252, 0.45);
+  color: rgba(248, 250, 252, 0.72);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   display: flex;
@@ -174,8 +174,8 @@
 
 .ep-sort-pill {
   background: none;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(248, 250, 252, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(248, 250, 252, 0.82);
   border-radius: 8px;
   padding: 0.5rem 0.85rem;
   font-size: 0.88rem;
@@ -354,7 +354,7 @@
 
 .ep-results-meta {
   font-size: 0.88rem;
-  color: rgba(248, 250, 252, 0.45);
+  color: rgba(248, 250, 252, 0.72);
 }
 
 .ep-clear-all {

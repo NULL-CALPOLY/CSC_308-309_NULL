@@ -138,7 +138,7 @@ export default function LandingPage() {
                 Create your account
               </button>
             ) : (
-              <Link to="/explore" className="cta-button">
+              <Link to="/events" className="cta-button">
                 Explore events
               </Link>
             )}
@@ -150,8 +150,8 @@ export default function LandingPage() {
         <div className="footer-content">
           <p>&copy; 2026 Findr. All rights reserved.</p>
           <div className="footer-links">
-            <Link to="/explore">Explore</Link>
-            <Link to="/about">About</Link>
+            <Link to="/events">Events</Link>
+            <Link to="/clubs">Clubs</Link>
             <a href="mailto:hello@findr.page">Contact</a>
           </div>
         </div>

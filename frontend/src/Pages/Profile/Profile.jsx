@@ -7,6 +7,7 @@ import DeleteAccountModal from '../../Components/DeleteAccountModal/DeleteAccoun
 import { useNavigate } from 'react-router-dom';
 import EventComponent from '../../Components/EventComponent/EventComponent';
 import VerifiedBadge from '../../Components/VerifiedBadge/VerifiedBadge';
+import { useModal } from '../../Components/ModalContext.jsx';
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -40,6 +41,7 @@ export default function Profile() {
     updateProfileImage,
     updateProfileName,
   } = useAuth();
+  const { openSignIn } = useModal();
 
   useEffect(() => {
     if (authLoading) return;
@@ -266,7 +268,17 @@ export default function Profile() {
   if (authLoading || loading)
     return <div className="profile-loading">Loading…</div>;
   if (errorMsg && !name)
-    return <div className="profile-loading">{errorMsg}</div>;
+    return (
+      <div className="profile-page">
+        <Navbar page="/" />
+        <div className="profile-unauthenticated">
+          <p>You need to be signed in to view your profile.</p>
+          <button className="profile-signin-btn" onClick={openSignIn}>
+            Sign In
+          </button>
+        </div>
+      </div>
+    );
 
   return (
     <div className="profile-page">

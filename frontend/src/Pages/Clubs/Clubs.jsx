@@ -112,8 +112,9 @@ export default function Clubs() {
 
         <input
           className="clubs-search"
-          type="text"
+          type="search"
           placeholder="Search clubs by name, category…"
+          aria-label="Search clubs"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />

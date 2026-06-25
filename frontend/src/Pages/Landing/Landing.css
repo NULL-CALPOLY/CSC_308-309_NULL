@@ -67,9 +67,9 @@ main {
   cursor: pointer;
 
   /* shared link styles */
-  color: #1a73e8;
+  color: #7c3aed;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 1.1rem;
   transition:
     color 0.2s ease,
@@ -77,12 +77,12 @@ main {
 }
 
 .general-link:hover {
-  color: #1558b0;
+  color: #6d28d9;
   text-decoration: underline;
 }
 
 .general-link:focus-visible {
-  outline: 2px solid #1a73e8;
+  outline: 2px solid #7c3aed;
   outline-offset: 3px;
   border-radius: 3px;
 }
