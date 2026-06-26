@@ -26,7 +26,7 @@ export default function LandingPage() {
               interests
             </p>
             {!isAuthenticated ? (
-              <button className="cta-button" onClick={openSignIn}>
+              <button className="cta-button" onClick={openRegister}>
                 Get Started!
               </button>
             ) : (

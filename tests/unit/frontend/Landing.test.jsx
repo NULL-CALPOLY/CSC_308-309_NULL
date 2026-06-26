@@ -75,16 +75,16 @@ describe('LandingPage', () => {
     expect(btn).toBeInTheDocument();
   });
 
-  it('calls openSignIn when "Get Started!" is clicked and not authenticated', () => {
-    const mockOpenSignIn = jest.fn();
+  it('calls openRegister when "Get Started!" is clicked and not authenticated', () => {
+    const mockOpenRegister = jest.fn();
     useModal.mockReturnValue({
-      openSignIn: mockOpenSignIn,
-      openRegister: jest.fn(),
+      openSignIn: jest.fn(),
+      openRegister: mockOpenRegister,
       closeAll: jest.fn(),
     });
     renderLanding();
     fireEvent.click(screen.getByRole('button', { name: /get started/i }));
-    expect(mockOpenSignIn).toHaveBeenCalled();
+    expect(mockOpenRegister).toHaveBeenCalled();
   });
 
   it('renders "Get Started!" as a Link to /home when authenticated', () => {

@@ -311,8 +311,8 @@ export default function EventsPage() {
                   </button>
                 )}
                 {!isAuthenticated && (
-                  <button className="ep-empty-action ep-empty-action--secondary" onClick={() => navigate('/explore')}>
-                    Browse all events
+                  <button className="ep-empty-action ep-empty-action--secondary" onClick={() => navigate('/home')}>
+                    Browse map
                   </button>
                 )}
               </div>

@@ -37,7 +37,7 @@ describe('ProtectedRoute', () => {
 
   it('shows loading when auth is loading', () => {
     renderProtectedRoute({ isAuthenticated: false, loading: true });
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
+    expect(screen.getByText('Loading…')).toBeInTheDocument();
   });
 
   it('redirects to / when not authenticated', () => {
