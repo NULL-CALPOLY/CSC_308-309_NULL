@@ -181,6 +181,7 @@ function AttendeesModal({ attendees, resolvedUsers, loading, onClose, onNavigate
                   type="button"
                   className="attendee-row"
                   onClick={() => id && onNavigate(`/users/${id}`)}>
+
                   <Avatar
                     id={id}
                     name={user?.name}
