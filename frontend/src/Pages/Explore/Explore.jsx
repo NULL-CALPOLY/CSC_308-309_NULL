@@ -82,10 +82,10 @@ export default function ExplorePage() {
           });
           setNearMe(true);
         },
-        () => setGeoError('Couldn’t get your location.')
+        () => setGeoError("Couldn't get your location.")
       );
     } else {
-      setGeoError('Location isn’t available in this browser.');
+      setGeoError("Location isn't available in this browser.");
     }
   };
 
@@ -137,8 +137,8 @@ export default function ExplorePage() {
       <div className="explore-hero">
         <h1>Explore events</h1>
         <p>
-          Browse what’s happening around Cal Poly. Filter by interest, date, or
-          keyword{isAuthenticated ? ‘ — sorted for you.’ : ‘.’}
+          Browse what's happening around Cal Poly. Filter by interest, date, or
+          keyword{isAuthenticated ? ' — sorted for you.' : '.'}
         </p>
       </div>
 
@@ -202,7 +202,7 @@ export default function ExplorePage() {
             </div>
           ) : error ? (
             <p className="explore-empty">
-              Couldn’t load events right now — please try again later.
+              Couldn't load events right now — please try again later.
             </p>
           ) : filtered.length === 0 ? (
             <div className="explore-empty">
