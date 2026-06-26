@@ -8,7 +8,7 @@
   display: block;
   font-size: 0.82rem;
   font-weight: 600;
-  color: #374151;
+  color: rgba(248, 250, 252, 0.72);
   margin-bottom: 5px;
 }
 
@@ -16,21 +16,21 @@
   position: relative;
   display: flex;
   align-items: center;
-  border: 1px solid rgba(124, 58, 237, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 10px;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
   transition:
     border-color 0.2s,
     box-shadow 0.2s;
 }
 
 .asb-input-wrapper:focus-within {
-  border-color: #7c3aed;
+  border-color: rgba(124, 58, 237, 0.55);
   box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
 }
 
 .asb-input-wrapper.asb-input--error {
-  border-color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.6);
 }
 
 .asb-input-wrapper.asb-input--error:focus-within {
@@ -40,7 +40,7 @@
 .asb-icon-pin {
   width: 16px;
   height: 16px;
-  color: #7c3aed;
+  color: #a78bfa;
   margin-left: 12px;
   flex-shrink: 0;
 }
@@ -49,24 +49,24 @@
   flex: 1;
   border: none;
   outline: none;
-  background: #ffffff;
+  background: transparent;
   padding: 10px 8px;
   font-size: 0.875rem;
-  color: #1a1a2e;
+  color: #f8fafc;
   font-family: inherit;
   min-width: 0;
-  -webkit-text-fill-color: #1a1a2e;
+  -webkit-text-fill-color: #f8fafc;
 }
 
 .asb-input::placeholder {
-  color: #9ca3af;
-  -webkit-text-fill-color: #9ca3af;
+  color: rgba(248, 250, 252, 0.3);
+  -webkit-text-fill-color: rgba(248, 250, 252, 0.3);
 }
 
 .asb-input:focus {
-  background: #ffffff;
-  color: #1a1a2e;
-  -webkit-text-fill-color: #1a1a2e;
+  background: transparent;
+  color: #f8fafc;
+  -webkit-text-fill-color: #f8fafc;
 }
 
 .asb-icon-right {
@@ -97,7 +97,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: #9ca3af;
+  color: rgba(248, 250, 252, 0.4);
   font-size: 0.75rem;
   padding: 2px 4px;
   border-radius: 4px;
@@ -108,8 +108,8 @@
 }
 
 .asb-clear-btn:hover {
-  color: #6b7280;
-  background: rgba(0, 0, 0, 0.05);
+  color: rgba(248, 250, 252, 0.8);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .asb-coords-badge {
@@ -118,11 +118,11 @@
   gap: 5px;
   margin-top: 6px;
   padding: 3px 10px;
-  background: rgba(124, 58, 237, 0.07);
-  border: 1px solid rgba(124, 58, 237, 0.2);
+  background: rgba(124, 58, 237, 0.12);
+  border: 1px solid rgba(124, 58, 237, 0.3);
   border-radius: 20px;
   font-size: 0.72rem;
-  color: #6d28d9;
+  color: #a78bfa;
   font-variant-numeric: tabular-nums;
 }
 
@@ -135,7 +135,7 @@
 .asb-error {
   margin-top: 4px;
   font-size: 0.78rem;
-  color: #ef4444;
+  color: #f87171;
 }
 
 .asb-dropdown {
@@ -143,12 +143,12 @@
   top: calc(100% + 4px);
   left: 0;
   right: 0;
-  background: #ffffff;
-  border: 1px solid rgba(124, 58, 237, 0.18);
+  background: #1a1a27;
+  border: 1px solid rgba(124, 58, 237, 0.2);
   border-radius: 12px;
   box-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.07),
-    0 10px 24px -4px rgba(124, 58, 237, 0.12);
+    0 4px 6px -1px rgba(0, 0, 0, 0.3),
+    0 10px 24px -4px rgba(0, 0, 0, 0.4);
   z-index: 9999;
   list-style: none;
   margin: 0;
@@ -163,18 +163,18 @@
   padding: 10px 14px;
   cursor: pointer;
   transition: background 0.12s;
-  background: #ffffff;
+  background: transparent;
 }
 
 .asb-option:hover,
 .asb-option--active {
-  background: rgba(124, 58, 237, 0.06);
+  background: rgba(124, 58, 237, 0.1);
 }
 
 .asb-option-icon {
   width: 16px;
   height: 16px;
-  color: #7c3aed;
+  color: #a78bfa;
   flex-shrink: 0;
   margin-top: 2px;
 }
@@ -188,7 +188,7 @@
 .asb-option-primary {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #1a1a2e;
+  color: #f8fafc;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -196,7 +196,7 @@
 
 .asb-option-secondary {
   font-size: 0.78rem;
-  color: #6b7280;
+  color: rgba(248, 250, 252, 0.5);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -206,9 +206,9 @@
 .asb-powered-by {
   padding: 6px 14px;
   font-size: 0.68rem;
-  color: #c4c9d4;
+  color: rgba(248, 250, 252, 0.25);
   text-align: right;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
   user-select: none;
   list-style: none;
 }

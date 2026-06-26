@@ -8,9 +8,9 @@
   padding: 8px 12px;
   margin-bottom: 10px;
   border-radius: 8px;
-  border: 1px solid rgba(124, 58, 237, 0.25);
-  background: #fff;
-  color: #1a1a2e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  color: #f8fafc;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 0.875rem;
   box-sizing: border-box;
@@ -21,11 +21,11 @@
 }
 
 .searchbar-input::placeholder {
-  color: #aab0bc;
+  color: rgba(248, 250, 252, 0.35);
 }
 
 .searchbar-input:focus {
-  border-color: #7c3aed;
+  border-color: rgba(124, 58, 237, 0.55);
   box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
 }
 
@@ -43,8 +43,8 @@
   height: 32px;
   background: linear-gradient(
     to bottom,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.95) 100%
+    rgba(18, 14, 28, 0) 0%,
+    rgba(18, 14, 28, 0.95) 100%
   );
   pointer-events: none;
   transition: opacity 0.2s;
@@ -88,12 +88,12 @@
   align-items: center;
   word-wrap: break-word;
   font-size: 0.82rem;
-  color: #1a1a2e;
+  color: #f8fafc;
 }
 
 /* ── Cloudscape checkbox overrides ── */
 .checkbox-item [class*='awsui_label'] {
-  color: #1a1a2e !important;
+  color: #f8fafc !important;
   font-size: 0.82rem !important;
 }
 
@@ -109,14 +109,14 @@
 /* ── Date filter ── */
 .date-filter {
   margin-top: 10px;
-  border-top: 1px solid rgba(124, 58, 237, 0.15);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding-top: 10px;
 }
 
 .date-filter__label {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #555e6e;
+  color: rgba(248, 250, 252, 0.45);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin: 0 0 6px 0;
@@ -136,7 +136,7 @@
 
 .date-filter__field label {
   font-size: 0.72rem;
-  color: #888;
+  color: rgba(248, 250, 252, 0.4);
   font-weight: 500;
 }
 
@@ -144,9 +144,9 @@
   width: 100%;
   padding: 8px 12px;
   border-radius: 8px;
-  border: 1px solid rgba(124, 58, 237, 0.25);
-  background: #fff;
-  color: #1a1a2e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  color: #f8fafc;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: max(16px, 0.875rem);
   box-sizing: border-box;
@@ -157,8 +157,13 @@
   margin-bottom: 0;
 }
 
+.date-input::-webkit-calendar-picker-indicator {
+  filter: invert(0.7);
+  cursor: pointer;
+}
+
 .date-input:focus {
-  border-color: #7c3aed;
+  border-color: rgba(124, 58, 237, 0.55);
   box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
 }
 
@@ -166,12 +171,12 @@
   margin-top: 8px;
   background: none;
   border: none;
-  color: #7c3aed;
+  color: #a78bfa;
   font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
   padding: 0;
-  opacity: 0.8;
+  opacity: 0.85;
   transition: opacity 0.15s;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }

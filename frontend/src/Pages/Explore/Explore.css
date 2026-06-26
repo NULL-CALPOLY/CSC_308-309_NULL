@@ -195,59 +195,6 @@
   background: #6d28d9;
 }
 
-/* ── Dark-mode SearchBar overrides for the Explore sidebar ── */
-.explore-filters .searchbar-input {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.1);
-  color: #f8fafc;
-}
-
-.explore-filters .searchbar-input::placeholder {
-  color: rgba(248, 250, 252, 0.35);
-}
-
-.explore-filters .searchbar-input:focus {
-  border-color: rgba(124, 58, 237, 0.55);
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
-}
-
-.explore-filters .checkbox-grid-wrapper::after {
-  background: linear-gradient(
-    to bottom,
-    rgba(18, 14, 28, 0) 0%,
-    rgba(18, 14, 28, 0.95) 100%
-  );
-}
-
-.explore-filters .checkbox-item [class*='awsui_label'] {
-  color: #f8fafc !important;
-}
-
-.explore-filters .date-filter {
-  border-top-color: rgba(255, 255, 255, 0.08);
-}
-
-.explore-filters .date-filter__label {
-  color: rgba(248, 250, 252, 0.45);
-}
-
-.explore-filters .date-filter__field label {
-  color: rgba(248, 250, 252, 0.4);
-}
-
-.explore-filters .date-input {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.1);
-  color: #f8fafc;
-}
-
-.explore-filters .date-filter__clear {
-  color: #a78bfa;
-}
-
-.explore-filters .checkbox-item {
-  color: #f8fafc;
-}
 
 @media (max-width: 860px) {
   .explore-body {
