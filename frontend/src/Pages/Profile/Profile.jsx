@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import { useAuth } from '../../Hooks/UseAuth.ts';
+import { useDocumentTitle } from '../../Hooks/UseDocumentTitle.js';
 import Navbar from '../../Components/Navbar/Navbar';
 import ProfileImageUploadModal from '../../Components/Modals/ProfileImageUploadModal/ProfileImageUploadModal';
 import DeleteAccountModal from '../../Components/DeleteAccountModal/DeleteAccountModal';
@@ -10,6 +11,7 @@ import VerifiedBadge from '../../Components/VerifiedBadge/VerifiedBadge';
 import { useModal } from '../../Components/ModalContext.jsx';
 
 export default function Profile() {
+  useDocumentTitle('Profile');
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');

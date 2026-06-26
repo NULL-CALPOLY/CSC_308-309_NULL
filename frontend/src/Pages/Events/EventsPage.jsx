@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../Components/Navbar/Navbar.jsx';
+import { useDocumentTitle } from '../../Hooks/UseDocumentTitle.js';
 import EventComponent from '../../Components/EventComponent/EventComponent.jsx';
 import { useUpcomingEvents } from '../../Hooks/UseEvents.jsx';
 import useInterests from '../../Hooks/UseInterests.jsx';
@@ -14,6 +15,7 @@ const SORT_OPTIONS = [
 ];
 
 export default function EventsPage() {
+  useDocumentTitle('Events');
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { events: allEvents, loading, error } = useUpcomingEvents();

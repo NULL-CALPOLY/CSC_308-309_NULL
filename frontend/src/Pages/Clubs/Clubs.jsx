@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Clubs.css';
 import Navbar from '../../Components/Navbar/Navbar';
+import { useDocumentTitle } from '../../Hooks/UseDocumentTitle.js';
 import { useAuth } from '../../Hooks/UseAuth.ts';
 import { useModal } from '../../Components/ModalContext.jsx';
 import RegisterClubModal from '../../Components/RegisterClubModal/RegisterClubModal';
@@ -10,6 +11,7 @@ import VerifiedBadge from '../../Components/VerifiedBadge/VerifiedBadge';
 const API = import.meta.env.VITE_API_BASE_URL;
 
 export default function Clubs() {
+  useDocumentTitle('Clubs');
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
   const { openSignIn } = useModal();

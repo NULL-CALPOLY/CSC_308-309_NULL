@@ -1,5 +1,6 @@
 import './HomePage.css';
 import { useState, useRef, useEffect } from 'react';
+import { useDocumentTitle } from '../../Hooks/UseDocumentTitle.js';
 import MainMapComponent from '../../Components/MainMapComponent/MainMapComponent.jsx';
 import EventColumn from '../../Components/EventColumn/EventColumn.jsx';
 import CreateEventButton from '../../Components/CreateEventButton/CreateEventButton.jsx';
@@ -13,6 +14,7 @@ import { useModal } from '../../Components/ModalContext.jsx';
 const MOBILE_BP = 768;
 
 export default function HomePage() {
+  useDocumentTitle('Map');
   const [showModal, setShowModal] = useState(false);
   const [colOpen, setColOpen] = useState(() => window.innerWidth > MOBILE_BP);
   const [selectedEventId, setSelectedEventId] = useState(null);

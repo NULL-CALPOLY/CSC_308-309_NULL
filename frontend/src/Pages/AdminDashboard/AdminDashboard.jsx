@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import './AdminDashboard.css';
 import Navbar from '../../Components/Navbar/Navbar';
 import { useAuth } from '../../Hooks/UseAuth.ts';
+import { useDocumentTitle } from '../../Hooks/UseDocumentTitle.js';
 
 const API = import.meta.env.VITE_API_BASE_URL;
 
 export default function AdminDashboard() {
+  useDocumentTitle('Admin');
   const navigate = useNavigate();
   const { user, isAuthenticated, loading: authLoading } = useAuth();
 
