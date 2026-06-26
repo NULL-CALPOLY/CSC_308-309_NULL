@@ -7,9 +7,20 @@ import SearchBar from '../SearchBar/SearchBar.jsx';
 
 const NEARBY_RADIUS = 16093;
 
+function EventSkeleton() {
+  return (
+    <div className="ec-skeleton">
+      <div className="ec-sk-title" />
+      <div className="ec-sk-meta" />
+      <div className="ec-sk-meta ec-sk-meta--sm" />
+    </div>
+  );
+}
+
 export default function EventColumn({ onRefetchReady, selectedId, onSelect, userCoords }) {
-  const { events: allEvents, refetch } = useUpcomingEvents();
-  const { events: nearbyEvents } = useNearbyEvents(userCoords, NEARBY_RADIUS);
+  const { events: allEvents, loading: loadingAll, refetch } = useUpcomingEvents();
+  const { events: nearbyEvents, loading: loadingNearby } = useNearbyEvents(userCoords, NEARBY_RADIUS);
+  const loading = userCoords ? loadingNearby : loadingAll;
 
   const eventList = userCoords ? nearbyEvents : allEvents;
 
@@ -135,7 +146,14 @@ export default function EventColumn({ onRefetchReady, selectedId, onSelect, user
       </div>
 
       <div className="Event_List">
-        {filteredEvents.length === 0 && (
+        {loading && filteredEvents.length === 0 && (
+          <>
+            {Array.from({ length: 4 }).map((_, i) => (
+              <EventSkeleton key={i} />
+            ))}
+          </>
+        )}
+        {!loading && filteredEvents.length === 0 && (
           <div className="ec-empty">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
