@@ -5,6 +5,7 @@ import Navbar from '../../Components/Navbar/Navbar';
 import VerifiedBadge from '../../Components/VerifiedBadge/VerifiedBadge';
 import { useAuth } from '../../Hooks/UseAuth.ts';
 import { useDocumentTitle } from '../../Hooks/UseDocumentTitle.js';
+import { useToast } from '../../Components/Toast/ToastContext.jsx';
 import './ClubDetail.css';
 
 const API = import.meta.env.VITE_API_BASE_URL;
@@ -18,6 +19,7 @@ export default function ClubDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const toast = useToast();
 
   const [club, setClub] = useState(null);
   const [events, setEvents] = useState([]);
@@ -30,6 +32,8 @@ export default function ClubDetail() {
   const [saveError, setSaveError] = useState('');
   const [isMember, setIsMember] = useState(false);
   const [busyMember, setBusyMember] = useState(false);
+  const [membersList, setMembersList] = useState([]);
+  const [loadingMembers, setLoadingMembers] = useState(false);
 
   useDocumentTitle(club?.name || 'Club');
 
@@ -111,8 +115,33 @@ export default function ClubDetail() {
     }
   };
 
+  useEffect(() => {
+    if (activeTab !== 'members' || !club) return;
+    const memberIds = (club.members || [])
+      .map((m) => (typeof m === 'object' ? m._id : m))
+      .filter(Boolean);
+    if (!memberIds.length) { setMembersList([]); return; }
+    setLoadingMembers(true);
+    Promise.all(
+      memberIds.map((uid) =>
+        fetch(`${API}/users/${uid}`)
+          .then((r) => r.json())
+          .then((json) => ({
+            id: uid,
+            name: json.success ? json.data?.name || 'Unknown' : 'Unknown',
+            avatar: json.success ? json.data?.avatar || json.data?.profileImage || null : null,
+          }))
+          .catch(() => ({ id: uid, name: 'Unknown', avatar: null }))
+      )
+    ).then(setMembersList).finally(() => setLoadingMembers(false));
+  }, [activeTab, club]);
+
   const toggleMembership = async () => {
     if (!user?.token || busyMember) return;
+    if (!isMember && club?.studentOnly && !user?.isVerifiedStudent) {
+      toast.error('This club is for verified Cal Poly students only. Verify your student status in your profile to join.');
+      return;
+    }
     const route = isMember ? 'remove' : 'add';
     setBusyMember(true);
     try {
@@ -250,7 +279,7 @@ export default function ClubDetail() {
             )}
           </section>
 
-          {/* ── Events ── */}
+          {/* ── Events + Members ── */}
           <section className="cd-section">
             <div className="cd-tabs">
               <button
@@ -265,9 +294,38 @@ export default function ClubDetail() {
                 Past
                 <span className="cd-tab-count">{past.length}</span>
               </button>
+              <button
+                className={`cd-tab${activeTab === 'members' ? ' active' : ''}`}
+                onClick={() => setActiveTab('members')}>
+                Members
+                <span className="cd-tab-count">{(club.members || []).length}</span>
+              </button>
             </div>
 
-            {loadingEvents ? (
+            {activeTab === 'members' ? (
+              loadingMembers ? (
+                <div className="cd-ev-empty"><div className="cd-spinner" /></div>
+              ) : membersList.length === 0 ? (
+                <div className="cd-ev-empty">No members yet.</div>
+              ) : (
+                <div className="cd-members-grid">
+                  {membersList.map((m) => (
+                    <button
+                      key={m.id}
+                      type="button"
+                      className="cd-member-card"
+                      onClick={() => navigate(`/users/${m.id}`)}>
+                      <div className="cd-member-avatar">
+                        {m.avatar
+                          ? <img src={m.avatar} alt={m.name} />
+                          : <span>{(m.name?.charAt(0) || '?').toUpperCase()}</span>}
+                      </div>
+                      <span className="cd-member-name">{m.name}</span>
+                    </button>
+                  ))}
+                </div>
+              )
+            ) : loadingEvents ? (
               <div className="cd-ev-empty">
                 <div className="cd-spinner" />
               </div>

@@ -492,12 +492,22 @@ input[type='time'].ed-input::-webkit-calendar-picker-indicator {
   width: 100%;
 }
 
-.ed-comment__name {
+.ed-comment__name-btn {
+  background: none;
+  border: none;
+  padding: 0;
   font-size: 0.84rem;
   font-weight: 700;
   color: #fff;
   font-family: 'Consolas', monospace;
   min-width: 0;
+  cursor: pointer;
+  transition: color 0.15s;
+  text-align: left;
+}
+.ed-comment__name-btn:hover {
+  color: #a78bfa;
+  text-decoration: underline;
 }
 
 .ed-comment__time {
@@ -1025,14 +1035,31 @@ input[type='time'].ed-input::-webkit-calendar-picker-indicator {
   padding: 8px 12px;
   border-radius: 10px;
   transition: background 0.15s;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
 }
 .attendee-row:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(124, 58, 237, 0.08);
 }
 .attendee-row__name {
   font-size: 0.9rem;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.85);
+  flex: 1;
+}
+.attendee-row__arrow {
+  color: rgba(167, 139, 250, 0.4);
+  font-size: 0.85rem;
+  margin-left: auto;
+  transition: color 0.15s, transform 0.15s;
+}
+.attendee-row:hover .attendee-row__arrow {
+  color: #a78bfa;
+  transform: translateX(2px);
 }
 .attendee-row__loading-name {
   color: rgba(255, 255, 255, 0.25);
