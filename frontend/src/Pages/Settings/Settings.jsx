@@ -3,24 +3,26 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../../Components/Navbar/Navbar';
 import { useAuth } from '../../Hooks/UseAuth.ts';
 import { useToast } from '../../Components/Toast/ToastContext.jsx';
-import './Settings.css';
 
 const API = import.meta.env.VITE_API_BASE_URL;
 
 function Toggle({ checked, onChange, label, description }) {
   return (
-    <div className="st-toggle-row">
-      <div className="st-toggle-info">
-        <span className="st-toggle-label">{label}</span>
-        {description && <span className="st-toggle-desc">{description}</span>}
+    <div className="flex items-center justify-between gap-3 min-h-[44px]">
+      <div className="flex flex-col gap-0.5">
+        <span className="text-[0.9rem] font-semibold text-[rgba(255,255,255,0.88)]">{label}</span>
+        {description && <span className="text-[0.75rem] text-[rgba(255,255,255,0.35)]">{description}</span>}
       </div>
       <button
         type="button"
         role="switch"
         aria-checked={checked}
-        className={`st-toggle${checked ? ' st-toggle--on' : ''}`}
+        className={`w-11 h-6 min-w-[44px] rounded-full border-none cursor-pointer p-0 relative transition-[background] duration-200 flex-shrink-0 ${checked ? 'bg-[#7c3aed]' : 'bg-[rgba(255,255,255,0.12)]'}`}
         onClick={() => onChange(!checked)}>
-        <span className="st-toggle-thumb" />
+        <span
+          className={`absolute top-[3px] left-[3px] w-[18px] h-[18px] rounded-full bg-white transition-transform duration-200 shadow-[0_1px_4px_rgba(0,0,0,0.4)] ${checked ? 'translate-x-5' : 'translate-x-0'}`}
+          style={{ transitionTimingFunction: 'cubic-bezier(0.34,1.56,0.64,1)' }}
+        />
       </button>
     </div>
   );
@@ -28,9 +30,13 @@ function Toggle({ checked, onChange, label, description }) {
 
 function Section({ title, children }) {
   return (
-    <section className="st-section">
-      <h2 className="st-section-title">{title}</h2>
-      <div className="st-section-body">{children}</div>
+    <section className="mb-6 bg-[#111111] border border-[rgba(255,255,255,0.07)] rounded-[18px] overflow-hidden">
+      <h2 className="m-0 px-6 pt-4 pb-3 text-[0.7rem] font-bold uppercase tracking-[0.1em] text-[rgba(255,255,255,0.4)] font-[Consolas,monospace] border-b border-[rgba(255,255,255,0.06)]">
+        {title}
+      </h2>
+      <div className="px-6 py-4 flex flex-col gap-3 max-[680px]:px-4 max-[680px]:py-3">
+        {children}
+      </div>
     </section>
   );
 }
@@ -45,7 +51,6 @@ export default function Settings() {
   const [blockedUsers, setBlockedUsers] = useState([]);
   const [loadingBlocked, setLoadingBlocked] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
-  const [savingNotifs, setSavingNotifs] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) navigate('/');
@@ -53,10 +58,10 @@ export default function Settings() {
 
   useEffect(() => {
     if (lightMode) {
-      document.body.classList.add('light-mode');
+      document.documentElement.classList.add('dark');
       localStorage.setItem('findr-theme', 'light');
     } else {
-      document.body.classList.remove('light-mode');
+      document.documentElement.classList.remove('dark');
       localStorage.setItem('findr-theme', 'dark');
     }
   }, [lightMode]);
@@ -65,33 +70,6 @@ export default function Settings() {
     localStorage.setItem('findr-email-notifs', emailNotifs ? 'true' : 'false');
   }, [emailNotifs]);
 
-  // Sync emailNotifications preference from user profile on mount
-  useEffect(() => {
-    if (user?.emailNotifications !== undefined) {
-      setEmailNotifs(user.emailNotifications);
-    }
-  }, [user?.emailNotifications]);
-
-  const handleEmailNotifsChange = async (value) => {
-    setEmailNotifs(value);
-    if (!user?.id || !user?.token) return;
-    setSavingNotifs(true);
-    try {
-      await fetch(`${API}/users/${user.id}/notifications`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${user.token}`,
-        },
-        body: JSON.stringify({ emailNotifications: value }),
-      });
-    } catch {
-      // silently keep local state
-    } finally {
-      setSavingNotifs(false);
-    }
-  };
-
   useEffect(() => {
     if (!user?.id || !user?.token) return;
     setLoadingBlocked(true);
@@ -99,28 +77,8 @@ export default function Settings() {
       headers: { Authorization: `Bearer ${user.token}` },
     })
       .then((r) => r.json())
-      .then(async (json) => {
-        if (!json.success) return;
-        const raw = json.data || [];
-        // If items are already objects with a name, use them directly.
-        // If they're plain ID strings, resolve each one to a user profile.
-        const resolved = await Promise.all(
-          raw.map(async (item) => {
-            if (typeof item === 'object' && item !== null && item.name) return item;
-            const id = typeof item === 'object' ? item._id || item.id : item;
-            try {
-              const r = await fetch(`${API}/users/${id}`, {
-                headers: { Authorization: `Bearer ${user.token}` },
-              });
-              const data = await r.json();
-              const profile = data.user || data.data || data;
-              return { _id: id, name: profile.name || profile.username || id };
-            } catch {
-              return { _id: id, name: id };
-            }
-          })
-        );
-        setBlockedUsers(resolved);
+      .then((json) => {
+        if (json.success) setBlockedUsers(json.data || []);
       })
       .catch(() => {})
       .finally(() => setLoadingBlocked(false));
@@ -150,30 +108,40 @@ export default function Settings() {
   };
 
   return (
-    <div className="st-page">
+    <div className="min-h-screen bg-[#080808] text-[#f8fafc]">
       <Navbar page="/" />
-      <div className="st-wrapper">
-        <div className="st-header">
-          <button className="st-back" onClick={() => navigate(-1)}>← Back</button>
-          <h1 className="st-title">Settings</h1>
+      <div className="max-w-[640px] mx-auto px-6 pt-[calc(var(--nav-h)+24px)] pb-20 max-[680px]:px-4 max-[680px]:pt-[calc(var(--nav-h)+16px)] max-[680px]:pb-16">
+        <div className="mb-8">
+          <button
+            className="bg-none border-none text-[rgba(255,255,255,0.5)] text-[0.82rem] cursor-pointer p-0 mb-4 font-[Consolas,monospace] transition-colors duration-200 inline-flex items-center gap-[5px] tracking-[0.04em] hover:text-[#a78bfa]"
+            onClick={() => navigate(-1)}>
+            ← Back
+          </button>
+          <h1 className="m-0 text-[1.75rem] font-extrabold text-white font-[Consolas,monospace] tracking-[-0.01em]">
+            Settings
+          </h1>
         </div>
 
         {/* ── Account info ── */}
         <Section title="Account">
-          <div className="st-account-row">
-            <div className="st-account-avatar">
+          <div className="flex items-center gap-3.5 max-[680px]:flex-wrap">
+            <div className="w-[52px] h-[52px] min-w-[52px] rounded-full bg-gradient-to-br from-[#7c3aed] to-[#a78bfa] flex items-center justify-center text-[1.3rem] font-bold text-white overflow-hidden flex-shrink-0">
               {user?.avatar
-                ? <img src={user.avatar} alt={user.name} />
+                ? <img src={user.avatar} alt={user.name} className="w-full h-full object-cover rounded-full" />
                 : <span>{(user?.name?.charAt(0) || '?').toUpperCase()}</span>}
             </div>
-            <div className="st-account-info">
-              <span className="st-account-name">{user?.name || 'User'}</span>
-              <span className="st-account-email">{user?.email || ''}</span>
+            <div className="flex-1 flex flex-col gap-[3px] min-w-0">
+              <span className="text-[0.95rem] font-bold text-white">{user?.name || 'User'}</span>
+              <span className="text-[0.8rem] text-[rgba(255,255,255,0.45)]">{user?.email || ''}</span>
               {user?.isVerifiedStudent && (
-                <span className="st-account-badge">Verified Student</span>
+                <span className="inline-flex items-center gap-1 py-0.5 px-2 bg-[rgba(16,185,129,0.15)] border border-[rgba(16,185,129,0.3)] rounded-[20px] text-[0.68rem] font-bold text-[#34d399] w-fit">
+                  Verified Student
+                </span>
               )}
             </div>
-            <button className="st-link-btn" onClick={() => navigate('/profile')}>
+            <button
+              className="bg-none border border-[rgba(124,58,237,0.35)] text-[#a78bfa] py-[0.4rem] px-[0.9rem] rounded-[8px] text-[0.78rem] font-semibold cursor-pointer whitespace-nowrap transition-[background,border-color] duration-200 flex-shrink-0 hover:bg-[rgba(124,58,237,0.12)] hover:border-[rgba(124,58,237,0.6)] max-[680px]:w-full max-[680px]:text-center"
+              onClick={() => navigate('/profile')}>
               Edit profile →
             </button>
           </div>
@@ -193,33 +161,35 @@ export default function Settings() {
         <Section title="Notifications">
           <Toggle
             checked={emailNotifs}
-            onChange={handleEmailNotifsChange}
+            onChange={setEmailNotifs}
             label="Email notifications"
-            description={savingNotifs ? 'Saving…' : 'Receive updates about events you\'ve joined'}
+            description="Receive updates about events you've joined"
           />
         </Section>
 
         {/* ── Blocked users ── */}
         <Section title="Blocked users">
           {loadingBlocked ? (
-            <div className="st-loading">
-              <div className="st-spinner" />
+            <div className="flex items-center justify-center py-6">
+              <div className="w-[22px] h-[22px] border-2 border-[rgba(124,58,237,0.2)] border-t-[#7c3aed] rounded-full animate-[st-spin_0.7s_linear_infinite]" />
             </div>
           ) : blockedUsers.length === 0 ? (
-            <p className="st-empty">You haven't blocked anyone.</p>
+            <p className="text-[rgba(255,255,255,0.35)] text-[0.875rem] m-0 py-1">
+              You haven't blocked anyone.
+            </p>
           ) : (
-            <div className="st-blocked-list">
+            <div className="flex flex-col gap-2">
               {blockedUsers.map((u) => {
                 const uid = typeof u === 'object' ? u._id : u;
                 const name = typeof u === 'object' ? u.name : uid;
                 return (
-                  <div key={uid} className="st-blocked-row">
-                    <div className="st-blocked-avatar">
+                  <div key={uid} className="flex items-center gap-3 py-2">
+                    <div className="w-9 h-9 min-w-[36px] rounded-full bg-[rgba(255,255,255,0.1)] flex items-center justify-center text-[0.9rem] font-bold text-[rgba(255,255,255,0.55)]">
                       {(name?.charAt(0) || '?').toUpperCase()}
                     </div>
-                    <span className="st-blocked-name">{name}</span>
+                    <span className="flex-1 text-[0.875rem] text-[rgba(255,255,255,0.75)]">{name}</span>
                     <button
-                      className="st-unblock-btn"
+                      className="py-[0.3rem] px-[0.8rem] rounded-[7px] border border-[rgba(248,113,113,0.3)] bg-transparent text-[#f87171] text-[0.75rem] font-semibold cursor-pointer transition-[background,border-color] duration-200 hover:bg-[rgba(248,113,113,0.08)] hover:border-[#f87171]"
                       onClick={() => handleUnblock(uid)}>
                       Unblock
                     </button>
@@ -230,18 +200,30 @@ export default function Settings() {
           )}
         </Section>
 
-        {/* ── Danger zone ── */}
+        {/* ── Session ── */}
         <Section title="Session">
           {!deleteConfirm ? (
-            <button className="st-danger-btn" onClick={() => setDeleteConfirm(true)}>
+            <button
+              className="py-[0.55rem] px-5 rounded-[10px] border-[1.5px] border-[rgba(248,113,113,0.35)] bg-transparent text-[#f87171] text-[0.875rem] font-semibold cursor-pointer transition-[background,border-color] duration-200 w-fit hover:bg-[rgba(248,113,113,0.08)] hover:border-[#f87171]"
+              onClick={() => setDeleteConfirm(true)}>
               Sign out of all devices
             </button>
           ) : (
-            <div className="st-confirm-box">
-              <p>Are you sure? You'll need to sign in again.</p>
-              <div className="st-confirm-actions">
-                <button className="st-ghost-btn" onClick={() => setDeleteConfirm(false)}>Cancel</button>
-                <button className="st-danger-btn" onClick={handleLogoutAll}>Yes, sign out</button>
+            <div className="flex flex-col gap-3">
+              <p className="m-0 text-[0.875rem] text-[rgba(255,255,255,0.6)]">
+                Are you sure? You'll need to sign in again.
+              </p>
+              <div className="flex gap-2">
+                <button
+                  className="py-[0.55rem] px-5 rounded-[10px] border-[1.5px] border-[rgba(255,255,255,0.12)] bg-transparent text-[rgba(255,255,255,0.55)] text-[0.875rem] font-semibold cursor-pointer transition-[border-color,color] duration-200 hover:border-[rgba(255,255,255,0.3)] hover:text-white"
+                  onClick={() => setDeleteConfirm(false)}>
+                  Cancel
+                </button>
+                <button
+                  className="py-[0.55rem] px-5 rounded-[10px] border-[1.5px] border-[rgba(248,113,113,0.35)] bg-transparent text-[#f87171] text-[0.875rem] font-semibold cursor-pointer transition-[background,border-color] duration-200 hover:bg-[rgba(248,113,113,0.08)] hover:border-[#f87171]"
+                  onClick={handleLogoutAll}>
+                  Yes, sign out
+                </button>
               </div>
             </div>
           )}

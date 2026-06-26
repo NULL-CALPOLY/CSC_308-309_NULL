@@ -1,4 +1,3 @@
-import './HomePage.css';
 import { useState, useRef, useEffect } from 'react';
 import { useDocumentTitle } from '../../Hooks/UseDocumentTitle.js';
 import MainMapComponent from '../../Components/MainMapComponent/MainMapComponent.jsx';
