@@ -134,13 +134,13 @@ export default function ExplorePage() {
     <div className="explore-page">
       <Navbar page="/explore" />
 
-      <header className="explore-hero">
+      <div className="explore-hero">
         <h1>Explore events</h1>
         <p>
           Browse what’s happening around Cal Poly. Filter by interest, date, or
-          keyword{isAuthenticated ? ' — sorted for you.' : '.'}
+          keyword{isAuthenticated ? ‘ — sorted for you.’ : ‘.’}
         </p>
-      </header>
+      </div>
 
       <div className="explore-body">
         <aside className="explore-filters">

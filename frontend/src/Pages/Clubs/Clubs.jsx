@@ -96,7 +96,7 @@ export default function Clubs() {
       <Navbar page="/" />
 
       <div className="clubs-wrapper">
-        <header className="clubs-header">
+        <div className="clubs-header">
           <div className="clubs-header-text">
             <h1>Clubs &amp; Organizations</h1>
             <p className="clubs-sub">
@@ -110,7 +110,7 @@ export default function Clubs() {
             }>
             + Register your club
           </button>
-        </header>
+        </div>
 
         <input
           className="clubs-search"

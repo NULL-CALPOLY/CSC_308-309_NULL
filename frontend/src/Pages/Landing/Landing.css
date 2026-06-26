@@ -8,14 +8,14 @@ body:has(.landing-page) {
   flex-direction: column;
 }
 
-header {
+.landing-page > header {
   position: fixed;
   top: 0;
   width: 100%;
   z-index: 1000;
 }
 
-main {
+.landing-page > main {
   flex: 1;
 }
 
