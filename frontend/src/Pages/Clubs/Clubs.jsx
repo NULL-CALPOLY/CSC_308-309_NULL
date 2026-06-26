@@ -5,6 +5,7 @@ import Navbar from '../../Components/Navbar/Navbar';
 import { useDocumentTitle } from '../../Hooks/UseDocumentTitle.js';
 import { useAuth } from '../../Hooks/UseAuth.ts';
 import { useModal } from '../../Components/ModalContext.jsx';
+import { useToast } from '../../Components/Toast/ToastContext.jsx';
 import RegisterClubModal from '../../Components/RegisterClubModal/RegisterClubModal';
 import VerifiedBadge from '../../Components/VerifiedBadge/VerifiedBadge';
 
@@ -15,6 +16,7 @@ export default function Clubs() {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
   const { openSignIn } = useModal();
+  const toast = useToast();
 
   const [clubs, setClubs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -57,7 +59,7 @@ export default function Clubs() {
       );
       const json = await res.json();
       if (!res.ok || !json.success) {
-        alert(json.message || 'Could not update membership');
+        toast.error(json.message || 'Could not update membership');
         return;
       }
       setClubs((prev) =>
@@ -74,8 +76,9 @@ export default function Clubs() {
             : c
         )
       );
+      toast.success(joining ? `Joined ${club.name}!` : `Left ${club.name}`);
     } catch {
-      alert('Network error updating membership');
+      toast.error('Network error updating membership');
     } finally {
       setBusyId(null);
     }

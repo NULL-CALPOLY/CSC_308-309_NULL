@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { useUpcomingEvents, useNearbyEvents } from '../../Hooks/UseEvents.jsx';
 import SearchBar from '../SearchBar/SearchBar.jsx';
 
-// 10-mile radius in metres
 const NEARBY_RADIUS = 16093;
 
 export default function EventColumn({ onRefetchReady, selectedId, onSelect, userCoords }) {
@@ -18,6 +17,7 @@ export default function EventColumn({ onRefetchReady, selectedId, onSelect, user
   const [selectedInterests, setSelectedInterests] = useState([]);
   const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' });
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [textQuery, setTextQuery] = useState('');
 
   useEffect(() => {
     if (onRefetchReady) onRefetchReady(refetch);
@@ -25,6 +25,15 @@ export default function EventColumn({ onRefetchReady, selectedId, onSelect, user
 
   useEffect(() => {
     let filtered = eventList;
+    if (textQuery.trim()) {
+      const q = textQuery.toLowerCase();
+      filtered = filtered.filter(
+        (e) =>
+          e.eventName.toLowerCase().includes(q) ||
+          (e.description || '').toLowerCase().includes(q) ||
+          (e.eventAddress || '').toLowerCase().includes(q)
+      );
+    }
     if (selectedInterests.length > 0) {
       filtered = filtered.filter((event) =>
         event.interests.some((interest) => selectedInterests.includes(interest))
@@ -40,12 +49,44 @@ export default function EventColumn({ onRefetchReady, selectedId, onSelect, user
       filtered = filtered.filter((event) => new Date(event.eventStart) <= end);
     }
     setFilteredEvents(filtered);
-  }, [selectedInterests, dateRange, eventList]);
+  }, [selectedInterests, dateRange, eventList, textQuery]);
 
-  const activeFilterCount = selectedInterests.length + (dateRange.startDate ? 1 : 0) + (dateRange.endDate ? 1 : 0);
+  const activeFilterCount =
+    selectedInterests.length + (dateRange.startDate ? 1 : 0) + (dateRange.endDate ? 1 : 0);
+  const hasAnyFilter = activeFilterCount > 0 || textQuery.trim().length > 0;
+
+  const clearAll = () => {
+    setTextQuery('');
+    setSelectedInterests([]);
+    setDateRange({ startDate: '', endDate: '' });
+  };
 
   return (
     <div className="Event_Container">
+      {/* ── Text search ── */}
+      <div className="ec-search-wrap">
+        <svg className="ec-search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <circle cx="6" cy="6" r="4" stroke="currentColor" strokeWidth="1.5" />
+          <path d="M9.5 9.5L12 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+        <input
+          className="ec-search-input"
+          type="search"
+          placeholder="Search events…"
+          value={textQuery}
+          onChange={(e) => setTextQuery(e.target.value)}
+          aria-label="Search events"
+        />
+        {textQuery && (
+          <button
+            className="ec-search-clear"
+            onClick={() => setTextQuery('')}
+            aria-label="Clear search">
+            ✕
+          </button>
+        )}
+      </div>
+
       {/* ── Collapsible filter toggle ── */}
       <button
         className="ec-filter-toggle"
@@ -76,23 +117,41 @@ export default function EventColumn({ onRefetchReady, selectedId, onSelect, user
         </div>
       )}
 
-      {userCoords && (
-        <div className="ec-nearby-badge">
-          <span className="ec-nearby-dot" />
-          Showing events within 10 miles
+      {/* ── Status row ── */}
+      <div className="ec-status-row">
+        {userCoords ? (
+          <div className="ec-nearby-badge">
+            <span className="ec-nearby-dot" />
+            Within 10 mi
+          </div>
+        ) : null}
+        <div className="ec-count">
+          {filteredEvents.length} event{filteredEvents.length !== 1 ? 's' : ''}
+          {activeFilterCount > 0 || textQuery.trim() ? ' matching' : userCoords ? ' nearby' : ' upcoming'}
         </div>
-      )}
-
-      {/* ── Event count ── */}
-      <div className="ec-count">
-        {filteredEvents.length} event{filteredEvents.length !== 1 ? 's' : ''}
-        {activeFilterCount > 0 ? ' matching filters' : userCoords ? ' nearby' : ' upcoming'}
+        {hasAnyFilter && (
+          <button className="ec-clear-all" onClick={clearAll}>Clear</button>
+        )}
       </div>
 
       <div className="Event_List">
         {filteredEvents.length === 0 && (
           <div className="ec-empty">
-            {userCoords ? 'No events found nearby.' : 'No upcoming events.'}
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
+            </svg>
+            <p>
+              {hasAnyFilter
+                ? 'No events match your search.'
+                : userCoords
+                  ? 'No events found nearby.'
+                  : 'No upcoming events.'}
+            </p>
+            {hasAnyFilter && (
+              <button className="ec-clear-filter-btn" onClick={clearAll}>
+                Clear filters
+              </button>
+            )}
           </div>
         )}
         {filteredEvents.map((event) => (

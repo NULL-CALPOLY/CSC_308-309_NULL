@@ -5,6 +5,7 @@ import Navbar from '../../Components/Navbar/Navbar';
 import { useAuth } from '../../Hooks/UseAuth.ts';
 import { useEventId } from '../../Hooks/UseEvents';
 import useInterests from '../../Hooks/UseInterests';
+import { useToast } from '../../Components/Toast/ToastContext.jsx';
 import Multiselect from '@cloudscape-design/components/multiselect';
 
 const MAX_TITLE_LENGTH = 75;
@@ -207,6 +208,7 @@ export default function EventDetails() {
   const { user, isAuthenticated } = useAuth();
   const { event: rawEvent, loading, error: fetchError } = useEventId(id);
   const { interests: allInterests } = useInterests();
+  const toast = useToast();
 
   const [event, setEvent] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -489,9 +491,10 @@ export default function EventDetails() {
       const json = await res.json();
       if (!res.ok || !json.success)
         throw new Error(json.message || 'Failed to delete');
+      toast.success('Event deleted successfully.');
       navigate('/home');
     } catch (err) {
-      alert(err.message);
+      toast.error(err.message || 'Failed to delete event.');
     }
   };
 
@@ -654,22 +657,39 @@ export default function EventDetails() {
               {/* Start Time */}
               {isEditing && (
                 <div className="ed-field">
-                  <label>Start Time</label>
-                  <input
-                    type="datetime-local"
-                    className={`ed-input ${editErrors.startTime ? 'ed-input--error' : ''}`}
-                    value={toInputValue(event.time.start)}
-                    onChange={(e) =>
-                      setEvent({
-                        ...event,
-                        time: { ...event.time, start: e.target.value },
-                      })
-                    }
-                  />
+                  <label>Start</label>
+                  <div className="ed-dt-row">
+                    <input
+                      type="date"
+                      className={`ed-input ${editErrors.startTime ? 'ed-input--error' : ''}`}
+                      value={toInputValue(event.time.start).slice(0, 10)}
+                      onChange={(e) =>
+                        setEvent({
+                          ...event,
+                          time: {
+                            ...event.time,
+                            start: `${e.target.value}T${toInputValue(event.time.start).slice(11) || '09:00'}`,
+                          },
+                        })
+                      }
+                    />
+                    <input
+                      type="time"
+                      className={`ed-input ed-input--time ${editErrors.startTime ? 'ed-input--error' : ''}`}
+                      value={toInputValue(event.time.start).slice(11, 16)}
+                      onChange={(e) =>
+                        setEvent({
+                          ...event,
+                          time: {
+                            ...event.time,
+                            start: `${toInputValue(event.time.start).slice(0, 10)}T${e.target.value}`,
+                          },
+                        })
+                      }
+                    />
+                  </div>
                   {editErrors.startTime && (
-                    <span className="ed-error-text">
-                      {editErrors.startTime}
-                    </span>
+                    <span className="ed-error-text">{editErrors.startTime}</span>
                   )}
                 </div>
               )}
@@ -677,18 +697,37 @@ export default function EventDetails() {
               {/* End Time */}
               {isEditing && (
                 <div className="ed-field">
-                  <label>End Time</label>
-                  <input
-                    type="datetime-local"
-                    className={`ed-input ${editErrors.endTime ? 'ed-input--error' : ''}`}
-                    value={toInputValue(event.time.end)}
-                    onChange={(e) =>
-                      setEvent({
-                        ...event,
-                        time: { ...event.time, end: e.target.value },
-                      })
-                    }
-                  />
+                  <label>End</label>
+                  <div className="ed-dt-row">
+                    <input
+                      type="date"
+                      className={`ed-input ${editErrors.endTime ? 'ed-input--error' : ''}`}
+                      value={toInputValue(event.time.end).slice(0, 10)}
+                      onChange={(e) =>
+                        setEvent({
+                          ...event,
+                          time: {
+                            ...event.time,
+                            end: `${e.target.value}T${toInputValue(event.time.end).slice(11) || '10:00'}`,
+                          },
+                        })
+                      }
+                    />
+                    <input
+                      type="time"
+                      className={`ed-input ed-input--time ${editErrors.endTime ? 'ed-input--error' : ''}`}
+                      value={toInputValue(event.time.end).slice(11, 16)}
+                      onChange={(e) =>
+                        setEvent({
+                          ...event,
+                          time: {
+                            ...event.time,
+                            end: `${toInputValue(event.time.end).slice(0, 10)}T${e.target.value}`,
+                          },
+                        })
+                      }
+                    />
+                  </div>
                   {editErrors.endTime && (
                     <span className="ed-error-text">{editErrors.endTime}</span>
                   )}

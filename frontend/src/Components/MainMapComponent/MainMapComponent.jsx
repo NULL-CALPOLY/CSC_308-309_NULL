@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import { useNavigate } from 'react-router-dom';
 import { useUpcomingEvents, useNearbyEvents } from '../../Hooks/UseEvents';
+import { useToast } from '../Toast/ToastContext.jsx';
 
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
@@ -166,10 +167,11 @@ function EventMarker({ event, isSelected = false, onSelect }) {
 
 function LocateButton({ icon, setUserPosition, setTracking, onCoordsChange }) {
   const map = useMap();
+  const toast = useToast();
 
   const handleLocate = () => {
     if (!navigator.geolocation) {
-      alert('Geolocation not supported');
+      toast.warning('Geolocation is not supported by your browser.');
       return;
     }
     navigator.geolocation.getCurrentPosition(
@@ -181,7 +183,7 @@ function LocateButton({ icon, setUserPosition, setTracking, onCoordsChange }) {
         setTracking((prev) => !prev);
         onCoordsChange?.({ lat, lng });
       },
-      () => alert('Unable to retrieve your location.')
+      () => toast.warning('Unable to retrieve your location. Check browser permissions.')
     );
   };
 

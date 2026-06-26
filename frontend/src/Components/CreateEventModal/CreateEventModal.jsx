@@ -18,8 +18,10 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
     roomDetail: '',
     interests: [],
     location: '',
-    startTime: '',
-    endTime: '',
+    startDate: '',
+    startTimeOnly: '09:00',
+    endDate: '',
+    endTimeOnly: '10:00',
   });
 
   const [selectedOptions, setSelectedOptions] = useState([]);
@@ -85,6 +87,16 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
 
   const now = new Date();
 
+  const getStartISO = () =>
+    formData.startDate && formData.startTimeOnly
+      ? `${formData.startDate}T${formData.startTimeOnly}`
+      : '';
+
+  const getEndISO = () =>
+    formData.endDate && formData.endTimeOnly
+      ? `${formData.endDate}T${formData.endTimeOnly}`
+      : '';
+
   const validateForm = () => {
     const newErrors = {};
 
@@ -99,15 +111,17 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
 
     if (!formData.address) newErrors.address = 'Location is required.';
 
-    if (!formData.startTime) {
-      newErrors.startTime = 'Start time is required.';
-    } else if (new Date(formData.startTime) <= now) {
+    const startISO = getStartISO();
+    if (!startISO) {
+      newErrors.startTime = 'Start date and time are required.';
+    } else if (new Date(startISO) <= now) {
       newErrors.startTime = 'Start time must be in the future.';
     }
 
-    if (!formData.endTime) {
-      newErrors.endTime = 'End time is required.';
-    } else if (new Date(formData.endTime) <= new Date(formData.startTime)) {
+    const endISO = getEndISO();
+    if (!endISO) {
+      newErrors.endTime = 'End date and time are required.';
+    } else if (startISO && new Date(endISO) <= new Date(startISO)) {
       newErrors.endTime = 'End time must be after start time.';
     }
 
@@ -119,7 +133,7 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
   };
 
   const resetForm = () => {
-    setFormData({ name: '', description: '', address: '', roomDetail: '', interests: [], location: '', startTime: '', endTime: '' });
+    setFormData({ name: '', description: '', address: '', roomDetail: '', interests: [], location: '', startDate: '', startTimeOnly: '09:00', endDate: '', endTimeOnly: '10:00' });
     setSelectedOptions([]);
     setInterestSearch('');
     setErrorMessage({});
@@ -147,8 +161,8 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
         location: formData.location,
         interests: selectedOptions.map((o) => o.value),
         time: {
-          start: formData.startTime,
-          end: formData.endTime,
+          start: getStartISO(),
+          end: getEndISO(),
         },
       };
 
@@ -432,42 +446,69 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
             </div>
 
             {/* ── Date & Time ── */}
-            <div className="datetime-grid">
-              <div className="form-group form-group--start-time">
-                <label>
-                  Start Time <span className="required">*</span>
-                </label>
+            <div className="form-group">
+              <label>
+                Start <span className="required">*</span>
+              </label>
+              <div className="cem-dt-row">
                 <input
-                  className="cem-native-input cem-start-time"
-                  type="datetime-local"
-                  value={formData.startTime}
+                  className="cem-native-input cem-dt-date"
+                  type="date"
+                  value={formData.startDate}
+                  min={new Date().toISOString().slice(0, 10)}
                   onChange={(e) => {
-                    setFormData({ ...formData, startTime: e.target.value });
+                    const v = e.target.value;
+                    setFormData((p) => ({
+                      ...p,
+                      startDate: v,
+                      endDate: p.endDate < v ? v : p.endDate,
+                    }));
                     setErrorMessage({ ...errorMessage, startTime: null });
                   }}
                 />
-                {errorMessage.startTime && (
-                  <p className="error-text">{errorMessage.startTime}</p>
-                )}
-              </div>
-
-              <div className="form-group form-group--end-time">
-                <label>
-                  End Time <span className="required">*</span>
-                </label>
                 <input
-                  className="cem-native-input cem-end-time"
-                  type="datetime-local"
-                  value={formData.endTime}
+                  className="cem-native-input cem-dt-time"
+                  type="time"
+                  value={formData.startTimeOnly}
                   onChange={(e) => {
-                    setFormData({ ...formData, endTime: e.target.value });
+                    setFormData((p) => ({ ...p, startTimeOnly: e.target.value }));
+                    setErrorMessage({ ...errorMessage, startTime: null });
+                  }}
+                />
+              </div>
+              {errorMessage.startTime && (
+                <p className="error-text">{errorMessage.startTime}</p>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label>
+                End <span className="required">*</span>
+              </label>
+              <div className="cem-dt-row">
+                <input
+                  className="cem-native-input cem-dt-date"
+                  type="date"
+                  value={formData.endDate}
+                  min={formData.startDate || new Date().toISOString().slice(0, 10)}
+                  onChange={(e) => {
+                    setFormData((p) => ({ ...p, endDate: e.target.value }));
                     setErrorMessage({ ...errorMessage, endTime: null });
                   }}
                 />
-                {errorMessage.endTime && (
-                  <p className="error-text">{errorMessage.endTime}</p>
-                )}
+                <input
+                  className="cem-native-input cem-dt-time"
+                  type="time"
+                  value={formData.endTimeOnly}
+                  onChange={(e) => {
+                    setFormData((p) => ({ ...p, endTimeOnly: e.target.value }));
+                    setErrorMessage({ ...errorMessage, endTime: null });
+                  }}
+                />
               </div>
+              {errorMessage.endTime && (
+                <p className="error-text">{errorMessage.endTime}</p>
+              )}
             </div>
           </form>
         </div>

@@ -228,8 +228,37 @@
   color: #eeeef5;
 }
 
-.form-group input[type='datetime-local'] {
+.form-group input[type='date'],
+.form-group input[type='time'] {
   color-scheme: dark;
+}
+
+/* ── Split date + time row ── */
+.cem-dt-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+
+.cem-dt-date {
+  min-width: 0;
+}
+
+.cem-dt-time {
+  width: 110px;
+  flex-shrink: 0;
+}
+
+input[type='date']::-webkit-calendar-picker-indicator,
+input[type='time']::-webkit-calendar-picker-indicator {
+  filter: invert(0.55) sepia(1) hue-rotate(230deg) saturate(2);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+input[type='date']::-webkit-calendar-picker-indicator:hover,
+input[type='time']::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
 }
 
 .form-group textarea {
@@ -238,12 +267,7 @@
   line-height: 1.55;
 }
 
-/* --- Datetime grid --- */
-.datetime-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
+/* kept for backward compat — no longer used */
 
 /* --- Footer / Actions --- */
 .modal-actions {
