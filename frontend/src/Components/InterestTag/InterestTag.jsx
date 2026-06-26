@@ -1,5 +1,4 @@
 import React from 'react';
-import './InterestTag.css';
 
 const COLORS = {
   basketball: '#ff6b6b',
@@ -32,8 +31,10 @@ export default function TagComponent({ Interest }) {
   const color = COLORS[key] ?? stringToColor(key);
 
   return (
-    <div className="Tag-Container" style={{ backgroundColor: color }}>
-      <div className="Tag-Text">{Interest}</div>
+    <div
+      className="inline-block px-3 py-1.5 rounded-full text-white font-normal text-[0.6rem] max-w-fit transition-transform duration-200 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_3px_10px_rgba(40,30,30,0.15)]"
+      style={{ backgroundColor: color }}>
+      {Interest}
     </div>
   );
 }
