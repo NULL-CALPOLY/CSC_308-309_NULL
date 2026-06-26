@@ -132,7 +132,7 @@ function AttendeeAvatarStack({ attendees, resolvedUsers, total, onClick }) {
 
 // ─── Attendees Modal ──────────────────────────────────────────────────────────
 
-function AttendeesModal({ attendees, resolvedUsers, loading, onClose }) {
+function AttendeesModal({ attendees, resolvedUsers, loading, onClose, onNavigate }) {
   useEffect(() => {
     const handler = (e) => e.key === 'Escape' && onClose();
     window.addEventListener('keydown', handler);
@@ -180,7 +180,7 @@ function AttendeesModal({ attendees, resolvedUsers, loading, onClose }) {
                   key={id || i}
                   type="button"
                   className="attendee-row"
-                  onClick={() => id && navigate(`/users/${id}`)}>
+                  onClick={() => id && onNavigate(`/users/${id}`)}>
                   <Avatar
                     id={id}
                     name={user?.name}
@@ -981,6 +981,7 @@ export default function EventDetails() {
           resolvedUsers={resolvedUsers}
           loading={attendeeNamesLoading}
           onClose={() => setShowAttendeesModal(false)}
+          onNavigate={navigate}
         />
       )}
 
