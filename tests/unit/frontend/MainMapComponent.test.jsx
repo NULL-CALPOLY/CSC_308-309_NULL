@@ -1,8 +1,14 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import MainMapComponent from '../../../frontend/src/Components/MainMapComponent/MainMapComponent.jsx';
+import { ToastProvider } from '../../../frontend/src/Components/Toast/ToastContext.jsx';
 
-const renderWithRouter = (ui) => render(<MemoryRouter>{ui}</MemoryRouter>);
+const renderWithRouter = (ui) =>
+  render(
+    <MemoryRouter>
+      <ToastProvider>{ui}</ToastProvider>
+    </MemoryRouter>
+  );
 
 describe('MainMapComponent', () => {
   beforeEach(() => {

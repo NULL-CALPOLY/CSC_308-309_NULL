@@ -47,6 +47,7 @@ const mockUseUpcomingEventsResult = {
 };
 jest.mock('../../../frontend/src/Hooks/UseEvents.jsx', () => ({
   useUpcomingEvents: jest.fn(),
+  useNearbyEvents: jest.fn(),
 }));
 
 // Minimal mock for sub-components to focus on EventColumn logic
@@ -79,6 +80,7 @@ jest.mock(
 
 const {
   useUpcomingEvents,
+  useNearbyEvents,
 } = require('../../../frontend/src/Hooks/UseEvents.jsx');
 
 import EventColumn from '../../../frontend/src/Components/EventColumn/EventColumn.jsx';
@@ -94,10 +96,18 @@ describe('EventColumn', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     useUpcomingEvents.mockReturnValue(mockUseUpcomingEventsResult);
+    useNearbyEvents.mockReturnValue({ events: [], loading: false, error: null });
   });
 
-  it('renders the SearchBar', () => {
+  const openFilters = () => {
+    act(() => {
+      screen.getByText('Filters').click();
+    });
+  };
+
+  it('renders the SearchBar when filters panel is open', () => {
     renderEventColumn();
+    openFilters();
     expect(screen.getByTestId('search-bar')).toBeInTheDocument();
   });
 
@@ -109,6 +119,7 @@ describe('EventColumn', () => {
 
   it('filters events by selected interest', () => {
     renderEventColumn();
+    openFilters();
     act(() => {
       screen.getByText('Filter Music').click();
     });
@@ -118,6 +129,7 @@ describe('EventColumn', () => {
 
   it('shows all events again after clearing interest filter', () => {
     renderEventColumn();
+    openFilters();
     act(() => {
       screen.getByText('Filter Music').click();
     });
@@ -130,6 +142,7 @@ describe('EventColumn', () => {
 
   it('filters events by interest (confirms filtering logic works)', async () => {
     renderEventColumn();
+    openFilters();
     act(() => {
       screen.getByText('Filter Music').click();
     });

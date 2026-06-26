@@ -43,11 +43,11 @@ describe('SearchBar', () => {
   it('renders the interest search input', () => {
     renderSearchBar();
     expect(
-      screen.getByPlaceholderText('Search interests...')
+      screen.getByPlaceholderText('Search interests…')
     ).toBeInTheDocument();
   });
 
-  it('renders all interest checkboxes', () => {
+  it('renders all interest pills', () => {
     renderSearchBar();
     expect(screen.getByText('Music')).toBeInTheDocument();
     expect(screen.getByText('Tech')).toBeInTheDocument();
@@ -56,7 +56,7 @@ describe('SearchBar', () => {
 
   it('filters interests by search term', () => {
     renderSearchBar();
-    fireEvent.change(screen.getByPlaceholderText('Search interests...'), {
+    fireEvent.change(screen.getByPlaceholderText('Search interests…'), {
       target: { value: 'mu' },
     });
     expect(screen.getByText('Music')).toBeInTheDocument();
@@ -64,19 +64,18 @@ describe('SearchBar', () => {
     expect(screen.queryByText('Sports')).not.toBeInTheDocument();
   });
 
-  it('calls onSelectionChange with selected interests when checkbox is checked', () => {
+  it('calls onSelectionChange with selected interests when pill is clicked', () => {
     const onSelectionChange = jest.fn();
     renderSearchBar({ onSelectionChange });
-    fireEvent.click(screen.getByTestId('checkbox-Music'));
+    fireEvent.click(screen.getByText('Music'));
     expect(onSelectionChange).toHaveBeenCalledWith(['Music']);
   });
 
-  it('calls onSelectionChange with empty array when unchecked', () => {
+  it('calls onSelectionChange with empty array when pill is clicked again', () => {
     const onSelectionChange = jest.fn();
     renderSearchBar({ onSelectionChange });
-    // Check then uncheck
-    fireEvent.click(screen.getByTestId('checkbox-Tech'));
-    fireEvent.click(screen.getByTestId('checkbox-Tech'));
+    fireEvent.click(screen.getByText('Tech'));
+    fireEvent.click(screen.getByText('Tech'));
     const lastCall =
       onSelectionChange.mock.calls[onSelectionChange.mock.calls.length - 1][0];
     expect(lastCall).not.toContain('Tech');
@@ -112,28 +111,28 @@ describe('SearchBar', () => {
     });
   });
 
-  it('shows "Clear dates" button after a date is selected', () => {
+  it('shows Clear button after a date is selected', () => {
     renderSearchBar();
     const dateInputs = document.querySelectorAll('input[type="date"]');
     fireEvent.change(dateInputs[0], { target: { value: '2025-01-01' } });
-    expect(screen.getByText('Clear dates')).toBeInTheDocument();
+    expect(screen.getByText('Clear')).toBeInTheDocument();
   });
 
-  it('clears dates when "Clear dates" is clicked', () => {
+  it('clears dates when Clear is clicked', () => {
     const onDateChange = jest.fn();
     renderSearchBar({ onDateChange });
     const dateInputs = document.querySelectorAll('input[type="date"]');
     fireEvent.change(dateInputs[0], { target: { value: '2025-01-01' } });
-    fireEvent.click(screen.getByText('Clear dates'));
+    fireEvent.click(screen.getByText('Clear'));
     expect(onDateChange).toHaveBeenLastCalledWith({
       startDate: '',
       endDate: '',
     });
-    expect(screen.queryByText('Clear dates')).not.toBeInTheDocument();
+    expect(screen.queryByText('Clear')).not.toBeInTheDocument();
   });
 
   it('renders Filter by date label', () => {
     renderSearchBar();
-    expect(screen.getByText('Filter by date')).toBeInTheDocument();
+    expect(screen.getByText('Date range')).toBeInTheDocument();
   });
 });
