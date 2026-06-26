@@ -1,187 +1,214 @@
-.searchbar-container {
+.sb-container {
   width: 100%;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.searchbar-input {
-  width: 100%;
-  padding: 8px 12px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.06);
-  color: #f8fafc;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 0.875rem;
-  box-sizing: border-box;
-  outline: none;
-  transition:
-    border-color 0.2s,
-    box-shadow 0.2s;
+/* ── Section header row ── */
+.sb-header,
+.sb-date-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.searchbar-input::placeholder {
-  color: rgba(248, 250, 252, 0.35);
+.sb-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(248, 250, 252, 0.4);
 }
 
-.searchbar-input:focus {
-  border-color: rgba(124, 58, 237, 0.55);
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
+.sb-clear-all {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #a78bfa;
+  cursor: pointer;
+  opacity: 0.8;
+  font-family: inherit;
+  transition: opacity 0.15s;
 }
+.sb-clear-all:hover { opacity: 1; text-decoration: underline; }
 
-/* ── Checkbox grid wrapper (for fade effect) ── */
-.checkbox-grid-wrapper {
+/* ── Search input ── */
+.sb-search-wrap {
   position: relative;
 }
 
-.checkbox-grid-wrapper::after {
-  content: '';
+.sb-search-icon {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 32px;
-  background: linear-gradient(
-    to bottom,
-    rgba(18, 14, 28, 0) 0%,
-    rgba(18, 14, 28, 0.95) 100%
-  );
+  left: 9px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(248, 250, 252, 0.3);
   pointer-events: none;
-  transition: opacity 0.2s;
 }
 
-.checkbox-grid-wrapper.scrolled-to-bottom::after {
-  opacity: 0;
+.sb-search-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 7px 10px 7px 28px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.05);
+  color: #f8fafc;
+  font-size: 0.82rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.sb-search-input::placeholder { color: rgba(248, 250, 252, 0.28); }
+.sb-search-input:focus {
+  border-color: rgba(124, 58, 237, 0.5);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
 }
 
-.checkbox-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 4px;
-  max-height: 220px;
+/* ── Pill chips ── */
+.sb-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  max-height: 160px;
   overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 4px;
   scrollbar-width: thin;
   scrollbar-color: rgba(124, 58, 237, 0.3) transparent;
 }
+.sb-pills::-webkit-scrollbar { width: 3px; }
+.sb-pills::-webkit-scrollbar-thumb { background: rgba(124, 58, 237, 0.3); border-radius: 10px; }
 
-.checkbox-grid::-webkit-scrollbar {
-  width: 4px;
+.sb-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(248, 250, 252, 0.65);
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
 }
 
-.checkbox-grid::-webkit-scrollbar-track {
+.sb-pill:hover {
+  border-color: rgba(124, 58, 237, 0.45);
+  color: #e9d5ff;
+  background: rgba(124, 58, 237, 0.08);
+}
+
+.sb-pill--on {
+  background: rgba(124, 58, 237, 0.22);
+  border-color: rgba(124, 58, 237, 0.55);
+  color: #e9d5ff;
+  font-weight: 600;
+}
+
+.sb-pill-check {
+  font-size: 0.65rem;
+  color: #a78bfa;
+}
+
+.sb-pill--more {
+  border-style: dashed;
+  color: #a78bfa;
+  border-color: rgba(124, 58, 237, 0.35);
   background: transparent;
 }
 
-.checkbox-grid::-webkit-scrollbar-thumb {
-  background: rgba(124, 58, 237, 0.3);
-  border-radius: 10px;
+.sb-no-results {
+  font-size: 0.78rem;
+  color: rgba(248, 250, 252, 0.3);
+  padding: 4px 2px;
 }
 
-.checkbox-grid::-webkit-scrollbar-thumb:hover {
-  background: rgba(124, 58, 237, 0.4);
+/* ── Date section ── */
+.sb-date {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
 }
 
-.checkbox-item {
+.sb-date-row {
   display: flex;
   align-items: center;
-  word-wrap: break-word;
-  font-size: 0.82rem;
-  color: #f8fafc;
-}
-
-/* ── Cloudscape checkbox overrides ── */
-.checkbox-item [class*='awsui_label'] {
-  color: #f8fafc !important;
-  font-size: 0.82rem !important;
-}
-
-.checkbox-item [class*='awsui_outline'] {
-  border-color: rgba(124, 58, 237, 0.35) !important;
-}
-
-.checkbox-item [class*='awsui_checked'] [class*='awsui_outline'] {
-  background: #7c3aed !important;
-  border-color: #7c3aed !important;
-}
-
-/* ── Date filter ── */
-.date-filter {
-  margin-top: 10px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding-top: 10px;
-}
-
-.date-filter__label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: rgba(248, 250, 252, 0.45);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin: 0 0 6px 0;
-}
-
-.date-filter__inputs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
   gap: 8px;
 }
 
-.date-filter__field {
+.sb-date-field {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 3px;
 }
 
-.date-filter__field label {
-  font-size: 0.72rem;
-  color: rgba(248, 250, 252, 0.4);
-  font-weight: 500;
+.sb-date-sep {
+  color: rgba(248, 250, 252, 0.25);
+  font-size: 0.85rem;
+  padding-top: 16px;
 }
 
-.date-input {
-  width: 100%;
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.06);
-  color: #f8fafc;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: max(16px, 0.875rem);
-  box-sizing: border-box;
-  outline: none;
-  transition:
-    border-color 0.2s,
-    box-shadow 0.2s;
-  margin-bottom: 0;
-}
-
-.date-input::-webkit-calendar-picker-indicator {
-  filter: invert(0.7);
-  cursor: pointer;
-}
-
-.date-input:focus {
-  border-color: rgba(124, 58, 237, 0.55);
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
-}
-
-.date-filter__clear {
-  margin-top: 8px;
-  background: none;
-  border: none;
-  color: #a78bfa;
-  font-size: 0.75rem;
+.sb-date-label {
+  font-size: 0.68rem;
   font-weight: 600;
-  cursor: pointer;
-  padding: 0;
-  opacity: 0.85;
-  transition: opacity 0.15s;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: rgba(248, 250, 252, 0.35);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
-.date-filter__clear:hover {
-  opacity: 1;
-  text-decoration: underline;
+.sb-date-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.05);
+  color: #f8fafc;
+  font-size: max(16px, 0.8rem);
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  color-scheme: dark;
+}
+.sb-date-input:focus {
+  border-color: rgba(124, 58, 237, 0.5);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+.sb-date-input::-webkit-calendar-picker-indicator {
+  filter: invert(0.6);
+  cursor: pointer;
+}
+
+/* ── Quick date shortcuts ── */
+.sb-quick-btns {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.sb-quick-btn {
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(248, 250, 252, 0.5);
+  font-size: 0.72rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.sb-quick-btn:hover {
+  border-color: rgba(124, 58, 237, 0.4);
+  color: #a78bfa;
+  background: rgba(124, 58, 237, 0.07);
 }

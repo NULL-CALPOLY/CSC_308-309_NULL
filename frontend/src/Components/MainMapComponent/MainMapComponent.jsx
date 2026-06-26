@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import { useNavigate } from 'react-router-dom';
-import { useUpcomingEvents } from '../../Hooks/UseEvents';
+import { useUpcomingEvents, useNearbyEvents } from '../../Hooks/UseEvents';
 
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
@@ -12,6 +12,8 @@ import markerIcon from '../../assets/event-pin.svg';
 import locateIcon from '../../assets/location.svg';
 import circle from '../../assets/circle.png';
 import './MainMapComponent.css';
+
+const NEARBY_RADIUS = 16093;
 
 const makeEventIcon = (selected) =>
   L.divIcon({
@@ -32,11 +34,14 @@ const currentLocationIcon = L.icon({
   popupAnchor: [0, -10],
 });
 
-export default function MainMapComponent({ selectedId = null, onSelect }) {
+export default function MainMapComponent({ selectedId = null, onSelect, userCoords, onCoordsChange }) {
   const [userPosition, setUserPosition] = useState(null);
   const [tracking, setTracking] = useState(false);
-  const { events: rawEvents } = useUpcomingEvents();
 
+  const { events: allEvents } = useUpcomingEvents();
+  const { events: nearbyEvents } = useNearbyEvents(userCoords, NEARBY_RADIUS);
+
+  const rawEvents = userCoords ? nearbyEvents : allEvents;
   const events = rawEvents.filter(
     (e) => e.lat !== 0 && e.lng !== 0 && e.lat != null && e.lng != null
   );
@@ -50,10 +55,7 @@ export default function MainMapComponent({ selectedId = null, onSelect }) {
         zoom={13}
         minZoom={3}
         maxZoom={18}
-        maxBounds={[
-          [-90, -180],
-          [90, 180],
-        ]}
+        maxBounds={[[-90, -180], [90, 180]]}
         maxBoundsViscosity={1.0}
         scrollWheelZoom={true}
         zoomControl={true}
@@ -64,7 +66,6 @@ export default function MainMapComponent({ selectedId = null, onSelect }) {
           referrerPolicy="no-referrer-when-downgrade"
         />
 
-        {/* Current user location marker */}
         {userPosition && (
           <Marker position={userPosition} icon={currentLocationIcon}>
             <Popup>
@@ -75,7 +76,6 @@ export default function MainMapComponent({ selectedId = null, onSelect }) {
           </Marker>
         )}
 
-        {/* Event markers — clustered; spiderfy spreads out same-venue pins */}
         <MarkerClusterGroup
           chunkedLoading
           spiderfyOnMaxZoom
@@ -91,7 +91,6 @@ export default function MainMapComponent({ selectedId = null, onSelect }) {
           ))}
         </MarkerClusterGroup>
 
-        {/* Pan/zoom to the event selected from the side list */}
         {selectedEvent && <FlyToSelected event={selectedEvent} />}
 
         <LocateButton
@@ -99,6 +98,7 @@ export default function MainMapComponent({ selectedId = null, onSelect }) {
           setUserPosition={setUserPosition}
           tracking={tracking}
           setTracking={setTracking}
+          onCoordsChange={onCoordsChange}
         />
 
         {tracking && <LiveLocation setUserPosition={setUserPosition} />}
@@ -107,7 +107,6 @@ export default function MainMapComponent({ selectedId = null, onSelect }) {
   );
 }
 
-// Pans/zooms the map to the event selected from the side list.
 function FlyToSelected({ event }) {
   const map = useMap();
   useEffect(() => {
@@ -119,19 +118,8 @@ function FlyToSelected({ event }) {
   return null;
 }
 
-// Individual event marker with popup
 function EventMarker({ event, isSelected = false, onSelect }) {
   const navigate = useNavigate();
-
-  const formatTime = (isoString) => {
-    if (!isoString) return 'TBD';
-    return new Date(isoString).toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-    });
-  };
 
   return (
     <Marker
@@ -143,26 +131,24 @@ function EventMarker({ event, isSelected = false, onSelect }) {
           <div className="popup-title">{event.eventName}</div>
 
           <div className="popup-row">
-            <span className="popup-icon">📍</span>
-            <span>{event.address}</span>
+            <span className="popup-icon">📅</span>
+            <span>{event.eventDate}</span>
           </div>
 
           <div className="popup-row">
-            <span className="popup-icon">🕐</span>
-            <span>{formatTime(event.startTime)}</span>
+            <span className="popup-icon">📍</span>
+            <span>{event.eventAddress}</span>
           </div>
 
           <div className="popup-row">
             <span className="popup-icon">👥</span>
-            <span>{event.attendees.length} attending</span>
+            <span>{event.attendees?.length ?? 0} attending</span>
           </div>
 
           {event.interests.length > 0 && (
             <div className="popup-tags">
               {event.interests.slice(0, 3).map((tag, i) => (
-                <span key={i} className="popup-tag">
-                  {tag}
-                </span>
+                <span key={i} className="popup-tag">{tag}</span>
               ))}
             </div>
           )}
@@ -178,8 +164,7 @@ function EventMarker({ event, isSelected = false, onSelect }) {
   );
 }
 
-// "Locate Me" button
-function LocateButton({ icon, setUserPosition, setTracking }) {
+function LocateButton({ icon, setUserPosition, setTracking, onCoordsChange }) {
   const map = useMap();
 
   const handleLocate = () => {
@@ -187,20 +172,21 @@ function LocateButton({ icon, setUserPosition, setTracking }) {
       alert('Geolocation not supported');
       return;
     }
-
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        const latlng = [pos.coords.latitude, pos.coords.longitude];
+        const { latitude: lat, longitude: lng } = pos.coords;
+        const latlng = [lat, lng];
         setUserPosition(latlng);
         map.flyTo(latlng, 15);
         setTracking((prev) => !prev);
+        onCoordsChange?.({ lat, lng });
       },
       () => alert('Unable to retrieve your location.')
     );
   };
 
   return (
-    <button className="main-locate-btn" onClick={handleLocate}>
+    <button className="main-locate-btn" onClick={handleLocate} title="Show my location">
       <img src={icon} alt="Locate me" />
     </button>
   );
@@ -210,11 +196,7 @@ function LiveLocation({ setUserPosition }) {
   const map = useMap();
 
   useEffect(() => {
-    if (!navigator.geolocation) {
-      alert('Geolocation not supported');
-      return;
-    }
-
+    if (!navigator.geolocation) return;
     const watchId = navigator.geolocation.watchPosition(
       (pos) => {
         const latlng = [pos.coords.latitude, pos.coords.longitude];
@@ -222,13 +204,8 @@ function LiveLocation({ setUserPosition }) {
         map.setView(latlng);
       },
       () => {},
-      {
-        enableHighAccuracy: true,
-        maximumAge: 10000,
-        timeout: 5000,
-      }
+      { enableHighAccuracy: true, maximumAge: 10000, timeout: 5000 }
     );
-
     return () => navigator.geolocation.clearWatch(watchId);
   }, [map, setUserPosition]);
 

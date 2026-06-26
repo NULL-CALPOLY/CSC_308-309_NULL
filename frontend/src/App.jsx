@@ -10,6 +10,7 @@ import ExplorePage from './Pages/Explore/Explore.jsx';
 import Profile from './Pages/Profile/Profile.jsx';
 import PublicProfile from './Pages/PublicProfile/PublicProfile.jsx';
 import Clubs from './Pages/Clubs/Clubs.jsx';
+import ClubDetail from './Pages/ClubDetail/ClubDetail.jsx';
 import AdminDashboard from './Pages/AdminDashboard/AdminDashboard.jsx';
 import ProtectedRoute from './Components/ProtectedComponent.jsx';
 import EventDetails from './Pages/EventDetails/EventDetails.jsx';
@@ -52,6 +53,7 @@ function AppContent() {
           />
           <Route path="/users/:id" element={<PublicProfile />} />
           <Route path="/clubs" element={<Clubs />} />
+          <Route path="/clubs/:id" element={<ClubDetail />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/search" element={<SearchPage />} />
