@@ -132,7 +132,7 @@ export default function Clubs() {
             {filtered.map((club) => {
               const member = isMember(club);
               return (
-                <div key={club._id} className="club-card">
+                <div key={club._id} className="club-card" role="button" tabIndex={0} onClick={() => navigate(`/clubs/${club._id}`)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate(`/clubs/${club._id}`); }}>
                   <div className="club-card-top">
                     <div className="club-logo">
                       {club.logo ? (
@@ -166,7 +166,7 @@ export default function Clubs() {
                     <button
                       className={`club-join-btn ${member ? 'is-member' : ''}`}
                       disabled={busyId === club._id}
-                      onClick={() => toggleMembership(club)}>
+                      onClick={(e) => { e.stopPropagation(); toggleMembership(club); }}>
                       {busyId === club._id
                         ? '…'
                         : member

@@ -2,11 +2,19 @@
 import EventComponent from '../EventComponent/EventComponent.jsx';
 import './EventColumn.css';
 import { useEffect, useState } from 'react';
-import { useUpcomingEvents } from '../../Hooks/UseEvents.jsx';
+import { useUpcomingEvents, useNearbyEvents } from '../../Hooks/UseEvents.jsx';
 import SearchBar from '../SearchBar/SearchBar.jsx';
 
-export default function EventColumn({ onRefetchReady, selectedId, onSelect }) {
-  const { events: eventList, refetch } = useUpcomingEvents();
+// 10-mile radius in metres
+const NEARBY_RADIUS = 16093;
+
+export default function EventColumn({ onRefetchReady, selectedId, onSelect, userCoords }) {
+  const { events: allEvents, refetch } = useUpcomingEvents();
+  const { events: nearbyEvents } = useNearbyEvents(userCoords, NEARBY_RADIUS);
+
+  // When the user has shared location, show nearby events; otherwise show all upcoming
+  const eventList = userCoords ? nearbyEvents : allEvents;
+
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedInterests, setSelectedInterests] = useState([]);
   const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' });
@@ -22,19 +30,15 @@ export default function EventColumn({ onRefetchReady, selectedId, onSelect }) {
         event.interests.some((interest) => selectedInterests.includes(interest))
       );
     }
-    // Date filter
     if (dateRange.startDate) {
       const start = new Date(dateRange.startDate);
-      filtered = filtered.filter(
-        (event) => new Date(event.eventStart) >= start
-      );
+      filtered = filtered.filter((event) => new Date(event.eventStart) >= start);
     }
     if (dateRange.endDate) {
       const end = new Date(dateRange.endDate);
-      end.setHours(23, 59, 59); // include the full end day
+      end.setHours(23, 59, 59);
       filtered = filtered.filter((event) => new Date(event.eventStart) <= end);
     }
-
     setFilteredEvents(filtered);
   }, [selectedInterests, dateRange, eventList]);
 
@@ -46,7 +50,18 @@ export default function EventColumn({ onRefetchReady, selectedId, onSelect }) {
           onDateChange={setDateRange}
         />
       </div>
+      {userCoords && (
+        <div className="ec-nearby-badge">
+          <span className="ec-nearby-dot" />
+          Showing events within 10 miles
+        </div>
+      )}
       <div className="Event_List">
+        {filteredEvents.length === 0 && (
+          <div className="ec-empty">
+            {userCoords ? 'No events found nearby.' : 'No upcoming events.'}
+          </div>
+        )}
         {filteredEvents.map((event) => (
           <EventComponent
             eventId={event.id}

@@ -18,13 +18,14 @@ export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
   const [colOpen, setColOpen] = useState(() => window.innerWidth > MOBILE_BP);
   const [selectedEventId, setSelectedEventId] = useState(null);
+  const [userCoords, setUserCoords] = useState(null);
   const refetchEvents = useRef(null);
 
-  // Selecting from the map opens the list panel so the highlight is visible.
   const handleSelectEvent = (id) => {
     setSelectedEventId(id);
     if (id && window.innerWidth <= MOBILE_BP) setColOpen(true);
   };
+
   const { user } = useAuth();
   const { openSignIn } = useModal();
 
@@ -46,6 +47,8 @@ export default function HomePage() {
         <MainMapComponent
           selectedId={selectedEventId}
           onSelect={handleSelectEvent}
+          userCoords={userCoords}
+          onCoordsChange={setUserCoords}
         />
       </div>
       <div className="Event-Column">
@@ -60,10 +63,10 @@ export default function HomePage() {
           onRefetchReady={(fn) => (refetchEvents.current = fn)}
           selectedId={selectedEventId}
           onSelect={handleSelectEvent}
+          userCoords={userCoords}
         />
       </div>
 
-      {/* Hamburger – slides in when column is closed */}
       <button
         className="col-open-btn"
         onClick={() => setColOpen(true)}
