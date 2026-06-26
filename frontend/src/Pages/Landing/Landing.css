@@ -365,8 +365,27 @@ body:has(.landing-page) {
     font-size: 1rem;
     margin-bottom: 1.25rem;
   }
+  .feature-text h2,
+  .feature-content h2 {
+    font-size: 1.55rem;
+  }
+  .feature-text p,
+  .feature-content p {
+    font-size: 1rem;
+    margin-bottom: 1.25rem;
+  }
   .feature {
     padding: 2rem 1.5rem;
+  }
+  .newsletter-section {
+    padding: 2.5rem 1rem;
+  }
+  .newsletter-content h2 {
+    font-size: 1.6rem;
+  }
+  .newsletter-content p {
+    font-size: 1rem;
+    margin-bottom: 1.25rem;
   }
   .newsletter-section {
     padding: 2.5rem 1rem;

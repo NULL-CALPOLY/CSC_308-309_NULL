@@ -5,6 +5,7 @@ import SignInModal from './Components/Modals/SignInModal/SignInModal.jsx';
 import RegistrationModal from './Components/Modals/RegistrationModal/RegistrationModal.jsx';
 import { AuthProvider } from './Components/AuthProvider.jsx';
 import { ModalProvider, useModal } from './Components/ModalContext.jsx';
+import { ToastProvider } from './Components/Toast/ToastContext.jsx';
 import LandingPage from './Pages/Landing/Landing.jsx';
 import ExplorePage from './Pages/Explore/Explore.jsx';
 import Profile from './Pages/Profile/Profile.jsx';
@@ -25,7 +26,9 @@ export default function App() {
   return (
     <AuthProvider>
       <ModalProvider>
-        <AppContent />
+        <ToastProvider>
+          <AppContent />
+        </ToastProvider>
       </ModalProvider>
     </AuthProvider>
   );

@@ -217,20 +217,28 @@
   color: #f8fafc;
   padding: 0.5rem 0.75rem;
   font-size: max(16px, 0.88rem);
+  font-family: inherit;
   width: 100%;
   box-sizing: border-box;
   cursor: pointer;
-  transition: border-color 0.15s;
+  color-scheme: dark;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .ep-date-label input[type='date']:focus {
   outline: none;
   border-color: rgba(124, 58, 237, 0.5);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
 }
 
 .ep-date-label input[type='date']::-webkit-calendar-picker-indicator {
-  filter: invert(0.7);
+  filter: invert(0.55) sepia(1) hue-rotate(230deg) saturate(2);
   cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.15s;
+}
+.ep-date-label input[type='date']::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
 }
 
 .ep-clear-dates {

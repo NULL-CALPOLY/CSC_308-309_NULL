@@ -236,6 +236,29 @@
   box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.15) !important;
 }
 
+/* ── Split date + time row ── */
+.ed-dt-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+
+.ed-input--time {
+  width: 110px;
+}
+
+.ed-input[type='date'],
+.ed-input[type='time'] {
+  color-scheme: dark;
+}
+
+input[type='date'].ed-input::-webkit-calendar-picker-indicator,
+input[type='time'].ed-input::-webkit-calendar-picker-indicator {
+  filter: invert(0.55) sepia(1) hue-rotate(230deg) saturate(2);
+  cursor: pointer;
+  opacity: 0.7;
+}
+
 .ed-textarea {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.1);
