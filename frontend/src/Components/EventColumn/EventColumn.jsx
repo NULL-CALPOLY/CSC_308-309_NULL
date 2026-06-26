@@ -1,7 +1,7 @@
 // EventColumn.jsx
 import EventComponent from '../EventComponent/EventComponent.jsx';
 import './EventColumn.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useUpcomingEvents, useNearbyEvents } from '../../Hooks/UseEvents.jsx';
 import SearchBar from '../SearchBar/SearchBar.jsx';
 
@@ -29,10 +29,26 @@ export default function EventColumn({ onRefetchReady, selectedId, onSelect, user
   const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' });
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [textQuery, setTextQuery] = useState('');
+  const listRef = useRef(null);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     if (onRefetchReady) onRefetchReady(refetch);
   }, [refetch, onRefetchReady]);
+
+  useEffect(() => {
+    const el = listRef.current;
+    if (!el) return;
+    const handleScroll = () => {
+      const current = el.scrollTop;
+      if (current < lastScrollY.current - 30 && filtersOpen) {
+        setFiltersOpen(false);
+      }
+      lastScrollY.current = current;
+    };
+    el.addEventListener('scroll', handleScroll, { passive: true });
+    return () => el.removeEventListener('scroll', handleScroll);
+  }, [filtersOpen]);
 
   useEffect(() => {
     let filtered = eventList;
@@ -145,7 +161,7 @@ export default function EventColumn({ onRefetchReady, selectedId, onSelect, user
         )}
       </div>
 
-      <div className="Event_List">
+      <div className="Event_List" ref={listRef}>
         {loading && filteredEvents.length === 0 && (
           <>
             {Array.from({ length: 4 }).map((_, i) => (

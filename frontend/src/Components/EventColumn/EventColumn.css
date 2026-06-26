@@ -80,7 +80,15 @@
   border-radius: 14px;
   padding: 10px 12px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  max-height: 320px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124, 58, 237, 0.3) transparent;
+  flex-shrink: 0;
 }
+.Search_Bar::-webkit-scrollbar { width: 4px; }
+.Search_Bar::-webkit-scrollbar-thumb { background: rgba(124, 58, 237, 0.3); border-radius: 10px; }
 
 .Event_List {
   padding-top: 10px;

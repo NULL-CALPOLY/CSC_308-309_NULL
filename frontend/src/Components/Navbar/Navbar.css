@@ -247,6 +247,29 @@ body {
   border-bottom: 1px solid rgba(124, 58, 237, 0.5);
 }
 
+/* ── Settings icon link ── */
+.navbar__settings {
+  font-size: 1.1rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 0.2s, background 0.2s;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.navbar__settings:hover {
+  color: #a78bfa;
+  background: rgba(124, 58, 237, 0.08);
+  text-decoration: none;
+}
+
+.navbar__settings.active {
+  color: #a78bfa;
+  border-bottom: none;
+}
+
 /* ── Hamburger button (mobile only) ── */
 .navbar__hamburger {
   display: none;

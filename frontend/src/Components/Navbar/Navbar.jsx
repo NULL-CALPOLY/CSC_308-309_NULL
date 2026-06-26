@@ -90,6 +90,15 @@ export default function Navbar({ page = '/' }) {
                 Admin
               </NavLink>
             )}
+            <NavLink
+              to="/settings"
+              className={({ isActive }) =>
+                isActive
+                  ? 'navbar__link navbar__settings active'
+                  : 'navbar__link navbar__settings'
+              }>
+              ⚙
+            </NavLink>
             <button onClick={logout} className="navbar__logout-btn">
               Logout
             </button>
@@ -179,6 +188,12 @@ export default function Navbar({ page = '/' }) {
                 className={({ isActive }) => (isActive ? 'nmm-link active' : 'nmm-link')}
                 onClick={closeMenu}>
                 Profile
+              </NavLink>
+              <NavLink
+                to="/settings"
+                className={({ isActive }) => (isActive ? 'nmm-link active' : 'nmm-link')}
+                onClick={closeMenu}>
+                Settings
               </NavLink>
               <button
                 className="nmm-btn nmm-btn--ghost"

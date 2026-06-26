@@ -17,6 +17,7 @@ import ProtectedRoute from './Components/ProtectedComponent.jsx';
 import EventDetails from './Pages/EventDetails/EventDetails.jsx';
 import EventsPage from './Pages/Events/EventsPage.jsx';
 import NotFound from './Pages/NotFound/NotFound.jsx';
+import Settings from './Pages/Settings/Settings.jsx';
 import './App.css';
 
 const AboutPage = () => <div style={{ padding: 24 }}>About</div>;
@@ -66,6 +67,15 @@ function AppContent() {
               <ProtectedRoute>
                 {' '}
                 <EventDetails />{' '}
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                {' '}
+                <Settings />{' '}
               </ProtectedRoute>
             }
           />

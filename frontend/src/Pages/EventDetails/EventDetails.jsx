@@ -176,7 +176,11 @@ function AttendeesModal({ attendees, resolvedUsers, loading, onClose }) {
               const id = typeof a === 'object' ? a._id : a;
               const user = resolvedUsers[id];
               return (
-                <div key={id || i} className="attendee-row">
+                <button
+                  key={id || i}
+                  type="button"
+                  className="attendee-row"
+                  onClick={() => id && navigate(`/users/${id}`)}>
                   <Avatar
                     id={id}
                     name={user?.name}
@@ -190,7 +194,8 @@ function AttendeesModal({ attendees, resolvedUsers, loading, onClose }) {
                       </span>
                     )}
                   </span>
-                </div>
+                  <span className="attendee-row__arrow">→</span>
+                </button>
               );
             })
           )}
@@ -891,9 +896,12 @@ export default function EventDetails() {
                         />
                         <div className="ed-comment__body">
                           <div className="ed-comment__meta">
-                            <strong className="ed-comment__name">
+                            <button
+                              type="button"
+                              className="ed-comment__name-btn"
+                              onClick={() => commentUserId && navigate(`/users/${commentUserId}`)}>
                               {msg.name}
-                            </strong>
+                            </button>
                             <span className="ed-comment__time">
                               {msg.createdAt &&
                                 new Date(msg.createdAt).toLocaleString(
