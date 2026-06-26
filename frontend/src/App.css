@@ -1,5 +1,14 @@
 :root {
   --nav-h: 80px;
+  --bg-primary: #080808;
+  --bg-secondary: #111111;
+  --bg-card: rgba(255, 255, 255, 0.04);
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --text-primary: #f8fafc;
+  --text-secondary: rgba(248, 250, 252, 0.65);
+  --text-muted: rgba(248, 250, 252, 0.35);
+  --accent: #7c3aed;
+  --accent-soft: #a78bfa;
 }
 
 html,
@@ -18,3 +27,140 @@ body,
 .main {
   height: 100%;
 }
+
+/* ═══════════════════════════════════════
+   LIGHT MODE
+   ═══════════════════════════════════════ */
+body.light-mode {
+  --bg-primary: #f5f5f7;
+  --bg-secondary: #ffffff;
+  --bg-card: rgba(0, 0, 0, 0.03);
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --text-primary: #1a1a2e;
+  --text-secondary: rgba(26, 26, 46, 0.7);
+  --text-muted: rgba(26, 26, 46, 0.4);
+  color-scheme: light;
+}
+
+/* Navbar */
+body.light-mode .navbar {
+  background: #ffffff;
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 0 rgba(124, 58, 237, 0.15);
+}
+body.light-mode .navbar__logo h2,
+body.light-mode .navbar__explore-link,
+body.light-mode .navbar__link { color: #1a1a2e; }
+body.light-mode .navbar__explore-link:hover,
+body.light-mode .navbar__explore-link.active { color: #7c3aed; }
+body.light-mode .navbar__hamburger span { background: #1a1a2e; }
+body.light-mode .navbar__mobile-menu { background: #ffffff; }
+body.light-mode .nmm-link { color: rgba(26, 26, 46, 0.7); }
+body.light-mode .nmm-link:hover { color: #1a1a2e; background: rgba(0, 0, 0, 0.04); }
+body.light-mode .navbar__logout-btn { color: rgba(26, 26, 46, 0.6); border-color: rgba(0, 0, 0, 0.15); }
+body.light-mode .navbar__logout-btn:hover { border-color: #7c3aed; color: #7c3aed; }
+body.light-mode .navbar__profile-initial { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
+
+/* Settings page */
+body.light-mode .st-page { background: #f5f5f7; color: #1a1a2e; }
+body.light-mode .st-section { background: #ffffff; border-color: rgba(0, 0, 0, 0.08); }
+body.light-mode .st-section-title { color: rgba(26, 26, 46, 0.45); border-bottom-color: rgba(0, 0, 0, 0.06); }
+body.light-mode .st-back { color: rgba(26, 26, 46, 0.45); }
+body.light-mode .st-back:hover { color: #7c3aed; }
+body.light-mode .st-title { color: #1a1a2e; }
+body.light-mode .st-account-name { color: #1a1a2e; }
+body.light-mode .st-account-email { color: rgba(26, 26, 46, 0.5); }
+body.light-mode .st-toggle-label { color: rgba(26, 26, 46, 0.9); }
+body.light-mode .st-toggle-desc { color: rgba(26, 26, 46, 0.4); }
+body.light-mode .st-toggle { background: rgba(0, 0, 0, 0.12); }
+body.light-mode .st-empty { color: rgba(26, 26, 46, 0.4); }
+body.light-mode .st-blocked-name { color: rgba(26, 26, 46, 0.8); }
+body.light-mode .st-blocked-avatar { background: rgba(0, 0, 0, 0.08); color: rgba(26, 26, 46, 0.5); }
+body.light-mode .st-ghost-btn { color: rgba(26, 26, 46, 0.6); border-color: rgba(0, 0, 0, 0.15); }
+body.light-mode .st-ghost-btn:hover { color: #1a1a2e; border-color: rgba(0, 0, 0, 0.3); }
+body.light-mode .st-confirm-box p { color: rgba(26, 26, 46, 0.6); }
+
+/* Map/Home — event column side panel */
+body.light-mode .Event_Container {
+  background: rgba(245, 245, 247, 0.95);
+  border-right-color: rgba(0, 0, 0, 0.1);
+}
+body.light-mode .ec-search-input {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: #1a1a2e;
+}
+body.light-mode .ec-search-input::placeholder { color: rgba(26, 26, 46, 0.35); }
+body.light-mode .ec-filter-toggle {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: rgba(26, 26, 46, 0.7);
+}
+body.light-mode .Search_Bar {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+body.light-mode .ec-count { color: rgba(26, 26, 46, 0.4); }
+
+/* Event cards */
+body.light-mode .Event-card,
+body.light-mode [class*="EventComponent"],
+body.light-mode [class*="event-card"] {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.09);
+  color: #1a1a2e;
+}
+
+/* Clubs page */
+body.light-mode .clubs-page { background: #f5f5f7; }
+body.light-mode .club-card,
+body.light-mode [class*="club-card"],
+body.light-mode [class*="ClubCard"] {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.08);
+  color: #1a1a2e;
+}
+
+/* Events page */
+body.light-mode .events-page,
+body.light-mode [class*="events-page"] { background: #f5f5f7; }
+
+/* Generic page backgrounds */
+body.light-mode .page,
+body.light-mode [class*="-page"] { background: #f5f5f7; color: #1a1a2e; }
+
+/* Modals */
+body.light-mode [class*="modal"],
+body.light-mode [class*="Modal"] {
+  background: #ffffff;
+  color: #1a1a2e;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* SearchBar (filter panel) */
+body.light-mode .sb-container { color: #1a1a2e; }
+body.light-mode .sb-label { color: rgba(26, 26, 46, 0.45); }
+body.light-mode .sb-search-input {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: #1a1a2e;
+}
+body.light-mode .sb-pill {
+  border-color: rgba(0, 0, 0, 0.12);
+  background: rgba(0, 0, 0, 0.04);
+  color: rgba(26, 26, 46, 0.7);
+}
+body.light-mode .sb-pill--on { background: rgba(124, 58, 237, 0.15); border-color: rgba(124, 58, 237, 0.4); color: #7c3aed; }
+body.light-mode .sb-date-input {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: #1a1a2e;
+  color-scheme: light;
+}
+body.light-mode .sb-date-label { color: rgba(26, 26, 46, 0.45); }
+body.light-mode .sb-quick-btn {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: rgba(26, 26, 46, 0.6);
+}
+body.light-mode .sb-quick-btn:hover { border-color: #7c3aed; color: #7c3aed; }

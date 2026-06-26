@@ -45,6 +45,7 @@ export default function Settings() {
   const [blockedUsers, setBlockedUsers] = useState([]);
   const [loadingBlocked, setLoadingBlocked] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [savingNotifs, setSavingNotifs] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) navigate('/');
@@ -64,6 +65,33 @@ export default function Settings() {
     localStorage.setItem('findr-email-notifs', emailNotifs ? 'true' : 'false');
   }, [emailNotifs]);
 
+  // Sync emailNotifications preference from user profile on mount
+  useEffect(() => {
+    if (user?.emailNotifications !== undefined) {
+      setEmailNotifs(user.emailNotifications);
+    }
+  }, [user?.emailNotifications]);
+
+  const handleEmailNotifsChange = async (value) => {
+    setEmailNotifs(value);
+    if (!user?.id || !user?.token) return;
+    setSavingNotifs(true);
+    try {
+      await fetch(`${API}/users/${user.id}/notifications`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({ emailNotifications: value }),
+      });
+    } catch {
+      // silently keep local state
+    } finally {
+      setSavingNotifs(false);
+    }
+  };
+
   useEffect(() => {
     if (!user?.id || !user?.token) return;
     setLoadingBlocked(true);
@@ -71,8 +99,28 @@ export default function Settings() {
       headers: { Authorization: `Bearer ${user.token}` },
     })
       .then((r) => r.json())
-      .then((json) => {
-        if (json.success) setBlockedUsers(json.data || []);
+      .then(async (json) => {
+        if (!json.success) return;
+        const raw = json.data || [];
+        // If items are already objects with a name, use them directly.
+        // If they're plain ID strings, resolve each one to a user profile.
+        const resolved = await Promise.all(
+          raw.map(async (item) => {
+            if (typeof item === 'object' && item !== null && item.name) return item;
+            const id = typeof item === 'object' ? item._id || item.id : item;
+            try {
+              const r = await fetch(`${API}/users/${id}`, {
+                headers: { Authorization: `Bearer ${user.token}` },
+              });
+              const data = await r.json();
+              const profile = data.user || data.data || data;
+              return { _id: id, name: profile.name || profile.username || id };
+            } catch {
+              return { _id: id, name: id };
+            }
+          })
+        );
+        setBlockedUsers(resolved);
       })
       .catch(() => {})
       .finally(() => setLoadingBlocked(false));
@@ -145,9 +193,9 @@ export default function Settings() {
         <Section title="Notifications">
           <Toggle
             checked={emailNotifs}
-            onChange={setEmailNotifs}
+            onChange={handleEmailNotifsChange}
             label="Email notifications"
-            description="Receive updates about events you've joined"
+            description={savingNotifs ? 'Saving…' : 'Receive updates about events you\'ve joined'}
           />
         </Section>
 
