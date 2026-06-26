@@ -340,7 +340,7 @@ body:has(.landing-page) {
 
 @media (max-width: 480px) {
   .hero-section {
-    padding: 0 1rem;
+    padding: 0 1.25rem;
   }
   .hero-content {
     padding-bottom: 60px;
@@ -353,12 +353,8 @@ body:has(.landing-page) {
     margin-bottom: 1.5rem;
   }
   .cta-button {
-    padding: 0.85rem 1.5rem;
+    padding: 0.9rem 1.75rem;
     font-size: 1rem;
-    display: block;
-    max-width: 280px;
-    margin: 0 auto;
-    text-align: center;
   }
   .feature-text h2,
   .feature-content h2 {
@@ -379,7 +375,7 @@ body:has(.landing-page) {
     margin-bottom: 1.25rem;
   }
   .feature {
-    padding: 1.5rem;
+    padding: 2rem 1.5rem;
   }
   .newsletter-section {
     padding: 2.5rem 1rem;
@@ -402,14 +398,7 @@ body:has(.landing-page) {
     margin-bottom: 1.25rem;
   }
   .footer-links {
-    gap: 1.25rem;
+    gap: 1.5rem;
     flex-wrap: wrap;
-    justify-content: center;
-  }
-}
-
-@media (max-width: 420px) {
-  .hero-title {
-    font-size: 1.85rem;
   }
 }
