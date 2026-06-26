@@ -456,9 +456,13 @@ export default function RegistrationModal({
           <div className="rmodal__field">
             <label>Interests</label>
             <div className="rmodal__multiselect" ref={multiselectRef}>
-              <div
+              <button
+                type="button"
                 className="rmodal__multiselect-trigger"
                 onClick={toggleDropdown}
+                aria-expanded={dropdownOpen}
+                aria-haspopup="listbox"
+                disabled={interestsLoading}
                 style={{
                   opacity: interestsLoading ? 0.5 : 1,
                   cursor: interestsLoading ? 'not-allowed' : 'pointer',
@@ -489,7 +493,7 @@ export default function RegistrationModal({
                   </div>
                 )}
                 <span className="rmodal__chevron">▼</span>
-              </div>
+              </button>
 
               {dropdownOpen && !interestsLoading && (
                 <div className="rmodal__dropdown" style={dropdownStyle}>

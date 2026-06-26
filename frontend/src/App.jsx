@@ -13,6 +13,8 @@ import Clubs from './Pages/Clubs/Clubs.jsx';
 import AdminDashboard from './Pages/AdminDashboard/AdminDashboard.jsx';
 import ProtectedRoute from './Components/ProtectedComponent.jsx';
 import EventDetails from './Pages/EventDetails/EventDetails.jsx';
+import EventsPage from './Pages/Events/EventsPage.jsx';
+import NotFound from './Pages/NotFound/NotFound.jsx';
 import './App.css';
 
 const AboutPage = () => <div style={{ padding: 24 }}>About</div>;
@@ -37,6 +39,7 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/explore" element={<ExplorePage />} />
+          <Route path="/events" element={<EventsPage />} />
           <Route path="/home" element={<HomePage />} />
           <Route
             path="/profile"
@@ -61,7 +64,7 @@ function AppContent() {
               </ProtectedRoute>
             }
           />
-          <Route path="*" element={<div style={{ padding: 24 }}>404</div>} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <SignInModal
           isOpen={showSignIn}

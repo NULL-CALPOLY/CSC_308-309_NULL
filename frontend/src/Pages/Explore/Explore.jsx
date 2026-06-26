@@ -82,10 +82,10 @@ export default function ExplorePage() {
           });
           setNearMe(true);
         },
-        () => setGeoError('Couldn’t get your location.')
+        () => setGeoError("Couldn't get your location.")
       );
     } else {
-      setGeoError('Location isn’t available in this browser.');
+      setGeoError("Location isn't available in this browser.");
     }
   };
 
@@ -134,13 +134,13 @@ export default function ExplorePage() {
     <div className="explore-page">
       <Navbar page="/explore" />
 
-      <header className="explore-hero">
+      <div className="explore-hero">
         <h1>Explore events</h1>
         <p>
-          Browse what’s happening around Cal Poly. Filter by interest, date, or
+          Browse what's happening around Cal Poly. Filter by interest, date, or
           keyword{isAuthenticated ? ' — sorted for you.' : '.'}
         </p>
-      </header>
+      </div>
 
       <div className="explore-body">
         <aside className="explore-filters">
@@ -164,7 +164,8 @@ export default function ExplorePage() {
               type="button"
               className={`explore-nearme ${nearMe ? 'is-active' : ''}`}
               onClick={toggleNearMe}
-              aria-pressed={nearMe}>
+              aria-pressed={nearMe}
+              aria-label={nearMe ? 'Turn off near me filter' : 'Filter by events near me'}>
               📍 Near me
             </button>
             {usingNearby && (
@@ -201,12 +202,23 @@ export default function ExplorePage() {
             </div>
           ) : error ? (
             <p className="explore-empty">
-              Couldn’t load events right now — please try again later.
+              Couldn't load events right now — please try again later.
             </p>
           ) : filtered.length === 0 ? (
-            <p className="explore-empty">
-              No events match your filters. Try clearing some filters.
-            </p>
+            <div className="explore-empty">
+              <p>No events match your filters.</p>
+              {(query || selectedInterests.length || dateRange.startDate || dateRange.endDate) && (
+                <button
+                  className="explore-clear-btn"
+                  onClick={() => {
+                    setQuery('');
+                    setSelectedInterests([]);
+                    setDateRange({ startDate: '', endDate: '' });
+                  }}>
+                  Clear all filters
+                </button>
+              )}
+            </div>
           ) : (
             <>
               <p className="explore-count">

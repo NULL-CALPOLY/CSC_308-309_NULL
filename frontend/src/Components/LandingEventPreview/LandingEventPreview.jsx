@@ -56,7 +56,7 @@ export default function LandingEventPreview({ limit = 6 }) {
       )}
 
       <div className="lep-cta">
-        <Link to="/explore" className="lep-explore-btn">
+        <Link to="/events" className="lep-explore-btn">
           Explore all events →
         </Link>
       </div>

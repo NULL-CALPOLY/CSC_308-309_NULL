@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Clubs.css';
 import Navbar from '../../Components/Navbar/Navbar';
+import { useDocumentTitle } from '../../Hooks/UseDocumentTitle.js';
 import { useAuth } from '../../Hooks/UseAuth.ts';
 import { useModal } from '../../Components/ModalContext.jsx';
 import RegisterClubModal from '../../Components/RegisterClubModal/RegisterClubModal';
@@ -10,6 +11,7 @@ import VerifiedBadge from '../../Components/VerifiedBadge/VerifiedBadge';
 const API = import.meta.env.VITE_API_BASE_URL;
 
 export default function Clubs() {
+  useDocumentTitle('Clubs');
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
   const { openSignIn } = useModal();
@@ -94,8 +96,8 @@ export default function Clubs() {
       <Navbar page="/" />
 
       <div className="clubs-wrapper">
-        <header className="clubs-header">
-          <div>
+        <div className="clubs-header">
+          <div className="clubs-header-text">
             <h1>Clubs &amp; Organizations</h1>
             <p className="clubs-sub">
               Join a club to get its events surfaced first.
@@ -108,12 +110,13 @@ export default function Clubs() {
             }>
             + Register your club
           </button>
-        </header>
+        </div>
 
         <input
           className="clubs-search"
-          type="text"
+          type="search"
           placeholder="Search clubs by name, category…"
+          aria-label="Search clubs"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />

@@ -224,3 +224,11 @@
   opacity: 0.6;
   cursor: default;
 }
+
+.pub-block-error {
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+  color: #fca5a5;
+  text-align: center;
+  line-height: 1.4;
+}

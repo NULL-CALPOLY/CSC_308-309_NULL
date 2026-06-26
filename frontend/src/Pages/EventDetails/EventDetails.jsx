@@ -216,6 +216,7 @@ export default function EventDetails() {
   const [currentUserName, setCurrentUserName] = useState('');
 
   const [attendBusy, setAttendBusy] = useState(false);
+  const [actionError, setActionError] = useState('');
   const [showAttendeesModal, setShowAttendeesModal] = useState(false);
   const [resolvedUsers, setResolvedUsers] = useState({});
   const [attendeeNamesLoading, setAttendeeNamesLoading] = useState(false);
@@ -276,6 +277,14 @@ export default function EventDetails() {
   }, [event?.attendees, comments?.messages]);
 
   const handleOpenAttendees = () => setShowAttendeesModal(true);
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.key === 'Escape') setShowDeleteConfirm(false);
+    };
+    if (showDeleteConfirm) window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [showDeleteConfirm]);
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -424,7 +433,7 @@ export default function EventDetails() {
               (a) => (typeof a === 'object' ? a._id : a) !== user.id
             ),
       }));
-      alert(err.message);
+      setActionError(err.message || 'Could not update attendance. Try again.');
     } finally {
       setAttendBusy(false);
     }
@@ -462,8 +471,9 @@ export default function EventDetails() {
       setEvent((prev) => ({ ...prev, ...payload }));
       setIsEditing(false);
       setEditErrors({});
+      setActionError('');
     } catch (err) {
-      alert(err.message);
+      setActionError(err.message || 'Could not save changes. Try again.');
     }
   };
 
@@ -512,8 +522,9 @@ export default function EventDetails() {
 
       setComments(json.data);
       setCommentText('');
+      setActionError('');
     } catch (err) {
-      alert(err.message);
+      setActionError(err.message || 'Could not post comment. Try again.');
     }
   };
 
@@ -731,6 +742,20 @@ export default function EventDetails() {
               </div>
             </div>
           </div>
+
+          {/* ── Inline error banner ── */}
+          {actionError && (
+            <div className="ed-action-error" role="alert">
+              {actionError}
+              <button
+                type="button"
+                className="ed-action-error__dismiss"
+                onClick={() => setActionError('')}
+                aria-label="Dismiss error">
+                ×
+              </button>
+            </div>
+          )}
 
           {/* ── Actions ── */}
           <div className="ed-actions">

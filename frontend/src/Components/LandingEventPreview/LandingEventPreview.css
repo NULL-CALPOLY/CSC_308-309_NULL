@@ -1,82 +1,91 @@
 .lep-section {
   width: min(1200px, 92%);
   margin: 0 auto;
-  padding: 4rem 0 2rem;
+  padding: 5rem 0 3rem;
 }
 
 .lep-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 .lep-header h2 {
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 600;
+  color: #f8fafc;
   margin: 0 0 0.5rem;
+  letter-spacing: -0.02em;
 }
 
 .lep-header p {
-  color: #5f6b7a;
-  font-size: 1.05rem;
+  color: rgba(248, 250, 252, 0.55);
+  font-size: 1rem;
   margin: 0;
 }
 
 .lep-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+  gap: 1.25rem;
   align-items: start;
 }
 
 .lep-skeleton {
   height: 230px;
-  border-radius: 14px;
-  background: linear-gradient(100deg, #eef1f5 30%, #f7f9fb 50%, #eef1f5 70%);
+  border-radius: 16px;
+  background: linear-gradient(
+    100deg,
+    rgba(255,255,255,0.04) 30%,
+    rgba(255,255,255,0.08) 50%,
+    rgba(255,255,255,0.04) 70%
+  );
   background-size: 200% 100%;
-  animation: lep-shimmer 1.3s ease-in-out infinite;
+  animation: lep-shimmer 1.4s ease-in-out infinite;
 }
 
 @keyframes lep-shimmer {
-  from {
-    background-position: 200% 0;
-  }
-  to {
-    background-position: -200% 0;
-  }
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
 }
 
 .lep-empty {
   text-align: center;
-  color: #5f6b7a;
+  color: rgba(248, 250, 252, 0.4);
   padding: 2rem 0;
+  font-size: 0.95rem;
 }
 
 .lep-cta {
   display: flex;
   justify-content: center;
-  margin-top: 2.5rem;
+  margin-top: 3rem;
 }
 
 .lep-explore-btn {
   display: inline-block;
   padding: 0.85rem 1.75rem;
   border-radius: 999px;
-  background: #1f6feb;
+  background: #7c3aed;
   color: #fff;
   font-weight: 600;
+  font-size: 1rem;
   text-decoration: none;
   transition:
     transform 0.15s ease,
-    background 0.15s ease;
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.35);
 }
 
 .lep-explore-btn:hover {
-  background: #1a5fd0;
-  transform: translateY(-1px);
+  background: #6d28d9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(124, 58, 237, 0.55);
 }
 
 @media (max-width: 640px) {
   .lep-section {
-    padding: 2.5rem 0 1rem;
+    padding: 3rem 0 1.5rem;
   }
   .lep-grid {
     grid-template-columns: 1fr;

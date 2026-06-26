@@ -17,6 +17,7 @@ export default function PublicProfile() {
   const [errorMsg, setErrorMsg] = useState('');
   const [isBlocked, setIsBlocked] = useState(false);
   const [blockBusy, setBlockBusy] = useState(false);
+  const [blockError, setBlockError] = useState('');
 
   const isOwnProfile = user?.id === id;
 
@@ -88,6 +89,7 @@ export default function PublicProfile() {
     if (!user?.id || isOwnProfile) return;
     const action = isBlocked ? 'unblock' : 'block';
     setBlockBusy(true);
+    setBlockError('');
     try {
       const res = await fetch(
         `${import.meta.env.VITE_API_BASE_URL}/users/${user.id}/${action}/${id}`,
@@ -95,12 +97,12 @@ export default function PublicProfile() {
       );
       const json = await res.json();
       if (!res.ok || !json.success) {
-        alert(json.message || 'Could not update block status');
+        setBlockError(json.message || 'Could not update block status.');
         return;
       }
       setIsBlocked(!isBlocked);
     } catch {
-      alert('Network error');
+      setBlockError('Network error — please try again.');
     } finally {
       setBlockBusy(false);
     }
@@ -186,16 +188,21 @@ export default function PublicProfile() {
             )}
 
             {user?.id && !isOwnProfile && (
-              <button
-                className={`pub-block-btn ${isBlocked ? 'is-blocked' : ''}`}
-                onClick={toggleBlock}
-                disabled={blockBusy}>
-                {blockBusy
-                  ? '…'
-                  : isBlocked
-                    ? 'Unblock'
-                    : 'Block user'}
-              </button>
+              <>
+                <button
+                  className={`pub-block-btn ${isBlocked ? 'is-blocked' : ''}`}
+                  onClick={toggleBlock}
+                  disabled={blockBusy}>
+                  {blockBusy
+                    ? '…'
+                    : isBlocked
+                      ? 'Unblock'
+                      : 'Block user'}
+                </button>
+                {blockError && (
+                  <p className="pub-block-error" role="alert">{blockError}</p>
+                )}
+              </>
             )}
           </div>
         </aside>

@@ -179,6 +179,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  font-size: inherit;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
@@ -365,7 +369,7 @@
 
 /* "Add new interest" option in the interests dropdown */
 .rmodal__dropdown li.rmodal__create-option {
-  color: #1f6feb;
+  color: #a78bfa;
   font-weight: 600;
 }
 

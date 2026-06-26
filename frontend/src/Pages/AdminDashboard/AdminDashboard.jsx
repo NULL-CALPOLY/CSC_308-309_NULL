@@ -3,16 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import './AdminDashboard.css';
 import Navbar from '../../Components/Navbar/Navbar';
 import { useAuth } from '../../Hooks/UseAuth.ts';
+import { useDocumentTitle } from '../../Hooks/UseDocumentTitle.js';
 
 const API = import.meta.env.VITE_API_BASE_URL;
 
 export default function AdminDashboard() {
+  useDocumentTitle('Admin');
   const navigate = useNavigate();
   const { user, isAuthenticated, loading: authLoading } = useAuth();
 
   const [pending, setPending] = useState([]);
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState(null);
+  const [actionError, setActionError] = useState('');
+  const [rejectTarget, setRejectTarget] = useState(null);
+  const [rejectReason, setRejectReason] = useState('');
 
   const fetchPending = useCallback(async () => {
     if (!user?.token) return;
@@ -39,12 +44,9 @@ export default function AdminDashboard() {
     fetchPending();
   }, [authLoading, isAuthenticated, user, fetchPending]);
 
-  const review = async (id, action) => {
-    let reason = '';
-    if (action === 'reject') {
-      reason = window.prompt('Reason for rejection (optional):') || '';
-    }
+  const review = async (id, action, reason = '') => {
     setBusyId(id);
+    setActionError('');
     try {
       const res = await fetch(`${API}/organizations/${id}/${action}`, {
         method: 'PUT',
@@ -56,15 +58,27 @@ export default function AdminDashboard() {
       });
       const json = await res.json();
       if (!res.ok || !json.success) {
-        alert(json.message || 'Action failed');
+        setActionError(json.message || 'Action failed — please try again.');
         return;
       }
       setPending((prev) => prev.filter((c) => c._id !== id));
     } catch {
-      alert('Network error');
+      setActionError('Network error — please check your connection and try again.');
     } finally {
       setBusyId(null);
     }
+  };
+
+  const handleReject = (club) => {
+    setRejectTarget(club);
+    setRejectReason('');
+  };
+
+  const confirmReject = async () => {
+    if (!rejectTarget) return;
+    await review(rejectTarget._id, 'reject', rejectReason);
+    setRejectTarget(null);
+    setRejectReason('');
   };
 
   if (authLoading || loading)
@@ -75,7 +89,7 @@ export default function AdminDashboard() {
       <div className="admin-page">
         <Navbar page="/" />
         <div className="admin-loading">
-          You don’t have access to this page.
+          You don't have access to this page.
           <button className="admin-back" onClick={() => navigate('/')}>
             ← Home
           </button>
@@ -92,6 +106,44 @@ export default function AdminDashboard() {
         <p className="admin-sub">
           {pending.length} pending review{pending.length !== 1 ? 's' : ''}
         </p>
+
+        {actionError && (
+          <div className="admin-error" role="alert">
+            {actionError}
+            <button className="admin-error-dismiss" onClick={() => setActionError('')}>×</button>
+          </div>
+        )}
+
+        {/* Reject reason modal */}
+        {rejectTarget && (
+          <div className="admin-reject-overlay" role="dialog" aria-modal="true" aria-labelledby="reject-title">
+            <div className="admin-reject-modal">
+              <h2 id="reject-title">Reject "{rejectTarget.name}"?</h2>
+              <p>Provide an optional reason that will be sent to the applicant.</p>
+              <textarea
+                className="admin-reject-reason"
+                placeholder="Reason for rejection (optional)…"
+                value={rejectReason}
+                onChange={(e) => setRejectReason(e.target.value)}
+                rows={4}
+                autoFocus
+              />
+              <div className="admin-reject-actions">
+                <button
+                  className="admin-btn admin-btn--reject"
+                  onClick={confirmReject}
+                  disabled={busyId === rejectTarget._id}>
+                  {busyId === rejectTarget._id ? 'Rejecting…' : 'Confirm Rejection'}
+                </button>
+                <button
+                  className="admin-btn admin-btn--ghost"
+                  onClick={() => setRejectTarget(null)}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {pending.length === 0 ? (
           <div className="admin-empty">Nothing waiting for review. 🎉</div>
@@ -122,14 +174,14 @@ export default function AdminDashboard() {
                 <div className="admin-card-actions">
                   <button
                     className="admin-btn admin-btn--approve"
-                    disabled={busyId === club._id}
+                    disabled={!!busyId}
                     onClick={() => review(club._id, 'approve')}>
-                    Approve
+                    {busyId === club._id ? 'Processing…' : 'Approve'}
                   </button>
                   <button
                     className="admin-btn admin-btn--reject"
-                    disabled={busyId === club._id}
-                    onClick={() => review(club._id, 'reject')}>
+                    disabled={!!busyId}
+                    onClick={() => handleReject(club)}>
                     Reject
                   </button>
                 </div>

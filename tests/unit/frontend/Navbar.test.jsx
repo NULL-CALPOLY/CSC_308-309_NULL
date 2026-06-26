@@ -51,9 +51,9 @@ describe('Navbar', () => {
       expect(screen.getByText('Findr')).toBeInTheDocument();
     });
 
-    it('renders Explore link', () => {
+    it('renders Map link', () => {
       renderNavbar();
-      expect(screen.getByText('Explore')).toBeInTheDocument();
+      expect(screen.getByText('Map')).toBeInTheDocument();
     });
 
     it('shows Sign In button', () => {
@@ -63,10 +63,10 @@ describe('Navbar', () => {
       ).toBeInTheDocument();
     });
 
-    it('shows Registration button', () => {
+    it('shows Sign Up button', () => {
       renderNavbar();
       expect(
-        screen.getByRole('button', { name: /registration/i })
+        screen.getByRole('button', { name: /sign up/i })
       ).toBeInTheDocument();
     });
 
@@ -82,7 +82,7 @@ describe('Navbar', () => {
       expect(mockOpenSignIn).toHaveBeenCalled();
     });
 
-    it('calls openRegister when Registration is clicked', () => {
+    it('calls openRegister when Sign Up is clicked', () => {
       const mockOpenRegister = jest.fn();
       useModal.mockReturnValue({
         openSignIn: jest.fn(),
@@ -90,7 +90,7 @@ describe('Navbar', () => {
         closeAll: jest.fn(),
       });
       renderNavbar();
-      fireEvent.click(screen.getByRole('button', { name: /registration/i }));
+      fireEvent.click(screen.getByRole('button', { name: /sign up/i }));
       expect(mockOpenRegister).toHaveBeenCalled();
     });
 
@@ -126,13 +126,13 @@ describe('Navbar', () => {
       expect(mockLogout).toHaveBeenCalled();
     });
 
-    it('does not show Sign In or Registration buttons', () => {
+    it('does not show Sign In or Sign Up buttons', () => {
       renderNavbar();
       expect(
         screen.queryByRole('button', { name: /sign in/i })
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole('button', { name: /registration/i })
+        screen.queryByRole('button', { name: /sign up/i })
       ).not.toBeInTheDocument();
     });
 

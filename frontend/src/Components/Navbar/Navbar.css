@@ -1,7 +1,6 @@
 /* ── Reset & base ── */
 body {
   margin: 0;
-  padding-top: 72px;
   background-color: #0a0a0a;
 }
 
@@ -55,12 +54,10 @@ body {
 .navbar__explore-link {
   position: relative;
   text-decoration: none;
-  color: rgba(255, 255, 255, 0.6);
-  font-family: 'Consolas', 'Courier New', monospace;
+  color: rgba(255, 255, 255, 0.78);
   font-size: 0.9rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   padding: 0.3rem 0;
   transition: color 0.2s;
 }
@@ -101,7 +98,7 @@ body {
 /* ── Generic nav link ── */
 .navbar__link {
   text-decoration: none;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.78);
   font-weight: 500;
   font-size: 0.9rem;
   padding-bottom: 2px;
@@ -179,13 +176,13 @@ body {
   height: 38px;
   border-radius: 50%;
   border: 2px solid #7c3aed;
-  background: linear-gradient(135deg, #7c3aed, #a78bfa);
+  background: linear-gradient(135deg, #5b21b6, #7c3aed);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.9rem;
   font-weight: 700;
-  color: #fff;
+  color: #ffffff;
   transition: border-color 0.2s;
   flex-shrink: 0;
 }
@@ -218,10 +215,9 @@ body {
   padding: 0.35rem 0.9rem;
   border-radius: 6px;
   cursor: pointer;
-  font-family: 'Consolas', monospace;
   font-size: 0.85rem;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
   transition: all 0.2s ease;
 }
 
@@ -304,7 +300,7 @@ body {
   top: var(--nav-h);
   left: 0;
   right: 0;
-  background: #000000;
+  background: #080808;
   border-bottom: 1px solid rgba(124, 58, 237, 0.2);
   padding: 0.75rem 1.25rem 1.25rem;
   display: flex;
@@ -328,14 +324,12 @@ body {
 
 .nmm-link {
   display: block;
-  padding: 0.8rem 0.75rem;
+  padding: 0.85rem 0.75rem;
   color: rgba(255, 255, 255, 0.65);
   text-decoration: none;
-  font-family: 'Consolas', 'Courier New', monospace;
   font-size: 0.95rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   border-radius: 8px;
   transition:
     color 0.2s,

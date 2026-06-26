@@ -49,7 +49,14 @@ export default function Navbar({ page = '/' }) {
           className={({ isActive }) =>
             isActive ? 'navbar__explore-link active' : 'navbar__explore-link'
           }>
-          Explore
+          Map
+        </NavLink>
+        <NavLink
+          to="/events"
+          className={({ isActive }) =>
+            isActive ? 'navbar__explore-link active' : 'navbar__explore-link'
+          }>
+          Events
         </NavLink>
         <NavLink
           to="/clubs"
@@ -67,7 +74,7 @@ export default function Navbar({ page = '/' }) {
               Sign In
             </button>
             <button className="navbar__link signup" onClick={openRegister}>
-              Registration
+              Sign Up
             </button>
           </>
         ) : (
@@ -115,7 +122,8 @@ export default function Navbar({ page = '/' }) {
         className={`navbar__hamburger${menuOpen ? ' is-open' : ''}`}
         onClick={() => setMenuOpen((o) => !o)}
         aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-        aria-expanded={menuOpen}>
+        aria-expanded={menuOpen}
+        aria-controls="navbar-mobile-menu">
         <span />
         <span />
         <span />
@@ -123,12 +131,18 @@ export default function Navbar({ page = '/' }) {
 
       {/* Mobile slide-down menu */}
       {menuOpen && (
-        <div className="navbar__mobile-menu">
+        <div id="navbar-mobile-menu" className="navbar__mobile-menu" role="navigation" aria-label="Mobile menu">
           <NavLink
             to="/home"
             className={({ isActive }) => (isActive ? 'nmm-link active' : 'nmm-link')}
             onClick={closeMenu}>
-            Explore
+            Map
+          </NavLink>
+          <NavLink
+            to="/events"
+            className={({ isActive }) => (isActive ? 'nmm-link active' : 'nmm-link')}
+            onClick={closeMenu}>
+            Events
           </NavLink>
           <NavLink
             to="/clubs"
@@ -147,7 +161,7 @@ export default function Navbar({ page = '/' }) {
               <button
                 className="nmm-btn nmm-btn--primary"
                 onClick={() => { closeMenu(); openRegister(); }}>
-                Register
+                Sign Up
               </button>
             </>
           ) : (
