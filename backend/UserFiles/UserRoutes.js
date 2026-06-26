@@ -354,6 +354,27 @@ router.get(
   }
 );
 
+// Update notification preferences (self only)
+router.patch(
+  '/:id/notifications',
+  requireAuth,
+  requireSelf('id'),
+  async (req, res) => {
+    const { emailNotifications } = req.body;
+    if (typeof emailNotifications !== 'boolean')
+      return res.status(400).json({ success: false, message: 'emailNotifications must be a boolean' });
+    try {
+      const user = await userServices.findUserById(req.params.id);
+      if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+      user.emailNotifications = emailNotifications;
+      await user.save();
+      res.status(200).json({ success: true, data: { emailNotifications } });
+    } catch (error) {
+      res.status(500).json({ success: false, message: `Error in the server: ${error}` });
+    }
+  }
+);
+
 // Search users by name
 router.get('/search/name/:name', async (req, res) => {
   await userServices

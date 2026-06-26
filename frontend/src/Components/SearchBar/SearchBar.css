@@ -141,21 +141,18 @@
 
 .sb-date-row {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 8px;
 }
 
 .sb-date-field {
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 3px;
 }
 
 .sb-date-sep {
-  color: rgba(248, 250, 252, 0.25);
-  font-size: 0.85rem;
-  padding-top: 16px;
+  display: none;
 }
 
 .sb-date-label {
@@ -174,11 +171,12 @@
   border: 1px solid rgba(255, 255, 255, 0.09);
   background: rgba(255, 255, 255, 0.05);
   color: #f8fafc;
-  font-size: max(16px, 0.8rem);
+  font-size: 0.8rem;
   font-family: inherit;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
   color-scheme: dark;
+  min-width: 0;
 }
 .sb-date-input:focus {
   border-color: rgba(124, 58, 237, 0.5);

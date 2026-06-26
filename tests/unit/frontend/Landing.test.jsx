@@ -65,7 +65,7 @@ describe('LandingPage', () => {
   it('renders the hero subtitle', () => {
     renderLanding();
     expect(
-      screen.getByText(/Your go-to platform for connecting with others/i)
+      screen.getByText(/Discover events, join clubs/i)
     ).toBeInTheDocument();
   });
 
@@ -87,9 +87,9 @@ describe('LandingPage', () => {
     expect(mockOpenRegister).toHaveBeenCalled();
   });
 
-  it('renders "Get Started!" as a Link to /home when authenticated', () => {
+  it('renders primary CTA as a Link to /home when authenticated', () => {
     renderLanding({ isAuthenticated: true });
-    const link = screen.getAllByText('Get Started!')[0].closest('a');
+    const link = screen.getByText(/Open Findr/i).closest('a');
     expect(link).toHaveAttribute('href', '/home');
   });
 
@@ -109,12 +109,12 @@ describe('LandingPage', () => {
 
   it('renders community image', () => {
     renderLanding();
-    expect(screen.getByAltText('Community')).toBeInTheDocument();
+    expect(screen.getByAltText('Community illustration')).toBeInTheDocument();
   });
 
-  it('shows "Be part of a community" heading', () => {
+  it('shows community section heading', () => {
     renderLanding();
-    expect(screen.getByText('Be part of a community')).toBeInTheDocument();
+    expect(screen.getByText('Be part of something bigger')).toBeInTheDocument();
   });
 
   it('calls openSignIn when "Join the Community" is clicked and not authenticated', () => {
