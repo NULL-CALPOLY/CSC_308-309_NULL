@@ -127,7 +127,11 @@ export default function RegistrationModal({
   const multiselectRef = useRef(null);
   const [errors, setErrors] = useState({});
   const [submitError, setSubmitError] = useState('');
-  const { register, loading } = useAuth();
+  const [verificationSent, setVerificationSent] = useState(false);
+  const [verificationEmail, setVerificationEmail] = useState('');
+  const [resendLoading, setResendLoading] = useState(false);
+  const [resendMsg, setResendMsg] = useState('');
+  const { register, resendVerificationEmail, loading } = useAuth();
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -194,6 +198,64 @@ export default function RegistrationModal({
   }, [interestSearch, searchInterests]);
 
   if (!isOpen) return null;
+
+  if (verificationSent) {
+    return (
+      <div
+        data-testid="rmodal-overlay"
+        className="fixed inset-0 z-[2000] bg-[rgba(0,0,0,0.65)] backdrop-blur-[4px] flex items-center justify-center p-4 [animation:roverlay-in_0.2s_ease] max-[560px]:items-end max-[560px]:p-0"
+        onClick={onClose}>
+        <div
+          className="relative bg-[#111111] border border-[rgba(255,255,255,0.1)] rounded-[16px] py-12 px-9 w-full max-w-[420px] shadow-[0_24px_60px_rgba(0,0,0,0.5)] [animation:rcard-in_0.25s_cubic-bezier(0.16,1,0.3,1)] max-[560px]:max-w-full max-[560px]:rounded-t-[20px] max-[560px]:rounded-b-none max-[560px]:py-8 max-[560px]:px-5 max-[560px]:pb-10 max-[560px]:[animation:rcard-slide-up_0.3s_cubic-bezier(0.16,1,0.3,1)]"
+          onClick={(e) => e.stopPropagation()}>
+          <button
+            className="absolute top-4 right-4 bg-[rgba(255,255,255,0.06)] border-none text-[rgba(255,255,255,0.5)] w-[30px] h-[30px] min-w-[30px] p-0 rounded-full text-[0.75rem] cursor-pointer flex items-center justify-center flex-shrink-0 transition-[background,color] duration-200 hover:bg-[rgba(255,255,255,0.12)] hover:text-white"
+            onClick={onClose}
+            aria-label="Close">
+            ✕
+          </button>
+          <div className="flex flex-col items-center text-center gap-4">
+            <div className="text-5xl">📧</div>
+            <h2 className="m-0 text-[1.4rem] font-bold text-white font-[Consolas,monospace]">
+              Check your inbox
+            </h2>
+            <p className="m-0 text-[0.9rem] text-[rgba(255,255,255,0.5)] leading-[1.5]">
+              We sent a verification link to
+            </p>
+            <p className="m-0 text-[0.95rem] font-semibold text-[#a78bfa] break-all">
+              {verificationEmail}
+            </p>
+            <p className="m-0 text-[0.82rem] text-[rgba(255,255,255,0.35)] leading-[1.5]">
+              Click the link in the email to activate your account. The link
+              expires in 24 hours.
+            </p>
+            {resendMsg && (
+              <p
+                className={`m-0 text-[0.82rem] ${resendMsg.includes('resent') || resendMsg.includes('Check') ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
+                {resendMsg}
+              </p>
+            )}
+            <button
+              type="button"
+              className="mt-1 bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.1)] text-white py-[0.65rem] px-6 rounded-[8px] text-[0.875rem] font-semibold cursor-pointer transition-[background] duration-200 hover:bg-[rgba(255,255,255,0.12)] disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={handleResend}
+              disabled={resendLoading}>
+              {resendLoading ? 'Sending…' : 'Resend verification email'}
+            </button>
+            <button
+              type="button"
+              className="bg-transparent border-none text-[rgba(255,255,255,0.35)] text-[0.82rem] cursor-pointer p-0 mt-1 transition-colors duration-200 hover:text-white hover:underline"
+              onClick={() => {
+                onSwitchToSignIn?.();
+                onClose();
+              }}>
+              Back to sign in
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const toggleInterest = (interest) => {
     setSelectedInterests((prev) =>
@@ -267,7 +329,7 @@ export default function RegistrationModal({
       // Geocode the city so the new user gets a location point for the
       // location-bounded feed. Non-blocking: sign up proceeds even if it fails.
       const location = await geocodeCity(city);
-      await register({
+      const result = await register({
         name,
         phoneNumber,
         gender,
@@ -278,10 +340,28 @@ export default function RegistrationModal({
         interests: selectedInterests,
         ...(location ? { location } : {}),
       });
+      if (result?.requiresVerification) {
+        setVerificationEmail(result.email || email);
+        setVerificationSent(true);
+        return;
+      }
       onClose();
       navigate('/home');
     } catch (err) {
       setSubmitError(err.message || 'Something went wrong');
+    }
+  };
+
+  const handleResend = async () => {
+    setResendLoading(true);
+    setResendMsg('');
+    try {
+      await resendVerificationEmail(verificationEmail);
+      setResendMsg('Verification email resent! Check your inbox.');
+    } catch (err) {
+      setResendMsg(err.message || 'Failed to resend. Please try again.');
+    } finally {
+      setResendLoading(false);
     }
   };
 

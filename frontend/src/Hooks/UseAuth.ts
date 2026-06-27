@@ -213,7 +213,12 @@ export const useProvideAuth = () => {
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || 'Login failed');
+      const error: any = new Error(err.message || 'Login failed');
+      if (err.requiresVerification) {
+        error.requiresVerification = true;
+        error.email = err.email || email;
+      }
+      throw error;
     }
 
     const data = await res.json();
@@ -244,6 +249,12 @@ export const useProvideAuth = () => {
       }
 
       const data = await res.json();
+
+      // Email verification required — do NOT log the user in yet.
+      if (data.requiresVerification) {
+        return { requiresVerification: true, email: data.email };
+      }
+
       const id = data.userId || data.user?._id;
       const token = data.token || data.accessToken;
       const profile = await fetchUserProfile(id, token);
@@ -256,6 +267,22 @@ export const useProvideAuth = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const resendVerificationEmail = async (email: string) => {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/users/resend-verification`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      }
+    );
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || 'Failed to resend email');
+    }
+    return res.json();
   };
 
   const logout = async () => {
@@ -287,6 +314,7 @@ export const useProvideAuth = () => {
     login,
     loginWithGoogle,
     register,
+    resendVerificationEmail,
     logout,
     updateProfileImage,
     updateProfileName,

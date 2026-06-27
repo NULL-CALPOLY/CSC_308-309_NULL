@@ -15,7 +15,7 @@ export default function LandingEventPreview({ limit = 6 }) {
     .slice(0, limit);
 
   return (
-    <section className="w-[min(1200px,92%)] mx-auto py-20 pb-12 max-[640px]:py-12 max-[640px]:pb-6" aria-labelledby="lep-heading">
+    <section className="w-[min(1200px,92%)] mx-auto pt-16 pb-12 max-[640px]:pt-10 max-[640px]:pb-6" aria-labelledby="lep-heading">
       <div className="text-center mb-10">
         <h2
           id="lep-heading"

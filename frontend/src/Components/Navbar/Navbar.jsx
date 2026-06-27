@@ -7,7 +7,9 @@ export default function Navbar({ page = '/' }) {
   const { isAuthenticated, logout, user } = useAuth();
   const { openSignIn, openRegister } = useModal();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const navRef = useRef(null);
+  const dropdownRef = useRef(null);
   const location = useLocation();
 
   useEffect(() => {
@@ -28,6 +30,21 @@ export default function Navbar({ page = '/' }) {
       document.removeEventListener('touchstart', handler);
     };
   }, [menuOpen]);
+
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    const handler = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [dropdownOpen]);
+
+  useEffect(() => {
+    setDropdownOpen(false);
+  }, [location]);
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -74,44 +91,75 @@ export default function Navbar({ page = '/' }) {
             </button>
           </>
         ) : (
-          <div className="flex items-center gap-3">
-            {user?.isAdmin && (
-              <NavLink
-                to="/admin"
-                className={({ isActive }) =>
-                  `border border-[rgba(124,58,237,0.5)] text-[#a78bfa] px-3 py-1.5 rounded-md font-semibold text-[0.82rem] no-underline transition-all duration-200 hover:bg-[rgba(124,58,237,0.12)] hover:text-white ${isActive ? 'bg-[rgba(124,58,237,0.2)] text-white' : ''}`
-                }>
-                Admin
-              </NavLink>
-            )}
-            <NavLink
-              to="/settings"
-              className={({ isActive }) =>
-                `text-[1.1rem] px-1.5 py-1 rounded-md flex items-center no-underline transition-colors duration-200 hover:text-[#a78bfa] hover:bg-[rgba(124,58,237,0.08)] ${isActive ? 'text-[#a78bfa]' : 'text-[rgba(255,255,255,0.5)]'}`
-              }>
-              ⚙
-            </NavLink>
+          <div className="relative flex items-center" ref={dropdownRef}>
             <button
-              onClick={logout}
-              className="bg-transparent border border-[rgba(255,255,255,0.2)] text-[rgba(255,255,255,0.7)] px-3.5 py-1.5 rounded-md cursor-pointer text-[0.85rem] font-semibold transition-all duration-200 hover:border-[#7c3aed] hover:text-[#a78bfa] hover:bg-[rgba(124,58,237,0.1)]">
-              Logout
-            </button>
-            <NavLink
-              to="/profile"
-              className="flex items-center no-underline"
-              end>
+              className="flex items-center gap-0 bg-transparent border-none p-0 cursor-pointer rounded-full"
+              onClick={() => setDropdownOpen((o) => !o)}
+              aria-label="Open profile menu"
+              aria-expanded={dropdownOpen}
+              aria-haspopup="true">
               {user?.avatar ? (
                 <img
                   src={user.avatar}
                   alt="Profile"
-                  className="w-[38px] h-[38px] rounded-full border-2 border-[#7c3aed] object-cover transition-[border-color] duration-200 hover:border-[#a78bfa]"
+                  className="w-[38px] h-[38px] rounded-full border-2 border-[#7c3aed] object-cover transition-[border-color,box-shadow] duration-200 hover:border-[#a78bfa] hover:shadow-[0_0_0_3px_rgba(124,58,237,0.25)]"
                 />
               ) : (
-                <div className="w-[38px] h-[38px] rounded-full border-2 border-[#7c3aed] bg-gradient-to-br from-[#5b21b6] to-[#7c3aed] flex items-center justify-center text-[0.9rem] font-bold text-white flex-shrink-0 transition-[border-color] duration-200 hover:border-[#a78bfa]">
+                <div className="w-[38px] h-[38px] rounded-full border-2 border-[#7c3aed] bg-gradient-to-br from-[#5b21b6] to-[#7c3aed] flex items-center justify-center text-[0.9rem] font-bold text-white flex-shrink-0 transition-[border-color,box-shadow] duration-200 hover:border-[#a78bfa] hover:shadow-[0_0_0_3px_rgba(124,58,237,0.25)]">
                   {(user?.name?.charAt(0) || '?').toUpperCase()}
                 </div>
               )}
-            </NavLink>
+            </button>
+
+            {dropdownOpen && (
+              <div className="absolute right-0 top-[calc(100%+10px)] w-[220px] bg-[#111111] border border-[rgba(255,255,255,0.1)] rounded-[14px] shadow-[0_16px_48px_rgba(0,0,0,0.6)] overflow-hidden z-[1100] animate-fade-in">
+                {/* User info header */}
+                <div className="px-4 py-3 border-b border-[rgba(255,255,255,0.07)]">
+                  <p className="m-0 text-[0.875rem] font-semibold text-white truncate">{user?.name || 'My Account'}</p>
+                </div>
+
+                {/* Menu items */}
+                <div className="py-1">
+                  <NavLink
+                    to="/profile"
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-4 py-2.5 text-[0.875rem] font-medium no-underline transition-colors duration-150 ${isActive ? 'text-[#a78bfa] bg-[rgba(124,58,237,0.1)]' : 'text-[rgba(255,255,255,0.75)] hover:text-white hover:bg-[rgba(255,255,255,0.05)]'}`
+                    }>
+                    <span className="text-[1rem] w-5 text-center">👤</span>
+                    Profile
+                  </NavLink>
+
+                  <NavLink
+                    to="/settings"
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-4 py-2.5 text-[0.875rem] font-medium no-underline transition-colors duration-150 ${isActive ? 'text-[#a78bfa] bg-[rgba(124,58,237,0.1)]' : 'text-[rgba(255,255,255,0.75)] hover:text-white hover:bg-[rgba(255,255,255,0.05)]'}`
+                    }>
+                    <span className="text-[1rem] w-5 text-center">⚙️</span>
+                    Settings
+                  </NavLink>
+
+                  {user?.isAdmin && (
+                    <NavLink
+                      to="/admin"
+                      className={({ isActive }) =>
+                        `flex items-center gap-3 px-4 py-2.5 text-[0.875rem] font-medium no-underline transition-colors duration-150 ${isActive ? 'text-[#a78bfa] bg-[rgba(124,58,237,0.1)]' : 'text-[rgba(255,255,255,0.75)] hover:text-white hover:bg-[rgba(255,255,255,0.05)]'}`
+                      }>
+                      <span className="text-[1rem] w-5 text-center">🛡️</span>
+                      Admin
+                    </NavLink>
+                  )}
+
+                  <div className="h-px bg-[rgba(255,255,255,0.07)] my-1" />
+
+                  <button
+                    onClick={() => { setDropdownOpen(false); logout(); }}
+                    className="flex items-center gap-3 w-full px-4 py-2.5 text-[0.875rem] font-medium text-left bg-transparent border-none cursor-pointer text-[rgba(255,100,100,0.85)] transition-colors duration-150 hover:text-[#f87171] hover:bg-[rgba(239,68,68,0.06)]">
+                    <span className="text-[1rem] w-5 text-center">↪</span>
+                    Log out
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

@@ -20,7 +20,7 @@ export default function LandingPage() {
         <Navbar page="/" />
       </header>
 
-      <main className="flex-1">
+      <main className="flex-1 pt-[var(--nav-h)]">
         {/* ── Hero ── */}
         <section
           className="hero-section min-h-screen flex items-center justify-center text-center px-6 relative overflow-hidden max-[480px]:px-5"

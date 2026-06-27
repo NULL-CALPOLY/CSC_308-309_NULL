@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { requireAuth, requireSelf, optionalAuth } from '../middleware/auth.js';
 import { authLimiter } from '../middleware/security.js';
 import { isAdminEmail } from '../utils/adminEmail.js';
+import { sendVerificationEmail } from '../utils/emailService.js';
 
 const router = express.Router();
 
@@ -50,6 +51,15 @@ router.post('/login', authLimiter, async (req, res) => {
         .status(401)
         .json({ success: false, message: 'Invalid email or password' });
 
+    if (!result.user.emailVerified) {
+      return res.status(403).json({
+        success: false,
+        message: 'Please verify your email before signing in.',
+        requiresVerification: true,
+        email: result.user.email,
+      });
+    }
+
     const { user, accessToken, refreshToken } = result;
 
     // Set refresh token as HttpOnly cookie
@@ -77,33 +87,18 @@ router.post('/login', authLimiter, async (req, res) => {
 
 router.post('/', authLimiter, async (req, res) => {
   try {
-    const newUser = await userServices.addUser(req.body);
+    const { user: newUser, verificationToken } = await userServices.addUser(req.body);
 
-    const accessToken = jwt.sign(
-      { id: newUser._id },
-      process.env.JWT_TOKEN_SECRET,
-      { expiresIn: '15m' }
+    // Send verification email (non-blocking — don't fail the request if it errors)
+    sendVerificationEmail(newUser.email, newUser.name, verificationToken).catch((err) =>
+      console.error('[email] Failed to send verification email:', err.message)
     );
-
-    const refreshToken = jwt.sign(
-      { id: newUser._id },
-      process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: '7d' }
-    );
-
-    // store refresh token cookie (same as login)
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
 
     res.status(201).json({
       success: true,
-      message: 'User created successfully',
-      user: newUser,
-      token: accessToken,
+      requiresVerification: true,
+      message: 'Account created. Please check your email to verify your account.',
+      email: newUser.email,
     });
   } catch (error) {
     res.status(error.status || 500).json({
@@ -206,6 +201,39 @@ router.post('/logout', (req, res) => {
       message: 'Logout successful',
     });
   });
+});
+
+/*
+ * Endpoint to VERIFY EMAIL via token from the link in the verification email
+ */
+router.get('/verify-email/:token', async (req, res) => {
+  try {
+    await userServices.verifyEmail(req.params.token);
+    res.status(200).json({ success: true, message: 'Email verified successfully. You can now sign in.' });
+  } catch (err) {
+    res.status(err.status || 400).json({ success: false, message: err.message });
+  }
+});
+
+/*
+ * Endpoint to RESEND VERIFICATION EMAIL
+ */
+router.post('/resend-verification', authLimiter, async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ success: false, message: 'Email is required' });
+  try {
+    const result = await userServices.resendVerification(email);
+    if (!result) {
+      // Don't reveal whether the email exists or is already verified
+      return res.status(200).json({ success: true, message: 'If that email is pending verification, a new link has been sent.' });
+    }
+    sendVerificationEmail(result.user.email, result.user.name, result.verificationToken).catch((err) =>
+      console.error('[email] Failed to resend verification email:', err.message)
+    );
+    res.status(200).json({ success: true, message: 'Verification email sent. Please check your inbox.' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
 });
 
 // Update a user (self only)

@@ -11,7 +11,11 @@ export default function SignInModal({ isOpen, onClose, onSwitchToRegister }) {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
-  const { login, loginWithGoogle } = useAuth();
+  const [verificationPending, setVerificationPending] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState('');
+  const [resendLoading, setResendLoading] = useState(false);
+  const [resendMsg, setResendMsg] = useState('');
+  const { login, loginWithGoogle, resendVerificationEmail } = useAuth();
   const signInError = useModal()?.signInError || '';
   const navigate = useNavigate();
 
@@ -42,15 +46,35 @@ export default function SignInModal({ isOpen, onClose, onSwitchToRegister }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
+    setVerificationPending(false);
+    setResendMsg('');
     setLoading(true);
     try {
       await login(email, password);
       onClose();
       navigate('/home');
     } catch (err) {
-      setErrorMsg(err.message);
+      if (err.requiresVerification) {
+        setVerificationPending(true);
+        setPendingEmail(err.email || email);
+      } else {
+        setErrorMsg(err.message);
+      }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    setResendLoading(true);
+    setResendMsg('');
+    try {
+      await resendVerificationEmail(pendingEmail);
+      setResendMsg('Verification email resent! Check your inbox.');
+    } catch (err) {
+      setResendMsg(err.message || 'Failed to resend. Please try again.');
+    } finally {
+      setResendLoading(false);
     }
   };
 
@@ -115,6 +139,29 @@ export default function SignInModal({ isOpen, onClose, onSwitchToRegister }) {
 
           {errorMsg && (
             <p className="m-0 text-[0.85rem] text-[#f87171]">{errorMsg}</p>
+          )}
+
+          {verificationPending && (
+            <div className="rounded-[10px] bg-[rgba(167,139,250,0.08)] border border-[rgba(167,139,250,0.25)] px-4 py-3 flex flex-col gap-2">
+              <p className="m-0 text-[0.85rem] text-[rgba(255,255,255,0.75)] leading-[1.5]">
+                Your email isn&apos;t verified yet. We sent a link to{' '}
+                <strong className="text-[#a78bfa]">{pendingEmail}</strong>.
+              </p>
+              {resendMsg ? (
+                <p
+                  className={`m-0 text-[0.8rem] ${resendMsg.includes('resent') || resendMsg.includes('Check') ? 'text-[#34d399]' : 'text-[#f87171]'}`}>
+                  {resendMsg}
+                </p>
+              ) : (
+                <button
+                  type="button"
+                  className="self-start bg-transparent border-none text-[#a78bfa] text-[0.82rem] font-semibold cursor-pointer p-0 hover:underline disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={handleResend}
+                  disabled={resendLoading}>
+                  {resendLoading ? 'Sending…' : 'Resend verification email'}
+                </button>
+              )}
+            </div>
           )}
 
           <button
