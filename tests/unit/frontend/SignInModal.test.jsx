@@ -72,7 +72,7 @@ describe('SignInModal', () => {
 
   it('calls onClose when backdrop is clicked', () => {
     const { container } = renderModal();
-    fireEvent.click(container.querySelector('.modal__overlay'));
+    fireEvent.click(container.querySelector('[data-testid="modal-overlay"]'));
     expect(defaultProps.onClose).toHaveBeenCalled();
   });
 

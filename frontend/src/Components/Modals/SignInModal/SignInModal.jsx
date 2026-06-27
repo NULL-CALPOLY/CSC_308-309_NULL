@@ -56,6 +56,7 @@ export default function SignInModal({ isOpen, onClose, onSwitchToRegister }) {
 
   return (
     <div
+      data-testid="modal-overlay"
       className="fixed inset-0 z-[2000] bg-[rgba(0,0,0,0.65)] backdrop-blur-[4px] flex items-center justify-center p-4 overflow-y-auto max-[480px]:items-end max-[480px]:p-0 [animation:overlay-in_0.2s_ease]"
       onClick={onClose}>
       <div

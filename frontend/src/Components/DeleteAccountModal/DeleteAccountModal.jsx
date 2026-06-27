@@ -28,9 +28,11 @@ export default function DeleteAccountModal({
 
   return (
     <div
+      data-testid="dam-backdrop"
       className="fixed inset-0 bg-[rgba(0,0,0,0.75)] backdrop-blur-[6px] flex items-center justify-center z-[9999] animate-[dam-fade-in_0.2s_ease_both]"
       onClick={onClose}>
       <div
+        data-testid="dam-modal"
         className={`relative bg-[#0f0f0f] border border-[rgba(239,68,68,0.2)] rounded-[20px] px-8 pt-10 pb-8 w-full max-w-[420px] m-4 flex flex-col items-center gap-4 overflow-hidden shadow-[0_0_0_1px_rgba(239,68,68,0.08),0_24px_60px_rgba(0,0,0,0.6)] animate-[dam-slide-up_0.3s_cubic-bezier(0.16,1,0.3,1)_both] ${shake ? 'animate-[dam-shake_0.45s_cubic-bezier(0.36,0.07,0.19,0.97)_both]' : ''}`}
         onClick={(e) => e.stopPropagation()}>
         {/* Glow orb */}
@@ -93,7 +95,7 @@ export default function DeleteAccountModal({
             onClick={handleConfirm}
             disabled={!isMatch || isDeleting}>
             {isDeleting ? (
-              <span className="w-[14px] h-[14px] border-2 border-[rgba(255,255,255,0.3)] border-t-white rounded-full animate-[dam-spin_0.6s_linear_infinite] inline-block" />
+              <span data-testid="dam-spinner" className="w-[14px] h-[14px] border-2 border-[rgba(255,255,255,0.3)] border-t-white rounded-full animate-[dam-spin_0.6s_linear_infinite] inline-block" />
             ) : (
               'Delete My Account'
             )}

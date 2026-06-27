@@ -287,6 +287,7 @@ export default function RegistrationModal({
 
   return (
     <div
+      data-testid="rmodal-overlay"
       className="fixed inset-0 z-[2000] bg-[rgba(0,0,0,0.65)] backdrop-blur-[4px] flex items-center justify-center p-4 [animation:roverlay-in_0.2s_ease] max-[560px]:items-end max-[560px]:p-0"
       onClick={onClose}>
       <div
