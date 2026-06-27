@@ -2,7 +2,6 @@ import React, { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../Hooks/UseAuth.ts';
 import useInterests from '../../../Hooks/UseInterests';
-import './RegistrationModal.css';
 
 // ── Validators ──
 const validate = ({
@@ -95,6 +94,11 @@ async function geocodeCity(city) {
   }
   return null;
 }
+
+// Shared field classes
+const fieldCls =
+  'bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-[8px] py-[0.7rem] px-[0.9rem] text-[0.9rem] text-white outline-none w-full box-border transition-[border-color,box-shadow] duration-200 placeholder:text-[rgba(255,255,255,0.2)] focus:border-[#7c3aed] focus:shadow-[0_0_0_3px_rgba(124,58,237,0.2)]';
+const fieldErrCls = '!border-[#f87171] !shadow-[0_0_0_3px_rgba(248,113,113,0.15)]';
 
 export default function RegistrationModal({
   isOpen,
@@ -282,20 +286,34 @@ export default function RegistrationModal({
   };
 
   return (
-    <div className="rmodal__overlay" onClick={onClose}>
-      <div className="rmodal__card" onClick={(e) => e.stopPropagation()}>
-        <button className="rmodal__close" onClick={onClose} aria-label="Close">
+    <div
+      data-testid="rmodal-overlay"
+      className="fixed inset-0 z-[2000] bg-[rgba(0,0,0,0.65)] backdrop-blur-[4px] flex items-center justify-center p-4 [animation:roverlay-in_0.2s_ease] max-[560px]:items-end max-[560px]:p-0"
+      onClick={onClose}>
+      <div
+        className="relative bg-[#111111] border border-[rgba(255,255,255,0.1)] rounded-[16px] py-10 px-9 w-full max-w-[560px] max-h-[90vh] overflow-y-auto shadow-[0_24px_60px_rgba(0,0,0,0.5)] [animation:rcard-in_0.25s_cubic-bezier(0.16,1,0.3,1)] [scrollbar-width:thin] [scrollbar-color:rgba(255,255,255,0.1)_transparent] max-[560px]:max-w-full max-[560px]:rounded-t-[20px] max-[560px]:rounded-b-none max-[560px]:py-6 max-[560px]:px-5 max-[560px]:pb-8 max-[560px]:max-h-[92dvh] max-[560px]:[animation:rcard-slide-up_0.3s_cubic-bezier(0.16,1,0.3,1)]"
+        onClick={(e) => e.stopPropagation()}>
+        <button
+          className="absolute top-4 right-4 bg-[rgba(255,255,255,0.06)] border-none text-[rgba(255,255,255,0.5)] w-[30px] h-[30px] min-w-[30px] p-0 rounded-full text-[0.75rem] cursor-pointer flex items-center justify-center flex-shrink-0 transition-[background,color] duration-200 hover:bg-[rgba(255,255,255,0.12)] hover:text-white"
+          onClick={onClose}
+          aria-label="Close">
           ✕
         </button>
-        <h2 className="rmodal__title">Create account</h2>
-        <p className="rmodal__subtitle">Join Findr today</p>
+        <h2 className="m-0 mb-1 text-[1.5rem] font-bold text-white font-[Consolas,monospace]">
+          Create account
+        </h2>
+        <p className="m-0 mb-7 text-[0.875rem] text-[rgba(255,255,255,0.4)]">
+          Join Findr today
+        </p>
 
-        <form onSubmit={handleSubmit} className="rmodal__form" noValidate>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
           {/* ── Row 1: Email + Password ── */}
-          <div className="rmodal__grid">
-            <div className="rmodal__field">
-              <label htmlFor="reg-email">
-                Email <span className="rmodal__required">*</span>
+          <div className="grid grid-cols-2 gap-4 max-[560px]:grid-cols-1">
+            <div className="flex flex-col gap-[0.4rem]">
+              <label
+                htmlFor="reg-email"
+                className="text-[0.8rem] font-semibold text-[rgba(255,255,255,0.6)] tracking-[0.05em] uppercase">
+                Email <span className="text-[#f87171]">*</span>
               </label>
               <input
                 id="reg-email"
@@ -307,15 +325,19 @@ export default function RegistrationModal({
                   clearError('email');
                 }}
                 placeholder="you@example.com"
-                className={errors.email ? 'input--error' : ''}
+                className={`${fieldCls} ${errors.email ? fieldErrCls : ''}`}
               />
               {errors.email && (
-                <span className="rmodal__field-error">{errors.email}</span>
+                <span className="text-[0.75rem] text-[#f87171] mt-[0.15rem]">
+                  {errors.email}
+                </span>
               )}
             </div>
-            <div className="rmodal__field">
-              <label htmlFor="reg-password">
-                Password <span className="rmodal__required">*</span>
+            <div className="flex flex-col gap-[0.4rem]">
+              <label
+                htmlFor="reg-password"
+                className="text-[0.8rem] font-semibold text-[rgba(255,255,255,0.6)] tracking-[0.05em] uppercase">
+                Password <span className="text-[#f87171]">*</span>
               </label>
               <input
                 id="reg-password"
@@ -327,19 +349,23 @@ export default function RegistrationModal({
                   clearError('password');
                 }}
                 placeholder="••••••••"
-                className={errors.password ? 'input--error' : ''}
+                className={`${fieldCls} ${errors.password ? fieldErrCls : ''}`}
               />
               {errors.password && (
-                <span className="rmodal__field-error">{errors.password}</span>
+                <span className="text-[0.75rem] text-[#f87171] mt-[0.15rem]">
+                  {errors.password}
+                </span>
               )}
             </div>
           </div>
 
           {/* ── Row 2: Name + Phone ── */}
-          <div className="rmodal__grid">
-            <div className="rmodal__field">
-              <label htmlFor="reg-name">
-                Full Name <span className="rmodal__required">*</span>
+          <div className="grid grid-cols-2 gap-4 max-[560px]:grid-cols-1">
+            <div className="flex flex-col gap-[0.4rem]">
+              <label
+                htmlFor="reg-name"
+                className="text-[0.8rem] font-semibold text-[rgba(255,255,255,0.6)] tracking-[0.05em] uppercase">
+                Full Name <span className="text-[#f87171]">*</span>
               </label>
               <input
                 id="reg-name"
@@ -351,15 +377,19 @@ export default function RegistrationModal({
                   clearError('name');
                 }}
                 placeholder="Your name"
-                className={errors.name ? 'input--error' : ''}
+                className={`${fieldCls} ${errors.name ? fieldErrCls : ''}`}
               />
               {errors.name && (
-                <span className="rmodal__field-error">{errors.name}</span>
+                <span className="text-[0.75rem] text-[#f87171] mt-[0.15rem]">
+                  {errors.name}
+                </span>
               )}
             </div>
-            <div className="rmodal__field">
-              <label htmlFor="reg-phone">
-                Phone Number <span className="rmodal__required">*</span>
+            <div className="flex flex-col gap-[0.4rem]">
+              <label
+                htmlFor="reg-phone"
+                className="text-[0.8rem] font-semibold text-[rgba(255,255,255,0.6)] tracking-[0.05em] uppercase">
+                Phone Number <span className="text-[#f87171]">*</span>
               </label>
               <input
                 id="reg-phone"
@@ -371,10 +401,10 @@ export default function RegistrationModal({
                   clearError('phoneNumber');
                 }}
                 placeholder="+1 2345678900"
-                className={errors.phoneNumber ? 'input--error' : ''}
+                className={`${fieldCls} ${errors.phoneNumber ? fieldErrCls : ''}`}
               />
               {errors.phoneNumber && (
-                <span className="rmodal__field-error">
+                <span className="text-[0.75rem] text-[#f87171] mt-[0.15rem]">
                   {errors.phoneNumber}
                 </span>
               )}
@@ -382,10 +412,12 @@ export default function RegistrationModal({
           </div>
 
           {/* ── Row 3: DOB + Gender ── */}
-          <div className="rmodal__grid">
-            <div className="rmodal__field">
-              <label htmlFor="reg-dob">
-                Date of Birth <span className="rmodal__required">*</span>
+          <div className="grid grid-cols-2 gap-4 max-[560px]:grid-cols-1">
+            <div className="flex flex-col gap-[0.4rem]">
+              <label
+                htmlFor="reg-dob"
+                className="text-[0.8rem] font-semibold text-[rgba(255,255,255,0.6)] tracking-[0.05em] uppercase">
+                Date of Birth <span className="text-[#f87171]">*</span>
               </label>
               <input
                 id="reg-dob"
@@ -395,19 +427,21 @@ export default function RegistrationModal({
                   setDateOfBirth(e.target.value);
                   clearError('dateOfBirth');
                 }}
-                className={errors.dateOfBirth ? 'input--error' : ''}
+                className={`${fieldCls} [color-scheme:dark] ${errors.dateOfBirth ? fieldErrCls : ''}`}
               />
               {errors.dateOfBirth && (
-                <span className="rmodal__field-error">
+                <span className="text-[0.75rem] text-[#f87171] mt-[0.15rem]">
                   {errors.dateOfBirth}
                 </span>
               )}
             </div>
-            <div className="rmodal__field">
-              <label htmlFor="reg-gender">
-                Gender <span className="rmodal__required">*</span>
+            <div className="flex flex-col gap-[0.4rem]">
+              <label
+                htmlFor="reg-gender"
+                className="text-[0.8rem] font-semibold text-[rgba(255,255,255,0.6)] tracking-[0.05em] uppercase">
+                Gender <span className="text-[#f87171]">*</span>
               </label>
-              <div className="rmodal__select-wrapper">
+              <div className="relative">
                 <select
                   id="reg-gender"
                   value={gender}
@@ -415,7 +449,7 @@ export default function RegistrationModal({
                     setGender(e.target.value);
                     clearError('gender');
                   }}
-                  className={errors.gender ? 'input--error' : ''}>
+                  className={`${fieldCls} appearance-none pr-8 cursor-pointer [&_option]:bg-[#1a1a1a] [&_option]:text-white ${errors.gender ? fieldErrCls : ''}`}>
                   <option value="">Select gender</option>
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
@@ -423,18 +457,24 @@ export default function RegistrationModal({
                   <option value="Prefer not to say">Prefer not to say</option>
                   <option value="Other">Other</option>
                 </select>
-                <span className="rmodal__chevron">▼</span>
+                <span className="absolute right-[10px] top-1/2 -translate-y-1/2 text-[0.65rem] text-[rgba(255,255,255,0.4)] pointer-events-none">
+                  ▼
+                </span>
               </div>
               {errors.gender && (
-                <span className="rmodal__field-error">{errors.gender}</span>
+                <span className="text-[0.75rem] text-[#f87171] mt-[0.15rem]">
+                  {errors.gender}
+                </span>
               )}
             </div>
           </div>
 
           {/* ── Row 4: City ── */}
-          <div className="rmodal__field">
-            <label htmlFor="reg-city">
-              City <span className="rmodal__required">*</span>
+          <div className="flex flex-col gap-[0.4rem]">
+            <label
+              htmlFor="reg-city"
+              className="text-[0.8rem] font-semibold text-[rgba(255,255,255,0.6)] tracking-[0.05em] uppercase">
+              City <span className="text-[#f87171]">*</span>
             </label>
             <input
               id="reg-city"
@@ -445,20 +485,24 @@ export default function RegistrationModal({
                 clearError('city');
               }}
               placeholder="Your city"
-              className={errors.city ? 'input--error' : ''}
+              className={`${fieldCls} ${errors.city ? fieldErrCls : ''}`}
             />
             {errors.city && (
-              <span className="rmodal__field-error">{errors.city}</span>
+              <span className="text-[0.75rem] text-[#f87171] mt-[0.15rem]">
+                {errors.city}
+              </span>
             )}
           </div>
 
           {/* ── Interests multiselect ── */}
-          <div className="rmodal__field">
-            <label>Interests</label>
-            <div className="rmodal__multiselect" ref={multiselectRef}>
+          <div className="flex flex-col gap-[0.4rem]">
+            <label className="text-[0.8rem] font-semibold text-[rgba(255,255,255,0.6)] tracking-[0.05em] uppercase">
+              Interests
+            </label>
+            <div className="relative" ref={multiselectRef}>
               <button
                 type="button"
-                className="rmodal__multiselect-trigger"
+                className="flex items-center justify-between w-full text-left font-[inherit] text-[inherit] bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-[8px] py-[0.7rem] px-[0.9rem] cursor-pointer transition-[border-color] duration-200 hover:border-[rgba(255,255,255,0.25)]"
                 onClick={toggleDropdown}
                 aria-expanded={dropdownOpen}
                 aria-haspopup="listbox"
@@ -468,20 +512,23 @@ export default function RegistrationModal({
                   cursor: interestsLoading ? 'not-allowed' : 'pointer',
                 }}>
                 {interestsLoading ? (
-                  <span className="rmodal__placeholder">
+                  <span className="text-[rgba(255,255,255,0.2)] text-[0.9rem]">
                     Loading interests...
                   </span>
                 ) : selectedInterests.length === 0 ? (
-                  <span className="rmodal__placeholder">
+                  <span className="text-[rgba(255,255,255,0.2)] text-[0.9rem]">
                     Select interests...
                   </span>
                 ) : (
-                  <div className="rmodal__tags">
+                  <div className="flex flex-wrap gap-[0.4rem] flex-1">
                     {selectedInterests.map((i) => (
-                      <span key={i} className="rmodal__tag">
+                      <span
+                        key={i}
+                        className="flex items-center gap-[0.3rem] bg-[rgba(124,58,237,0.25)] border border-[rgba(124,58,237,0.5)] text-[#a78bfa] text-[0.78rem] font-semibold py-[0.2rem] px-[0.5rem] rounded-[20px]">
                         {i}
                         <button
                           type="button"
+                          className="bg-none border-none text-[#a78bfa] cursor-pointer text-[0.65rem] p-0 leading-none opacity-70 transition-opacity duration-150 hover:opacity-100"
                           onClick={(e) => {
                             e.stopPropagation();
                             removeInterest(i);
@@ -492,30 +539,34 @@ export default function RegistrationModal({
                     ))}
                   </div>
                 )}
-                <span className="rmodal__chevron">▼</span>
+                <span className="text-[rgba(255,255,255,0.4)] text-[0.65rem] ml-2 flex-shrink-0">
+                  ▼
+                </span>
               </button>
 
               {dropdownOpen && !interestsLoading && (
-                <div className="rmodal__dropdown" style={dropdownStyle}>
+                <div
+                  className="bg-[#1a1a1a] border border-[rgba(255,255,255,0.12)] rounded-[10px] z-[9999] overflow-hidden shadow-[0_8px_24px_rgba(0,0,0,0.4)]"
+                  style={dropdownStyle}>
                   <input
-                    className="rmodal__dropdown-search"
+                    className="w-full bg-[rgba(255,255,255,0.05)] border-none border-b border-b-[rgba(255,255,255,0.08)] rounded-none py-[0.7rem] px-[0.9rem] text-[0.85rem] text-white box-border outline-none"
                     type="text"
                     placeholder="Search..."
                     value={interestSearch}
                     onChange={(e) => setInterestSearch(e.target.value)}
                     onClick={(e) => e.stopPropagation()}
                   />
-                  <ul>
+                  <ul className="list-none m-0 py-[0.4rem] px-0 max-h-[180px] overflow-y-auto [scrollbar-width:thin] [scrollbar-color:rgba(255,255,255,0.1)_transparent]">
                     {displayedInterests.map((interest) => (
                       <li
                         key={interest._id || interest.name}
-                        className={
+                        className={`flex items-center gap-[0.6rem] py-[0.55rem] px-[0.9rem] text-[0.875rem] cursor-pointer transition-[background,color] duration-150 hover:bg-[rgba(255,255,255,0.06)] hover:text-white ${
                           selectedInterests.includes(interest.name)
-                            ? 'selected'
-                            : ''
-                        }
+                            ? 'text-[#a78bfa]'
+                            : 'text-[rgba(255,255,255,0.7)]'
+                        }`}
                         onClick={() => toggleInterest(interest.name)}>
-                        <span className="rmodal__check">
+                        <span className="w-[14px] text-[0.75rem] text-[#7c3aed] font-bold">
                           {selectedInterests.includes(interest.name) ? '✓' : ''}
                         </span>
                         {interest.name}
@@ -523,12 +574,14 @@ export default function RegistrationModal({
                     ))}
                     {trimmedSearch && !hasExactMatch && (
                       <li
-                        className="rmodal__create-option"
+                        className="flex items-center gap-[0.6rem] py-[0.55rem] px-[0.9rem] text-[0.875rem] cursor-pointer text-[#a78bfa] font-semibold transition-[background,color] duration-150 hover:bg-[rgba(255,255,255,0.06)]"
                         onClick={handleCreateInterest}>
-                        <span className="rmodal__check">＋</span>
+                        <span className="w-[14px] text-[0.75rem] text-[#7c3aed] font-bold">
+                          ＋
+                        </span>
                         {creatingInterest
-                          ? `Adding “${trimmedSearch}”…`
-                          : `Add “${trimmedSearch}”`}
+                          ? `Adding "${trimmedSearch}"…`
+                          : `Add "${trimmedSearch}"`}
                       </li>
                     )}
                   </ul>
@@ -537,18 +590,23 @@ export default function RegistrationModal({
             </div>
           </div>
 
-          {submitError && <p className="rmodal__error">{submitError}</p>}
+          {submitError && (
+            <p className="m-0 text-[0.85rem] text-[#f87171]">{submitError}</p>
+          )}
 
-          <button type="submit" className="rmodal__submit" disabled={loading}>
+          <button
+            type="submit"
+            className="mt-2 bg-[#7c3aed] border-none text-white py-3 px-0 rounded-[8px] text-[0.95rem] font-bold cursor-pointer transition-[background,transform,box-shadow] duration-200 tracking-[0.03em] hover:not-disabled:bg-[#6d28d9] hover:not-disabled:-translate-y-[1px] hover:not-disabled:shadow-[0_6px_20px_rgba(124,58,237,0.35)] disabled:opacity-50 disabled:cursor-not-allowed max-[560px]:py-[0.85rem] max-[560px]:text-[1rem]"
+            disabled={loading}>
             {loading ? 'Creating account...' : 'Create Account'}
           </button>
         </form>
 
-        <p className="rmodal__footer">
+        <p className="mt-5 text-center text-[0.85rem] text-[rgba(255,255,255,0.35)]">
           Already have an account?{' '}
           <button
             type="button"
-            className="rmodal__switch"
+            className="bg-none border-none text-[#a78bfa] font-semibold text-[0.85rem] cursor-pointer p-0 no-underline hover:underline"
             onClick={onSwitchToSignIn}>
             Sign in
           </button>

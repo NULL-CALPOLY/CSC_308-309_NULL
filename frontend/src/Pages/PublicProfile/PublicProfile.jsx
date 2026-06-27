@@ -1,10 +1,26 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import './PublicProfile.css';
 import Navbar from '../../Components/Navbar/Navbar';
 import EventComponent from '../../Components/EventComponent/EventComponent';
 import { useAuth } from '../../Hooks/UseAuth.ts';
 import VerifiedBadge from '../../Components/VerifiedBadge/VerifiedBadge';
+
+function Panel({ children }) {
+  return (
+    <div className="bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.07)] rounded-2xl overflow-hidden">
+      {children}
+    </div>
+  );
+}
+
+function PanelHeader({ title }) {
+  return (
+    <div className="flex items-center gap-[0.6rem] px-6 py-4 border-b border-[rgba(255,255,255,0.06)]">
+      <span className="w-2 h-2 rounded-full bg-[#7c3aed]" />
+      <h3 className="m-0 text-base font-semibold">{title}</h3>
+    </div>
+  );
+}
 
 export default function PublicProfile() {
   const { id } = useParams();
@@ -21,7 +37,6 @@ export default function PublicProfile() {
 
   const isOwnProfile = user?.id === id;
 
-  // If the viewer lands on their own public profile, send them to the editable one.
   useEffect(() => {
     if (user?.id && id === user.id) navigate('/profile', { replace: true });
   }, [id, user, navigate]);
@@ -35,13 +50,10 @@ export default function PublicProfile() {
       try {
         const res = await fetch(
           `${import.meta.env.VITE_API_BASE_URL}/users/${id}`,
-          user?.token
-            ? { headers: { Authorization: `Bearer ${user.token}` } }
-            : undefined
+          user?.token ? { headers: { Authorization: `Bearer ${user.token}` } } : undefined
         );
         const json = await res.json();
-        if (!res.ok || !json.success)
-          throw new Error(json.message || 'User not found');
+        if (!res.ok || !json.success) throw new Error(json.message || 'User not found');
         if (!cancelled) setProfile(json.data);
       } catch (err) {
         if (!cancelled) setErrorMsg(err.message);
@@ -60,16 +72,12 @@ export default function PublicProfile() {
         const json = await res.json();
         if (!cancelled && res.ok && json.success)
           setIsBlocked(json.data.map(String).includes(String(id)));
-      } catch {
-        /* ignore */
-      }
+      } catch { /* ignore */ }
     };
 
     const fetchHosted = async () => {
       try {
-        const res = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/events/search/host/${id}`
-        );
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/search/host/${id}`);
         const json = await res.json();
         if (!cancelled && res.ok && json.success) setHostedEvents(json.data);
       } catch {
@@ -80,9 +88,7 @@ export default function PublicProfile() {
     fetchProfile();
     fetchHosted();
     fetchBlockStatus();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [id, user?.id, user?.token]);
 
   const toggleBlock = async () => {
@@ -113,17 +119,8 @@ export default function PublicProfile() {
       key={event._id}
       eventId={event._id}
       eventName={event.name}
-      eventDate={
-        event.time?.start ? new Date(event.time.start).toLocaleDateString() : ''
-      }
-      eventTime={
-        event.time?.start
-          ? new Date(event.time.start).toLocaleTimeString([], {
-              hour: 'numeric',
-              minute: '2-digit',
-            })
-          : ''
-      }
+      eventDate={event.time?.start ? new Date(event.time.start).toLocaleDateString() : ''}
+      eventTime={event.time?.start ? new Date(event.time.start).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : ''}
       eventAddress={event.address}
       description={event.description}
       interest={Array.isArray(event.interests) ? event.interests.join(', ') : ''}
@@ -132,57 +129,59 @@ export default function PublicProfile() {
     />
   );
 
-  if (loading) return <div className="pub-loading">Loading profile…</div>;
+  if (loading)
+    return (
+      <div className="py-16 px-6 text-center text-[rgba(255,255,255,0.6)] text-base">
+        Loading profile…
+      </div>
+    );
   if (errorMsg)
     return (
-      <div className="pub-page">
+      <div className="min-h-screen bg-[#080808] pt-[var(--nav-h,72px)] text-white">
         <Navbar page="/" />
-        <div className="pub-loading">{errorMsg}</div>
+        <div className="py-16 px-6 text-center text-[rgba(255,255,255,0.6)]">{errorMsg}</div>
       </div>
     );
 
   const interests = Array.isArray(profile?.interests) ? profile.interests : [];
 
   return (
-    <div className="pub-page">
+    <div className="min-h-screen bg-[#080808] pt-[var(--nav-h,72px)] text-white">
       <Navbar page="/" />
 
-      <div className="pub-back-wrapper">
-        <button className="pub-back" onClick={() => navigate(-1)}>
+      <div className="max-w-[1100px] mx-auto px-6 pt-6 pb-0">
+        <button
+          className="bg-none border-none text-[rgba(255,255,255,0.5)] cursor-pointer text-[0.95rem] py-[0.4rem] px-0 transition-colors duration-150 hover:text-[#a78bfa]"
+          onClick={() => navigate(-1)}>
           ← Back
         </button>
       </div>
 
-      <div className="pub-layout">
-        <aside className="pub-sidebar">
-          <div className="pub-sidebar-card">
-            <div className="pub-avatar">
+      <div className="max-w-[1100px] mx-auto px-6 pt-6 pb-12 grid grid-cols-[300px_1fr] gap-6 items-start max-[768px]:grid-cols-1 max-[768px]:px-4">
+        <aside>
+          <div className="sticky top-[calc(var(--nav-h,72px)+2rem)] bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.08)] rounded-[18px] px-6 py-8 text-center max-[768px]:static">
+            <div className="w-[120px] h-[120px] rounded-full mx-auto mb-4 overflow-hidden flex items-center justify-center bg-gradient-to-br from-[#1a0533] to-[#2e1065] border-2 border-[rgba(124,58,237,0.4)]">
               {profile?.avatar ? (
-                <img
-                  src={profile.avatar}
-                  alt={profile.name}
-                  className="pub-avatar-img"
-                />
+                <img src={profile.avatar} alt={profile.name} className="w-full h-full object-cover" />
               ) : (
-                <div className="pub-avatar-initials">
+                <span className="text-[2.5rem] font-bold text-[#a78bfa]">
                   {(profile?.name?.charAt(0) || '?').toUpperCase()}
-                </div>
+                </span>
               )}
             </div>
 
-            <p className="pub-name">{profile?.name || '—'}</p>
+            <p className="text-[1.3rem] font-bold mt-2 mb-1">{profile?.name || '—'}</p>
             {profile?.isVerifiedStudent && (
-              <div className="pub-verified">
+              <div className="flex justify-center mt-[0.1rem] mb-[0.4rem]">
                 <VerifiedBadge size="sm" />
               </div>
             )}
-            {profile?.city && <p className="pub-city">{profile.city}</p>}
+            {profile?.city && <p className="text-[rgba(255,255,255,0.5)] text-[0.9rem] m-0">{profile.city}</p>}
 
             {interests.length > 0 && (
-              <div className="pub-stats">
-                <span className="pub-stat">
-                  {interests.length} interest
-                  {interests.length !== 1 ? 's' : ''}
+              <div className="mt-4 flex justify-center gap-2 flex-wrap">
+                <span className="bg-[rgba(124,58,237,0.1)] border border-[rgba(124,58,237,0.25)] text-[#a78bfa] text-[0.8rem] py-[0.3rem] px-[0.7rem] rounded-full">
+                  {interests.length} interest{interests.length !== 1 ? 's' : ''}
                 </span>
               </div>
             )}
@@ -190,73 +189,68 @@ export default function PublicProfile() {
             {user?.id && !isOwnProfile && (
               <>
                 <button
-                  className={`pub-block-btn ${isBlocked ? 'is-blocked' : ''}`}
+                  className={`mt-5 w-full bg-transparent py-2 px-4 rounded-[8px] cursor-pointer font-semibold text-[0.85rem] transition-[background,border-color,color] duration-200 disabled:opacity-60 disabled:cursor-default ${
+                    isBlocked
+                      ? 'border border-[rgba(255,255,255,0.25)] text-[rgba(255,255,255,0.6)] hover:bg-[rgba(255,255,255,0.04)]'
+                      : 'border border-[rgba(248,113,113,0.4)] text-[#f87171] hover:bg-[rgba(248,113,113,0.1)]'
+                  }`}
                   onClick={toggleBlock}
                   disabled={blockBusy}>
-                  {blockBusy
-                    ? '…'
-                    : isBlocked
-                      ? 'Unblock'
-                      : 'Block user'}
+                  {blockBusy ? '…' : isBlocked ? 'Unblock' : 'Block user'}
                 </button>
                 {blockError && (
-                  <p className="pub-block-error" role="alert">{blockError}</p>
+                  <p className="mt-2 mb-0 text-[0.8rem] text-[#fca5a5] text-center leading-snug" role="alert">
+                    {blockError}
+                  </p>
                 )}
               </>
             )}
           </div>
         </aside>
 
-        <div className="pub-main">
-          <div className="pub-panel">
-            <div className="pub-panel-header">
-              <span className="pub-dot" />
-              <h3>About</h3>
-            </div>
-            <div className="pub-panel-body">
+        <div className="flex flex-col gap-5">
+          <Panel>
+            <PanelHeader title="About" />
+            <div className="px-6 py-6">
               {profile?.bio ? (
-                <p className="pub-bio">{profile.bio}</p>
+                <p className="m-0 leading-relaxed text-[rgba(255,255,255,0.85)] whitespace-pre-wrap">{profile.bio}</p>
               ) : (
-                <span className="pub-empty">No bio yet</span>
+                <span className="text-[rgba(255,255,255,0.35)] text-[0.9rem]">No bio yet</span>
               )}
             </div>
-          </div>
+          </Panel>
 
-          <div className="pub-panel">
-            <div className="pub-panel-header">
-              <span className="pub-dot" />
-              <h3>Interests</h3>
-            </div>
-            <div className="pub-panel-body">
+          <Panel>
+            <PanelHeader title="Interests" />
+            <div className="px-6 py-6">
               {interests.length ? (
-                <div className="pub-tags">
+                <div className="flex flex-wrap gap-2">
                   {interests.map((tag, idx) => (
-                    <span key={idx} className="pub-tag">
+                    <span
+                      key={idx}
+                      className="bg-[rgba(124,58,237,0.1)] border border-[rgba(124,58,237,0.25)] text-[#a78bfa] text-[0.85rem] py-[0.35rem] px-3 rounded-full">
                       {tag}
                     </span>
                   ))}
                 </div>
               ) : (
-                <span className="pub-empty">No interests added yet</span>
+                <span className="text-[rgba(255,255,255,0.35)] text-[0.9rem]">No interests added yet</span>
               )}
             </div>
-          </div>
+          </Panel>
 
-          <div className="pub-panel">
-            <div className="pub-panel-header">
-              <span className="pub-dot" />
-              <h3>Hosted Events</h3>
-            </div>
-            <div className="pub-panel-body">
+          <Panel>
+            <PanelHeader title="Hosted Events" />
+            <div className="px-6 py-6">
               {hostedEvents.length ? (
-                <div className="pub-event-list">
+                <div className="flex flex-col gap-4">
                   {hostedEvents.map(renderEventCard)}
                 </div>
               ) : (
-                <span className="pub-empty">No hosted events yet</span>
+                <span className="text-[rgba(255,255,255,0.35)] text-[0.9rem]">No hosted events yet</span>
               )}
             </div>
-          </div>
+          </Panel>
         </div>
       </div>
     </div>

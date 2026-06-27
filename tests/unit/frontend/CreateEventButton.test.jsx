@@ -24,8 +24,8 @@ describe('CreateEventButton', () => {
     expect(container.querySelector('svg')).toBeInTheDocument();
   });
 
-  it('renders the button with correct class', () => {
+  it('renders the button element', () => {
     const { container } = render(<CreateEventButton onClick={jest.fn()} />);
-    expect(container.querySelector('.create-event-btn')).toBeInTheDocument();
+    expect(container.querySelector('button')).toBeInTheDocument();
   });
 });
