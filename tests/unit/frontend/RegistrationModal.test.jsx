@@ -216,7 +216,7 @@ describe('RegistrationModal', () => {
 
   it('calls onClose when backdrop is clicked', () => {
     const { container } = renderModal();
-    fireEvent.click(container.querySelector('.rmodal__overlay'));
+    fireEvent.click(container.querySelector('[data-testid="rmodal-overlay"]'));
     expect(defaultProps.onClose).toHaveBeenCalled();
   });
 });
