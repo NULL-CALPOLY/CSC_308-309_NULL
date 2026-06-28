@@ -23,6 +23,7 @@ interface UserState {
   avatar?: string | null;
   isAdmin?: boolean;
   isVerifiedStudent?: boolean;
+  emailNotifications?: boolean;
 }
 
 export const AuthContext = createContext(null);
@@ -95,6 +96,7 @@ export const useProvideAuth = () => {
         avatar: json.data?.avatar || null,
         isAdmin: !!json.data?.isAdmin,
         isVerifiedStudent: !!json.data?.isVerifiedStudent,
+        emailNotifications: json.data?.emailNotifications !== false,
       };
     } catch {
       return {};

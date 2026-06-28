@@ -109,12 +109,12 @@ describe('LandingPage', () => {
 
   it('renders community image', () => {
     renderLanding();
-    expect(screen.getByAltText('Community')).toBeInTheDocument();
+    expect(screen.getByAltText('Community illustration')).toBeInTheDocument();
   });
 
   it('shows community section heading', () => {
     renderLanding();
-    expect(screen.getByText('Be part of a community')).toBeInTheDocument();
+    expect(screen.getByText('Be part of something bigger')).toBeInTheDocument();
   });
 
   it('calls openSignIn when "Join the Community" is clicked and not authenticated', () => {
