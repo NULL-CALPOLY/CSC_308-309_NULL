@@ -1,6 +1,7 @@
 import userModel from './UserSchema.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 import { isAdminEmail } from '../utils/adminEmail.js';
 
 /*
@@ -73,8 +74,51 @@ async function addUser(user) {
   // actually authenticated a student-domain account (see GoogleAuthRoutes).
   formatteduser.isVerifiedStudent = false;
   formatteduser.isAdmin = isAdminEmail(user.email);
+  // Email verification required for password signups.
+  const verificationToken = crypto.randomBytes(32).toString('hex');
+  formatteduser.emailVerified = false;
+  formatteduser.emailVerificationToken = verificationToken;
+  formatteduser.emailVerificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
   const newUser = new userModel(formatteduser);
-  return await newUser.save();
+  const saved = await newUser.save();
+  return { user: saved, verificationToken };
+}
+
+async function verifyEmail(token) {
+  const user = await userModel
+    .findOne({ emailVerificationToken: token })
+    .select('+emailVerificationToken');
+
+  if (!user) {
+    const err = new Error('Invalid or expired verification link.');
+    err.status = 400;
+    throw err;
+  }
+  if (user.emailVerificationExpires < new Date()) {
+    const err = new Error('Verification link has expired. Please request a new one.');
+    err.status = 400;
+    throw err;
+  }
+
+  user.emailVerified = true;
+  user.emailVerificationToken = null;
+  user.emailVerificationExpires = null;
+  await user.save();
+  return user;
+}
+
+async function resendVerification(email) {
+  const user = await userModel
+    .findOne({ email: email.toLowerCase() })
+    .select('+emailVerificationToken');
+
+  if (!user || user.emailVerified) return null;
+
+  const token = crypto.randomBytes(32).toString('hex');
+  user.emailVerificationToken = token;
+  user.emailVerificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+  await user.save();
+  return { user, verificationToken: token };
 }
 
 // Delete a user
@@ -267,6 +311,8 @@ async function findUserIdsWhoBlocked(viewerId) {
 export default {
   authenticateUser,
   getUsers,
+  verifyEmail,
+  resendVerification,
   findUserById,
   findPublicProfileById,
   blockUser,

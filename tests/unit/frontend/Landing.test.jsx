@@ -65,7 +65,7 @@ describe('LandingPage', () => {
   it('renders the hero subtitle', () => {
     renderLanding();
     expect(
-      screen.getByText(/Discover events, join clubs/i)
+      screen.getByText(/connecting with others and discovering new interests/i)
     ).toBeInTheDocument();
   });
 
@@ -89,7 +89,7 @@ describe('LandingPage', () => {
 
   it('renders primary CTA as a Link to /home when authenticated', () => {
     renderLanding({ isAuthenticated: true });
-    const link = screen.getByText(/Open Findr/i).closest('a');
+    const link = screen.getByText(/Get Started!/i).closest('a');
     expect(link).toHaveAttribute('href', '/home');
   });
 

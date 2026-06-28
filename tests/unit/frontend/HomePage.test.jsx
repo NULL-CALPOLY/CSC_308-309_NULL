@@ -122,10 +122,10 @@ describe('HomePage', () => {
     );
   });
 
-  it('renders "Sign In to create event" label when no user', () => {
+  it('renders "Sign In" label when no user', () => {
     renderHomePage({ user: null });
     expect(screen.getByTestId('create-event-btn')).toHaveTextContent(
-      'Sign In to create event'
+      'Sign In'
     );
   });
 

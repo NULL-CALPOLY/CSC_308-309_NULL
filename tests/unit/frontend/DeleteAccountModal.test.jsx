@@ -76,19 +76,19 @@ describe('DeleteAccountModal', () => {
     const { container } = render(
       <DeleteAccountModal {...defaultProps} isDeleting={true} />
     );
-    expect(container.querySelector('.dam-spinner')).toBeInTheDocument();
+    expect(container.querySelector('[data-testid="dam-spinner"]')).toBeInTheDocument();
   });
 
   it('clicking backdrop calls onClose', () => {
     const { container } = render(<DeleteAccountModal {...defaultProps} />);
-    const backdrop = container.querySelector('.dam-backdrop');
+    const backdrop = container.querySelector('[data-testid="dam-backdrop"]');
     fireEvent.click(backdrop);
     expect(defaultProps.onClose).toHaveBeenCalled();
   });
 
   it('clicking modal content does not call onClose (stopPropagation)', () => {
     const { container } = render(<DeleteAccountModal {...defaultProps} />);
-    const modal = container.querySelector('.dam-modal');
+    const modal = container.querySelector('[data-testid="dam-modal"]');
     fireEvent.click(modal);
     expect(defaultProps.onClose).not.toHaveBeenCalled();
   });

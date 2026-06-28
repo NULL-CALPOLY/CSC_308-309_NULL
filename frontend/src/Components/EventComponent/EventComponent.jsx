@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './EventComponent.css';
 import TagComponent from '../InterestTag/InterestTag.jsx';
 import { useAuth } from '../../Hooks/UseAuth.ts';
 import { useModal } from '../ModalContext.jsx';
@@ -83,20 +82,19 @@ export default function EventComponent(props) {
     }
   };
 
-  const handleEdit = () => {
-    navigate(`/events/${props.eventId}`);
-  };
-
-  const goToEventDetails = () => {
-    navigate(`/events/${props.eventId}`);
-  };
+  const handleEdit = () => navigate(`/events/${props.eventId}`);
+  const goToEventDetails = () => navigate(`/events/${props.eventId}`);
 
   return (
     <div
       ref={cardRef}
       role="article"
       tabIndex={props.onSelect ? 0 : undefined}
-      className={`Event-Container${props.selected ? ' Event-Container--selected' : ''}`}
+      className={`bg-[rgba(255,255,255,0.04)] text-[#f8fafc] rounded-[14px] px-[18px] py-4 w-full box-border border transition-[transform,box-shadow,border-color] duration-200 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(0,0,0,0.3)] ${
+        props.selected
+          ? 'border-[rgba(124,58,237,0.55)] shadow-[0_6px_22px_rgba(124,58,237,0.2)]'
+          : 'border-[rgba(255,255,255,0.07)] shadow-[0_2px_12px_rgba(0,0,0,0.2)] hover:border-[rgba(124,58,237,0.3)]'
+      }`}
       onClick={() => props.onSelect?.(props.eventId)}
       onKeyDown={(e) => {
         if (props.onSelect && (e.key === 'Enter' || e.key === ' ')) {
@@ -104,23 +102,24 @@ export default function EventComponent(props) {
           props.onSelect(props.eventId);
         }
       }}>
-      <div className="Event-Title">{props.eventName}</div>
-      <hr className="Event-Divider" />
+      <div className="font-bold text-[15px] leading-snug text-[#f8fafc] mb-2 tracking-[0.1px] whitespace-nowrap overflow-hidden text-ellipsis max-w-full">
+        {props.eventName}
+      </div>
+      <hr className="border-0 border-t border-[rgba(255,255,255,0.07)] my-1.5 mb-2.5" />
 
-      <div className="Event-DateTime">
+      <div className="flex flex-col gap-0.5 text-xs text-[#a78bfa] font-semibold mb-1 tracking-[0.2px]">
         <span>📅 {props.eventDate}</span>
         <span>🕒 {props.eventTime}</span>
       </div>
 
-      <div className="Event-Address">
+      <div className="text-[12.5px] leading-relaxed text-[rgba(248,250,252,0.55)] mt-1 whitespace-nowrap overflow-hidden text-ellipsis">
         Address:{' '}
         {props.eventAddress ? (
           <a
-            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-              props.eventAddress
-            )}`}
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(props.eventAddress)}`}
             target="_blank"
-            rel="noopener noreferrer">
+            rel="noopener noreferrer"
+            className="text-[rgba(248,250,252,0.55)] no-underline border-b border-dashed border-[rgba(167,139,250,0.3)] transition-colors duration-200 hover:text-[#a78bfa] hover:border-[#a78bfa]">
             {props.eventAddress}
           </a>
         ) : (
@@ -129,11 +128,11 @@ export default function EventComponent(props) {
       </div>
 
       {hostName && (
-        <div className="Event-Host">
+        <div className="mt-1.5 mb-0.5 text-[0.82rem] text-[rgba(248,250,252,0.45)] whitespace-nowrap overflow-hidden text-ellipsis">
           Hosted by{' '}
           <button
             type="button"
-            className="Event-Host-Link"
+            className="bg-none border-none p-0 cursor-pointer text-[#a78bfa] text-[0.82rem] font-semibold no-underline hover:underline hover:text-[#c4b5fd] transition-colors duration-200"
             onClick={(e) => {
               e.stopPropagation();
               if (hostId) navigate(`/users/${hostId}`);
@@ -143,28 +142,38 @@ export default function EventComponent(props) {
         </div>
       )}
 
-      <div className="Tag-List">
+      <div className="flex flex-wrap gap-[5px] mt-2">
         {tags.slice(0, 3).map((tag, idx) => (
           <TagComponent key={idx} Interest={tag} />
         ))}
       </div>
 
       {attendError && (
-        <p className="Event-Error" role="alert">{attendError}</p>
+        <p className="text-[0.78rem] text-[#f87171] mt-1.5 mb-0.5 leading-snug" role="alert">
+          {attendError}
+        </p>
       )}
 
-      <div className="Event-Footer">
+      <div className="flex justify-end items-center gap-2 mt-2.5">
         {!isAuthenticated ? (
-          <button className="SignInPromptBtn" onClick={openSignIn}>
+          <button
+            className="px-3.5 py-1.5 rounded-[7px] border border-dashed border-[rgba(124,58,237,0.4)] bg-transparent text-[#7c3aed] font-semibold text-xs cursor-pointer tracking-[0.2px] transition-[background,border-color] duration-200 hover:bg-[rgba(124,58,237,0.08)] hover:border-[#7c3aed]"
+            onClick={openSignIn}>
             Sign in to join
           </button>
         ) : isHost ? (
-          <button className="ActionButton EditButton" onClick={handleEdit}>
+          <button
+            className="px-3.5 py-1.5 rounded-[7px] border-none bg-[#7b1fa2] text-white font-semibold text-xs cursor-pointer tracking-[0.2px] transition-[background,box-shadow] duration-200 hover:bg-[#4a148c] hover:shadow-[0_0_12px_rgba(123,31,162,0.55)]"
+            onClick={handleEdit}>
             Edit Event
           </button>
         ) : (
           <button
-            className={`ActionButton ${isAttending ? 'LeaveButton' : 'JoinButton'}`}
+            className={`px-3.5 py-1.5 rounded-[7px] border-none text-white font-semibold text-xs cursor-pointer tracking-[0.2px] transition-[background,box-shadow] duration-200 disabled:opacity-60 disabled:cursor-not-allowed ${
+              isAttending
+                ? 'bg-[#c62828] hover:bg-[#8e1a1a] hover:shadow-[0_0_12px_rgba(198,40,40,0.55)]'
+                : 'bg-[#2e7d32] hover:bg-[#1b5e20] hover:shadow-[0_0_12px_rgba(46,125,50,0.55)]'
+            }`}
             onClick={handleAttend}
             disabled={attendBusy}>
             {attendBusy ? '…' : isAttending ? 'Leave Event' : 'Join Event'}
@@ -173,7 +182,7 @@ export default function EventComponent(props) {
 
         {isAuthenticated && (
           <button
-            className="ViewEventBtn"
+            className="px-3.5 py-1.5 rounded-[7px] border-none bg-[#7c3aed] text-white font-bold text-xs cursor-pointer tracking-[0.2px] transition-[background,box-shadow] duration-200 hover:bg-[#6d28d9] hover:shadow-[0_4px_14px_rgba(124,58,237,0.35)]"
             type="button"
             onClick={goToEventDetails}>
             View Event

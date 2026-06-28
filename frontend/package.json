@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@cloudscape-design/components": "^3.0.1188",
+    "@tailwindcss/vite": "^4.3.1",
     "date-fns": "^4.1.0",
     "leaflet": "^1.9.4",
     "leaflet.markercluster": "^1.5.3",
@@ -19,7 +20,8 @@
     "react-dom": "^18.0.0",
     "react-leaflet": "^4.2.1",
     "react-leaflet-cluster": "^2.1.0",
-    "react-router-dom": "^7.9.5"
+    "react-router-dom": "^7.9.5",
+    "tailwindcss": "^4.3.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

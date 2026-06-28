@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import './AddressSearchBar.css';
 
 export default function AddressSearchBar({
   onSelect,
@@ -143,15 +142,24 @@ export default function AddressSearchBar({
   return (
     <div
       ref={containerRef}
-      className={`asb-root ${className}`}
+      className={`relative w-full ${className}`}
       role="combobox"
       aria-expanded={open}
       aria-haspopup="listbox">
-      {label && <label className="asb-label">{label}</label>}
+      {label && (
+        <label className="block text-[0.82rem] font-semibold text-[rgba(248,250,252,0.72)] mb-1.5">
+          {label}
+        </label>
+      )}
 
-      <div className={`asb-input-wrapper ${error ? 'asb-input--error' : ''}`}>
+      <div
+        className={`relative flex items-center border rounded-[10px] bg-[rgba(255,255,255,0.05)] transition-[border-color,box-shadow] duration-200 focus-within:border-[rgba(124,58,237,0.55)] focus-within:shadow-[0_0_0_3px_rgba(124,58,237,0.12)] ${
+          error
+            ? 'border-[rgba(239,68,68,0.6)] focus-within:!shadow-[0_0_0_3px_rgba(239,68,68,0.12)]'
+            : 'border-[rgba(255,255,255,0.1)]'
+        }`}>
         <svg
-          className="asb-icon-pin"
+          className="w-4 h-4 text-[#a78bfa] ml-3 flex-shrink-0"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -166,7 +174,7 @@ export default function AddressSearchBar({
         <input
           ref={inputRef}
           type="text"
-          className="asb-input"
+          className="flex-1 border-none outline-none bg-transparent px-2 py-2.5 text-[0.875rem] text-[#f8fafc] min-w-0 placeholder:text-[rgba(248,250,252,0.3)]"
           value={query}
           placeholder={placeholder}
           onChange={handleChange}
@@ -180,13 +188,16 @@ export default function AddressSearchBar({
           }
         />
 
-        <div className="asb-icon-right">
+        <div className="w-8 flex items-center justify-center flex-shrink-0">
           {loading ? (
-            <span className="asb-spinner" aria-label="Searching…" />
+            <span
+              className="inline-block w-3.5 h-3.5 border-2 border-[rgba(124,58,237,0.25)] border-t-[#7c3aed] rounded-full animate-spin-slow"
+              aria-label="Searching…"
+            />
           ) : query.length > 0 ? (
             <button
               type="button"
-              className="asb-clear-btn"
+              className="bg-transparent border-none cursor-pointer text-[rgba(248,250,252,0.4)] text-xs px-1 py-0.5 rounded transition-colors duration-150 hover:text-[rgba(248,250,252,0.8)] hover:bg-[rgba(255,255,255,0.06)]"
               onClick={() => {
                 setQuery('');
                 setSelectedCoords(null);
@@ -202,8 +213,9 @@ export default function AddressSearchBar({
       </div>
 
       {selectedCoords && (
-        <div className="asb-coords-badge">
+        <div className="inline-flex items-center gap-1.5 mt-1.5 px-2.5 py-0.5 bg-[rgba(124,58,237,0.12)] border border-[rgba(124,58,237,0.3)] rounded-full text-[0.72rem] text-[#a78bfa] tabular-nums">
           <svg
+            className="w-[11px] h-[11px] flex-shrink-0"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -219,13 +231,13 @@ export default function AddressSearchBar({
         </div>
       )}
 
-      {error && <p className="asb-error">{error}</p>}
+      {error && <p className="mt-1 text-[0.78rem] text-[#f87171]">{error}</p>}
 
       {open && results.length > 0 && (
         <ul
           id="asb-listbox"
           role="listbox"
-          className="asb-dropdown"
+          className="absolute top-[calc(100%+4px)] left-0 right-0 bg-[#1a1a27] border border-[rgba(124,58,237,0.2)] rounded-xl shadow-[0_4px_6px_-1px_rgba(0,0,0,0.3),0_10px_24px_-4px_rgba(0,0,0,0.4)] z-[9999] list-none m-0 py-1 overflow-hidden"
           aria-label="Address suggestions">
           {results.map((item, idx) => (
             <li
@@ -233,14 +245,18 @@ export default function AddressSearchBar({
               id={`asb-option-${idx}`}
               role="option"
               aria-selected={idx === activeIndex}
-              className={`asb-option ${idx === activeIndex ? 'asb-option--active' : ''}`}
+              className={`flex items-start gap-2.5 px-3.5 py-2.5 cursor-pointer transition-colors duration-[120ms] ${
+                idx === activeIndex
+                  ? 'bg-[rgba(124,58,237,0.1)]'
+                  : 'hover:bg-[rgba(124,58,237,0.1)]'
+              }`}
               onMouseDown={(e) => {
                 e.preventDefault();
                 handleSelect(item);
               }}
               onMouseEnter={() => setActiveIndex(idx)}>
               <svg
-                className="asb-option-icon"
+                className="w-4 h-4 text-[#a78bfa] flex-shrink-0 mt-0.5"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -249,17 +265,19 @@ export default function AddressSearchBar({
                 <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z" />
                 <circle cx="12" cy="10" r="3" />
               </svg>
-              <div className="asb-option-text">
-                <span className="asb-option-primary">
+              <div className="flex flex-col min-w-0">
+                <span className="text-[0.875rem] font-semibold text-[#f8fafc] truncate">
                   {formatPrimary(item)}
                 </span>
-                <span className="asb-option-secondary">
+                <span className="text-[0.78rem] text-[rgba(248,250,252,0.5)] truncate mt-0.5">
                   {formatSecondary(item)}
                 </span>
               </div>
             </li>
           ))}
-          <li className="asb-powered-by" aria-hidden="true">
+          <li
+            className="px-3.5 py-1.5 text-[0.68rem] text-[rgba(248,250,252,0.25)] text-right border-t border-[rgba(255,255,255,0.06)] select-none"
+            aria-hidden="true">
             Powered by OpenStreetMap / Nominatim
           </li>
         </ul>

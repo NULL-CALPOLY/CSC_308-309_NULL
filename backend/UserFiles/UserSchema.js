@@ -90,6 +90,21 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    // Email verification — defaults to true for existing users / OAuth users.
+    // Password-signup flow sets this false until the user clicks the email link.
+    emailVerified: {
+      type: Boolean,
+      default: true,
+    },
+    emailVerificationToken: {
+      type: String,
+      default: null,
+      select: false,
+    },
+    emailVerificationExpires: {
+      type: Date,
+      default: null,
+    },
     location: {
       type: {
         type: String,

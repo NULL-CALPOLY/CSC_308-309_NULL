@@ -1,4 +1,3 @@
-import './HomePage.css';
 import { useState, useRef, useEffect } from 'react';
 import { useDocumentTitle } from '../../Hooks/UseDocumentTitle.js';
 import MainMapComponent from '../../Components/MainMapComponent/MainMapComponent.jsx';
@@ -79,7 +78,7 @@ export default function HomePage() {
       <div className="Create-Event-Button">
         <CreateEventButton
           onClick={user ? () => setShowModal(true) : openSignIn}
-          label={user ? 'Create Event' : 'Sign In to create event'}
+          label={user ? 'Create Event' : 'Sign In'}
         />
       </div>
       <CreateEventModal

@@ -12,7 +12,6 @@ import L from 'leaflet';
 import markerIcon from '../../assets/event-pin.svg';
 import locateIcon from '../../assets/location.svg';
 import circle from '../../assets/circle.png';
-import './MainMapComponent.css';
 
 const NEARBY_RADIUS = 16093;
 
@@ -50,7 +49,7 @@ export default function MainMapComponent({ selectedId = null, onSelect, userCoor
   const selectedEvent = events.find((e) => e.id === selectedId) || null;
 
   return (
-    <div className="main-map-wrapper">
+    <div className="flex flex-1 flex-col justify-start items-stretch bg-[#0a0a0f] w-full h-full">
       <MapContainer
         center={[35.3, -120.66]}
         zoom={13}
@@ -60,7 +59,7 @@ export default function MainMapComponent({ selectedId = null, onSelect, userCoor
         maxBoundsViscosity={1.0}
         scrollWheelZoom={true}
         zoomControl={true}
-        className="main-map-component">
+        className="flex-1 w-full">
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -128,34 +127,34 @@ function EventMarker({ event, isSelected = false, onSelect }) {
       icon={makeEventIcon(isSelected)}
       eventHandlers={{ click: () => onSelect?.(event.id) }}>
       <Popup className="event-popup">
-        <div className="popup-content">
-          <div className="popup-title">{event.eventName}</div>
+        <div className="flex flex-col gap-[6px] min-w-[200px] font-[inherit]">
+          <div className="text-[15px] font-bold text-[#f8fafc] mb-[2px] overflow-wrap-break-word">{event.eventName}</div>
 
-          <div className="popup-row">
-            <span className="popup-icon">📅</span>
+          <div className="flex items-start gap-[6px] text-[12.5px] text-[rgba(248,250,252,0.6)]">
+            <span className="text-[12px] mt-[1px]">📅</span>
             <span>{event.eventDate}</span>
           </div>
 
-          <div className="popup-row">
-            <span className="popup-icon">📍</span>
+          <div className="flex items-start gap-[6px] text-[12.5px] text-[rgba(248,250,252,0.6)]">
+            <span className="text-[12px] mt-[1px]">📍</span>
             <span>{event.eventAddress}</span>
           </div>
 
-          <div className="popup-row">
-            <span className="popup-icon">👥</span>
+          <div className="flex items-start gap-[6px] text-[12.5px] text-[rgba(248,250,252,0.6)]">
+            <span className="text-[12px] mt-[1px]">👥</span>
             <span>{event.attendees?.length ?? 0} attending</span>
           </div>
 
           {event.interests.length > 0 && (
-            <div className="popup-tags">
+            <div className="flex flex-wrap gap-[4px] mt-[2px]">
               {event.interests.slice(0, 3).map((tag, i) => (
-                <span key={i} className="popup-tag">{tag}</span>
+                <span key={i} className="bg-[rgba(124,58,237,0.18)] text-[#a78bfa] text-[11px] font-medium py-[2px] px-[8px] rounded-[20px] border border-[rgba(124,58,237,0.3)]">{tag}</span>
               ))}
             </div>
           )}
 
           <button
-            className="popup-btn"
+            className="mt-[6px] bg-[#7c3aed] text-white border-none rounded-[6px] py-[7px] px-[12px] text-[12.5px] font-semibold cursor-pointer w-full transition-[background] duration-150 hover:bg-[#6d28d9]"
             onClick={() => navigate(`/events/${event.id}`)}>
             View Event
           </button>
@@ -188,8 +187,12 @@ function LocateButton({ icon, setUserPosition, setTracking, onCoordsChange }) {
   };
 
   return (
-    <button className="main-locate-btn" onClick={handleLocate} title="Show my location">
-      <img src={icon} alt="Locate me" />
+    <button
+      className="absolute bottom-[10px] right-[15px] max-[768px]:bottom-auto max-[768px]:top-[calc(var(--nav-h,80px)+10px)] bg-[rgba(10,10,18,0.9)] border border-[rgba(124,58,237,0.35)] rounded-full p-[10px] shadow-[0_2px_12px_rgba(0,0,0,0.4)] cursor-pointer z-[1000] transition-[transform,background] duration-[100ms,200ms] hover:scale-110 hover:bg-[rgba(124,58,237,0.15)] active:scale-95"
+      onClick={handleLocate}
+      title="Show my location"
+      aria-label="Show my location">
+      <img src={icon} alt="" className="w-[22px] h-[22px] block invert" />
     </button>
   );
 }
