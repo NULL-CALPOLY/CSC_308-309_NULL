@@ -69,23 +69,14 @@ describe('User Routes', () => {
   });
 
   describe('Authentication Tests', () => {
-    test('POST /users (register) creates a user and returns access token', async () => {
+    test('POST /users (register) creates a user and requires email verification', async () => {
       const res = await request(app).post('/users').send(testUser);
 
       expect(res.status).toBe(201);
       expect(res.body.success).toBe(true);
-      expect(res.body.message).toBe('User created successfully');
-      expect(res.body.user.name).toBe('Test User');
-      expect(res.body.user.email).toBe('test@example.com');
-      expect(res.body.token).toBeDefined();
-      expect(res.body.user.password).toBeUndefined(); // password should not be returned
-
-      // Check that refresh token cookie is set
-      const cookies = res.headers['set-cookie'];
-      expect(cookies).toBeDefined();
-      expect(cookies.some((cookie) => cookie.includes('refreshToken'))).toBe(
-        true
-      );
+      expect(res.body.requiresVerification).toBe(true);
+      expect(res.body.email).toBe('test@example.com');
+      expect(res.body.message).toContain('check your email');
     });
 
     test('POST /users (register) prevents duplicate email registration', async () => {
@@ -100,6 +91,12 @@ describe('User Routes', () => {
     test('POST /users/login authenticates user with correct credentials', async () => {
       // First register the user
       await request(app).post('/users').send(testUser);
+
+      // Manually verify email to allow login (email verification is required)
+      await userModel.findOneAndUpdate(
+        { email: testUser.email },
+        { emailVerified: true }
+      );
 
       // Then login
       const res = await request(app)
@@ -133,6 +130,10 @@ describe('User Routes', () => {
 
     test('POST /users/login rejects incorrect password', async () => {
       await request(app).post('/users').send(testUser);
+      await userModel.findOneAndUpdate(
+        { email: testUser.email },
+        { emailVerified: true }
+      );
 
       const res = await request(app)
         .post('/users/login')
@@ -220,8 +221,9 @@ describe('User Routes', () => {
     });
 
     test('GET /users/:id returns a public-safe profile', async () => {
-      const registerRes = await request(app).post('/users').send(testUser);
-      const userId = registerRes.body.user._id;
+      await request(app).post('/users').send(testUser);
+      const createdUser = await userModel.findOne({ email: testUser.email });
+      const userId = createdUser._id;
 
       const res = await request(app).get(`/users/${userId}`);
       expect(res.status).toBe(200);
@@ -242,8 +244,9 @@ describe('User Routes', () => {
     });
 
     test('DELETE /users/:id deletes a user', async () => {
-      const registerRes = await request(app).post('/users').send(testUser);
-      const userId = registerRes.body.user._id;
+      await request(app).post('/users').send(testUser);
+      const createdUser = await userModel.findOne({ email: testUser.email });
+      const userId = createdUser._id;
 
       const res = await request(app)
         .delete(`/users/${userId}`)
@@ -253,8 +256,9 @@ describe('User Routes', () => {
     });
 
     test('DELETE /users/:id forbids deleting another account', async () => {
-      const registerRes = await request(app).post('/users').send(testUser);
-      const userId = registerRes.body.user._id;
+      await request(app).post('/users').send(testUser);
+      const createdUser = await userModel.findOne({ email: testUser.email });
+      const userId = createdUser._id;
       const otherId = new mongoose.Types.ObjectId();
 
       const res = await request(app)
@@ -271,8 +275,9 @@ describe('User Routes', () => {
     });
 
     test('PUT /users/:id updates a user', async () => {
-      const registerRes = await request(app).post('/users').send(testUser);
-      const userId = registerRes.body.user._id;
+      await request(app).post('/users').send(testUser);
+      const createdUser = await userModel.findOne({ email: testUser.email });
+      const userId = createdUser._id;
 
       const res = await request(app)
         .put(`/users/${userId}`)
@@ -284,8 +289,9 @@ describe('User Routes', () => {
     });
 
     test('PUT /users/:id forbids updating another account', async () => {
-      const registerRes = await request(app).post('/users').send(testUser);
-      const userId = registerRes.body.user._id;
+      await request(app).post('/users').send(testUser);
+      const createdUser = await userModel.findOne({ email: testUser.email });
+      const userId = createdUser._id;
       const otherId = new mongoose.Types.ObjectId();
 
       const res = await request(app)

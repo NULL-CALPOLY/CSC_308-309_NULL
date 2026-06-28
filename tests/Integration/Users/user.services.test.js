@@ -90,7 +90,7 @@ describe('User Services', () => {
 
   describe('User CRUD Operations', () => {
     test('should create a new user with hashed password', async () => {
-      const user = await userServices.addUser(baseUser);
+      const { user } = await userServices.addUser(baseUser);
 
       expect(user.name).toBe('John Doe');
       expect(user.email).toBe('john@example.com');
@@ -117,7 +117,7 @@ describe('User Services', () => {
     });
 
     test('should format location correctly when creating user', async () => {
-      const user = await userServices.addUser(baseUser);
+      const { user } = await userServices.addUser(baseUser);
       const found = await userModel.findById(user._id);
 
       expect(found.location.type).toBe('Point');
@@ -131,7 +131,7 @@ describe('User Services', () => {
         password: 'password123',
       };
 
-      const user = await userServices.addUser(userWithoutLocation);
+      const { user } = await userServices.addUser(userWithoutLocation);
       expect(user.name).toBe('No Location User');
     });
 
@@ -148,14 +148,14 @@ describe('User Services', () => {
     });
 
     test('should find a user by ID', async () => {
-      const user = await userServices.addUser(baseUser);
+      const { user } = await userServices.addUser(baseUser);
 
       const found = await userServices.findUserById(user._id);
       expect(found.email).toBe('john@example.com');
     });
 
     test('should update a user', async () => {
-      const user = await userServices.addUser(baseUser);
+      const { user } = await userServices.addUser(baseUser);
 
       const updated = await userServices.updateUser(user._id, {
         name: 'Updated Name',
@@ -164,7 +164,7 @@ describe('User Services', () => {
     });
 
     test('should delete a user', async () => {
-      const user = await userServices.addUser(baseUser);
+      const { user } = await userServices.addUser(baseUser);
 
       const deleted = await userServices.deleteUser(user._id);
       expect(deleted._id.toString()).toBe(user._id.toString());
