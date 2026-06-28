@@ -13,7 +13,7 @@ const SORT_OPTIONS = [
   { value: 'popular', label: 'Most Popular' },
 ];
 
-const dateCls = 'w-full box-border bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-[8px] text-[#f8fafc] py-2 px-3 text-[max(16px,0.88rem)] cursor-pointer [color-scheme:dark] outline-none transition-[border-color,box-shadow] duration-150 [&::-webkit-calendar-picker-indicator]:[filter:invert(0.55)_sepia(1)_hue-rotate(230deg)_saturate(2)] [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-70 [&::-webkit-calendar-picker-indicator]:hover:opacity-100 focus:border-[rgba(124,58,237,0.5)] focus:shadow-[0_0_0_3px_rgba(124,58,237,0.1)] dark:bg-[rgba(0,0,0,0.05)] dark:border-[rgba(0,0,0,0.15)] dark:text-[#1a1a2e] dark:[color-scheme:light] dark:[&::-webkit-calendar-picker-indicator]:[filter:none]';
+const dateCls = 'w-full box-border bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-[8px] text-[#f8fafc] py-[0.65rem] px-3 min-h-[44px] text-[max(16px,0.88rem)] cursor-pointer [color-scheme:dark] outline-none transition-[border-color,box-shadow] duration-150 [&::-webkit-calendar-picker-indicator]:[filter:invert(0.55)_sepia(1)_hue-rotate(230deg)_saturate(2)] [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-70 [&::-webkit-calendar-picker-indicator]:hover:opacity-100 focus:border-[rgba(124,58,237,0.5)] focus:shadow-[0_0_0_3px_rgba(124,58,237,0.1)] dark:bg-[rgba(0,0,0,0.05)] dark:border-[rgba(0,0,0,0.15)] dark:text-[#1a1a2e] dark:[color-scheme:light] dark:[&::-webkit-calendar-picker-indicator]:[filter:none]';
 
 export default function EventsPage() {
   useDocumentTitle('Events');
@@ -161,7 +161,7 @@ export default function EventsPage() {
 
         {/* Mobile filter toggle — hidden on desktop */}
         <button
-          className="hidden max-[900px]:flex items-center gap-2 bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.1)] text-[#f8fafc] py-[0.6rem] px-4 rounded-[8px] text-[0.9rem] font-semibold cursor-pointer w-fit mb-4 col-[1/-1] dark:bg-[rgba(0,0,0,0.04)] dark:border-[rgba(0,0,0,0.15)] dark:text-[#1a1a2e]"
+          className="hidden max-[900px]:flex items-center gap-2 bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.1)] text-[#f8fafc] py-[0.7rem] px-5 rounded-[10px] text-[0.9rem] font-semibold cursor-pointer w-fit mb-4 col-[1/-1] min-h-[44px] dark:bg-[rgba(0,0,0,0.04)] dark:border-[rgba(0,0,0,0.15)] dark:text-[#1a1a2e]"
           onClick={() => setSidebarOpen((o) => !o)}
           aria-expanded={sidebarOpen}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -185,7 +185,7 @@ export default function EventsPage() {
               {availableSorts.map((o) => (
                 <button
                   key={o.value}
-                  className={`bg-none border rounded-[8px] py-2 px-[0.85rem] text-[0.88rem] font-medium text-left cursor-pointer transition-[background,color,border-color] duration-150 ${
+                  className={`bg-none border rounded-[8px] py-[0.6rem] px-[0.85rem] min-h-[44px] text-[0.88rem] font-medium text-left cursor-pointer transition-[background,color,border-color] duration-150 flex items-center ${
                     sort === o.value
                       ? 'bg-[rgba(124,58,237,0.15)] border-[rgba(124,58,237,0.4)] text-[#a78bfa] font-semibold'
                       : 'border-[rgba(255,255,255,0.12)] text-[rgba(248,250,252,0.82)] hover:bg-[rgba(255,255,255,0.05)] hover:text-[#f8fafc] dark:border-[rgba(0,0,0,0.15)] dark:text-[rgba(26,26,46,0.75)] dark:hover:bg-[rgba(0,0,0,0.04)] dark:hover:text-[#1a1a2e]'
@@ -199,17 +199,19 @@ export default function EventsPage() {
 
           <div className="py-5 border-b border-[rgba(255,255,255,0.07)] dark:border-[rgba(0,0,0,0.08)]">
             <h3 className="m-0 mb-[0.85rem] text-[0.8rem] font-bold text-[rgba(248,250,252,0.72)] uppercase tracking-[0.08em] dark:text-[#64748b]">Date range</h3>
-            <label className="flex flex-col gap-[0.3rem] text-[0.82rem] text-[rgba(248,250,252,0.5)] mb-[0.6rem] dark:text-[rgba(26,26,46,0.5)]">
-              From
-              <input type="date" className={dateCls} value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
-            </label>
-            <label className="flex flex-col gap-[0.3rem] text-[0.82rem] text-[rgba(248,250,252,0.5)] mb-[0.6rem] dark:text-[rgba(26,26,46,0.5)]">
-              To
-              <input type="date" className={dateCls} value={dateTo} min={dateFrom} onChange={(e) => setDateTo(e.target.value)} />
-            </label>
+            <div className="flex flex-col gap-[0.5rem]">
+              <label className="flex flex-col gap-[0.3rem] text-[0.75rem] font-semibold text-[rgba(248,250,252,0.5)] uppercase tracking-[0.06em] dark:text-[rgba(26,26,46,0.5)]">
+                From
+                <input type="date" className={dateCls} value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
+              </label>
+              <label className="flex flex-col gap-[0.3rem] text-[0.75rem] font-semibold text-[rgba(248,250,252,0.5)] uppercase tracking-[0.06em] dark:text-[rgba(26,26,46,0.5)]">
+                To
+                <input type="date" className={dateCls} value={dateTo} min={dateFrom} onChange={(e) => setDateTo(e.target.value)} />
+              </label>
+            </div>
             {(dateFrom || dateTo) && (
               <button
-                className="bg-none border-none text-[#a78bfa] text-[0.82rem] cursor-pointer p-0 underline underline-offset-2"
+                className="mt-[0.5rem] bg-none border-none text-[#a78bfa] text-[0.82rem] cursor-pointer p-0 underline underline-offset-2 min-h-[36px] flex items-center"
                 onClick={() => { setDateFrom(''); setDateTo(''); }}>
                 Clear dates
               </button>

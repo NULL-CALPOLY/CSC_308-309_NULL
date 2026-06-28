@@ -188,10 +188,11 @@ function LocateButton({ icon, setUserPosition, setTracking, onCoordsChange }) {
 
   return (
     <button
-      className="absolute bottom-[10px] right-[15px] bg-[rgba(10,10,18,0.9)] border border-[rgba(124,58,237,0.35)] rounded-full p-[8px] shadow-[0_2px_12px_rgba(0,0,0,0.4)] cursor-pointer z-[1000] transition-[transform,background] duration-[100ms,200ms] hover:scale-110 hover:bg-[rgba(124,58,237,0.15)]"
+      className="absolute bottom-[10px] right-[15px] max-[768px]:bottom-auto max-[768px]:top-[calc(var(--nav-h,80px)+10px)] bg-[rgba(10,10,18,0.9)] border border-[rgba(124,58,237,0.35)] rounded-full p-[10px] shadow-[0_2px_12px_rgba(0,0,0,0.4)] cursor-pointer z-[1000] transition-[transform,background] duration-[100ms,200ms] hover:scale-110 hover:bg-[rgba(124,58,237,0.15)] active:scale-95"
       onClick={handleLocate}
-      title="Show my location">
-      <img src={icon} alt="Locate me" className="w-[22px] h-[22px] block invert" />
+      title="Show my location"
+      aria-label="Show my location">
+      <img src={icon} alt="" className="w-[22px] h-[22px] block invert" />
     </button>
   );
 }

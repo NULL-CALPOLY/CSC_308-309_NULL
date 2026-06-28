@@ -365,11 +365,11 @@ export default function Profile() {
 
           {/* Personal Information */}
           <div className="bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.07)] rounded-[16px] overflow-hidden backdrop-blur-[8px] transition-[border-color] duration-[250ms] focus-within:border-[rgba(124,58,237,0.3)]">
-            <div className="flex items-center gap-[0.65rem] px-6 py-[0.9rem] border-b border-[rgba(255,255,255,0.05)]">
+            <div className="flex items-center gap-[0.65rem] px-6 py-[0.9rem] border-b border-[rgba(255,255,255,0.05)] max-[480px]:px-4">
               <span className="w-[6px] h-[6px] rounded-full bg-[#7c3aed] shadow-[0_0_8px_rgba(124,58,237,0.7)] flex-shrink-0" />
               <h3 className="m-0 text-[0.68rem] font-medium uppercase tracking-[0.12em] text-[rgba(255,255,255,0.35)]">Personal Information</h3>
             </div>
-            <div className="p-6 grid grid-cols-2 gap-5 max-[720px]:grid-cols-1 max-[720px]:flex max-[720px]:flex-col">
+            <div className="p-6 grid grid-cols-2 gap-5 max-[720px]:grid-cols-1 max-[720px]:flex max-[720px]:flex-col max-[480px]:p-4">
               {/* Full Name */}
               <div className="flex flex-col gap-[0.4rem]">
                 <label className="text-[0.62rem] uppercase tracking-[0.1em] text-[rgba(255,255,255,0.28)]">Full Name</label>
@@ -423,7 +423,7 @@ export default function Profile() {
                 <label className="text-[0.62rem] uppercase tracking-[0.1em] text-[rgba(255,255,255,0.28)]">Date of Birth</label>
                 {isEditing ? (
                   <input
-                    className={`${fieldInputCls} [color-scheme:dark] [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:[filter:invert(0.6)]`}
+                    className={`${fieldInputCls} [color-scheme:dark] [&::-webkit-calendar-picker-indicator]:[filter:invert(0.6)] dark:[color-scheme:light] min-h-[44px]`}
                     type="date"
                     value={dateOfBirth}
                     onChange={(e) => setDateOfBirth(e.target.value)}
@@ -439,11 +439,11 @@ export default function Profile() {
 
           {/* About / Bio */}
           <div className="bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.07)] rounded-[16px] overflow-hidden backdrop-blur-[8px] transition-[border-color] duration-[250ms] focus-within:border-[rgba(124,58,237,0.3)]">
-            <div className="flex items-center gap-[0.65rem] px-6 py-[0.9rem] border-b border-[rgba(255,255,255,0.05)]">
+            <div className="flex items-center gap-[0.65rem] px-6 py-[0.9rem] border-b border-[rgba(255,255,255,0.05)] max-[480px]:px-4">
               <span className="w-[6px] h-[6px] rounded-full bg-[#7c3aed] shadow-[0_0_8px_rgba(124,58,237,0.7)] flex-shrink-0" />
               <h3 className="m-0 text-[0.68rem] font-medium uppercase tracking-[0.12em] text-[rgba(255,255,255,0.35)]">About</h3>
             </div>
-            <div className="p-6">
+            <div className="p-6 max-[480px]:p-4">
               <div className="flex flex-col gap-[0.4rem]">
                 {isEditing ? (
                   <>
@@ -469,11 +469,11 @@ export default function Profile() {
 
           {/* Contact & Location */}
           <div className="bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.07)] rounded-[16px] overflow-hidden backdrop-blur-[8px] transition-[border-color] duration-[250ms] focus-within:border-[rgba(124,58,237,0.3)]">
-            <div className="flex items-center gap-[0.65rem] px-6 py-[0.9rem] border-b border-[rgba(255,255,255,0.05)]">
+            <div className="flex items-center gap-[0.65rem] px-6 py-[0.9rem] border-b border-[rgba(255,255,255,0.05)] max-[480px]:px-4">
               <span className="w-[6px] h-[6px] rounded-full bg-[#7c3aed] shadow-[0_0_8px_rgba(124,58,237,0.7)] flex-shrink-0" />
               <h3 className="m-0 text-[0.68rem] font-medium uppercase tracking-[0.12em] text-[rgba(255,255,255,0.35)]">Contact &amp; Location</h3>
             </div>
-            <div className="p-6 grid grid-cols-2 gap-5 max-[720px]:grid-cols-1 max-[720px]:flex max-[720px]:flex-col">
+            <div className="p-6 grid grid-cols-2 gap-5 max-[720px]:grid-cols-1 max-[720px]:flex max-[720px]:flex-col max-[480px]:p-4">
               {/* Phone */}
               <div className="flex flex-col gap-[0.4rem]">
                 <label className="text-[0.62rem] uppercase tracking-[0.1em] text-[rgba(255,255,255,0.28)]">Phone</label>
@@ -513,11 +513,11 @@ export default function Profile() {
 
           {/* Interests */}
           <div className="bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.07)] rounded-[16px] overflow-hidden backdrop-blur-[8px] transition-[border-color] duration-[250ms] focus-within:border-[rgba(124,58,237,0.3)]">
-            <div className="flex items-center gap-[0.65rem] px-6 py-[0.9rem] border-b border-[rgba(255,255,255,0.05)]">
+            <div className="flex items-center gap-[0.65rem] px-6 py-[0.9rem] border-b border-[rgba(255,255,255,0.05)] max-[480px]:px-4">
               <span className="w-[6px] h-[6px] rounded-full bg-[#7c3aed] shadow-[0_0_8px_rgba(124,58,237,0.7)] flex-shrink-0" />
               <h3 className="m-0 text-[0.68rem] font-medium uppercase tracking-[0.12em] text-[rgba(255,255,255,0.35)]">Interests</h3>
             </div>
-            <div className="p-6">
+            <div className="p-6 max-[480px]:p-4">
               <div className="flex flex-col gap-[0.4rem]">
                 {isEditing ? (
                   <>
@@ -547,16 +547,16 @@ export default function Profile() {
             </div>
 
             {isEditing && (
-              <div className="flex justify-end gap-3 px-6 py-4 border-t border-[rgba(255,255,255,0.05)] bg-[rgba(0,0,0,0.15)] flex-wrap">
+              <div className="flex justify-end gap-3 px-6 py-4 border-t border-[rgba(255,255,255,0.05)] bg-[rgba(0,0,0,0.15)] flex-wrap max-[480px]:flex-col-reverse max-[480px]:px-4 max-[480px]:gap-2">
                 <button
                   type="button"
-                  className="py-[0.6rem] px-[1.4rem] rounded-[8px] text-[0.72rem] font-medium tracking-[0.07em] uppercase cursor-pointer border border-[rgba(255,255,255,0.1)] bg-transparent text-[rgba(255,255,255,0.45)] transition-all duration-200 hover:border-[rgba(255,255,255,0.3)] hover:text-white"
+                  className="py-[0.65rem] px-[1.4rem] rounded-[8px] text-[0.72rem] font-medium tracking-[0.07em] uppercase cursor-pointer border border-[rgba(255,255,255,0.1)] bg-transparent text-[rgba(255,255,255,0.45)] transition-all duration-200 hover:border-[rgba(255,255,255,0.3)] hover:text-white min-h-[44px] max-[480px]:w-full"
                   onClick={cancelEditing}>
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="py-[0.6rem] px-[1.4rem] rounded-[8px] text-[0.72rem] font-medium tracking-[0.07em] uppercase cursor-pointer border-none bg-[#7c3aed] text-white transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed hover:not-disabled:bg-[#6d28d9] hover:not-disabled:-translate-y-px hover:not-disabled:shadow-[0_6px_20px_rgba(124,58,237,0.4)]"
+                  className="py-[0.65rem] px-[1.4rem] rounded-[8px] text-[0.72rem] font-medium tracking-[0.07em] uppercase cursor-pointer border-none bg-[#7c3aed] text-white transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed hover:not-disabled:bg-[#6d28d9] hover:not-disabled:-translate-y-px hover:not-disabled:shadow-[0_6px_20px_rgba(124,58,237,0.4)] min-h-[44px] max-[480px]:w-full"
                   disabled={saving}>
                   {saving ? 'Saving…' : 'Save Profile'}
                 </button>
@@ -572,13 +572,13 @@ export default function Profile() {
 
           {/* Events Attending */}
           <div className="bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.07)] rounded-[16px] overflow-hidden backdrop-blur-[8px]">
-            <div className="flex items-center gap-[0.65rem] px-6 py-[0.9rem] border-b border-[rgba(255,255,255,0.05)]">
+            <div className="flex items-center gap-[0.65rem] px-6 py-[0.9rem] border-b border-[rgba(255,255,255,0.05)] max-[480px]:px-4">
               <span className="w-[6px] h-[6px] rounded-full bg-[#7c3aed] shadow-[0_0_8px_rgba(124,58,237,0.7)] flex-shrink-0" />
               <h3 className="m-0 text-[0.68rem] font-medium uppercase tracking-[0.12em] text-[rgba(255,255,255,0.35)]">Events I'm Attending</h3>
             </div>
-            <div className="p-5">
+            <div className="p-5 max-[480px]:p-3">
               {attendingEvents.length ? (
-                <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4 max-[720px]:grid-cols-1">
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-4 max-[720px]:grid-cols-1">
                   {attendingEvents.map(renderEventCard)}
                 </div>
               ) : (
@@ -591,13 +591,13 @@ export default function Profile() {
 
           {/* Events Hosting */}
           <div className="bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.07)] rounded-[16px] overflow-hidden backdrop-blur-[8px]">
-            <div className="flex items-center gap-[0.65rem] px-6 py-[0.9rem] border-b border-[rgba(255,255,255,0.05)]">
+            <div className="flex items-center gap-[0.65rem] px-6 py-[0.9rem] border-b border-[rgba(255,255,255,0.05)] max-[480px]:px-4">
               <span className="w-[6px] h-[6px] rounded-full bg-[#7c3aed] shadow-[0_0_8px_rgba(124,58,237,0.7)] flex-shrink-0" />
               <h3 className="m-0 text-[0.68rem] font-medium uppercase tracking-[0.12em] text-[rgba(255,255,255,0.35)]">Events I'm Hosting</h3>
             </div>
-            <div className="p-5">
+            <div className="p-5 max-[480px]:p-3">
               {hostedEvents.length ? (
-                <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4 max-[720px]:grid-cols-1">
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-4 max-[720px]:grid-cols-1">
                   {hostedEvents.map(renderEventCard)}
                 </div>
               ) : (

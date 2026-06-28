@@ -166,6 +166,8 @@ body:has(.HomePage) {
     border-top-right-radius: 20px;
     box-shadow: 0 -6px 28px rgba(0,0,0,0.22), 0 -1px 0 rgba(124,58,237,0.15);
     overflow: hidden;
+    /* iOS safe area — prevent content clipping at home indicator */
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
   .col-closed .Event-Column {
     transform: translateY(100%);
@@ -175,7 +177,7 @@ body:has(.HomePage) {
     right: 50%;
     transform: translate(50%, 0);
     width: 64px;
-    height: 28px;
+    height: 36px;
     border-radius: 0 0 8px 8px;
     background: transparent;
     border: none;
@@ -188,13 +190,14 @@ body:has(.HomePage) {
   .col-close-btn::before {
     content: '';
     display: block;
-    width: 40px;
+    width: 44px;
     height: 5px;
     border-radius: 3px;
     background: rgba(255, 255, 255, 0.2);
     transition: background 0.2s;
   }
-  .col-close-btn:hover::before {
+  .col-close-btn:hover::before,
+  .col-close-btn:active::before {
     background: rgba(124, 58, 237, 0.6);
   }
   .col-close-btn img {
@@ -205,14 +208,16 @@ body:has(.HomePage) {
     bottom: 20px;
     left: 50%;
     width: auto;
-    height: 44px;
-    padding: 0 20px;
-    border-radius: 22px;
+    height: 48px;
+    padding: 0 22px;
+    border-radius: 24px;
     transform: translateX(-50%) translateY(10px);
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #7c3aed;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #a78bfa;
     gap: 8px;
+    /* Ensure it's never hidden behind iOS home indicator */
+    bottom: max(20px, calc(env(safe-area-inset-bottom, 0px) + 16px));
   }
   .col-open-label {
     display: inline;
@@ -227,7 +232,20 @@ body:has(.HomePage) {
   }
   .col-closed .Create-Event-Button {
     left: 50%;
-    bottom: 76px;
+    bottom: max(76px, calc(env(safe-area-inset-bottom, 0px) + 72px));
+  }
+
+  /* Push Leaflet zoom controls below the fixed navbar so they're not hidden */
+  .leaflet-top.leaflet-left {
+    top: calc(var(--nav-h, 80px) + 8px);
+  }
+
+  /* Leaflet attribution bar — ensure it doesn't overlap event column handle */
+  .leaflet-bottom.leaflet-right {
+    bottom: calc(65vh + 4px);
+  }
+  .col-closed .leaflet-bottom {
+    bottom: 4px;
   }
 }
 
