@@ -184,11 +184,18 @@ export default function Navbar({ page = '/' }) {
 
       {/* Mobile slide-down menu */}
       {menuOpen && (
-        <div
-          id="navbar-mobile-menu"
-          className="fixed top-[var(--nav-h)] left-0 right-0 bg-[#080808] border-b border-[rgba(124,58,237,0.2)] px-5 pb-5 pt-3 flex flex-col gap-1 z-[999] shadow-[0_12px_40px_rgba(0,0,0,0.6)] animate-fade-in"
-          role="navigation"
-          aria-label="Mobile menu">
+        <>
+          {/* Backdrop — closes menu on tap outside */}
+          <div
+            className="fixed inset-0 top-[var(--nav-h)] bg-[rgba(0,0,0,0.55)] z-[998] animate-fade-in"
+            aria-hidden="true"
+            onClick={closeMenu}
+          />
+          <div
+            id="navbar-mobile-menu"
+            className="fixed top-[var(--nav-h)] left-0 right-0 bg-[#080808] border-b border-[rgba(124,58,237,0.2)] px-5 pb-5 pt-3 flex flex-col gap-1 z-[999] shadow-[0_12px_40px_rgba(0,0,0,0.6)] animate-fade-in"
+            role="navigation"
+            aria-label="Mobile menu">
           {[
             { to: '/home', label: 'Map' },
             { to: '/events', label: 'Events' },
@@ -254,6 +261,7 @@ export default function Navbar({ page = '/' }) {
             </>
           )}
         </div>
+        </>
       )}
     </nav>
   );
