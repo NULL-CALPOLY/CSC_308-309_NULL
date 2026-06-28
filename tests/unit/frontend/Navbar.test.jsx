@@ -113,8 +113,9 @@ describe('Navbar', () => {
       });
     });
 
-    it('shows Logout button', () => {
+    it('shows Logout button after opening profile dropdown', () => {
       renderNavbar();
+      fireEvent.click(screen.getByRole('button', { name: /open profile menu/i }));
       expect(
         screen.getByRole('button', { name: /logout/i })
       ).toBeInTheDocument();
@@ -122,6 +123,7 @@ describe('Navbar', () => {
 
     it('calls logout when Logout is clicked', () => {
       renderNavbar();
+      fireEvent.click(screen.getByRole('button', { name: /open profile menu/i }));
       fireEvent.click(screen.getByRole('button', { name: /logout/i }));
       expect(mockLogout).toHaveBeenCalled();
     });

@@ -155,7 +155,7 @@ export default function Navbar({ page = '/' }) {
                     onClick={() => { setDropdownOpen(false); logout(); }}
                     className="flex items-center gap-3 w-full px-4 py-2.5 text-[0.875rem] font-medium text-left bg-transparent border-none cursor-pointer text-[rgba(255,100,100,0.85)] transition-colors duration-150 hover:text-[#f87171] hover:bg-[rgba(239,68,68,0.06)]">
                     <span className="text-[1rem] w-5 text-center">↪</span>
-                    Log out
+                    Logout
                   </button>
                 </div>
               </div>
