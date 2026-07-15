@@ -1,0 +1,523 @@
+================================================================================
+FINDR — PRODUCT DOCUMENT
+================================================================================
+Version: 1.0
+Platform: Web (findr.page)
+Team: Brian, Vishnu, Ryan, Aaron — Cal Poly CSC 308/309
+
+--------------------------------------------------------------------------------
+TABLE OF CONTENTS
+--------------------------------------------------------------------------------
+  1. Product Overview
+  2. Target Audience
+  3. Value Proposition
+  4. Core Features
+  5. User Roles & Permissions
+  6. User Stories
+  7. User Flows
+  8. Functional Requirements
+  9. Non-Functional Requirements
+ 10. Product Screens
+ 11. Out of Scope (Known Limitations)
+
+================================================================================
+1. PRODUCT OVERVIEW
+================================================================================
+
+Findr is a location-based social discovery platform designed to help students
+and community members find, attend, and host events and clubs near them.
+Users explore a live interactive map to see what is happening around them,
+RSVP to events that match their interests, and connect with organizations on
+campus and in the wider community.
+
+The core thesis: discovery should be spatial and personal. Instead of browsing
+an undifferentiated event list, users see events pinned on a map and receive
+personalized recommendations ranked by their stated interest areas.
+
+--------------------------------------------------------------------------------
+Tagline: "Discover events, join clubs, connect with people near you."
+--------------------------------------------------------------------------------
+
+================================================================================
+2. TARGET AUDIENCE
+================================================================================
+
+Primary
+  - Cal Poly students (San Luis Obispo) — on-campus club discovery, academic
+    and social events, verified student badge for student-only organizations.
+
+Secondary
+  - Faculty, staff, and community members in and around campus who attend or
+    host community events.
+
+Tertiary
+  - Student organizations and clubs that want a managed registration and
+    membership channel beyond a static web page.
+
+================================================================================
+3. VALUE PROPOSITION
+================================================================================
+
+For attendees
+  - One place to find everything happening nearby — no more scattered flyers,
+    Instagram posts, or out-of-date bulletin boards.
+  - Personalized "For You" ranking surfaces events that match stated interests.
+  - Spatial context: see events on a map, understand proximity at a glance.
+
+For hosts / organizers
+  - Free, instant event creation with address autocomplete and map pin placement.
+  - Built-in RSVP tracking and attendee list.
+  - Gated comment thread for direct communication with registered attendees.
+
+For clubs and organizations
+  - Structured registration and admin-approval workflow establishes legitimacy.
+  - Membership management (join / leave) built in.
+  - Student-only gating for organizations that restrict membership.
+
+================================================================================
+4. CORE FEATURES
+================================================================================
+
+  A. Interactive Map
+     — Live map with event pins; clicking a pin opens a detail card.
+     — Geolocation ("Near Me") to center the map on the user's current position.
+     — Distance-radius filter (5 / 16 / 40 / 100 km).
+
+  B. Event Discovery
+     — Search events by keyword (name, description, address).
+     — Filter by interest tags and date range.
+     — Sort by: Soonest, Most Popular, For You (personalized, auth-only).
+     — "Recommended for You" section highlights the top 4 interest-matched
+       events at the top of the browse page.
+
+  C. Event Management (hosts)
+     — Create events: title, description, address (autocomplete), date/time,
+       interest tags. Limited to 2 events per user per day.
+     — Edit or delete own events.
+     — View RSVP'd attendee list with links to attendee profiles.
+
+  D. RSVP & Attendance
+     — One-click join / leave for any event.
+     — Gated comment thread visible only to the host and RSVP'd attendees.
+
+  E. Clubs & Organizations
+     — Browse approved clubs; search by name, category, or description.
+     — Club detail page: description, member count, upcoming and past events.
+     — One-click join / leave for any approved club.
+     — Student-only clubs: accessible only to users with a verified
+       student badge (school-domain email).
+
+  F. Club Registration & Admin Approval
+     — Any authenticated user can submit a club registration (name, description,
+       category, contact info, logo, student-only flag).
+     — New submissions enter a pending queue invisible to the public.
+     — Platform admins review the queue and approve or reject each submission
+       (rejection includes an optional reason).
+
+  G. User Profiles
+     — Public profile: name, avatar, bio, city, interests, hosted events,
+       verified student badge.
+     — Own profile: editable fields (name, email, bio, phone, city, date of
+       birth, gender, interests, profile photo).
+
+  H. Authentication & Identity
+     — Email/password registration with mandatory email verification link.
+     — Google OAuth sign-in (bypasses email verification step).
+     — Verified Student badge auto-assigned for recognized school email domains.
+     — Secure session management: short-lived access tokens refreshed silently
+       via HttpOnly cookie.
+
+  I. Safety & Blocking
+     — Users can block any other user.
+     — Blocked users cannot view the blocker's profile or events (enforced
+       server-side — not just hidden on the client).
+     — Block list managed from the Settings page.
+
+  J. Settings
+     — Light / dark theme toggle.
+     — Email notification preference toggle.
+     — Manage blocked users.
+     — Sign out of all devices.
+     — Delete account (with confirmation).
+
+================================================================================
+5. USER ROLES & PERMISSIONS
+================================================================================
+
+  Unauthenticated (guest)
+    — Browse map, events list, clubs list, public profiles.
+    — Cannot RSVP, create events, join clubs, post comments, or view event
+      detail pages.
+    — Prompted to sign in when attempting any of the above.
+
+  Authenticated (standard user)
+    — All guest capabilities plus: RSVP, create/edit/delete own events,
+      join/leave clubs, post comments, manage profile, block users.
+
+  Verified Student (subset of authenticated)
+    — All standard user capabilities plus: access to student-only clubs.
+    — Verified Student badge shown on profile.
+
+  Admin
+    — All standard user capabilities plus: access to /admin dashboard to
+      approve or reject club registration submissions.
+    — Admin status is server-configured (not user-controlled).
+
+================================================================================
+6. USER STORIES
+================================================================================
+
+--- Discovery ---
+
+US-01  As a guest, I want to see events on a map so that I can understand
+       what is happening near me without signing up.
+
+US-02  As a guest, I want to search and filter events by keyword and interest
+       tags so that I can find events relevant to me.
+
+US-03  As a guest, I want to browse the clubs list and view a club's detail
+       page so that I can learn about organizations before committing to join.
+
+US-04  As an authenticated user, I want to see a "For You" sort that surfaces
+       events matching my listed interests so that discovery feels personal.
+
+US-05  As an authenticated user, I want to see "Recommended" events at the
+       top of the browse page so that I notice the most relevant upcoming events
+       immediately.
+
+US-06  As a user, I want to enable "Near Me" location and pick a distance
+       radius so that I only see events within a realistic travel distance.
+
+--- Attendance ---
+
+US-07  As an authenticated user, I want to RSVP to an event with one click
+       so that I can register my attendance quickly.
+
+US-08  As an authenticated user, I want to un-RSVP from an event if my plans
+       change so that the attendee list stays accurate.
+
+US-09  As an RSVP'd attendee, I want to read and post messages in the event
+       comment thread so that I can communicate with the host and other
+       attendees.
+
+US-10  As an authenticated user, I want to view the attendee list for an event
+       so that I can see who else will be there and explore their profiles.
+
+--- Event Hosting ---
+
+US-11  As an authenticated user, I want to create an event with a title,
+       description, location, date/time, and interest tags so that others can
+       discover and join it.
+
+US-12  As an event host, I want to edit my event details so that I can correct
+       errors or update information after publishing.
+
+US-13  As an event host, I want to delete my event so that it is removed from
+       the map and all listings.
+
+US-14  As a host, I want to see the list of people who RSVPd to my event so
+       that I can plan accordingly.
+
+--- Clubs ---
+
+US-15  As an authenticated user, I want to join a club with one click so that
+       I become a listed member without a separate sign-up process.
+
+US-16  As a verified student, I want to join student-only clubs so that I can
+       access organizations restricted to enrolled students.
+
+US-17  As an authenticated user, I want to submit a club registration so that
+       my organization can be listed on the platform once approved.
+
+US-18  As an admin, I want to review pending club registrations and
+       approve or reject each one so that only legitimate organizations appear
+       in the public listing.
+
+--- Profile & Identity ---
+
+US-19  As a new user, I want to register with my email and password and verify
+       my email before signing in so that my account is secure.
+
+US-20  As a user, I want to sign in with Google so that I can authenticate
+       quickly without managing a separate password.
+
+US-21  As a user, I want to edit my profile (bio, interests, photo, city) so
+       that other users get an accurate picture of who I am.
+
+US-22  As a user, I want to view any other user's public profile so that I can
+       learn about hosts and attendees.
+
+US-23  As a user, I want to receive a Verified Student badge automatically
+       when I register with my school email so that organizations know I am a
+       student.
+
+--- Safety ---
+
+US-24  As a user, I want to block another user so that they cannot view my
+       profile or events and I do not see theirs.
+
+US-25  As a user, I want to manage my block list in Settings so that I can
+       review and unblock people I have previously blocked.
+
+--- Settings ---
+
+US-26  As a user, I want to switch between light and dark mode so that the
+       app is comfortable to use in any lighting environment.
+
+US-27  As a user, I want to toggle email notifications so that I receive only
+       the communications I want.
+
+US-28  As a user, I want to delete my account with a confirmation step so
+       that I can remove my data from the platform if I choose.
+
+================================================================================
+7. USER FLOWS
+================================================================================
+
+FLOW 1 — New User Registration
+  1. Guest lands on Landing page.
+  2. Clicks "Get Started" or "Sign Up."
+  3. Registration modal opens: name, email, password.
+  4. On submit: account created, verification email sent.
+  5. User opens email, clicks verification link.
+  6. Browser loads /verify-email/:token; account activates with success message.
+  7. User clicks "Sign In," enters credentials, lands on Map Home (/home).
+
+FLOW 2 — Google Sign-In
+  1. Guest clicks "Sign In" from any page.
+  2. Sign In modal opens; user clicks "Continue with Google."
+  3. Google OAuth popup; user selects account.
+  4. Account created or matched; user lands on Map Home.
+  5. If school email detected, Verified Student badge is set automatically.
+
+FLOW 3 — Event Discovery & RSVP
+  1. Authenticated user on Map Home sees event pins.
+  2. Clicks a pin; event card preview opens in the sidebar.
+  3. Clicks "View Details"; navigates to /events/:id.
+  4. Reads title, description, date/time, host, interest tags, attendee count.
+  5. Clicks "Join Event"; user is added to the attendee list.
+  6. Comment thread section unlocks; user can read and post messages.
+
+FLOW 4 — Create Event
+  1. Authenticated user on Map Home clicks "Create Event" button.
+  2. Modal opens with form fields: title, description, address (autocomplete
+     powered), room/detail, interest tags, start date/time, end date/time.
+  3. User completes form and submits.
+  4. Event is created; new pin appears on the map immediately.
+  5. User is the host; event appears under "Hosting" on their Profile page.
+  [Daily limit of 2 events enforced; error shown if exceeded.]
+
+FLOW 5 — Club Registration & Approval
+  1. Authenticated user on /clubs clicks "Register your club."
+  2. Modal: club name, description, category, contact email, phone,
+     student-only flag, logo upload.
+  3. Submission creates a pending entry; user sees confirmation message.
+  4. Admin visits /admin; sees the new pending club in the review queue.
+  5. Admin reads details; clicks "Approve" or "Reject" (with optional reason).
+  6. Approved club appears immediately in the public /clubs listing.
+
+FLOW 6 — Blocking a User
+  1. User visits another user's public profile at /users/:id.
+  2. Clicks "Block User."
+  3. Confirmation prompt; user confirms.
+  4. Blocked user can no longer see the blocker's profile or events.
+  5. Blocker can later visit Settings > Blocked Users to view the list and
+     unblock individuals.
+
+FLOW 7 — Account Deletion
+  1. Authenticated user navigates to /profile.
+  2. Clicks "Delete Account."
+  3. Confirmation modal appears requiring explicit acknowledgment.
+  4. On confirm: account and all associated data are deleted; user is logged
+     out and redirected to the Landing page.
+
+================================================================================
+8. FUNCTIONAL REQUIREMENTS
+================================================================================
+
+FR-01  The platform shall allow unauthenticated users to browse the map,
+       events list, clubs list, and public user profiles without logging in.
+
+FR-02  The platform shall require email verification before a password-signup
+       account can log in for the first time.
+
+FR-03  The platform shall support Google OAuth as an alternative sign-in
+       method, bypassing the email verification step.
+
+FR-04  The platform shall automatically assign a Verified Student flag to
+       accounts registered with a recognized school email domain.
+
+FR-05  Event discovery shall support full-text search across event title,
+       description, and address.
+
+FR-06  Event discovery shall support multi-select interest tag filtering and
+       date range filtering.
+
+FR-07  Authenticated users shall be able to sort event results by Soonest,
+       Most Popular, and For You (interest-overlap ranking).
+
+FR-08  The map shall display all upcoming events as interactive pins; clicking
+       a pin shall surface a preview in the sidebar.
+
+FR-09  The platform shall allow geolocation-based "Near Me" filtering with
+       user-selectable radius options.
+
+FR-10  Authenticated users shall be able to RSVP to (join) and un-RSVP from
+       any event that has not already ended.
+
+FR-11  The event comment thread shall be visible and writable only by the
+       event host and RSVP'd attendees.
+
+FR-12  Authenticated users shall be able to create events with a daily cap
+       of two events per user, enforced server-side.
+
+FR-13  Event hosts shall be able to edit or delete their own events.
+
+FR-14  Authenticated users shall be able to join or leave any approved club
+       with a single action.
+
+FR-15  Student-only clubs shall only be joinable by users whose Verified
+       Student flag is set.
+
+FR-16  Club registrations shall require admin approval before the club is
+       visible in the public listing.
+
+FR-17  Admins shall be able to approve or reject club registrations; rejections
+       shall include an optional written reason.
+
+FR-18  Blocking a user shall prevent the blocked user from viewing the
+       blocker's profile and events, enforced at the API level.
+
+FR-19  Users shall be able to upload a profile photo; profile photos shall be
+       stored externally (cloud image host).
+
+FR-20  The platform shall provide light and dark theme options, persisted
+       across sessions.
+
+FR-21  Account deletion shall remove the user's data and terminate active
+       sessions.
+
+================================================================================
+9. NON-FUNCTIONAL REQUIREMENTS
+================================================================================
+
+NFR-01  Performance
+        — Map page shall load and display pins within 3 seconds on a standard
+          broadband connection.
+        — API responses for event searches shall complete within 500 ms for
+          typical query sizes.
+
+NFR-02  Scalability
+        — Geospatial queries (nearby events) shall use a 2dsphere index to
+          support efficient radius lookups as event volume grows.
+
+NFR-03  Security
+        — Passwords shall be hashed using a strong adaptive algorithm (bcrypt).
+        — Access tokens shall be short-lived; refresh tokens shall be stored in
+          HttpOnly cookies, not accessible to JavaScript.
+        — Blocking enforcement shall be server-side, not client-side only.
+        — Admin routes shall verify admin status server-side on every request.
+
+NFR-04  Reliability
+        — The platform shall provide informative error messages for failed
+          actions (e.g. duplicate email, daily event cap exceeded, join
+          failure for student-only club).
+
+NFR-05  Accessibility
+        — Interactive controls shall have descriptive ARIA labels.
+        — Tap targets on mobile shall meet a minimum size of 44 × 44 px.
+        — Color contrast shall meet WCAG AA minimums.
+
+NFR-06  Usability
+        — Core actions (RSVP, join club, create event) shall be reachable
+          within two taps/clicks from the home screen.
+        — The platform shall be fully usable on mobile screen widths
+          (≥ 320 px).
+
+NFR-07  Privacy
+        — A blocked user shall not know they have been blocked (they simply
+          receive a 404 on the blocker's profile and events are not surfaced).
+
+================================================================================
+10. PRODUCT SCREENS
+================================================================================
+
+  Landing Page        — Hero section, feature highlights, live event preview,
+                        sign-up CTA.
+
+  Map Home (/home)    — Full-screen interactive map, collapsible event sidebar,
+                        "Create Event" floating button, "Near Me" locate button.
+
+  Events (/events)    — Search bar, interest/date filters, sort controls,
+                        "Recommended" strip (auth), paginated event cards.
+
+  Event Detail        — Title, description, host info, date/time, interest tags,
+  (/events/:id)         attendee count + list, RSVP button, comment thread.
+                        [Auth required]
+
+  Explore (/explore)  — Alternate discovery view; interest chips, date filter,
+                        Near Me radius slider, event card grid.
+
+  Clubs (/clubs)      — Search bar, club cards with join/leave toggle,
+                        "Register your club" CTA.
+
+  Club Detail         — Club description, member count, member list,
+  (/clubs/:id)          upcoming and past events tabs.
+
+  Profile (/profile)  — Avatar, editable fields, interest tags, hosted events,
+                        attending events, delete account.
+
+  Public Profile      — Read-only: name, avatar, bio, city, interests,
+  (/users/:id)          verified student badge, hosted events, block button.
+
+  Settings            — Theme toggle, email notification toggle, blocked users
+  (/settings)           list, sign out of all devices.
+
+  Admin (/admin)      — Pending club review queue, approve/reject controls.
+                        [Admin only]
+
+  Verify Email        — Token validation landing; success or error message;
+  (/verify-email/:t)    link to sign in.
+
+  404                 — Not found fallback with navigation link home.
+
+  Modals (global)
+    Sign In           — Email/password fields, show/hide password toggle,
+                        Google OAuth, link to Registration.
+    Registration      — Name, email, password, link to Sign In.
+    Create Event      — Title, description, address autocomplete, room detail,
+                        interest tags, start/end date-time pickers.
+    Register Club     — Name, description, category, contact info, student-only
+                        flag, logo upload.
+    Attendees List    — Avatar grid with names, clickable to public profiles.
+    Delete Account    — Confirmation dialog with explicit acknowledgment.
+
+================================================================================
+11. OUT OF SCOPE (KNOWN LIMITATIONS & FUTURE WORK)
+================================================================================
+
+  — Forgot Password / password reset flow (backend groundwork exists; not yet
+    live in the UI).
+
+  — In-app direct messaging between users (currently limited to per-event
+    comment threads).
+
+  — Push / real-time notifications (web push or email) for event updates,
+    club announcements, or new comments.
+
+  — Event ticketing or paid RSVP (events are currently free / open).
+
+  — Recurring events (events are one-off only; no repeat scheduling).
+
+  — Club-hosted event creation from within the club admin interface
+    (events are currently created by individuals, not by organizations).
+
+  — Native mobile applications (current platform is web-only; responsive but
+    not a native iOS/Android app).
+
+  — Privacy settings beyond blocking (e.g. private profiles, hidden attendee
+    lists, invite-only events).
+
+================================================================================
+END OF DOCUMENT
+================================================================================
