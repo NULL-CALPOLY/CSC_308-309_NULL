@@ -13,7 +13,10 @@ const ICON_SIZES = {
   lg: 'w-4 h-4',
 };
 
-export default function VerifiedBadge({ size = 'md', label = 'Verified Student' }) {
+export default function VerifiedBadge({
+  size = 'md',
+  label = 'Verified Student',
+}) {
   return (
     <span
       className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[rgba(52,211,153,0.12)] border border-[rgba(52,211,153,0.3)] text-[#34d399] font-semibold ${SIZE_CLASSES[size] ?? SIZE_CLASSES.md}`}

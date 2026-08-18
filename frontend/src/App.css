@@ -72,7 +72,9 @@ body:has(.HomePage) {
   align-items: center;
   justify-content: center;
   z-index: 20;
-  transition: background 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
   pointer-events: auto;
   box-sizing: content-box;
   padding: 0;
@@ -115,7 +117,10 @@ body:has(.HomePage) {
   opacity: 0;
   pointer-events: none;
   transform: translateX(-8px);
-  transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    background 0.2s;
 }
 
 .col-open-btn img {
@@ -164,7 +169,9 @@ body:has(.HomePage) {
     max-height: 65vh;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
-    box-shadow: 0 -6px 28px rgba(0,0,0,0.22), 0 -1px 0 rgba(124,58,237,0.15);
+    box-shadow:
+      0 -6px 28px rgba(0, 0, 0, 0.22),
+      0 -1px 0 rgba(124, 58, 237, 0.15);
     overflow: hidden;
     /* iOS safe area — prevent content clipping at home indicator */
     padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -259,7 +266,10 @@ body:has(.HomePage) {
   content: '';
   position: fixed;
   inset: 0;
-  background-image: radial-gradient(rgba(124, 58, 237, 0.1) 1px, transparent 1px);
+  background-image: radial-gradient(
+    rgba(124, 58, 237, 0.1) 1px,
+    transparent 1px
+  );
   background-size: 32px 32px;
   pointer-events: none;
   z-index: 0;
@@ -273,7 +283,11 @@ body:has(.HomePage) {
   left: -10%;
   width: 60vw;
   height: 60vw;
-  background: radial-gradient(ellipse, rgba(124, 58, 237, 0.06) 0%, transparent 65%);
+  background: radial-gradient(
+    ellipse,
+    rgba(124, 58, 237, 0.06) 0%,
+    transparent 65%
+  );
   pointer-events: none;
   z-index: 0;
 }
@@ -336,21 +350,33 @@ body:has(.HomePage) {
 }
 
 @keyframes shimmer {
-  from { background-position: 200% 0; }
-  to { background-position: -200% 0; }
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
 }
 
 @keyframes spin-slow {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slide-up {
@@ -365,35 +391,70 @@ body:has(.HomePage) {
 }
 
 @keyframes ring-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes grid-drift {
-  0% { background-position: 0 0; }
-  100% { background-position: 32px 32px; }
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 32px 32px;
+  }
 }
 
 @keyframes pulse-dot {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.6); opacity: 0.5; }
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.6);
+    opacity: 0.5;
+  }
 }
 
 @keyframes shake {
-  10%, 90% { transform: translateX(-2px); }
-  20%, 80% { transform: translateX(4px); }
-  30%, 50%, 70% { transform: translateX(-6px); }
-  40%, 60% { transform: translateX(6px); }
+  10%,
+  90% {
+    transform: translateX(-2px);
+  }
+  20%,
+  80% {
+    transform: translateX(4px);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translateX(-6px);
+  }
+  40%,
+  60% {
+    transform: translateX(6px);
+  }
 }
 
 @keyframes ec-pulse {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 /* Modal animations */
 @keyframes overlay-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes card-in {
@@ -419,8 +480,12 @@ body:has(.HomePage) {
 }
 
 @keyframes backdrop-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes modal-in {
@@ -446,8 +511,12 @@ body:has(.HomePage) {
 }
 
 @keyframes iup-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes iup-slide-in {
@@ -462,7 +531,9 @@ body:has(.HomePage) {
 }
 
 @keyframes iup-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes nmm-slide-in {
@@ -477,52 +548,97 @@ body:has(.HomePage) {
 }
 
 @keyframes cd-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes dam-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes dam-slide-up {
-  from { opacity: 0; transform: translateY(20px) scale(0.97); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @keyframes dam-shake {
-  10%, 90% { transform: translateX(-2px); }
-  20%, 80% { transform: translateX(4px); }
-  30%, 50%, 70% { transform: translateX(-6px); }
-  40%, 60% { transform: translateX(6px); }
+  10%,
+  90% {
+    transform: translateX(-2px);
+  }
+  20%,
+  80% {
+    transform: translateX(4px);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translateX(-6px);
+  }
+  40%,
+  60% {
+    transform: translateX(6px);
+  }
 }
 
 @keyframes dam-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes lep-shimmer {
-  from { background-position: 200% 0; }
-  to { background-position: -200% 0; }
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
 }
 
 @keyframes explore-shimmer {
-  from { background-position: 200% 0; }
-  to { background-position: -200% 0; }
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
 }
 
 @keyframes ep-shimmer {
-  from { background-position: 200% 0; }
-  to { background-position: -200% 0; }
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
 }
 
 @keyframes asb-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes roverlay-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes rcard-in {
@@ -548,7 +664,9 @@ body:has(.HomePage) {
 }
 
 @keyframes st-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ── Leaflet map overrides ── */
@@ -611,7 +729,11 @@ body:has(.landing-page) {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-image: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.04) 1px,
+    transparent 1px
+  );
   background-size: 40px 40px;
   pointer-events: none;
 }
@@ -634,7 +756,11 @@ body:has(.landing-page) {
   right: -40px;
   width: 160px;
   height: 160px;
-  background: radial-gradient(ellipse, rgba(124, 58, 237, 0.08) 0%, transparent 70%);
+  background: radial-gradient(
+    ellipse,
+    rgba(124, 58, 237, 0.08) 0%,
+    transparent 70%
+  );
   pointer-events: none;
 }
 
@@ -744,7 +870,9 @@ body:has(.landing-page) {
 .modal .asb-dropdown {
   background: #151515;
   border-color: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(124, 58, 237, 0.08);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(124, 58, 237, 0.08);
 }
 
 .modal .asb-option {
@@ -773,7 +901,11 @@ body:has(.landing-page) {
   right: -60px;
   width: 220px;
   height: 220px;
-  background: radial-gradient(ellipse, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
+  background: radial-gradient(
+    ellipse,
+    rgba(124, 58, 237, 0.15) 0%,
+    transparent 70%
+  );
   pointer-events: none;
 }
 

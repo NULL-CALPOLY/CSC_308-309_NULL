@@ -68,7 +68,9 @@ export default function Clubs() {
                 ...c,
                 members: joining
                   ? [...(c.members || []), user.id]
-                  : (c.members || []).filter((m) => String(m) !== String(user.id)),
+                  : (c.members || []).filter(
+                      (m) => String(m) !== String(user.id)
+                    ),
               }
             : c
         )
@@ -107,7 +109,9 @@ export default function Clubs() {
           </div>
           <button
             className="bg-[#7c3aed] border-none text-white font-bold py-[0.65rem] px-5 rounded-[8px] cursor-pointer whitespace-nowrap flex-shrink-0 text-[0.9rem] tracking-[0.02em] shadow-[0_4px_14px_rgba(124,58,237,0.35)] transition-[background,box-shadow,transform] duration-200 hover:bg-[#6d28d9] hover:shadow-[0_6px_20px_rgba(124,58,237,0.5)] hover:-translate-y-px max-[640px]:w-full max-[640px]:py-[0.7rem] max-[640px]:text-[0.95rem]"
-            onClick={() => isAuthenticated ? setShowRegister(true) : openSignIn()}>
+            onClick={() =>
+              isAuthenticated ? setShowRegister(true) : openSignIn()
+            }>
             + Register your club
           </button>
         </div>
@@ -122,7 +126,9 @@ export default function Clubs() {
         />
 
         {loading ? (
-          <div className="py-12 px-4 text-center text-[rgba(255,255,255,0.45)]">Loading clubs…</div>
+          <div className="py-12 px-4 text-center text-[rgba(255,255,255,0.45)]">
+            Loading clubs…
+          </div>
         ) : filtered.length === 0 ? (
           <div className="py-12 px-4 text-center text-[rgba(255,255,255,0.45)]">
             No clubs yet. Be the first to register one!
@@ -138,17 +144,26 @@ export default function Clubs() {
                   role="button"
                   tabIndex={0}
                   onClick={() => navigate(`/clubs/${club._id}`)}
-                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate(`/clubs/${club._id}`); }}>
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ')
+                      navigate(`/clubs/${club._id}`);
+                  }}>
                   <div className="flex gap-[0.85rem] items-center">
                     <div className="w-[52px] h-[52px] rounded-[12px] flex-shrink-0 flex items-center justify-center text-[1.4rem] font-bold text-[#a78bfa] bg-gradient-to-br from-[#1a0533] to-[#2e1065] overflow-hidden">
                       {club.logo ? (
-                        <img src={club.logo} alt={club.name} className="w-full h-full object-cover" />
+                        <img
+                          src={club.logo}
+                          alt={club.name}
+                          className="w-full h-full object-cover"
+                        />
                       ) : (
                         (club.name?.charAt(0) || '?').toUpperCase()
                       )}
                     </div>
                     <div>
-                      <h3 className="m-0 mb-[0.3rem] text-[1.1rem] text-[#f8fafc] font-semibold leading-[1.3]">{club.name}</h3>
+                      <h3 className="m-0 mb-[0.3rem] text-[1.1rem] text-[#f8fafc] font-semibold leading-[1.3]">
+                        {club.name}
+                      </h3>
                       <div className="flex items-center gap-2 flex-wrap">
                         {club.category && (
                           <span className="bg-[rgba(124,58,237,0.18)] border border-[rgba(124,58,237,0.35)] text-[#e9d5ff] text-[0.72rem] py-[0.2rem] px-[0.55rem] rounded-full">
@@ -170,7 +185,8 @@ export default function Clubs() {
 
                   <div className="flex items-center justify-between mt-auto">
                     <span className="text-[rgba(255,255,255,0.72)] text-[0.82rem]">
-                      {(club.members || []).length} member{(club.members || []).length !== 1 ? 's' : ''}
+                      {(club.members || []).length} member
+                      {(club.members || []).length !== 1 ? 's' : ''}
                     </span>
                     <button
                       className={`border-none font-semibold py-[0.45rem] px-[1.1rem] min-h-[44px] rounded-[7px] cursor-pointer transition-[background,border-color,color] duration-200 disabled:opacity-60 disabled:cursor-default ${
@@ -179,7 +195,10 @@ export default function Clubs() {
                           : 'bg-[#7c3aed] text-white hover:bg-[#6d28d9]'
                       }`}
                       disabled={busyId === club._id}
-                      onClick={(e) => { e.stopPropagation(); toggleMembership(club); }}>
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleMembership(club);
+                      }}>
                       {busyId === club._id ? '…' : member ? 'Leave' : 'Join'}
                     </button>
                   </div>

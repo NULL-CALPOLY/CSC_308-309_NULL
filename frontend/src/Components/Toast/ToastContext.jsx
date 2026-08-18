@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, useCallback, useRef } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useRef,
+} from 'react';
 import ToastContainer from './Toast.jsx';
 
 const ToastContext = createContext(null);
@@ -11,12 +17,15 @@ export function ToastProvider({ children }) {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  const show = useCallback((message, type = 'info', duration = 4000) => {
-    const id = ++counterRef.current;
-    setToasts((prev) => [...prev.slice(-4), { id, message, type }]);
-    if (duration > 0) setTimeout(() => dismiss(id), duration);
-    return id;
-  }, [dismiss]);
+  const show = useCallback(
+    (message, type = 'info', duration = 4000) => {
+      const id = ++counterRef.current;
+      setToasts((prev) => [...prev.slice(-4), { id, message, type }]);
+      if (duration > 0) setTimeout(() => dismiss(id), duration);
+      return id;
+    },
+    [dismiss]
+  );
 
   const toast = {
     success: (msg, dur) => show(msg, 'success', dur),

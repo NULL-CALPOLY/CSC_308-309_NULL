@@ -9,7 +9,10 @@ export default function SearchBar({ onSelectionChange, onDateChange }) {
   const [endDate, setEndDate] = useState('');
   const [expanded, setExpanded] = useState(false);
 
-  const interestOptions = interests.map((i) => ({ label: i.name, value: i.name }));
+  const interestOptions = interests.map((i) => ({
+    label: i.name,
+    value: i.name,
+  }));
 
   const filtered = interestOptions.filter((o) =>
     o.label.toLowerCase().includes(searchTerm.toLowerCase())
@@ -45,7 +48,9 @@ export default function SearchBar({ onSelectionChange, onDateChange }) {
     <div className="w-full box-border flex flex-col gap-2.5">
       {/* ── Header ── */}
       <div className="flex items-center justify-between">
-        <span className="text-[0.72rem] font-bold uppercase tracking-[0.07em] text-[rgba(248,250,252,0.4)]">Filters</span>
+        <span className="text-[0.72rem] font-bold uppercase tracking-[0.07em] text-[rgba(248,250,252,0.4)]">
+          Filters
+        </span>
         {selected.size > 0 && (
           <button
             className="bg-none border-none p-0 text-[0.72rem] font-semibold text-[#a78bfa] cursor-pointer opacity-80 transition-opacity duration-150 hover:opacity-100 hover:underline"
@@ -64,7 +69,12 @@ export default function SearchBar({ onSelectionChange, onDateChange }) {
           viewBox="0 0 14 14"
           fill="none">
           <circle cx="6" cy="6" r="4" stroke="currentColor" strokeWidth="1.5" />
-          <path d="M9.5 9.5L12 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          <path
+            d="M9.5 9.5L12 12"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
         </svg>
         <input
           className="w-full box-border py-[7px] pr-[10px] pl-7 rounded-[8px] border border-[rgba(255,255,255,0.09)] bg-[rgba(255,255,255,0.05)] text-[#f8fafc] text-[0.82rem] outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-[rgba(248,250,252,0.28)] focus:border-[rgba(124,58,237,0.5)] focus:shadow-[0_0_0_3px_rgba(124,58,237,0.1)]"
@@ -96,18 +106,24 @@ export default function SearchBar({ onSelectionChange, onDateChange }) {
           <button
             className="inline-flex items-center gap-1 py-1 px-2.5 rounded-full border border-dashed border-[rgba(124,58,237,0.35)] bg-transparent text-[#a78bfa] text-[0.75rem] font-medium cursor-pointer whitespace-nowrap transition-all duration-150 hover:bg-[rgba(124,58,237,0.08)]"
             onClick={() => setExpanded((v) => !v)}>
-            {expanded ? 'Show less' : `+${filtered.length - COLLAPSED_MAX} more`}
+            {expanded
+              ? 'Show less'
+              : `+${filtered.length - COLLAPSED_MAX} more`}
           </button>
         )}
         {filtered.length === 0 && (
-          <span className="text-[0.78rem] text-[rgba(248,250,252,0.3)] py-1 px-0.5">No matches</span>
+          <span className="text-[0.78rem] text-[rgba(248,250,252,0.3)] py-1 px-0.5">
+            No matches
+          </span>
         )}
       </div>
 
       {/* ── Date filter ── */}
       <div className="border-t border-[rgba(255,255,255,0.07)] pt-2.5 flex flex-col gap-[7px]">
         <div className="flex items-center justify-between">
-          <span className="text-[0.72rem] font-bold uppercase tracking-[0.07em] text-[rgba(248,250,252,0.4)]">Date range</span>
+          <span className="text-[0.72rem] font-bold uppercase tracking-[0.07em] text-[rgba(248,250,252,0.4)]">
+            Date range
+          </span>
           {(startDate || endDate) && (
             <button
               className="bg-none border-none p-0 text-[0.72rem] font-semibold text-[#a78bfa] cursor-pointer opacity-80 transition-opacity duration-150 hover:opacity-100 hover:underline"
@@ -118,7 +134,9 @@ export default function SearchBar({ onSelectionChange, onDateChange }) {
         </div>
         <div className="flex items-center gap-2">
           <div className="flex-1 flex flex-col gap-[3px]">
-            <label className="text-[0.68rem] font-semibold text-[rgba(248,250,252,0.35)] uppercase tracking-[0.06em]">From</label>
+            <label className="text-[0.68rem] font-semibold text-[rgba(248,250,252,0.35)] uppercase tracking-[0.06em]">
+              From
+            </label>
             <input
               type="date"
               className="w-full box-border py-1.5 px-2 rounded-[8px] border border-[rgba(255,255,255,0.09)] bg-[rgba(255,255,255,0.05)] text-[#f8fafc] text-[max(16px,0.8rem)] outline-none transition-[border-color,box-shadow] duration-200 [color-scheme:dark] [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:[filter:invert(0.6)] [&::-webkit-calendar-picker-indicator]:cursor-pointer focus:border-[rgba(124,58,237,0.5)] focus:shadow-[0_0_0_3px_rgba(124,58,237,0.1)]"
@@ -129,9 +147,13 @@ export default function SearchBar({ onSelectionChange, onDateChange }) {
               }}
             />
           </div>
-          <div className="text-[rgba(248,250,252,0.25)] text-[0.85rem] pt-4">—</div>
+          <div className="text-[rgba(248,250,252,0.25)] text-[0.85rem] pt-4">
+            —
+          </div>
           <div className="flex-1 flex flex-col gap-[3px]">
-            <label className="text-[0.68rem] font-semibold text-[rgba(248,250,252,0.35)] uppercase tracking-[0.06em]">To</label>
+            <label className="text-[0.68rem] font-semibold text-[rgba(248,250,252,0.35)] uppercase tracking-[0.06em]">
+              To
+            </label>
             <input
               type="date"
               className="w-full box-border py-1.5 px-2 rounded-[8px] border border-[rgba(255,255,255,0.09)] bg-[rgba(255,255,255,0.05)] text-[#f8fafc] text-[max(16px,0.8rem)] outline-none transition-[border-color,box-shadow] duration-200 [color-scheme:dark] [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:[filter:invert(0.6)] [&::-webkit-calendar-picker-indicator]:cursor-pointer focus:border-[rgba(124,58,237,0.5)] focus:shadow-[0_0_0_3px_rgba(124,58,237,0.1)]"
@@ -147,9 +169,46 @@ export default function SearchBar({ onSelectionChange, onDateChange }) {
         {/* Quick-select shortcuts */}
         <div className="flex gap-[5px] flex-wrap">
           {[
-            { label: 'Today', fn: () => { const d = new Date(); const s = d.toISOString().slice(0,10); setStartDate(s); setEndDate(s); onDateChange({ startDate: s, endDate: s }); } },
-            { label: 'This week', fn: () => { const d = new Date(); const start = new Date(d); start.setDate(d.getDate() - d.getDay()); const end = new Date(start); end.setDate(start.getDate() + 6); const s = start.toISOString().slice(0,10); const e = end.toISOString().slice(0,10); setStartDate(s); setEndDate(e); onDateChange({ startDate: s, endDate: e }); } },
-            { label: 'This month', fn: () => { const d = new Date(); const s = new Date(d.getFullYear(), d.getMonth(), 1).toISOString().slice(0,10); const e = new Date(d.getFullYear(), d.getMonth()+1, 0).toISOString().slice(0,10); setStartDate(s); setEndDate(e); onDateChange({ startDate: s, endDate: e }); } },
+            {
+              label: 'Today',
+              fn: () => {
+                const d = new Date();
+                const s = d.toISOString().slice(0, 10);
+                setStartDate(s);
+                setEndDate(s);
+                onDateChange({ startDate: s, endDate: s });
+              },
+            },
+            {
+              label: 'This week',
+              fn: () => {
+                const d = new Date();
+                const start = new Date(d);
+                start.setDate(d.getDate() - d.getDay());
+                const end = new Date(start);
+                end.setDate(start.getDate() + 6);
+                const s = start.toISOString().slice(0, 10);
+                const e = end.toISOString().slice(0, 10);
+                setStartDate(s);
+                setEndDate(e);
+                onDateChange({ startDate: s, endDate: e });
+              },
+            },
+            {
+              label: 'This month',
+              fn: () => {
+                const d = new Date();
+                const s = new Date(d.getFullYear(), d.getMonth(), 1)
+                  .toISOString()
+                  .slice(0, 10);
+                const e = new Date(d.getFullYear(), d.getMonth() + 1, 0)
+                  .toISOString()
+                  .slice(0, 10);
+                setStartDate(s);
+                setEndDate(e);
+                onDateChange({ startDate: s, endDate: e });
+              },
+            },
           ].map(({ label, fn }) => (
             <button
               key={label}

@@ -74,7 +74,9 @@ export default function EventComponent(props) {
     } catch (err) {
       // Roll back optimistic update
       setAttendees((prev) =>
-        wasAttending ? [...prev, user.id] : prev.filter((a) => (typeof a === 'object' ? a._id : a) !== user.id)
+        wasAttending
+          ? [...prev, user.id]
+          : prev.filter((a) => (typeof a === 'object' ? a._id : a) !== user.id)
       );
       setAttendError(err.message || 'Could not update attendance.');
     } finally {
@@ -149,7 +151,9 @@ export default function EventComponent(props) {
       </div>
 
       {attendError && (
-        <p className="text-[0.78rem] text-[#f87171] mt-1.5 mb-0.5 leading-snug" role="alert">
+        <p
+          className="text-[0.78rem] text-[#f87171] mt-1.5 mb-0.5 leading-snug"
+          role="alert">
           {attendError}
         </p>
       )}

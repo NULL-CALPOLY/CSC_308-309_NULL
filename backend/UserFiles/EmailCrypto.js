@@ -19,7 +19,9 @@ function getKey(environmentVariable) {
 
   const key = Buffer.from(encodedKey, 'base64');
   if (key.length !== 32) {
-    throw new Error(`${environmentVariable} must be a base64-encoded 32-byte key`);
+    throw new Error(
+      `${environmentVariable} must be a base64-encoded 32-byte key`
+    );
   }
 
   return key;
@@ -54,9 +56,9 @@ export function createEmailLookupHash(email) {
 export function isEncryptedEmail(value) {
   return (
     typeof value === 'string' &&
-    new RegExp(`^${CIPHER_VERSION}\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$`).test(
-      value
-    )
+    new RegExp(
+      `^${CIPHER_VERSION}\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$`
+    ).test(value)
   );
 }
 
@@ -89,7 +91,8 @@ export function decryptEmail(encryptedEmail) {
     throw new Error('Email ciphertext has an invalid format');
   }
 
-  const [, encodedIv, encodedTag, encodedCiphertext] = encryptedEmail.split('.');
+  const [, encodedIv, encodedTag, encodedCiphertext] =
+    encryptedEmail.split('.');
   const initializationVector = Buffer.from(encodedIv, 'base64url');
   const authenticationTag = Buffer.from(encodedTag, 'base64url');
 

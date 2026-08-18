@@ -139,7 +139,18 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
   };
 
   const resetForm = () => {
-    setFormData({ name: '', description: '', address: '', roomDetail: '', interests: [], location: '', startDate: '', startTimeOnly: '09:00', endDate: '', endTimeOnly: '10:00' });
+    setFormData({
+      name: '',
+      description: '',
+      address: '',
+      roomDetail: '',
+      interests: [],
+      location: '',
+      startDate: '',
+      startTimeOnly: '09:00',
+      endDate: '',
+      endTimeOnly: '10:00',
+    });
     setSelectedOptions([]);
     setInterestSearch('');
     setErrorMessage({});
@@ -185,7 +196,8 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
       );
 
       const json = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(json.message || 'Failed to create event');
+      if (!response.ok)
+        throw new Error(json.message || 'Failed to create event');
       resetForm();
       onSuccess();
     } catch (err) {
@@ -202,14 +214,14 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
       <div
         className="relative flex flex-col bg-[#0c0c10] border border-[rgba(124,58,237,0.22)] border-t-[rgba(167,139,250,0.35)] w-[520px] max-w-[96vw] max-h-[90vh] overflow-hidden rounded-[18px] shadow-[0_0_0_1px_rgba(255,255,255,0.03)_inset,0_32px_80px_rgba(0,0,0,0.7),0_0_80px_rgba(124,58,237,0.08)] [animation:modal-in_0.28s_cubic-bezier(0.16,1,0.3,1)] max-[520px]:w-full max-[520px]:max-w-full max-[520px]:max-h-[92dvh] max-[520px]:rounded-t-[20px] max-[520px]:rounded-b-none max-[520px]:[animation:modal-slide-up_0.3s_cubic-bezier(0.16,1,0.3,1)]"
         onClick={(e) => e.stopPropagation()}>
-
         {/* ── Header ── */}
         <div className="flex justify-between items-center px-7 pt-[1.4rem] pb-5 flex-shrink-0 border-b border-[rgba(255,255,255,0.06)] bg-gradient-to-b from-[rgba(124,58,237,0.07)] to-transparent max-[520px]:px-5 max-[520px]:pt-4 max-[520px]:pb-[0.9rem]">
           <div>
             <h2
               className="m-0 text-[1.2rem] font-bold tracking-[0.25px] font-[inherit]"
               style={{
-                background: 'linear-gradient(120deg, #ede9fe 0%, #a78bfa 60%, #7c3aed 100%)',
+                background:
+                  'linear-gradient(120deg, #ede9fe 0%, #a78bfa 60%, #7c3aed 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
@@ -227,17 +239,21 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
         {/* ── Scrollable body ── */}
         <div
           className="flex-1 overflow-y-auto px-7 py-[1.4rem] max-[520px]:px-5 max-[520px]:py-[1.1rem]"
-          style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(124,58,237,0.18) transparent' }}>
+          style={{
+            scrollbarWidth: 'thin',
+            scrollbarColor: 'rgba(124,58,237,0.18) transparent',
+          }}>
           <form
             id="cem-form"
             className="flex flex-col gap-[1.1rem]"
             onSubmit={handleSubmit}
             noValidate>
-
             {/* ── Title ── */}
             <div className="flex flex-col gap-[0.4rem]">
               <label className={labelCls}>
-                <span>Event Title <span className="text-[#f87171]">*</span></span>
+                <span>
+                  Event Title <span className="text-[#f87171]">*</span>
+                </span>
                 <span className="text-[0.68rem] text-[rgba(255,255,255,0.22)] font-normal tracking-normal normal-case ml-auto">
                   {formData.name.length}/{MAX_TITLE_LENGTH}
                 </span>
@@ -255,7 +271,9 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
                 placeholder="Enter event title"
               />
               {errorMessage.name && (
-                <p className="text-[#f87171] text-[0.72rem] m-0 tracking-[0.01em]">{errorMessage.name}</p>
+                <p className="text-[#f87171] text-[0.72rem] m-0 tracking-[0.01em]">
+                  {errorMessage.name}
+                </p>
               )}
             </div>
 
@@ -274,7 +292,9 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
                 placeholder="Describe your event"
               />
               {errorMessage.description && (
-                <p className="text-[#f87171] text-[0.72rem] m-0 tracking-[0.01em]">{errorMessage.description}</p>
+                <p className="text-[#f87171] text-[0.72rem] m-0 tracking-[0.01em]">
+                  {errorMessage.description}
+                </p>
               )}
             </div>
 
@@ -344,7 +364,9 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
                     ) : (
                       <span className="flex flex-wrap gap-[0.3rem] py-[0.3rem]">
                         {selectedOptions.map((opt) => (
-                          <span key={opt.value} className="inline-flex items-center gap-[0.25rem] bg-[rgba(124,58,237,0.2)] border border-[rgba(124,58,237,0.45)] text-[#c4b5fd] rounded-full py-[0.15rem] pl-[0.6rem] pr-[0.5rem] text-[0.78rem] leading-[1.4]">
+                          <span
+                            key={opt.value}
+                            className="inline-flex items-center gap-[0.25rem] bg-[rgba(124,58,237,0.2)] border border-[rgba(124,58,237,0.45)] text-[#c4b5fd] rounded-full py-[0.15rem] pl-[0.6rem] pr-[0.5rem] text-[0.78rem] leading-[1.4]">
                             {opt.label}
                             <button
                               type="button"
@@ -424,7 +446,10 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
                       </div>
                       <ul
                         className="list-none m-0 py-[0.3rem] px-0 max-h-[180px] overflow-y-auto"
-                        style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,255,255,0.1) transparent' }}>
+                        style={{
+                          scrollbarWidth: 'thin',
+                          scrollbarColor: 'rgba(255,255,255,0.1) transparent',
+                        }}>
                         {interestOptions
                           .filter((o) =>
                             o.label
@@ -439,7 +464,9 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
                               <li
                                 key={opt.value}
                                 className={`flex items-center gap-2 py-[0.45rem] px-3 cursor-pointer text-[0.875rem] transition-[background] duration-[120ms] hover:bg-[rgba(255,255,255,0.05)] ${
-                                  chosen ? 'text-[#c4b5fd] hover:bg-[rgba(124,58,237,0.12)]' : 'text-[rgba(255,255,255,0.8)]'
+                                  chosen
+                                    ? 'text-[#c4b5fd] hover:bg-[rgba(124,58,237,0.12)]'
+                                    : 'text-[rgba(255,255,255,0.8)]'
                                 }`}
                                 onClick={() => {
                                   const updated = chosen
@@ -457,7 +484,8 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
                                     interests: null,
                                   });
                                 }}>
-                                <span className={`w-4 h-4 border rounded-[4px] flex items-center justify-center text-[0.7rem] text-[#a855f7] flex-shrink-0 ${chosen ? 'border-[#a855f7] bg-[rgba(124,58,237,0.25)]' : 'border-[rgba(255,255,255,0.2)]'}`}>
+                                <span
+                                  className={`w-4 h-4 border rounded-[4px] flex items-center justify-center text-[0.7rem] text-[#a855f7] flex-shrink-0 ${chosen ? 'border-[#a855f7] bg-[rgba(124,58,237,0.25)]' : 'border-[rgba(255,255,255,0.2)]'}`}>
                                   {chosen ? '✓' : ''}
                                 </span>
                                 {opt.label}
@@ -470,7 +498,9 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
                   )}
               </div>
               {errorMessage.interests && (
-                <p className="text-[#f87171] text-[0.72rem] m-0 tracking-[0.01em]">{errorMessage.interests}</p>
+                <p className="text-[#f87171] text-[0.72rem] m-0 tracking-[0.01em]">
+                  {errorMessage.interests}
+                </p>
               )}
             </div>
 
@@ -500,13 +530,18 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
                   type="time"
                   value={formData.startTimeOnly}
                   onChange={(e) => {
-                    setFormData((p) => ({ ...p, startTimeOnly: e.target.value }));
+                    setFormData((p) => ({
+                      ...p,
+                      startTimeOnly: e.target.value,
+                    }));
                     setErrorMessage({ ...errorMessage, startTime: null });
                   }}
                 />
               </div>
               {errorMessage.startTime && (
-                <p className="text-[#f87171] text-[0.72rem] m-0 tracking-[0.01em]">{errorMessage.startTime}</p>
+                <p className="text-[#f87171] text-[0.72rem] m-0 tracking-[0.01em]">
+                  {errorMessage.startTime}
+                </p>
               )}
             </div>
 
@@ -520,7 +555,9 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
                   className={`${fieldCls} [color-scheme:dark]`}
                   type="date"
                   value={formData.endDate}
-                  min={formData.startDate || new Date().toISOString().slice(0, 10)}
+                  min={
+                    formData.startDate || new Date().toISOString().slice(0, 10)
+                  }
                   onChange={(e) => {
                     setFormData((p) => ({ ...p, endDate: e.target.value }));
                     setErrorMessage({ ...errorMessage, endTime: null });
@@ -537,7 +574,9 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
                 />
               </div>
               {errorMessage.endTime && (
-                <p className="text-[#f87171] text-[0.72rem] m-0 tracking-[0.01em]">{errorMessage.endTime}</p>
+                <p className="text-[#f87171] text-[0.72rem] m-0 tracking-[0.01em]">
+                  {errorMessage.endTime}
+                </p>
               )}
             </div>
           </form>
@@ -546,7 +585,9 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }) {
         {/* ── Footer / Actions ── */}
         <div className="flex justify-end items-center gap-3 px-7 py-[1.1rem] flex-shrink-0 border-t border-[rgba(255,255,255,0.06)] bg-[rgba(0,0,0,0.18)] max-[520px]:px-5 max-[520px]:py-[0.9rem] max-[520px]:pb-5 max-[520px]:flex-col-reverse max-[520px]:gap-[0.6rem]">
           {submitError && (
-            <p className="text-[#f87171] text-[0.82rem] m-0 mr-auto max-[520px]:mr-0 max-[520px]:text-center">{submitError}</p>
+            <p className="text-[#f87171] text-[0.82rem] m-0 mr-auto max-[520px]:mr-0 max-[520px]:text-center">
+              {submitError}
+            </p>
           )}
           <button
             type="button"

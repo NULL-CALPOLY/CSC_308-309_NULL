@@ -87,20 +87,28 @@ router.post('/login', authLimiter, async (req, res) => {
 
 router.post('/', authLimiter, async (req, res) => {
   try {
-    const { user: newUser, verificationToken, verificationRequired } =
-      await userServices.addUser(req.body);
+    const {
+      user: newUser,
+      verificationToken,
+      verificationRequired,
+    } = await userServices.addUser(req.body);
     const email = newUser.toJSON().email;
 
     if (verificationRequired) {
       // Send verification email (non-blocking — don't fail the request if it errors)
-      sendVerificationEmail(email, newUser.name, verificationToken).catch((err) =>
-        console.error('[email] Failed to send verification email:', err.message)
+      sendVerificationEmail(email, newUser.name, verificationToken).catch(
+        (err) =>
+          console.error(
+            '[email] Failed to send verification email:',
+            err.message
+          )
       );
 
       return res.status(201).json({
         success: true,
         requiresVerification: true,
-        message: 'Account created. Please check your email to verify your account.',
+        message:
+          'Account created. Please check your email to verify your account.',
         email,
       });
     }
@@ -238,9 +246,16 @@ router.post('/logout', (req, res) => {
 router.get('/verify-email/:token', async (req, res) => {
   try {
     await userServices.verifyEmail(req.params.token);
-    res.status(200).json({ success: true, message: 'Email verified successfully. You can now sign in.' });
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: 'Email verified successfully. You can now sign in.',
+      });
   } catch (err) {
-    res.status(err.status || 400).json({ success: false, message: err.message });
+    res
+      .status(err.status || 400)
+      .json({ success: false, message: err.message });
   }
 });
 
@@ -249,18 +264,36 @@ router.get('/verify-email/:token', async (req, res) => {
  */
 router.post('/resend-verification', authLimiter, async (req, res) => {
   const { email } = req.body;
-  if (!email) return res.status(400).json({ success: false, message: 'Email is required' });
+  if (!email)
+    return res
+      .status(400)
+      .json({ success: false, message: 'Email is required' });
   try {
     const result = await userServices.resendVerification(email);
     if (!result) {
       // Don't reveal whether the email exists or is already verified
-      return res.status(200).json({ success: true, message: 'If that email is pending verification, a new link has been sent.' });
+      return res
+        .status(200)
+        .json({
+          success: true,
+          message:
+            'If that email is pending verification, a new link has been sent.',
+        });
     }
     const email = result.user.toJSON().email;
-    sendVerificationEmail(email, result.user.name, result.verificationToken).catch((err) =>
+    sendVerificationEmail(
+      email,
+      result.user.name,
+      result.verificationToken
+    ).catch((err) =>
       console.error('[email] Failed to resend verification email:', err.message)
     );
-    res.status(200).json({ success: true, message: 'Verification email sent. Please check your inbox.' });
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: 'Verification email sent. Please check your inbox.',
+      });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -296,7 +329,9 @@ router.get('/me', requireAuth, async (req, res) => {
   try {
     const user = await userServices.findUserById(req.userId);
     if (!user)
-      return res.status(404).json({ success: false, message: 'User not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: 'User not found' });
 
     // Keep isAdmin in sync with the ADMIN_EMAILS config on every profile fetch,
     // so admins don't need to log out and back in after their email is added.
@@ -327,7 +362,9 @@ router.get('/:id', optionalAuth, async (req, res) => {
       req.userId !== req.params.id &&
       (await userServices.hasBlocked(req.params.id, req.userId))
     ) {
-      return res.status(404).json({ success: false, message: 'User not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: 'User not found' });
     }
 
     const user = await userServices.findPublicProfileById(req.params.id);
@@ -396,21 +433,16 @@ router.put(
 );
 
 // List the ids the current user has blocked.
-router.get(
-  '/:id/blocked',
-  requireAuth,
-  requireSelf('id'),
-  async (req, res) => {
-    try {
-      const blocked = await userServices.getBlockedUsers(req.params.id);
-      res.status(200).json({ success: true, data: blocked });
-    } catch (error) {
-      res
-        .status(500)
-        .json({ success: false, message: `Error in the server: ${error}` });
-    }
+router.get('/:id/blocked', requireAuth, requireSelf('id'), async (req, res) => {
+  try {
+    const blocked = await userServices.getBlockedUsers(req.params.id);
+    res.status(200).json({ success: true, data: blocked });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: `Error in the server: ${error}` });
   }
-);
+});
 
 // Update notification preferences (self only)
 router.patch(
@@ -420,15 +452,25 @@ router.patch(
   async (req, res) => {
     const { emailNotifications } = req.body;
     if (typeof emailNotifications !== 'boolean')
-      return res.status(400).json({ success: false, message: 'emailNotifications must be a boolean' });
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: 'emailNotifications must be a boolean',
+        });
     try {
       const user = await userServices.findUserById(req.params.id);
-      if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+      if (!user)
+        return res
+          .status(404)
+          .json({ success: false, message: 'User not found' });
       user.emailNotifications = emailNotifications;
       await user.save();
       res.status(200).json({ success: true, data: { emailNotifications } });
     } catch (error) {
-      res.status(500).json({ success: false, message: `Error in the server: ${error}` });
+      res
+        .status(500)
+        .json({ success: false, message: `Error in the server: ${error}` });
     }
   }
 );

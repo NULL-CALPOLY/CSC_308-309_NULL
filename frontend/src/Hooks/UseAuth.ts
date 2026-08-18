@@ -83,12 +83,9 @@ export const useProvideAuth = () => {
     token: string
   ): Promise<Partial<UserState>> => {
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/users/me`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       if (!res.ok) return {};
       const json = await res.json();
       return {
@@ -114,10 +111,9 @@ export const useProvideAuth = () => {
     if (!token || !userId) return false;
 
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/users/me`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       const profile: Partial<UserState> = res.ok
         ? await res
             .json()
@@ -133,7 +129,11 @@ export const useProvideAuth = () => {
       setUser({ id: userId, token });
     }
 
-    history.replaceState(null, '', window.location.pathname + window.location.search);
+    history.replaceState(
+      null,
+      '',
+      window.location.pathname + window.location.search
+    );
     navigate('/home');
     return true;
   };

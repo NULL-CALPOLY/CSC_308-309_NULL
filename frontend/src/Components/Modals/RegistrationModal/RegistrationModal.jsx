@@ -98,7 +98,8 @@ async function geocodeCity(city) {
 // Shared field classes
 const fieldCls =
   'bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-[8px] py-[0.7rem] px-[0.9rem] text-[0.9rem] text-white outline-none w-full box-border transition-[border-color,box-shadow] duration-200 placeholder:text-[rgba(255,255,255,0.2)] focus:border-[#7c3aed] focus:shadow-[0_0_0_3px_rgba(124,58,237,0.2)]';
-const fieldErrCls = '!border-[#f87171] !shadow-[0_0_0_3px_rgba(248,113,113,0.15)]';
+const fieldErrCls =
+  '!border-[#f87171] !shadow-[0_0_0_3px_rgba(248,113,113,0.15)]';
 
 export default function RegistrationModal({
   isOpen,
@@ -386,7 +387,10 @@ export default function RegistrationModal({
           Join Findr today
         </p>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-4"
+          noValidate>
           {/* ── Row 1: Email + Password ── */}
           <div className="grid grid-cols-2 gap-4 max-[560px]:grid-cols-1">
             <div className="flex flex-col gap-[0.4rem]">

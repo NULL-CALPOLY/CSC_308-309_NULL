@@ -76,7 +76,9 @@ describe('DeleteAccountModal', () => {
     const { container } = render(
       <DeleteAccountModal {...defaultProps} isDeleting={true} />
     );
-    expect(container.querySelector('[data-testid="dam-spinner"]')).toBeInTheDocument();
+    expect(
+      container.querySelector('[data-testid="dam-spinner"]')
+    ).toBeInTheDocument();
   });
 
   it('clicking backdrop calls onClose', () => {

@@ -7,7 +7,8 @@ import { useAuth } from '../../Hooks/UseAuth';
 
 const attendeeCount = (e) => e.attendees?.length || 0;
 
-const selectCls = "py-2 border border-[rgba(255,255,255,0.1)] rounded-[8px] bg-[rgba(255,255,255,0.06)] text-[#f8fafc] text-[0.88rem] cursor-pointer appearance-none font-[inherit] transition-[border-color] duration-150 outline-none focus:border-[rgba(124,58,237,0.5)] focus:shadow-[0_0_0_2px_rgba(124,58,237,0.12)]";
+const selectCls =
+  'py-2 border border-[rgba(255,255,255,0.1)] rounded-[8px] bg-[rgba(255,255,255,0.06)] text-[#f8fafc] text-[0.88rem] cursor-pointer appearance-none font-[inherit] transition-[border-color] duration-150 outline-none focus:border-[rgba(124,58,237,0.5)] focus:shadow-[0_0_0_2px_rgba(124,58,237,0.12)]';
 
 export default function ExplorePage() {
   const { user, isAuthenticated } = useAuth();
@@ -73,7 +74,10 @@ export default function ExplorePage() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
-          setUserCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+          setUserCoords({
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+          });
           setNearMe(true);
         },
         () => setGeoError("Couldn't get your location.")
@@ -165,7 +169,9 @@ export default function ExplorePage() {
               }`}
               onClick={toggleNearMe}
               aria-pressed={nearMe}
-              aria-label={nearMe ? 'Turn off near me filter' : 'Filter by events near me'}>
+              aria-label={
+                nearMe ? 'Turn off near me filter' : 'Filter by events near me'
+              }>
               📍 Near me
             </button>
             {usingNearby && (
@@ -173,13 +179,25 @@ export default function ExplorePage() {
                 Within:
                 <select
                   className={`${selectCls} pl-[0.7rem] pr-7 max-[600px]:flex-1`}
-                  style={{backgroundImage:`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(248,250,252,0.45)' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`, backgroundRepeat:'no-repeat', backgroundPosition:'right 0.6rem center'}}
+                  style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(248,250,252,0.45)' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'right 0.6rem center',
+                  }}
                   value={radiusKm}
                   onChange={(e) => setRadiusKm(Number(e.target.value))}>
-                  <option value={5} style={{background:'#1a1a27'}}>5 km</option>
-                  <option value={16} style={{background:'#1a1a27'}}>16 km</option>
-                  <option value={40} style={{background:'#1a1a27'}}>40 km</option>
-                  <option value={100} style={{background:'#1a1a27'}}>100 km</option>
+                  <option value={5} style={{ background: '#1a1a27' }}>
+                    5 km
+                  </option>
+                  <option value={16} style={{ background: '#1a1a27' }}>
+                    16 km
+                  </option>
+                  <option value={40} style={{ background: '#1a1a27' }}>
+                    40 km
+                  </option>
+                  <option value={100} style={{ background: '#1a1a27' }}>
+                    100 km
+                  </option>
                 </select>
               </label>
             )}
@@ -187,27 +205,44 @@ export default function ExplorePage() {
               Sort:
               <select
                 className={`${selectCls} pl-[0.7rem] pr-7 max-[600px]:flex-1`}
-                style={{backgroundImage:`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(248,250,252,0.45)' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`, backgroundRepeat:'no-repeat', backgroundPosition:'right 0.6rem center'}}
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(248,250,252,0.45)' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'right 0.6rem center',
+                }}
                 value={sort}
                 onChange={(e) => setSort(e.target.value)}>
                 {isAuthenticated && myInterests.length > 0 && (
-                  <option value="foryou" style={{background:'#1a1a27'}}>For you</option>
+                  <option value="foryou" style={{ background: '#1a1a27' }}>
+                    For you
+                  </option>
                 )}
-                <option value="soonest" style={{background:'#1a1a27'}}>Soonest</option>
-                <option value="popular" style={{background:'#1a1a27'}}>Most popular</option>
+                <option value="soonest" style={{ background: '#1a1a27' }}>
+                  Soonest
+                </option>
+                <option value="popular" style={{ background: '#1a1a27' }}>
+                  Most popular
+                </option>
               </select>
             </label>
           </div>
-          {geoError && <p className="text-[#f87171] text-[0.85rem] -mt-2 mb-4">{geoError}</p>}
+          {geoError && (
+            <p className="text-[#f87171] text-[0.85rem] -mt-2 mb-4">
+              {geoError}
+            </p>
+          )}
 
           {loading ? (
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-5 max-[600px]:grid-cols-1 max-[600px]:gap-4" aria-hidden="true">
+            <div
+              className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-5 max-[600px]:grid-cols-1 max-[600px]:gap-4"
+              aria-hidden="true">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div
                   key={i}
                   className="h-[230px] rounded-[14px] animate-shimmer"
                   style={{
-                    background: 'linear-gradient(100deg, rgba(255,255,255,0.03) 30%, rgba(255,255,255,0.07) 50%, rgba(255,255,255,0.03) 70%)',
+                    background:
+                      'linear-gradient(100deg, rgba(255,255,255,0.03) 30%, rgba(255,255,255,0.07) 50%, rgba(255,255,255,0.03) 70%)',
                     backgroundSize: '200% 100%',
                   }}
                 />
@@ -220,7 +255,10 @@ export default function ExplorePage() {
           ) : filtered.length === 0 ? (
             <div className="text-[rgba(248,250,252,0.72)] py-12 text-center flex flex-col items-center gap-4">
               <p className="m-0">No events match your filters.</p>
-              {(query || selectedInterests.length || dateRange.startDate || dateRange.endDate) && (
+              {(query ||
+                selectedInterests.length ||
+                dateRange.startDate ||
+                dateRange.endDate) && (
                 <button
                   className="bg-[#7c3aed] border-none text-white rounded-[8px] py-[0.6rem] px-5 text-[0.9rem] font-semibold cursor-pointer transition-[background] duration-200 hover:bg-[#6d28d9]"
                   onClick={() => {

@@ -124,9 +124,7 @@ describe('HomePage', () => {
 
   it('renders "Sign In" label when no user', () => {
     renderHomePage({ user: null });
-    expect(screen.getByTestId('create-event-btn')).toHaveTextContent(
-      'Sign In'
-    );
+    expect(screen.getByTestId('create-event-btn')).toHaveTextContent('Sign In');
   });
 
   it('opens create event modal when button is clicked and user is logged in', () => {

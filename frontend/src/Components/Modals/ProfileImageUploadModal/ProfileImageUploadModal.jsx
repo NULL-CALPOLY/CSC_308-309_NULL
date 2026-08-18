@@ -270,9 +270,15 @@ export default function ProfileImageUploadModal({
             onDrop={onDrop}
             onClick={() => fileInputRef.current?.click()}>
             <div className="text-[2.5rem] mb-3">📁</div>
-            <p className="m-0 mb-1 text-[1rem] font-semibold text-white">Drop your image here</p>
-            <p className="m-0 mb-3 text-[0.875rem] text-[rgba(255,255,255,0.4)]">or click to browse</p>
-            <p className="m-0 text-[0.75rem] text-[rgba(255,255,255,0.25)]">JPG, PNG, WEBP · Max 10 MB</p>
+            <p className="m-0 mb-1 text-[1rem] font-semibold text-white">
+              Drop your image here
+            </p>
+            <p className="m-0 mb-3 text-[0.875rem] text-[rgba(255,255,255,0.4)]">
+              or click to browse
+            </p>
+            <p className="m-0 text-[0.75rem] text-[rgba(255,255,255,0.25)]">
+              JPG, PNG, WEBP · Max 10 MB
+            </p>
             <input
               ref={fileInputRef}
               type="file"
@@ -286,7 +292,9 @@ export default function ProfileImageUploadModal({
         {/* ── STEP: CROP ── */}
         {step === 'crop' && imageSrc && (
           <div className="flex flex-col gap-4">
-            <p className="m-0 text-[0.78rem] text-[rgba(255,255,255,0.35)] text-center">Drag to reposition · Scroll to zoom</p>
+            <p className="m-0 text-[0.78rem] text-[rgba(255,255,255,0.35)] text-center">
+              Drag to reposition · Scroll to zoom
+            </p>
 
             <div
               ref={cropContainerRef}
@@ -320,7 +328,9 @@ export default function ProfileImageUploadModal({
 
             {/* Zoom row */}
             <div className="flex items-center gap-3">
-              <span className="text-[0.75rem] text-[rgba(255,255,255,0.4)] min-w-[36px]">Zoom</span>
+              <span className="text-[0.75rem] text-[rgba(255,255,255,0.4)] min-w-[36px]">
+                Zoom
+              </span>
               <input
                 type="range"
                 min="1"
@@ -336,7 +346,9 @@ export default function ProfileImageUploadModal({
                 }}
                 className="flex-1 appearance-none h-[4px] bg-[rgba(255,255,255,0.1)] rounded-[2px] outline-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#7c3aed] [&::-webkit-slider-thumb]:cursor-pointer"
               />
-              <span className="text-[0.75rem] text-[rgba(255,255,255,0.4)] min-w-[32px] text-right">{zoom.toFixed(1)}×</span>
+              <span className="text-[0.75rem] text-[rgba(255,255,255,0.4)] min-w-[32px] text-right">
+                {zoom.toFixed(1)}×
+              </span>
             </div>
 
             {/* Actions */}
@@ -366,7 +378,9 @@ export default function ProfileImageUploadModal({
         {/* ── STEP: DONE ── */}
         {step === 'done' && (
           <div className="flex flex-col items-center gap-4 py-8 text-[rgba(255,255,255,0.7)] text-[0.9rem]">
-            <div className="w-[52px] h-[52px] rounded-full bg-[rgba(124,58,237,0.2)] border-2 border-[#7c3aed] flex items-center justify-center text-[1.4rem] text-[#a78bfa]">✓</div>
+            <div className="w-[52px] h-[52px] rounded-full bg-[rgba(124,58,237,0.2)] border-2 border-[#7c3aed] flex items-center justify-center text-[1.4rem] text-[#a78bfa]">
+              ✓
+            </div>
             <p>Photo uploaded successfully!</p>
             <button
               className="py-[0.65rem] px-5 rounded-[8px] text-[0.875rem] font-bold cursor-pointer border-none bg-[#7c3aed] text-white transition-all duration-200 ease-[ease] tracking-[0.02em] hover:bg-[#6d28d9] hover:-translate-y-px hover:shadow-[0_6px_20px_rgba(124,58,237,0.35)]"
@@ -376,7 +390,11 @@ export default function ProfileImageUploadModal({
           </div>
         )}
 
-        {error && <p className="mt-3 text-[0.78rem] text-[#f87171] text-center">{error}</p>}
+        {error && (
+          <p className="mt-3 text-[0.78rem] text-[#f87171] text-center">
+            {error}
+          </p>
+        )}
       </div>
     </div>
   );

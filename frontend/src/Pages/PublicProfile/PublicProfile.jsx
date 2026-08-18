@@ -50,10 +50,13 @@ export default function PublicProfile() {
       try {
         const res = await fetch(
           `${import.meta.env.VITE_API_BASE_URL}/users/${id}`,
-          user?.token ? { headers: { Authorization: `Bearer ${user.token}` } } : undefined
+          user?.token
+            ? { headers: { Authorization: `Bearer ${user.token}` } }
+            : undefined
         );
         const json = await res.json();
-        if (!res.ok || !json.success) throw new Error(json.message || 'User not found');
+        if (!res.ok || !json.success)
+          throw new Error(json.message || 'User not found');
         if (!cancelled) setProfile(json.data);
       } catch (err) {
         if (!cancelled) setErrorMsg(err.message);
@@ -72,12 +75,16 @@ export default function PublicProfile() {
         const json = await res.json();
         if (!cancelled && res.ok && json.success)
           setIsBlocked(json.data.map(String).includes(String(id)));
-      } catch { /* ignore */ }
+      } catch {
+        /* ignore */
+      }
     };
 
     const fetchHosted = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/search/host/${id}`);
+        const res = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/events/search/host/${id}`
+        );
         const json = await res.json();
         if (!cancelled && res.ok && json.success) setHostedEvents(json.data);
       } catch {
@@ -88,7 +95,9 @@ export default function PublicProfile() {
     fetchProfile();
     fetchHosted();
     fetchBlockStatus();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [id, user?.id, user?.token]);
 
   const toggleBlock = async () => {
@@ -119,11 +128,22 @@ export default function PublicProfile() {
       key={event._id}
       eventId={event._id}
       eventName={event.name}
-      eventDate={event.time?.start ? new Date(event.time.start).toLocaleDateString() : ''}
-      eventTime={event.time?.start ? new Date(event.time.start).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : ''}
+      eventDate={
+        event.time?.start ? new Date(event.time.start).toLocaleDateString() : ''
+      }
+      eventTime={
+        event.time?.start
+          ? new Date(event.time.start).toLocaleTimeString([], {
+              hour: 'numeric',
+              minute: '2-digit',
+            })
+          : ''
+      }
       eventAddress={event.address}
       description={event.description}
-      interest={Array.isArray(event.interests) ? event.interests.join(', ') : ''}
+      interest={
+        Array.isArray(event.interests) ? event.interests.join(', ') : ''
+      }
       attendees={event.attendees}
       host={event.host}
     />
@@ -139,7 +159,9 @@ export default function PublicProfile() {
     return (
       <div className="min-h-screen bg-[#080808] pt-[var(--nav-h,72px)] text-white">
         <Navbar page="/" />
-        <div className="py-16 px-6 text-center text-[rgba(255,255,255,0.6)]">{errorMsg}</div>
+        <div className="py-16 px-6 text-center text-[rgba(255,255,255,0.6)]">
+          {errorMsg}
+        </div>
       </div>
     );
 
@@ -162,7 +184,11 @@ export default function PublicProfile() {
           <div className="sticky top-[calc(var(--nav-h,72px)+2rem)] bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.08)] rounded-[18px] px-6 py-8 text-center max-[768px]:static">
             <div className="w-[120px] h-[120px] rounded-full mx-auto mb-4 overflow-hidden flex items-center justify-center bg-gradient-to-br from-[#1a0533] to-[#2e1065] border-2 border-[rgba(124,58,237,0.4)]">
               {profile?.avatar ? (
-                <img src={profile.avatar} alt={profile.name} className="w-full h-full object-cover" />
+                <img
+                  src={profile.avatar}
+                  alt={profile.name}
+                  className="w-full h-full object-cover"
+                />
               ) : (
                 <span className="text-[2.5rem] font-bold text-[#a78bfa]">
                   {(profile?.name?.charAt(0) || '?').toUpperCase()}
@@ -170,13 +196,19 @@ export default function PublicProfile() {
               )}
             </div>
 
-            <p className="text-[1.3rem] font-bold mt-2 mb-1">{profile?.name || '—'}</p>
+            <p className="text-[1.3rem] font-bold mt-2 mb-1">
+              {profile?.name || '—'}
+            </p>
             {profile?.isVerifiedStudent && (
               <div className="flex justify-center mt-[0.1rem] mb-[0.4rem]">
                 <VerifiedBadge size="sm" />
               </div>
             )}
-            {profile?.city && <p className="text-[rgba(255,255,255,0.5)] text-[0.9rem] m-0">{profile.city}</p>}
+            {profile?.city && (
+              <p className="text-[rgba(255,255,255,0.5)] text-[0.9rem] m-0">
+                {profile.city}
+              </p>
+            )}
 
             {interests.length > 0 && (
               <div className="mt-4 flex justify-center gap-2 flex-wrap">
@@ -199,7 +231,9 @@ export default function PublicProfile() {
                   {blockBusy ? '…' : isBlocked ? 'Unblock' : 'Block user'}
                 </button>
                 {blockError && (
-                  <p className="mt-2 mb-0 text-[0.8rem] text-[#fca5a5] text-center leading-snug" role="alert">
+                  <p
+                    className="mt-2 mb-0 text-[0.8rem] text-[#fca5a5] text-center leading-snug"
+                    role="alert">
                     {blockError}
                   </p>
                 )}
@@ -213,9 +247,13 @@ export default function PublicProfile() {
             <PanelHeader title="About" />
             <div className="px-6 py-6">
               {profile?.bio ? (
-                <p className="m-0 leading-relaxed text-[rgba(255,255,255,0.85)] whitespace-pre-wrap">{profile.bio}</p>
+                <p className="m-0 leading-relaxed text-[rgba(255,255,255,0.85)] whitespace-pre-wrap">
+                  {profile.bio}
+                </p>
               ) : (
-                <span className="text-[rgba(255,255,255,0.35)] text-[0.9rem]">No bio yet</span>
+                <span className="text-[rgba(255,255,255,0.35)] text-[0.9rem]">
+                  No bio yet
+                </span>
               )}
             </div>
           </Panel>
@@ -234,7 +272,9 @@ export default function PublicProfile() {
                   ))}
                 </div>
               ) : (
-                <span className="text-[rgba(255,255,255,0.35)] text-[0.9rem]">No interests added yet</span>
+                <span className="text-[rgba(255,255,255,0.35)] text-[0.9rem]">
+                  No interests added yet
+                </span>
               )}
             </div>
           </Panel>
@@ -247,7 +287,9 @@ export default function PublicProfile() {
                   {hostedEvents.map(renderEventCard)}
                 </div>
               ) : (
-                <span className="text-[rgba(255,255,255,0.35)] text-[0.9rem]">No hosted events yet</span>
+                <span className="text-[rgba(255,255,255,0.35)] text-[0.9rem]">
+                  No hosted events yet
+                </span>
               )}
             </div>
           </Panel>

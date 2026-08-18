@@ -15,9 +15,7 @@ export function isStudentEmail(email) {
   const domain = email.trim().toLowerCase().split('@')[1];
   if (!domain) return false;
   // Match the domain or any subdomain (e.g. mail.calpoly.edu).
-  return STUDENT_DOMAINS.some(
-    (d) => domain === d || domain.endsWith(`.${d}`)
-  );
+  return STUDENT_DOMAINS.some((d) => domain === d || domain.endsWith(`.${d}`));
 }
 
 export default isStudentEmail;

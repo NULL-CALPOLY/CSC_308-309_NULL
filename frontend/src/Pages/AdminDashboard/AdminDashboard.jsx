@@ -62,7 +62,9 @@ export default function AdminDashboard() {
       }
       setPending((prev) => prev.filter((c) => c._id !== id));
     } catch {
-      setActionError('Network error — please check your connection and try again.');
+      setActionError(
+        'Network error — please check your connection and try again.'
+      );
     } finally {
       setBusyId(null);
     }
@@ -133,7 +135,9 @@ export default function AdminDashboard() {
             aria-modal="true"
             aria-labelledby="reject-title">
             <div className="bg-[#111118] border border-[rgba(255,255,255,0.12)] rounded-2xl p-8 w-full max-w-[460px] shadow-[0_24px_64px_rgba(0,0,0,0.6)]">
-              <h2 id="reject-title" className="m-0 mb-2 text-[1.15rem] text-[#f8fafc]">
+              <h2
+                id="reject-title"
+                className="m-0 mb-2 text-[1.15rem] text-[#f8fafc]">
                 Reject "{rejectTarget.name}"?
               </h2>
               <p className="m-0 mb-4 text-[rgba(248,250,252,0.65)] text-[0.88rem] leading-relaxed">
@@ -152,7 +156,9 @@ export default function AdminDashboard() {
                   className="border border-[rgba(248,113,113,0.5)] bg-transparent text-[#f87171] rounded-[8px] py-2 px-5 font-semibold cursor-pointer min-w-[100px] disabled:opacity-60 disabled:cursor-default"
                   onClick={confirmReject}
                   disabled={busyId === rejectTarget._id}>
-                  {busyId === rejectTarget._id ? 'Rejecting…' : 'Confirm Rejection'}
+                  {busyId === rejectTarget._id
+                    ? 'Rejecting…'
+                    : 'Confirm Rejection'}
                 </button>
                 <button
                   className="bg-transparent border border-[rgba(255,255,255,0.18)] text-[rgba(255,255,255,0.7)] rounded-[8px] py-2 px-5 font-semibold cursor-pointer min-w-[100px] transition-[border-color,color,background] duration-200 hover:border-[rgba(255,255,255,0.4)] hover:text-white hover:bg-[rgba(255,255,255,0.05)]"

@@ -96,7 +96,11 @@ describe('EventColumn', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     useUpcomingEvents.mockReturnValue(mockUseUpcomingEventsResult);
-    useNearbyEvents.mockReturnValue({ events: [], loading: false, error: null });
+    useNearbyEvents.mockReturnValue({
+      events: [],
+      loading: false,
+      error: null,
+    });
   });
 
   const openFilters = () => {

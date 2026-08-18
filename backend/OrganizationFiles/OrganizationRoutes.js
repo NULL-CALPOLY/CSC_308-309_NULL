@@ -1,10 +1,6 @@
 import express from 'express';
 import organizationServices from './OrganizationServices.js';
-import {
-  requireAuth,
-  requireAdmin,
-  requireSelf,
-} from '../middleware/auth.js';
+import { requireAuth, requireAdmin, requireSelf } from '../middleware/auth.js';
 import User from '../UserFiles/UserSchema.js';
 
 const router = express.Router();
@@ -164,7 +160,10 @@ router.delete('/:id', requireAuth, async (req, res) => {
     if (!allowed)
       return res
         .status(403)
-        .json({ success: false, message: 'Not allowed to delete this organization' });
+        .json({
+          success: false,
+          message: 'Not allowed to delete this organization',
+        });
 
     await organizationServices.deleteOrganization(req.params.id);
     res

@@ -129,7 +129,9 @@ router.get('/:id', optionalAuth, async (req, res) => {
 
     // A viewer blocked by the host can't see the event.
     const hostId =
-      event.host && typeof event.host === 'object' ? event.host._id : event.host;
+      event.host && typeof event.host === 'object'
+        ? event.host._id
+        : event.host;
     if (
       req.userId &&
       String(hostId) !== String(req.userId) &&

@@ -10,8 +10,14 @@ function Toggle({ checked, onChange, label, description }) {
   return (
     <div className="flex items-center justify-between gap-3 min-h-[44px]">
       <div className="flex flex-col gap-0.5">
-        <span className="text-[0.9rem] font-semibold text-[rgba(255,255,255,0.88)]">{label}</span>
-        {description && <span className="text-[0.75rem] text-[rgba(255,255,255,0.35)]">{description}</span>}
+        <span className="text-[0.9rem] font-semibold text-[rgba(255,255,255,0.88)]">
+          {label}
+        </span>
+        {description && (
+          <span className="text-[0.75rem] text-[rgba(255,255,255,0.35)]">
+            {description}
+          </span>
+        )}
       </div>
       <button
         type="button"
@@ -46,8 +52,12 @@ export default function Settings() {
   const navigate = useNavigate();
   const toast = useToast();
 
-  const [lightMode, setLightMode] = useState(() => localStorage.getItem('findr-theme') === 'light');
-  const [emailNotifs, setEmailNotifs] = useState(() => localStorage.getItem('findr-email-notifs') !== 'false');
+  const [lightMode, setLightMode] = useState(
+    () => localStorage.getItem('findr-theme') === 'light'
+  );
+  const [emailNotifs, setEmailNotifs] = useState(
+    () => localStorage.getItem('findr-email-notifs') !== 'false'
+  );
   const [blockedUsers, setBlockedUsers] = useState([]);
   const [loadingBlocked, setLoadingBlocked] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
@@ -112,7 +122,8 @@ export default function Settings() {
         // If they're plain ID strings, resolve each one to a user profile.
         const resolved = await Promise.all(
           raw.map(async (item) => {
-            if (typeof item === 'object' && item !== null && item.name) return item;
+            if (typeof item === 'object' && item !== null && item.name)
+              return item;
             const id = typeof item === 'object' ? item._id || item.id : item;
             try {
               const r = await fetch(`${API}/users/${id}`, {
@@ -139,7 +150,9 @@ export default function Settings() {
         headers: { Authorization: `Bearer ${user.token}` },
       });
       if (res.ok) {
-        setBlockedUsers((prev) => prev.filter((u) => (typeof u === 'object' ? u._id : u) !== blockedId));
+        setBlockedUsers((prev) =>
+          prev.filter((u) => (typeof u === 'object' ? u._id : u) !== blockedId)
+        );
         toast.success('User unblocked.');
       } else {
         toast.error('Could not unblock user.');
@@ -174,13 +187,23 @@ export default function Settings() {
         <Section title="Account">
           <div className="flex items-center gap-3.5 max-[680px]:flex-wrap">
             <div className="w-[52px] h-[52px] min-w-[52px] rounded-full bg-gradient-to-br from-[#7c3aed] to-[#a78bfa] flex items-center justify-center text-[1.3rem] font-bold text-white overflow-hidden flex-shrink-0">
-              {user?.avatar
-                ? <img src={user.avatar} alt={user.name} className="w-full h-full object-cover rounded-full" />
-                : <span>{(user?.name?.charAt(0) || '?').toUpperCase()}</span>}
+              {user?.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt={user.name}
+                  className="w-full h-full object-cover rounded-full"
+                />
+              ) : (
+                <span>{(user?.name?.charAt(0) || '?').toUpperCase()}</span>
+              )}
             </div>
             <div className="flex-1 flex flex-col gap-[3px] min-w-0">
-              <span className="text-[0.95rem] font-bold text-white">{user?.name || 'User'}</span>
-              <span className="text-[0.8rem] text-[rgba(255,255,255,0.45)]">{user?.email || ''}</span>
+              <span className="text-[0.95rem] font-bold text-white">
+                {user?.name || 'User'}
+              </span>
+              <span className="text-[0.8rem] text-[rgba(255,255,255,0.45)]">
+                {user?.email || ''}
+              </span>
               {user?.isVerifiedStudent && (
                 <span className="inline-flex items-center gap-1 py-0.5 px-2 bg-[rgba(16,185,129,0.15)] border border-[rgba(16,185,129,0.3)] rounded-[20px] text-[0.68rem] font-bold text-[#34d399] w-fit">
                   Verified Student
@@ -211,7 +234,11 @@ export default function Settings() {
             checked={emailNotifs}
             onChange={handleEmailNotifsChange}
             label="Email notifications"
-            description={savingNotifs ? 'Saving…' : 'Receive updates about events you\'ve joined'}
+            description={
+              savingNotifs
+                ? 'Saving…'
+                : "Receive updates about events you've joined"
+            }
           />
         </Section>
 
@@ -235,7 +262,9 @@ export default function Settings() {
                     <div className="w-9 h-9 min-w-[36px] rounded-full bg-[rgba(255,255,255,0.1)] flex items-center justify-center text-[0.9rem] font-bold text-[rgba(255,255,255,0.55)]">
                       {(name?.charAt(0) || '?').toUpperCase()}
                     </div>
-                    <span className="flex-1 text-[0.875rem] text-[rgba(255,255,255,0.75)]">{name}</span>
+                    <span className="flex-1 text-[0.875rem] text-[rgba(255,255,255,0.75)]">
+                      {name}
+                    </span>
                     <button
                       className="py-[0.3rem] px-[0.8rem] rounded-[7px] border border-[rgba(248,113,113,0.3)] bg-transparent text-[#f87171] text-[0.75rem] font-semibold cursor-pointer transition-[background,border-color] duration-200 hover:bg-[rgba(248,113,113,0.08)] hover:border-[#f87171]"
                       onClick={() => handleUnblock(uid)}>

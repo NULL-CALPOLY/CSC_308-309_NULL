@@ -15,7 +15,9 @@ export default function LandingEventPreview({ limit = 6 }) {
     .slice(0, limit);
 
   return (
-    <section className="w-[min(1200px,92%)] mx-auto pt-16 pb-12 max-[640px]:pt-10 max-[640px]:pb-6" aria-labelledby="lep-heading">
+    <section
+      className="w-[min(1200px,92%)] mx-auto pt-16 pb-12 max-[640px]:pt-10 max-[640px]:pb-6"
+      aria-labelledby="lep-heading">
       <div className="text-center mb-10">
         <h2
           id="lep-heading"
@@ -28,13 +30,16 @@ export default function LandingEventPreview({ limit = 6 }) {
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-5 items-start max-[640px]:grid-cols-1" aria-hidden="true">
+        <div
+          className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-5 items-start max-[640px]:grid-cols-1"
+          aria-hidden="true">
           {Array.from({ length: 3 }).map((_, i) => (
             <div
               key={i}
               className="h-[230px] rounded-2xl animate-shimmer"
               style={{
-                background: 'linear-gradient(100deg, rgba(255,255,255,0.04) 30%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 70%)',
+                background:
+                  'linear-gradient(100deg, rgba(255,255,255,0.04) 30%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 70%)',
                 backgroundSize: '200% 100%',
               }}
             />

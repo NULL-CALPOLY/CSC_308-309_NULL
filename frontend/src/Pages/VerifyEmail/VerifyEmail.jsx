@@ -20,7 +20,10 @@ export default function VerifyEmail() {
           setStatus('success');
         } else {
           setStatus('error');
-          setMessage(data.message || 'Verification failed. The link may be expired or invalid.');
+          setMessage(
+            data.message ||
+              'Verification failed. The link may be expired or invalid.'
+          );
         }
       })
       .catch(() => {

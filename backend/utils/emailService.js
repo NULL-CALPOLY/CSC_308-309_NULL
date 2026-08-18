@@ -65,7 +65,9 @@ export async function sendPasswordResetEmail(to, name, token) {
   const url = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password/${token}`;
 
   if (!transport) {
-    console.warn(`[email] SMTP not configured — skipping reset email to ${to}.`);
+    console.warn(
+      `[email] SMTP not configured — skipping reset email to ${to}.`
+    );
     return;
   }
 

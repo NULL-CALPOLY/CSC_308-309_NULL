@@ -54,7 +54,9 @@ export default function DeleteAccountModal({
           </svg>
         </div>
 
-        <h2 className="font-['DM_Serif_Display',serif] text-[1.45rem] text-white m-0 text-center">Delete Account</h2>
+        <h2 className="font-['DM_Serif_Display',serif] text-[1.45rem] text-white m-0 text-center">
+          Delete Account
+        </h2>
         <p className="font-['DM_Mono',monospace] text-[0.74rem] text-[rgba(255,255,255,0.38)] text-center leading-[1.7] m-0">
           This action is{' '}
           <span className="text-[#f87171]">permanent and irreversible.</span>
@@ -64,7 +66,11 @@ export default function DeleteAccountModal({
 
         <div className="w-full flex flex-col gap-[0.45rem] mt-1">
           <label className="font-['DM_Mono',monospace] text-[0.62rem] uppercase tracking-[0.1em] text-[rgba(255,255,255,0.28)]">
-            Type <span className="text-[#f87171] font-['DM_Mono',monospace]">DELETE</span> to confirm
+            Type{' '}
+            <span className="text-[#f87171] font-['DM_Mono',monospace]">
+              DELETE
+            </span>{' '}
+            to confirm
           </label>
           <input
             className={`bg-[rgba(255,255,255,0.04)] border rounded-[8px] py-[0.65rem] px-[0.9rem] font-['DM_Mono',monospace] text-[0.9rem] tracking-[0.15em] text-white w-full box-border outline-none transition-[border-color,box-shadow,background] duration-200 placeholder:text-[rgba(255,255,255,0.12)] placeholder:tracking-[0.15em] focus:border-[rgba(255,255,255,0.2)] focus:bg-[rgba(255,255,255,0.06)] ${
@@ -95,7 +101,10 @@ export default function DeleteAccountModal({
             onClick={handleConfirm}
             disabled={!isMatch || isDeleting}>
             {isDeleting ? (
-              <span data-testid="dam-spinner" className="w-[14px] h-[14px] border-2 border-[rgba(255,255,255,0.3)] border-t-white rounded-full animate-[dam-spin_0.6s_linear_infinite] inline-block" />
+              <span
+                data-testid="dam-spinner"
+                className="w-[14px] h-[14px] border-2 border-[rgba(255,255,255,0.3)] border-t-white rounded-full animate-[dam-spin_0.6s_linear_infinite] inline-block"
+              />
             ) : (
               'Delete My Account'
             )}

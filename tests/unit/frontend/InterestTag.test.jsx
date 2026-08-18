@@ -27,24 +27,34 @@ describe('InterestTag', () => {
   it('generates a consistent color for unknown interests', () => {
     const { container: c1 } = render(<TagComponent Interest="Hiking" />);
     const { container: c2 } = render(<TagComponent Interest="Hiking" />);
-    const color1 = c1.querySelector('[data-testid="interest-tag"]').style.backgroundColor;
-    const color2 = c2.querySelector('[data-testid="interest-tag"]').style.backgroundColor;
+    const color1 = c1.querySelector('[data-testid="interest-tag"]').style
+      .backgroundColor;
+    const color2 = c2.querySelector('[data-testid="interest-tag"]').style
+      .backgroundColor;
     expect(color1).toBe(color2);
   });
 
   it('trims the interest name for color lookup', () => {
     const { container } = render(<TagComponent Interest="  soccer  " />);
-    expect(container.querySelector('[data-testid="interest-tag"]')).toBeInTheDocument();
+    expect(
+      container.querySelector('[data-testid="interest-tag"]')
+    ).toBeInTheDocument();
   });
 
   it('renders with different colors for different interests', () => {
     const { container: c1 } = render(<TagComponent Interest="Cooking" />);
     const { container: c2 } = render(<TagComponent Interest="Swimming" />);
-    const color1 = c1.querySelector('[data-testid="interest-tag"]').style.backgroundColor;
-    const color2 = c2.querySelector('[data-testid="interest-tag"]').style.backgroundColor;
+    const color1 = c1.querySelector('[data-testid="interest-tag"]').style
+      .backgroundColor;
+    const color2 = c2.querySelector('[data-testid="interest-tag"]').style
+      .backgroundColor;
     // Colors should differ (highly likely with different string hashes)
     // Just verify both render
-    expect(c1.querySelector('[data-testid="interest-tag"]')).toBeInTheDocument();
-    expect(c2.querySelector('[data-testid="interest-tag"]')).toBeInTheDocument();
+    expect(
+      c1.querySelector('[data-testid="interest-tag"]')
+    ).toBeInTheDocument();
+    expect(
+      c2.querySelector('[data-testid="interest-tag"]')
+    ).toBeInTheDocument();
   });
 });

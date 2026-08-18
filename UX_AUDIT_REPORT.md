@@ -9,6 +9,7 @@ Findr has a well-structured dark-theme design system and covers the core event-d
 ## Page-by-Page Findings
 
 ### 1. Landing Page — Score: 7/10
+
 **User story:** Guest browses events without logging in; Guest signs up
 
 - **Hero subtitle opacity** — `opacity: 0.9` white text on `#667eea–#764ba2` gradient → ~3.8:1, fails 4.5:1. **High / WCAG AA**
@@ -19,6 +20,7 @@ Findr has a well-structured dark-theme design system and covers the core event-d
 - **Footer link color** — `#1a73e8` on `#f1f3f4` → ~3.55:1, fails 4.5:1 for 1rem text. **Medium / WCAG AA**
 
 ### 2. Events Page — Score: 8/10
+
 **User story:** Authenticated user finds an event by interest
 
 - **Hero paragraph contrast** — `rgba(248,250,252,0.6)` on `#13101f` → ~4.2:1, fails 4.5:1. **High / WCAG AA**
@@ -29,6 +31,7 @@ Findr has a well-structured dark-theme design system and covers the core event-d
 - **Mobile filter: no close affordance inside panel** — No overlay or close button inside open sidebar. **Medium / Mobile**
 
 ### 3. Explore Page — Score: 6/10
+
 **User story:** Authenticated user finds an event by interest
 
 - **Functionally duplicates Events page** — 90% feature overlap. Creates cognitive load. **Critical / Cognitive load**
@@ -39,6 +42,7 @@ Findr has a well-structured dark-theme design system and covers the core event-d
 - **Emoji in Near Me button lacks aria-label** — "📍 Near me" announced verbatim. **Medium / Accessibility**
 
 ### 4. Home / Map Page — Score: 7/10
+
 **User story:** Authenticated user finds an event on map; Creates an event
 
 - **No map loading/empty state** — Blank map with no skeleton or "no events" message. **High / Feedback**
@@ -46,6 +50,7 @@ Findr has a well-structured dark-theme design system and covers the core event-d
 - **Panel toggle not discoverable** — No visual affordance that an event list exists behind the hamburger. **Medium / Learnability**
 
 ### 5. Clubs Page — Score: 7.5/10
+
 **User story:** Club leader registers a club; User joins a club
 
 - **`.clubs-sub` contrast** — `rgba(255,255,255,0.5)` on `#080808` → ~3.85:1. **High / WCAG AA**
@@ -57,6 +62,7 @@ Findr has a well-structured dark-theme design system and covers the core event-d
 - **`Navbar page="/"` bug** — Clubs nav link never shows active state. **Low / Navigation**
 
 ### 6. Profile Page — Score: 6.5/10
+
 **User story:** Authenticated user views and edits their profile
 
 - **Interests as comma-separated plain text** — Inconsistent with chip UI everywhere else. **High / Consistency**
@@ -67,6 +73,7 @@ Findr has a well-structured dark-theme design system and covers the core event-d
 - **"Delete Account" looks like "Edit Profile"** — Destructive action needs danger styling. **Medium / Error prevention**
 
 ### 7. EventDetails Page — Score: 7.5/10
+
 **User story:** Authenticated user views event details; Joins/leaves; Edits event
 
 - **`alert()` on attend/delete errors** — Breaks design system. **High / Feedback**
@@ -75,6 +82,7 @@ Findr has a well-structured dark-theme design system and covers the core event-d
 - **Cloudscape `Multiselect`** — Heavy AWS component visually jarring on dark theme. **Medium / Consistency**
 
 ### 8. EventComponent — Score: 5/10
+
 **User story:** User finds and joins an event
 
 - **Card `<div>` not keyboard-accessible** — No `role`, `tabIndex`, or `onKeyDown`. **Critical / Accessibility**
@@ -116,37 +124,37 @@ Findr has a well-structured dark-theme design system and covers the core event-d
 
 ## Top 10 Issues (Prioritized)
 
-| Priority | Issue | Page | Severity | Suggested Fix |
-|---|---|---|---|---|
-| 1 | EventComponent `<div>` card — no keyboard/AT support | EventComponent | Critical | Add `role="article"`, `tabIndex={0}`, `onKeyDown` firing `onSelect` on Enter/Space |
-| 2 | `window.prompt()` / `alert()` for admin + errors throughout | Admin, EventDetails, Clubs | Critical | Build `<Toast>` + `<ConfirmModal>` components; replace all call sites |
-| 3 | Password requirements not shown until submit failure | RegistrationModal | Critical | Add inline real-time `<PasswordStrengthHint>` that validates as user types |
-| 4 | Interests multiselect trigger is `<div>` (not keyboard-accessible) | RegistrationModal | Critical | Change to `<button type="button">` with `aria-haspopup="listbox"` |
-| 5 | No focus trap / focus management in modals | SignInModal, RegistrationModal | High | Add focus-trap hook; `autoFocus` on first field on open |
-| 6 | WCAG AA contrast failures — secondary/muted text on dark backgrounds | Events, Explore, Clubs, Navbar | High | Raise all `rgba(*,*,*,0.4–0.65)` to minimum `0.72` on dark backgrounds |
-| 7 | Profile: unauthenticated dead-end with no sign-in path | Profile | High | Replace plain text with a centered card + "Sign In" button |
-| 8 | Profile: interests edited as comma-separated text | Profile | High | Use chip UI matching RegistrationModal |
-| 9 | Explore page unreachable from Navbar; duplicates Events page | Explore | Critical | Either merge Near Me into EventsPage or add Explore to Navbar |
-| 10 | AdminDashboard rejection via `window.prompt()` | AdminDashboard | Critical | Build `<RejectModal>` with styled textarea + confirm/cancel buttons |
+| Priority | Issue                                                                | Page                           | Severity | Suggested Fix                                                                      |
+| -------- | -------------------------------------------------------------------- | ------------------------------ | -------- | ---------------------------------------------------------------------------------- |
+| 1        | EventComponent `<div>` card — no keyboard/AT support                 | EventComponent                 | Critical | Add `role="article"`, `tabIndex={0}`, `onKeyDown` firing `onSelect` on Enter/Space |
+| 2        | `window.prompt()` / `alert()` for admin + errors throughout          | Admin, EventDetails, Clubs     | Critical | Build `<Toast>` + `<ConfirmModal>` components; replace all call sites              |
+| 3        | Password requirements not shown until submit failure                 | RegistrationModal              | Critical | Add inline real-time `<PasswordStrengthHint>` that validates as user types         |
+| 4        | Interests multiselect trigger is `<div>` (not keyboard-accessible)   | RegistrationModal              | Critical | Change to `<button type="button">` with `aria-haspopup="listbox"`                  |
+| 5        | No focus trap / focus management in modals                           | SignInModal, RegistrationModal | High     | Add focus-trap hook; `autoFocus` on first field on open                            |
+| 6        | WCAG AA contrast failures — secondary/muted text on dark backgrounds | Events, Explore, Clubs, Navbar | High     | Raise all `rgba(*,*,*,0.4–0.65)` to minimum `0.72` on dark backgrounds             |
+| 7        | Profile: unauthenticated dead-end with no sign-in path               | Profile                        | High     | Replace plain text with a centered card + "Sign In" button                         |
+| 8        | Profile: interests edited as comma-separated text                    | Profile                        | High     | Use chip UI matching RegistrationModal                                             |
+| 9        | Explore page unreachable from Navbar; duplicates Events page         | Explore                        | Critical | Either merge Near Me into EventsPage or add Explore to Navbar                      |
+| 10       | AdminDashboard rejection via `window.prompt()`                       | AdminDashboard                 | Critical | Build `<RejectModal>` with styled textarea + confirm/cancel buttons                |
 
 ---
 
 ## WCAG Contrast Failures Summary
 
-| Element | Effective Color | Background | Ratio | Status |
-|---|---|---|---|---|
-| `.ep-hero p` | ~`#9FA6B2` | `#13101f` | ~4.2:1 | **FAIL** |
-| `.ep-sidebar-section h3` | ~`#787C85` | `#0d0d14` | ~3.1:1 | **FAIL** |
-| `.ep-sort-pill` inactive | ~`#A3A9B5` | `#0d0d14` | ~4.0:1 | **FAIL** |
-| `.ep-results-meta` | ~`#787C85` | `#0d0d14` | ~3.1:1 | **FAIL** |
-| `.explore-hero p` | ~`#8A9097` | `#0d0d14` | ~3.5:1 | **FAIL** |
-| `.explore-count` / `.explore-empty` | ~`#72757D` | `#0d0d14` | ~2.8:1 | **FAIL** |
-| `.clubs-sub` | ~`#808080` | `#080808` | ~3.85:1 | **FAIL** |
-| `.club-members` | ~`#737373` | `#080808` | ~3.5:1 | **FAIL** |
-| `.navbar__explore-link` inactive | ~`#999999` | `#000000` | ~3.35:1 | **FAIL** |
-| `.navbar__link` default | ~`#808080` | `#000000` | ~2.98:1 | **FAIL** |
-| Landing `.hero-subtitle` | ~`#E6E6E6` | purple gradient mid | ~3.8:1 | **FAIL** |
-| Landing footer links `#1a73e8` | `#1a73e8` | `#f1f3f4` | ~3.55:1 | **FAIL** |
+| Element                             | Effective Color | Background          | Ratio   | Status   |
+| ----------------------------------- | --------------- | ------------------- | ------- | -------- |
+| `.ep-hero p`                        | ~`#9FA6B2`      | `#13101f`           | ~4.2:1  | **FAIL** |
+| `.ep-sidebar-section h3`            | ~`#787C85`      | `#0d0d14`           | ~3.1:1  | **FAIL** |
+| `.ep-sort-pill` inactive            | ~`#A3A9B5`      | `#0d0d14`           | ~4.0:1  | **FAIL** |
+| `.ep-results-meta`                  | ~`#787C85`      | `#0d0d14`           | ~3.1:1  | **FAIL** |
+| `.explore-hero p`                   | ~`#8A9097`      | `#0d0d14`           | ~3.5:1  | **FAIL** |
+| `.explore-count` / `.explore-empty` | ~`#72757D`      | `#0d0d14`           | ~2.8:1  | **FAIL** |
+| `.clubs-sub`                        | ~`#808080`      | `#080808`           | ~3.85:1 | **FAIL** |
+| `.club-members`                     | ~`#737373`      | `#080808`           | ~3.5:1  | **FAIL** |
+| `.navbar__explore-link` inactive    | ~`#999999`      | `#000000`           | ~3.35:1 | **FAIL** |
+| `.navbar__link` default             | ~`#808080`      | `#000000`           | ~2.98:1 | **FAIL** |
+| Landing `.hero-subtitle`            | ~`#E6E6E6`      | purple gradient mid | ~3.8:1  | **FAIL** |
+| Landing footer links `#1a73e8`      | `#1a73e8`       | `#f1f3f4`           | ~3.55:1 | **FAIL** |
 
 **Global fix:** Pin `--text-muted` to a pre-calculated WCAG-passing value (e.g. `rgba(248,250,252,0.72)` = ~5.5:1 on `#0d0d14`) and replace all sub-threshold opacity values.
 

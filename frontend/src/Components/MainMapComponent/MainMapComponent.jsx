@@ -34,7 +34,12 @@ const currentLocationIcon = L.icon({
   popupAnchor: [0, -10],
 });
 
-export default function MainMapComponent({ selectedId = null, onSelect, userCoords, onCoordsChange }) {
+export default function MainMapComponent({
+  selectedId = null,
+  onSelect,
+  userCoords,
+  onCoordsChange,
+}) {
   const [userPosition, setUserPosition] = useState(null);
   const [tracking, setTracking] = useState(false);
 
@@ -55,7 +60,10 @@ export default function MainMapComponent({ selectedId = null, onSelect, userCoor
         zoom={13}
         minZoom={3}
         maxZoom={18}
-        maxBounds={[[-90, -180], [90, 180]]}
+        maxBounds={[
+          [-90, -180],
+          [90, 180],
+        ]}
         maxBoundsViscosity={1.0}
         scrollWheelZoom={true}
         zoomControl={true}
@@ -128,7 +136,9 @@ function EventMarker({ event, isSelected = false, onSelect }) {
       eventHandlers={{ click: () => onSelect?.(event.id) }}>
       <Popup className="event-popup">
         <div className="flex flex-col gap-[6px] min-w-[200px] font-[inherit]">
-          <div className="text-[15px] font-bold text-[#f8fafc] mb-[2px] overflow-wrap-break-word">{event.eventName}</div>
+          <div className="text-[15px] font-bold text-[#f8fafc] mb-[2px] overflow-wrap-break-word">
+            {event.eventName}
+          </div>
 
           <div className="flex items-start gap-[6px] text-[12.5px] text-[rgba(248,250,252,0.6)]">
             <span className="text-[12px] mt-[1px]">📅</span>
@@ -148,7 +158,11 @@ function EventMarker({ event, isSelected = false, onSelect }) {
           {event.interests.length > 0 && (
             <div className="flex flex-wrap gap-[4px] mt-[2px]">
               {event.interests.slice(0, 3).map((tag, i) => (
-                <span key={i} className="bg-[rgba(124,58,237,0.18)] text-[#a78bfa] text-[11px] font-medium py-[2px] px-[8px] rounded-[20px] border border-[rgba(124,58,237,0.3)]">{tag}</span>
+                <span
+                  key={i}
+                  className="bg-[rgba(124,58,237,0.18)] text-[#a78bfa] text-[11px] font-medium py-[2px] px-[8px] rounded-[20px] border border-[rgba(124,58,237,0.3)]">
+                  {tag}
+                </span>
               ))}
             </div>
           )}
@@ -182,7 +196,10 @@ function LocateButton({ icon, setUserPosition, setTracking, onCoordsChange }) {
         setTracking((prev) => !prev);
         onCoordsChange?.({ lat, lng });
       },
-      () => toast.warning('Unable to retrieve your location. Check browser permissions.')
+      () =>
+        toast.warning(
+          'Unable to retrieve your location. Check browser permissions.'
+        )
     );
   };
 

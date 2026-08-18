@@ -15,7 +15,8 @@ const CATEGORIES = [
   'Other',
 ];
 
-const fieldCls = 'bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.12)] rounded-[8px] py-[0.6rem] px-3 text-white text-[0.9rem] font-[inherit] resize-y transition-[border-color,box-shadow] duration-200 outline-none focus:border-[rgba(124,58,237,0.55)] focus:shadow-[0_0_0_3px_rgba(124,58,237,0.12)]';
+const fieldCls =
+  'bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.12)] rounded-[8px] py-[0.6rem] px-3 text-white text-[0.9rem] font-[inherit] resize-y transition-[border-color,box-shadow] duration-200 outline-none focus:border-[rgba(124,58,237,0.55)] focus:shadow-[0_0_0_3px_rgba(124,58,237,0.12)]';
 const selectCls = `${fieldCls} pr-8 appearance-none cursor-pointer`;
 
 export default function RegisterClubModal({ isOpen, onClose, onSuccess }) {
@@ -87,15 +88,27 @@ export default function RegisterClubModal({ isOpen, onClose, onSuccess }) {
           Submissions are reviewed by a Findr admin before going live.
         </p>
 
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit} noValidate>
+        <form
+          className="flex flex-col gap-4"
+          onSubmit={handleSubmit}
+          noValidate>
           <label className="flex flex-col gap-[0.35rem]">
-            <span className="text-[0.82rem] text-[rgba(255,255,255,0.6)]">Club name *</span>
-            <input className={fieldCls} value={form.name} onChange={update('name')} required />
+            <span className="text-[0.82rem] text-[rgba(255,255,255,0.6)]">
+              Club name *
+            </span>
+            <input
+              className={fieldCls}
+              value={form.name}
+              onChange={update('name')}
+              required
+            />
           </label>
 
           <div className="grid grid-cols-2 gap-4 max-[480px]:grid-cols-1">
             <label className="flex flex-col gap-[0.35rem]">
-              <span className="text-[0.82rem] text-[rgba(255,255,255,0.6)]">Contact email *</span>
+              <span className="text-[0.82rem] text-[rgba(255,255,255,0.6)]">
+                Contact email *
+              </span>
               <input
                 className={fieldCls}
                 type="email"
@@ -105,18 +118,33 @@ export default function RegisterClubModal({ isOpen, onClose, onSuccess }) {
               />
             </label>
             <label className="flex flex-col gap-[0.35rem]">
-              <span className="text-[0.82rem] text-[rgba(255,255,255,0.6)]">Phone</span>
-              <input className={fieldCls} value={form.phone} onChange={update('phone')} />
+              <span className="text-[0.82rem] text-[rgba(255,255,255,0.6)]">
+                Phone
+              </span>
+              <input
+                className={fieldCls}
+                value={form.phone}
+                onChange={update('phone')}
+              />
             </label>
           </div>
 
           <label className="flex flex-col gap-[0.35rem]">
-            <span className="text-[0.82rem] text-[rgba(255,255,255,0.6)]">Category</span>
-            <select className={selectCls} value={form.category} onChange={update('category')}
-              style={{backgroundImage:`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(255,255,255,0.35)' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`, backgroundRepeat:'no-repeat', backgroundPosition:'right 0.75rem center'}}>
+            <span className="text-[0.82rem] text-[rgba(255,255,255,0.6)]">
+              Category
+            </span>
+            <select
+              className={selectCls}
+              value={form.category}
+              onChange={update('category')}
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(255,255,255,0.35)' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`,
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'right 0.75rem center',
+              }}>
               <option value="">Select a category</option>
               {CATEGORIES.map((c) => (
-                <option key={c} value={c} style={{background:'#111'}}>
+                <option key={c} value={c} style={{ background: '#111' }}>
                   {c}
                 </option>
               ))}
@@ -124,7 +152,9 @@ export default function RegisterClubModal({ isOpen, onClose, onSuccess }) {
           </label>
 
           <label className="flex flex-col gap-[0.35rem]">
-            <span className="text-[0.82rem] text-[rgba(255,255,255,0.6)]">Description</span>
+            <span className="text-[0.82rem] text-[rgba(255,255,255,0.6)]">
+              Description
+            </span>
             <textarea
               className={fieldCls}
               rows={4}
@@ -143,11 +173,14 @@ export default function RegisterClubModal({ isOpen, onClose, onSuccess }) {
               onChange={update('studentOnly')}
             />
             <span>
-              Students only — only verified students can join &amp; see our events
+              Students only — only verified students can join &amp; see our
+              events
             </span>
           </label>
 
-          {error && <p className="text-[#f87171] text-[0.85rem] m-0">{error}</p>}
+          {error && (
+            <p className="text-[#f87171] text-[0.85rem] m-0">{error}</p>
+          )}
 
           <div className="flex justify-end gap-3 mt-2">
             <button
