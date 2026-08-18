@@ -1,5 +1,19 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
+import argon2 from 'argon2';
+import {
+  createEmailLookupHash,
+  decryptEmail,
+  encryptEmail,
+  isEncryptedEmail,
+  normalizeEmail,
+} from './EmailCrypto.js';
+
+const ARGON2_OPTIONS = {
+  type: argon2.argon2id,
+  memoryCost: 19456,
+  timeCost: 2,
+  parallelism: 1,
+};
 
 const UserSchema = new mongoose.Schema(
   {
@@ -16,10 +30,14 @@ const UserSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      unique: true,
       required: true,
       trim: true,
-      lowercase: true,
+    },
+    emailLookupHash: {
+      type: String,
+      unique: true,
+      sparse: true,
+      select: false,
     },
     password: {
       type: String,
@@ -129,15 +147,35 @@ UserSchema.index(
   { partialFilterExpression: { 'location.coordinates': { $exists: true } } }
 );
 
+UserSchema.pre('validate', function (next) {
+  if (!this.isModified('email') || !this.email) return next();
+
+  try {
+    const normalizedEmail = normalizeEmail(this.email);
+    this.email = encryptEmail(normalizedEmail);
+    this.emailLookupHash = createEmailLookupHash(normalizedEmail);
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
 UserSchema.pre('save', async function (next) {
   if (!this.isModified('password') || !this.password) return next();
-  this.password = await bcrypt.hash(this.password, 10);
-  next();
+
+  try {
+    this.password = await argon2.hash(this.password, ARGON2_OPTIONS);
+    next();
+  } catch (error) {
+    next(error);
+  }
 });
 
 UserSchema.set('toJSON', {
   transform: (_, ret) => {
     delete ret.password;
+    delete ret.emailLookupHash;
+    if (isEncryptedEmail(ret.email)) ret.email = decryptEmail(ret.email);
     return ret;
   },
 });
