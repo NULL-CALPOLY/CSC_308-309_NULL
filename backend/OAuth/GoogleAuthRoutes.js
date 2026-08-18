@@ -19,6 +19,7 @@ const envPath = [
 });
 config({ path: envPath });
 import User from '../UserFiles/UserSchema.js';
+import { findUserByCanonicalEmail } from '../UserFiles/UserServices.js';
 import { isStudentEmail } from '../utils/studentEmail.js';
 import { isAdminEmail } from '../utils/adminEmail.js';
 
@@ -51,7 +52,7 @@ passport.use(
         // with the same email instead of creating a duplicate (which would hit
         // the unique-email index and throw E11000).
         if (!user && email) {
-          user = await User.findOne({ email });
+          user = await findUserByCanonicalEmail(email);
         }
 
         if (!user) {
