@@ -21,9 +21,7 @@ export async function sendVerificationEmail(to, name, token) {
   const url = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/verify-email/${token}`;
 
   if (!transport) {
-    console.warn(
-      `[email] SMTP not configured — skipping verification email to ${to}.\n  Token: ${token}\n  Link:  ${url}`
-    );
+    console.warn('[email] SMTP not configured — skipping verification email.');
     return;
   }
 
