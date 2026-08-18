@@ -18,6 +18,7 @@ import interestRouter from './InterestFIles/InterestRoutes.js';
 import cloudinaryRouter from './Cloudinary.js';
 import googleAuthRouter from './OAuth/GoogleAuthRoutes.js';
 import { assertEmailCryptoConfiguration } from './UserFiles/EmailCrypto.js';
+import { assertPiiCryptoConfiguration } from './UserFiles/PiiCrypto.js';
 
 // Load .env.test for tests/CI, fallback to .env
 // NOTE: env vars used at module level (sessionConfig, etc.) are safe here
@@ -39,6 +40,7 @@ config({ path: envPath });
 if (process.env.NODE_ENV === 'production') {
   try {
     assertEmailCryptoConfiguration();
+    assertPiiCryptoConfiguration();
   } catch (error) {
     console.error(`❌ ${error.message}`);
     process.exit(1);

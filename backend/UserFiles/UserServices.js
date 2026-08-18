@@ -20,6 +20,8 @@ const ARGON2_OPTIONS = {
 
 const BCRYPT_HASH_PREFIX = /^\$2[aby]\$/;
 const ARGON2ID_HASH_PREFIX = /^\$argon2id\$/;
+const PUBLIC_PROFILE_FIELDS =
+  'name avatar bio interests city createdAt isVerifiedStudent';
 
 /*
  * Helper functions for authentication
@@ -118,9 +120,9 @@ async function authenticateUser(email, password) {
   return { user, accessToken, refreshToken };
 }
 
-// Get all users
+// Get public-safe user summaries.
 function getUsers() {
-  return userModel.find();
+  return userModel.find().select(PUBLIC_PROFILE_FIELDS);
 }
 
 function createEmailAlreadyRegisteredError() {
@@ -232,14 +234,14 @@ function findUserById(id) {
 // Public-safe projection of a user. Excludes email, phone, date of birth,
 // gender, location, and third-party identity fields.
 function findPublicProfileById(id) {
-  return userModel
-    .findById(id)
-    .select('name avatar bio interests city createdAt isVerifiedStudent');
+  return userModel.findById(id).select(PUBLIC_PROFILE_FIELDS);
 }
 
-// Search users by name
+// Search public profiles by name.
 function findUserByName(name) {
-  return userModel.find({ name: { $regex: name, $options: 'i' } });
+  return userModel
+    .find({ name: { $regex: name, $options: 'i' } })
+    .select(PUBLIC_PROFILE_FIELDS);
 }
 
 // Search users by email
@@ -252,43 +254,12 @@ function findUserByEmailForAuth(email) {
   return findUserByCanonicalEmail(email);
 }
 
-function findUserByPhoneNumber(phoneNumber) {
-  return userModel.find({ phoneNumber });
-}
-
-function findUserByDateOfBirth(dob) {
-  const startDate = new Date(dob);
-  startDate.setUTCHours(0, 0, 0, 0);
-  const endDate = new Date(dob);
-  endDate.setUTCHours(23, 59, 59, 999);
-
-  return userModel.find({ dateOfBirth: { $gte: startDate, $lt: endDate } });
-}
-
-function findUserByGender(gender) {
-  return userModel.find({ gender });
-}
-
 function findUserByInterests(interests) {
-  return userModel.find({ interests: { $in: interests } });
+  return userModel.find({ interests: { $in: interests } }).select(PUBLIC_PROFILE_FIELDS);
 }
 
 function findUserByCity(city) {
-  return userModel.find({ city });
-}
-
-function findUserByLocation(latitude, longitude, radiusInMiles) {
-  return userModel.find({
-    location: {
-      $geoWithin: {
-        $centerSphere: [[longitude, latitude], radiusInMiles / 3959],
-      },
-    },
-  });
-}
-
-function findUserByRadius(radiusInMiles) {
-  return userModel.find({ radius: radiusInMiles });
+  return userModel.find({ city }).select(PUBLIC_PROFILE_FIELDS);
 }
 
 function formatUser(user) {
@@ -302,27 +273,6 @@ function formatUser(user) {
       coordinates: [longitude, latitude],
     },
   };
-}
-
-function calculateAge(dateOfBirth) {
-  const dob = new Date(dateOfBirth);
-  const today = new Date();
-  let age = today.getFullYear() - dob.getFullYear();
-  const monthDiff = today.getMonth() - dob.getMonth();
-  const dayDiff = today.getDate() - dob.getDate();
-
-  if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) age--;
-  return age;
-}
-
-function findUserByAge(age) {
-  const now = new Date();
-  const birthYear = now.getFullYear() - age;
-  const startOfYear = new Date(birthYear, 0, 1, 0, 0, 0, 0);
-  const endOfYear = new Date(birthYear, 11, 31, 23, 59, 59, 999);
-  return userModel.find({
-    dateOfBirth: { $gte: startOfYear, $lte: endOfYear },
-  });
 }
 
 // ── Blocking ──
@@ -375,17 +325,10 @@ export default {
   findUserIdsWhoBlocked,
   findUserByName,
   findUserByEmail,
-  findUserByPhoneNumber,
-  findUserByDateOfBirth,
-  findUserByGender,
   findUserByInterests,
   findUserByCity,
-  findUserByLocation,
   addUser,
   deleteUser,
   updateUser,
-  findUserByRadius,
-  calculateAge,
-  findUserByAge,
   findUserByEmailForAuth,
 };

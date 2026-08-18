@@ -7,6 +7,9 @@ import {
   isEncryptedEmail,
   normalizeEmail,
 } from './EmailCrypto.js';
+import { decryptPii, encryptPii, isEncryptedPii } from './PiiCrypto.js';
+
+const PII_FIELDS = ['phoneNumber', 'dateOfBirth', 'gender', 'location'];
 
 const ARGON2_OPTIONS = {
   type: argon2.argon2id,
@@ -59,16 +62,14 @@ const UserSchema = new mongoose.Schema(
     phoneNumber: {
       type: String,
       required: false,
-      trim: true,
     },
     dateOfBirth: {
-      type: Date,
+      type: String,
       required: false,
     },
     gender: {
       type: String,
       required: false,
-      trim: true,
     },
     city: {
       type: String,
@@ -124,36 +125,34 @@ const UserSchema = new mongoose.Schema(
       default: null,
     },
     location: {
-      type: {
-        type: String,
-        enum: ['Point'],
-        default: 'Point',
-      },
-      coordinates: {
-        type: [Number],
-      },
+      type: mongoose.Schema.Types.Mixed,
+      required: false,
     },
   },
   { collection: 'users_list', timestamps: true }
 );
 
-// Geospatial index for "users near me" radius queries. Partial so users without
-// coordinates (e.g. OAuth signups, or anyone who hasn't set a location) aren't
-// indexed. The schema defaults `location.type` to 'Point', so a location-less
-// user still persists `location: { type: 'Point' }` with no coordinates — a
-// non-partial 2dsphere index errors on that with "Can't extract geo keys".
-UserSchema.index(
-  { location: '2dsphere' },
-  { partialFilterExpression: { 'location.coordinates': { $exists: true } } }
-);
-
 UserSchema.pre('validate', function (next) {
-  if (!this.isModified('email') || !this.email) return next();
-
   try {
-    const normalizedEmail = normalizeEmail(this.email);
-    this.email = encryptEmail(normalizedEmail);
-    this.emailLookupHash = createEmailLookupHash(normalizedEmail);
+    if (this.isModified('email') && this.email) {
+      const normalizedEmail = normalizeEmail(this.email);
+      this.email = encryptEmail(normalizedEmail);
+      this.emailLookupHash = createEmailLookupHash(normalizedEmail);
+    }
+
+    for (const field of PII_FIELDS) {
+      if (!this.isModified(field) || this[field] === undefined) continue;
+
+      if (this[field] === null || this[field] === '') {
+        this[field] = null;
+        continue;
+      }
+
+      if (!isEncryptedPii(this[field], field)) {
+        this[field] = encryptPii(field, this[field]);
+      }
+    }
+
     next();
   } catch (error) {
     next(error);
@@ -176,6 +175,13 @@ UserSchema.set('toJSON', {
     delete ret.password;
     delete ret.emailLookupHash;
     if (isEncryptedEmail(ret.email)) ret.email = decryptEmail(ret.email);
+
+    for (const field of PII_FIELDS) {
+      if (isEncryptedPii(ret[field], field)) {
+        ret[field] = decryptPii(field, ret[field]);
+      }
+    }
+
     return ret;
   },
 });

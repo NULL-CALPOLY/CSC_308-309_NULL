@@ -2,7 +2,8 @@
   "type": "module",
   "scripts": {
     "start": "node backend.js",
-    "migrate:email-encryption": "node scripts/migrate-email-encryption.js"
+    "migrate:email-encryption": "node scripts/migrate-email-encryption.js",
+    "migrate:user-pii-encryption": "node scripts/migrate-user-pii-encryption.js"
   },
   "dependencies": {
     "argon2": "0.45.1",
