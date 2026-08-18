@@ -56,7 +56,7 @@ router.post('/login', authLimiter, async (req, res) => {
         success: false,
         message: 'Please verify your email before signing in.',
         requiresVerification: true,
-        email: result.user.email,
+        email: result.user.toJSON().email,
       });
     }
 
@@ -87,18 +87,47 @@ router.post('/login', authLimiter, async (req, res) => {
 
 router.post('/', authLimiter, async (req, res) => {
   try {
-    const { user: newUser, verificationToken } = await userServices.addUser(req.body);
+    const { user: newUser, verificationToken, verificationRequired } =
+      await userServices.addUser(req.body);
+    const email = newUser.toJSON().email;
 
-    // Send verification email (non-blocking — don't fail the request if it errors)
-    sendVerificationEmail(newUser.email, newUser.name, verificationToken).catch((err) =>
-      console.error('[email] Failed to send verification email:', err.message)
+    if (verificationRequired) {
+      // Send verification email (non-blocking — don't fail the request if it errors)
+      sendVerificationEmail(email, newUser.name, verificationToken).catch((err) =>
+        console.error('[email] Failed to send verification email:', err.message)
+      );
+
+      return res.status(201).json({
+        success: true,
+        requiresVerification: true,
+        message: 'Account created. Please check your email to verify your account.',
+        email,
+      });
+    }
+
+    const accessToken = jwt.sign(
+      { id: newUser._id },
+      process.env.JWT_TOKEN_SECRET,
+      { expiresIn: '15m' }
+    );
+    const refreshToken = jwt.sign(
+      { id: newUser._id },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: '7d' }
     );
 
-    res.status(201).json({
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(201).json({
       success: true,
-      requiresVerification: true,
-      message: 'Account created. Please check your email to verify your account.',
-      email: newUser.email,
+      message: 'User created successfully',
+      user: newUser,
+      token: accessToken,
     });
   } catch (error) {
     res.status(error.status || 500).json({
@@ -227,7 +256,8 @@ router.post('/resend-verification', authLimiter, async (req, res) => {
       // Don't reveal whether the email exists or is already verified
       return res.status(200).json({ success: true, message: 'If that email is pending verification, a new link has been sent.' });
     }
-    sendVerificationEmail(result.user.email, result.user.name, result.verificationToken).catch((err) =>
+    const email = result.user.toJSON().email;
+    sendVerificationEmail(email, result.user.name, result.verificationToken).catch((err) =>
       console.error('[email] Failed to resend verification email:', err.message)
     );
     res.status(200).json({ success: true, message: 'Verification email sent. Please check your inbox.' });
@@ -253,9 +283,9 @@ router.put('/:id', requireAuth, requireSelf('id'), async (req, res) => {
         });
     })
     .catch((error) => {
-      res.status(500).json({
+      res.status(error.status || 500).json({
         success: false,
-        message: `Error in the server: ${error}`,
+        message: error.message || 'Server error',
       });
     });
 });
@@ -270,7 +300,7 @@ router.get('/me', requireAuth, async (req, res) => {
 
     // Keep isAdmin in sync with the ADMIN_EMAILS config on every profile fetch,
     // so admins don't need to log out and back in after their email is added.
-    const shouldBeAdmin = isAdminEmail(user.email);
+    const shouldBeAdmin = isAdminEmail(user.toJSON().email);
     if (user.isAdmin !== shouldBeAdmin) {
       user.isAdmin = shouldBeAdmin;
       await user.save();
