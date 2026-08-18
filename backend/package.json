@@ -1,9 +1,11 @@
 {
   "type": "module",
   "scripts": {
-    "start": "node backend.js"
+    "start": "node backend.js",
+    "migrate:email-encryption": "node scripts/migrate-email-encryption.js"
   },
   "dependencies": {
+    "argon2": "0.45.1",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.9.0",
     "connect-mongo": "^6.0.0",

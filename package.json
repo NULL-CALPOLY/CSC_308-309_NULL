@@ -53,6 +53,8 @@
   },
   "type": "module",
   "scripts": {
+    "install:all": "npm install && npm install --prefix frontend && npm install --prefix backend",
+    "audit:all": "npm audit fix && npm audit fix --prefix frontend && npm audit fix --prefix backend",
     "build": "npm run build --prefix frontend",
     "backend:dev": "node backend/backend.js",
     "frontend:dev": "npm run dev --prefix frontend",
