@@ -61,7 +61,7 @@ export default function Navbar({ page = '/' }) {
       ref={navRef}>
       {/* Logo */}
       <div className="flex-shrink-0">
-        <NavLink to={page} end className="no-underline">
+        <NavLink to="/" end className="no-underline">
           <h2 className="m-0 font-[Consolas,monospace] text-[1.4rem] font-extrabold tracking-[2px] text-white uppercase">
             Findr<span className="text-[#7c3aed]">.</span>
           </h2>
