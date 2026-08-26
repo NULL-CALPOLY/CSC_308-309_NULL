@@ -64,7 +64,8 @@ export function decryptPii(field, encryptedValue) {
     throw new Error(`${field} ciphertext has an invalid format`);
   }
 
-  const [, , encodedIv, encodedTag, encodedCiphertext] = encryptedValue.split('.');
+  const [, , encodedIv, encodedTag, encodedCiphertext] =
+    encryptedValue.split('.');
   const initializationVector = Buffer.from(encodedIv, 'base64url');
   const authenticationTag = Buffer.from(encodedTag, 'base64url');
 
@@ -72,7 +73,11 @@ export function decryptPii(field, encryptedValue) {
     throw new Error(`${field} ciphertext has invalid encryption parameters`);
   }
 
-  const decipher = createDecipheriv('aes-256-gcm', getKey(), initializationVector);
+  const decipher = createDecipheriv(
+    'aes-256-gcm',
+    getKey(),
+    initializationVector
+  );
   decipher.setAAD(aadFor(field));
   decipher.setAuthTag(authenticationTag);
 

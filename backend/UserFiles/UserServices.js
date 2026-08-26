@@ -255,7 +255,9 @@ function findUserByEmailForAuth(email) {
 }
 
 function findUserByInterests(interests) {
-  return userModel.find({ interests: { $in: interests } }).select(PUBLIC_PROFILE_FIELDS);
+  return userModel
+    .find({ interests: { $in: interests } })
+    .select(PUBLIC_PROFILE_FIELDS);
 }
 
 function findUserByCity(city) {

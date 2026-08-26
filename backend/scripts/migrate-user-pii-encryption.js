@@ -4,11 +4,8 @@ import mongoose from 'mongoose';
 config();
 
 const { default: User } = await import('../UserFiles/UserSchema.js');
-const {
-  assertPiiCryptoConfiguration,
-  encryptPii,
-  isEncryptedPii,
-} = await import('../UserFiles/PiiCrypto.js');
+const { assertPiiCryptoConfiguration, encryptPii, isEncryptedPii } =
+  await import('../UserFiles/PiiCrypto.js');
 
 const PII_FIELDS = ['phoneNumber', 'dateOfBirth', 'gender', 'location'];
 
@@ -53,7 +50,11 @@ try {
 
     for (const field of PII_FIELDS) {
       const value = user[field];
-      if (value === undefined || value === null || isEncryptedPii(value, field)) {
+      if (
+        value === undefined ||
+        value === null ||
+        isEncryptedPii(value, field)
+      ) {
         continue;
       }
 

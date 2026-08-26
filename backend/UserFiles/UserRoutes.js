@@ -246,12 +246,10 @@ router.post('/logout', (req, res) => {
 router.get('/verify-email/:token', async (req, res) => {
   try {
     await userServices.verifyEmail(req.params.token);
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: 'Email verified successfully. You can now sign in.',
-      });
+    res.status(200).json({
+      success: true,
+      message: 'Email verified successfully. You can now sign in.',
+    });
   } catch (err) {
     res
       .status(err.status || 400)
@@ -272,13 +270,11 @@ router.post('/resend-verification', authLimiter, async (req, res) => {
     const result = await userServices.resendVerification(email);
     if (!result) {
       // Don't reveal whether the email exists or is already verified
-      return res
-        .status(200)
-        .json({
-          success: true,
-          message:
-            'If that email is pending verification, a new link has been sent.',
-        });
+      return res.status(200).json({
+        success: true,
+        message:
+          'If that email is pending verification, a new link has been sent.',
+      });
     }
     const email = result.user.toJSON().email;
     sendVerificationEmail(
@@ -288,12 +284,10 @@ router.post('/resend-verification', authLimiter, async (req, res) => {
     ).catch((err) =>
       console.error('[email] Failed to resend verification email:', err.message)
     );
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: 'Verification email sent. Please check your inbox.',
-      });
+    res.status(200).json({
+      success: true,
+      message: 'Verification email sent. Please check your inbox.',
+    });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -452,12 +446,10 @@ router.patch(
   async (req, res) => {
     const { emailNotifications } = req.body;
     if (typeof emailNotifications !== 'boolean')
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: 'emailNotifications must be a boolean',
-        });
+      return res.status(400).json({
+        success: false,
+        message: 'emailNotifications must be a boolean',
+      });
     try {
       const user = await userServices.findUserById(req.params.id);
       if (!user)

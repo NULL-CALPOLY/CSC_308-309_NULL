@@ -158,12 +158,10 @@ router.delete('/:id', requireAuth, async (req, res) => {
     const allowed =
       organizationServices.isOrgAdmin(org, req.userId) || requester?.isAdmin;
     if (!allowed)
-      return res
-        .status(403)
-        .json({
-          success: false,
-          message: 'Not allowed to delete this organization',
-        });
+      return res.status(403).json({
+        success: false,
+        message: 'Not allowed to delete this organization',
+      });
 
     await organizationServices.deleteOrganization(req.params.id);
     res
