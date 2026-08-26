@@ -34,41 +34,24 @@ export const useAuth = () => {
   return context;
 };
 
-// ── localStorage session persistence ──
-// Access tokens expire in 15 min on the server; we store them for 14 min so
-// we always have a chance to refresh before an API call fails.
-const SESSION_KEY = 'findr_session';
-const TOKEN_EXPIRY_MS = 14 * 60 * 1000;
+// ── Session persistence ──
+// The access token lives in memory only (React state) and is never written to
+// localStorage, so an XSS payload has nothing durable to steal. Persistence
+// comes from the HttpOnly `refreshToken` cookie, which JS cannot read: on page
+// load we exchange it for a fresh access token via /users/refresh-token.
+//
+// Access tokens expire after 15 min on the server, so refresh on a shorter
+// interval to keep long-lived tabs working.
+const REFRESH_INTERVAL_MS = 13 * 60 * 1000;
 
-function saveSession(id: string, token: string) {
+// One-time cleanup for browsers that still hold a token from an earlier build
+// that persisted sessions in localStorage.
+function purgeLegacySession() {
   try {
-    localStorage.setItem(
-      SESSION_KEY,
-      JSON.stringify({ id, token, expiresAt: Date.now() + TOKEN_EXPIRY_MS })
-    );
-  } catch {}
-}
-
-function clearSession() {
-  try {
-    localStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem('findr_session');
     localStorage.removeItem('userToken');
     localStorage.removeItem('userId');
-    sessionStorage.clear();
   } catch {}
-}
-
-function loadSession(): { id: string; token: string } | null {
-  try {
-    const raw = localStorage.getItem(SESSION_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    if (!parsed?.token || !parsed?.id) return null;
-    if (parsed.expiresAt && parsed.expiresAt <= Date.now()) return null;
-    return { id: parsed.id, token: parsed.token };
-  } catch {
-    return null;
-  }
 }
 
 export const useProvideAuth = () => {
@@ -100,102 +83,88 @@ export const useProvideAuth = () => {
     }
   };
 
-  // ── Helper: consume an access token handed back via the URL hash ──
-  const consumeHashToken = async (): Promise<boolean> => {
-    const hash = window.location.hash;
-    if (!hash || !hash.includes('token=')) return false;
-
-    const params = new URLSearchParams(hash.replace(/^#/, ''));
-    const token = params.get('token');
-    const userId = params.get('userId');
-    if (!token || !userId) return false;
-
+  // ── Helper: trade the HttpOnly refresh cookie for a fresh access token ──
+  const refreshAccessToken = async (): Promise<{
+    id: string;
+    token: string;
+  } | null> => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const profile: Partial<UserState> = res.ok
-        ? await res
-            .json()
-            .then((json) => ({
-              name: json.data?.name || '',
-              avatar: json.data?.avatar || null,
-            }))
-            .catch(() => ({}))
-        : {};
-      saveSession(userId, token);
-      setUser({ id: userId, token, ...profile });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/users/refresh-token`,
+        { method: 'POST', credentials: 'include' }
+      );
+      if (!res.ok) return null;
+      const data = await res.json();
+      if (!data?.accessToken || !data?.userId) return null;
+      return { id: data.userId, token: data.accessToken };
     } catch {
-      setUser({ id: userId, token });
+      return null;
     }
-
-    history.replaceState(
-      null,
-      '',
-      window.location.pathname + window.location.search
-    );
-    navigate('/home');
-    return true;
-  };
-
-  // ── Silently try cookie-based refresh; update localStorage if it succeeds ──
-  const tryRefreshInBackground = () => {
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/users/refresh-token`, {
-      method: 'POST',
-      credentials: 'include',
-    })
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (data?.accessToken && data?.userId) {
-          saveSession(data.userId, data.accessToken);
-          setUser((prev) =>
-            prev ? { ...prev, id: data.userId, token: data.accessToken } : prev
-          );
-        }
-      })
-      .catch(() => {});
   };
 
   useEffect(() => {
+    let cancelled = false;
+
     const checkSession = async () => {
-      try {
-        if (await consumeHashToken()) return;
-
-        // 1. Try localStorage first — instant restoration, no network needed.
-        const stored = loadSession();
-        if (stored) {
-          const profile = await fetchUserProfile(stored.id, stored.token);
-          setUser({ id: stored.id, token: stored.token, ...profile });
-          setLoading(false);
-          // Kick off a background refresh to extend the cookie session.
-          tryRefreshInBackground();
-          return;
-        }
-
-        // 2. No valid localStorage entry — fall back to cookie-based refresh.
-        const res = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/users/refresh-token`,
-          { method: 'POST', credentials: 'include' }
+      // Google OAuth sends the browser back to /?auth=google. The refresh
+      // cookie is already set by the callback, so there is no token in the URL
+      // to consume — just clean the marker off and restore like any reload.
+      const params = new URLSearchParams(window.location.search);
+      const fromOAuth = params.get('auth') === 'google';
+      if (fromOAuth) {
+        params.delete('auth');
+        const qs = params.toString();
+        history.replaceState(
+          null,
+          '',
+          window.location.pathname + (qs ? `?${qs}` : '')
         );
-
-        if (!res.ok) {
-          setUser(null);
-        } else {
-          const data = await res.json();
-          const profile = await fetchUserProfile(data.userId, data.accessToken);
-          saveSession(data.userId, data.accessToken);
-          setUser({ id: data.userId, token: data.accessToken, ...profile });
-        }
-      } catch {
-        setUser(null);
-      } finally {
-        setLoading(false);
       }
+
+      const session = await refreshAccessToken();
+      if (cancelled) return;
+
+      if (!session) {
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
+      const profile = await fetchUserProfile(session.id, session.token);
+      if (cancelled) return;
+
+      setUser({ ...session, ...profile });
+      setLoading(false);
+      if (fromOAuth) navigate('/home');
     };
 
+    purgeLegacySession();
     checkSession();
+
+    return () => {
+      cancelled = true;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // ── Keep the in-memory access token alive while the tab stays open ──
+  // Without this the token would silently expire after 15 min. A failed
+  // refresh means the 7-day refresh cookie is gone, so drop to logged out.
+  const activeUserId = user?.id;
+  useEffect(() => {
+    if (!activeUserId) return;
+
+    const timer = setInterval(async () => {
+      const session = await refreshAccessToken();
+      setUser((prev) => {
+        if (!prev) return prev;
+        return session ? { ...prev, ...session } : null;
+      });
+    }, REFRESH_INTERVAL_MS);
+
+    return () => clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeUserId]);
 
   // ── Redirect the browser to start the Google OAuth flow ──
   const loginWithGoogle = () => {
@@ -226,7 +195,6 @@ export const useProvideAuth = () => {
     const data = await res.json();
     const profile = await fetchUserProfile(data.userId, data.accessToken);
     const newUser = { id: data.userId, token: data.accessToken, ...profile };
-    saveSession(data.userId, data.accessToken);
     setUser(newUser);
     return newUser;
   };
@@ -260,7 +228,6 @@ export const useProvideAuth = () => {
       const id = data.userId || data.user?._id;
       const token = data.token || data.accessToken;
       const profile = await fetchUserProfile(id, token);
-      saveSession(id, token);
       setUser({ id, token, ...profile });
       return data;
     } catch (err: any) {
@@ -296,7 +263,12 @@ export const useProvideAuth = () => {
     } catch (err) {
       console.error('Logout failed', err);
     }
-    clearSession();
+    // The refresh cookie is cleared server-side; drop the in-memory token and
+    // any cached view state.
+    purgeLegacySession();
+    try {
+      sessionStorage.clear();
+    } catch {}
     setUser(null);
     navigate('/');
   };

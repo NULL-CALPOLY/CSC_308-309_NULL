@@ -48,13 +48,9 @@ function fetchFirstEventId() {
     });
 }
 
-// Helper: inject auth token into the app's localStorage so the React AuthContext sees the user as logged in
-function injectAuthViaLocalStorage(token, userId) {
-  cy.window().then((win) => {
-    win.localStorage.setItem('userToken', token);
-    win.localStorage.setItem('userId', userId);
-  });
-}
+// NOTE: the browser session is restored from the HttpOnly `refreshToken` cookie
+// that `loginAndStoreToken` receives via `withCredentials`. The app keeps its
+// access token in memory only, so there is nothing to inject into localStorage.
 
 describe('UI — Feature #2: Join Event & Feature #3: Event Chat', () => {
   // Feature #2: Scenario — Non-logged-in user sees no Join button
