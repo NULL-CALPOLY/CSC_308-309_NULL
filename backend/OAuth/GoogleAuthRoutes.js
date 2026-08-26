@@ -122,10 +122,6 @@ router.get('/google/callback', (req, res, next) => {
     // for app auth).
     const userId = user._id;
 
-    const accessToken = jwt.sign({ id: userId }, process.env.JWT_TOKEN_SECRET, {
-      expiresIn: '15m',
-    });
-
     const refreshToken = jwt.sign(
       { id: userId },
       process.env.REFRESH_TOKEN_SECRET,
@@ -140,9 +136,11 @@ router.get('/google/callback', (req, res, next) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    // Redirect to the SPA carrying the access token in the URL hash so the
-    // frontend can store it and populate auth state.
-    res.redirect(`${frontendBase}/#token=${accessToken}&userId=${userId}`);
+    // Redirect to the SPA with only a marker flag. The HttpOnly refresh cookie
+    // above is the sole credential handed to the browser; the SPA exchanges it
+    // for an in-memory access token via /users/refresh-token. Putting the
+    // access token in the URL would leak it into browser history and referrers.
+    res.redirect(`${frontendBase}/?auth=google`);
   })(req, res, next);
 });
 
